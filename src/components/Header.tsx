@@ -14,7 +14,7 @@ export default function Header() {
   return (
     <header className="flex justify-between items-center h-32">
       <div className="flex gap-x-3 items-center">
-        <Logo />
+        <Link href="/"><Logo /></Link>
         <Link href="https://x.com/frogdotfun" target="_blank">
           <FaSquareXTwitter size={37} />
         </Link>
