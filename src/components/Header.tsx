@@ -12,7 +12,7 @@ export default function Header() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <header className="flex justify-between items-center h-32">
+    <header className="flex justify-between items-center h-32 px-12">
       <div className="flex gap-x-3 items-center">
         <Link href="/"><Logo /></Link>
         <Link href="https://x.com/frogdotfun" target="_blank">

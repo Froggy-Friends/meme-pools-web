@@ -6,6 +6,8 @@ import { headers } from "next/headers";
 import { config } from "@/config";
 import Web3ModalProvider from "@/context";
 import { NextUIProvider } from "@nextui-org/react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +28,9 @@ export default function RootLayout({
       <body className={`${inter.className} overflow-y-scroll`}>
         <NextUIProvider>
           <Web3ModalProvider initialState={initialState}>
+            <Header />
             {children}
+            <Footer />
           </Web3ModalProvider>
         </NextUIProvider>
       </body>

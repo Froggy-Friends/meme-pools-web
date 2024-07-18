@@ -1,22 +1,24 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import dynamic from "next/dynamic";
 import BondingCurveProgress from "@/components/token-details/BondingCurveProgress";
 import CommentsAndTradesContainer from "@/components/token-details/CommentsAndTradesContainer";
 import HolderDistribution from "@/components/token-details/HolderDistribution";
 import KingOfTheHillProgress from "@/components/token-details/KingOfTheHillProgress";
-import TokenChart from "@/components/token-details/TokenChart";
 import TokenInfo from "@/components/token-details/TokenInfo";
 import TokenSocials from "@/components/token-details/TokenSocials";
 import TokenSwap from "@/components/token-details/TokenSwap";
+const DynamicTokenChart = dynamic(
+  () => import("../../../components/token-details/TokenChart"),
+  {
+    ssr: false,
+  }
+);
 
 export default function TokenDetailsPage() {
   return (
-    <main className="flex flex-col px-12">
-      <Header />
-
+    <main className="flex flex-col px-12 mb-20">
       <div className="flex gap-x-10 mt-20">
         <div className="w-[65%] flex flex-col">
-          <TokenChart />
+          <DynamicTokenChart />
           <CommentsAndTradesContainer />
         </div>
 
@@ -29,8 +31,6 @@ export default function TokenDetailsPage() {
           <HolderDistribution />
         </div>
       </div>
-
-      <Footer />
     </main>
   );
 }
