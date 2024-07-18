@@ -5,12 +5,14 @@ import { cookieToInitialState } from "wagmi";
 import { headers } from "next/headers";
 import { config } from "@/config";
 import Web3ModalProvider from "@/context";
+import { NextUIProvider } from "@nextui-org/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Frog.fun",
-  description: "Launch a tradeable coin instantly in one click on http://frog.fun/",
+  description:
+    "Launch a tradeable coin instantly in one click on http://frog.fun/",
 };
 
 export default function RootLayout({
@@ -22,9 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Web3ModalProvider initialState={initialState}>
-          {children}
-        </Web3ModalProvider>
+        <NextUIProvider>
+          <Web3ModalProvider initialState={initialState}>
+            {children}
+          </Web3ModalProvider>
+        </NextUIProvider>
       </body>
     </html>
   );
