@@ -1,4 +1,5 @@
 import CreateCoinButton from "@/components/CreateCoinButton";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import KingOfTheHill from "@/components/KingOfTheHill";
 import TokenDisplayContainer from "@/components/TokenDisplayContainer";
@@ -19,6 +20,8 @@ export default function Home() {
       <TokenDisplayControls />
 
       <TokenDisplayContainer />
+
+      <Footer />
     </main>
   );
 }
