@@ -23,7 +23,12 @@ export default function TokenDetailsPage() {
         </div>
 
         <div className="flex flex-col">
-          <TokenSwap />
+          <TokenSwap
+            tokenName="JORDO"
+            ownedAmount={100}
+            currPrice={2}
+            ethPrice={4000}
+          />
           <TokenSocials />
           <TokenInfo />
           <BondingCurveProgress />
