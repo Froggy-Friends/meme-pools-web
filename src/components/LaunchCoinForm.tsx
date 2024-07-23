@@ -1,11 +1,34 @@
+"use client";
+
+import useCreateToken from "@/hooks/useCreateToken";
 import { launchCoin } from "@/lib/actions";
 
 export default function LaunchCoinForm() {
+  const { createToken } = useCreateToken();
+
   return (
     <section className="w-[400px] mx-auto">
       <h1 className="mx-auto text-2xl mb-6">Launch a New Coin</h1>
 
-      <form action={launchCoin} className="flex flex-col">
+      <form
+        action={(formData: FormData) => {
+          //launchCoin;
+          const name = formData.get("name");
+          const ticker = formData.get("ticker");
+          createToken({
+              amount: 10000,
+              name: name!,
+              symbol: ticker!,
+            });
+
+          // createToken({
+          //   amount: 10000,
+          //   name: name!,
+          //   symbol: ticker!,
+          // })
+        }}
+        className="flex flex-col"
+      >
         <label htmlFor="name" className="mb-1">
           Name
         </label>
@@ -35,7 +58,7 @@ export default function LaunchCoinForm() {
           id="description"
           name="description"
           className="ring-1 ring-black p-2 rounded-md mb-2 h-32"
-          required
+          //required
         />
 
         <label htmlFor="image" className="mb-1">
@@ -47,7 +70,7 @@ export default function LaunchCoinForm() {
           type="file"
           accept="image/*"
           className="ring-1 ring-black p-2 rounded-md mb-2"
-          required
+          //required
         />
 
         <label htmlFor="twitter" className="mb-1">
@@ -60,7 +83,6 @@ export default function LaunchCoinForm() {
           pattern="https://x.com/*"
           placeholder="optional.."
           className="ring-1 ring-black p-2 rounded-md mb-2"
-          required
         />
 
         <label htmlFor="twitter" className="mb-1">
@@ -72,7 +94,6 @@ export default function LaunchCoinForm() {
           type="text"
           placeholder="optional.."
           className="ring-1 ring-black p-2 rounded-md mb-2"
-          required
         />
 
         <label htmlFor="website" className="mb-1">
@@ -85,7 +106,6 @@ export default function LaunchCoinForm() {
           pattern="https://.*"
           placeholder="optional.."
           className="ring-1 ring-black p-2 rounded-md mb-2"
-          required
         />
 
         <button

@@ -8,4 +8,5 @@ export const launchCoin = async (formData: FormData) => {
   const twitter = formData.get("twitter");
   const telegram = formData.get("telegram");
   const website = formData.get("website");
+
 };
