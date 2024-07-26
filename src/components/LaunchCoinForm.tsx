@@ -2,30 +2,35 @@
 
 import useCreateToken from "@/hooks/useCreateToken";
 import { launchCoin } from "@/lib/actions";
+import { useAccount } from "wagmi";
+import { toast } from "react-hot-toast";
+import FormSubmitButton from "./FormSubmitButton";
 
 export default function LaunchCoinForm() {
   const { createToken } = useCreateToken();
+  const { address, isConnected } = useAccount();
 
   return (
     <section className="w-[400px] mx-auto">
       <h1 className="mx-auto text-2xl mb-6">Launch a New Coin</h1>
 
       <form
-        action={(formData: FormData) => {
-          //launchCoin;
-          const name = formData.get("name");
-          const ticker = formData.get("ticker");
-          createToken({
-              amount: 10000,
-              name: name!,
-              symbol: ticker!,
-            });
+        action={async (formData: FormData) => {
+          try {
+            if (!address || !isConnected) {
+              throw new Error("Wallet not connected");
+            }
 
-          // createToken({
-          //   amount: 10000,
-          //   name: name!,
-          //   symbol: ticker!,
-          // })
+            const errorMessage = await launchCoin(formData, address!);
+
+            if (errorMessage) {
+              throw new Error(errorMessage);
+            } else {
+              toast.success("Token successfully created!");
+            }
+          } catch (error) {
+            toast.error((error as Error).message);
+          }
         }}
         className="flex flex-col"
       >
@@ -58,7 +63,7 @@ export default function LaunchCoinForm() {
           id="description"
           name="description"
           className="ring-1 ring-black p-2 rounded-md mb-2 h-32"
-          //required
+          required
         />
 
         <label htmlFor="image" className="mb-1">
@@ -70,7 +75,7 @@ export default function LaunchCoinForm() {
           type="file"
           accept="image/*"
           className="ring-1 ring-black p-2 rounded-md mb-2"
-          //required
+          required
         />
 
         <label htmlFor="twitter" className="mb-1">
@@ -108,12 +113,9 @@ export default function LaunchCoinForm() {
           className="ring-1 ring-black p-2 rounded-md mb-2"
         />
 
-        <button
-          type="submit"
-          className="p-2 mt-2 border-[1px] border-black rounded-lg"
-        >
-          Launch coin
-        </button>
+        <FormSubmitButton className="p-2 mt-2 border-[1px] border-black rounded-lg flex justify-center active:scale-[0.97]">
+          <p className="py-1 font-semibold">Launch Coin</p>
+        </FormSubmitButton>
       </form>
     </section>
   );

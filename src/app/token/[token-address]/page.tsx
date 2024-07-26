@@ -13,7 +13,7 @@ const DynamicTokenChart = dynamic(
   }
 );
 
-export default function TokenDetailsPage() {
+export default async function TokenDetailsPage() {
   return (
     <main className="flex flex-col px-12 mb-20">
       <div className="flex gap-x-10 mt-20">

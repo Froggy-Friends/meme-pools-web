@@ -7,9 +7,22 @@ import ConnectButton from "./ConnectButton";
 import Link from "next/link";
 import { useDisclosure } from "@nextui-org/react";
 import HowItWorksModal from "./HowItWorksModal";
+import { useAccount } from "wagmi";
+import { useEffect } from "react";
+import { createUser } from "@/lib/actions";
+import ProfileAvatar from "./ProfileAvatar";
 
 export default function Header() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { address, isConnected } = useAccount();
+
+  useEffect(() => {
+    if (isConnected && address) {
+      createUser({
+        wallet: address
+      })
+    }
+  }, [isConnected, address])
 
   return (
     <header className="flex justify-between items-center h-32 px-12">
@@ -24,7 +37,7 @@ export default function Header() {
         </button>
       </div>
 
-      <ConnectButton />
+      {!isConnected ? <ConnectButton /> : <ProfileAvatar />}
       <HowItWorksModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </header>
   );
