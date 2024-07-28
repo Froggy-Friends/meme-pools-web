@@ -1,33 +1,31 @@
-"use client";
-
 import Image from "next/image";
-import { fetchUserAvatar } from "@/lib/actions";
 import { useAccount } from "wagmi";
-import { useCallback, useEffect, useState } from "react";
 import ProfileModal from "./ProfileModal";
 import { useDisclosure } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
+import useUser from "@/hooks/useUser";
+import { useEffect } from "react";
 
 export default function ProfileAvatar() {
-  const { address, isConnected } = useAccount();
-  const [avatarUrl, setAvatarUrl] = useState<string | null>("");
+  const { address } = useAccount();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { checkAndCreateUser, } = useUser(address!);
 
-  const setAvatar = useCallback(async () => {
-    const user = await fetchUserAvatar(address!);
-    if (user) {
-      setAvatarUrl(user.imageUrl);
-    }
-  }, [address]);
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: [`user`],
+    queryFn: async () => {
+      const data = await checkAndCreateUser();
+      return data
+    },
+    refetchOnMount: false,
+  });
 
   useEffect(() => {
-    if (isConnected && address) {
-      setAvatar();
-    }
-  }, [address, isConnected, setAvatar]);
-
+    console.log('image', data?.imageUrl)
+  }, [data])
   return (
     <>
-      {avatarUrl ? (
+      {data?.imageUrl ? (
         <div>
           <button
             onClick={() => {
@@ -35,7 +33,7 @@ export default function ProfileAvatar() {
             }}
           >
             <Image
-              src={avatarUrl}
+              src={data.imageUrl}
               alt="profile-avatar"
               height={70}
               width={70}
@@ -43,6 +41,8 @@ export default function ProfileAvatar() {
             />
           </button>
         </div>
+      ) : isLoading ? (
+        <div className="h-[60px] w-[60px] bg-gray-400 animate-pulse rounded-full" />
       ) : (
         <div />
       )}
@@ -51,7 +51,7 @@ export default function ProfileAvatar() {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         onClose={onClose}
-        setAvatar={setAvatar}
+        refetch={refetch}
       />
     </>
   );

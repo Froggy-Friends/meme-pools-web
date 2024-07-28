@@ -7,31 +7,32 @@ import { toast } from "react-hot-toast";
 import FormSubmitButton from "./FormSubmitButton";
 
 export default function LaunchCoinForm() {
-  const { createToken } = useCreateToken();
   const { address, isConnected } = useAccount();
+
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      if (!address || !isConnected) {
+        throw new Error("Wallet not connected");
+      }
+  
+      const errorMessage = await launchCoin(formData, address!);
+  
+      if (errorMessage) {
+        throw new Error(errorMessage);
+      } else {
+        toast.success("Token successfully created!");
+      }
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  }
 
   return (
     <section className="w-[400px] mx-auto">
       <h1 className="mx-auto text-2xl mb-6">Launch a New Coin</h1>
 
       <form
-        action={async (formData: FormData) => {
-          try {
-            if (!address || !isConnected) {
-              throw new Error("Wallet not connected");
-            }
-
-            const errorMessage = await launchCoin(formData, address!);
-
-            if (errorMessage) {
-              throw new Error(errorMessage);
-            } else {
-              toast.success("Token successfully created!");
-            }
-          } catch (error) {
-            toast.error((error as Error).message);
-          }
-        }}
+        action={handleSubmit}
         className="flex flex-col"
       >
         <label htmlFor="name" className="mb-1">

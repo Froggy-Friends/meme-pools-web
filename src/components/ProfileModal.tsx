@@ -1,6 +1,6 @@
 import { updateUserData } from "@/lib/actions";
-import { shortenAddress } from "@/lib/utils";
 import { useAccount, useDisconnect } from "wagmi";
+import { Address } from "@coinbase/onchainkit/identity";
 import {
   Modal,
   ModalContent,
@@ -16,40 +16,42 @@ type HowItWorkdsModalProps = {
   isOpen: boolean;
   onOpenChange: () => void;
   onClose: () => void;
-  setAvatar: () => void;
+  refetch: () => void;
 };
 
 export default function ProfileModal({
   isOpen,
   onOpenChange,
   onClose,
-  setAvatar,
+  refetch,
 }: HowItWorkdsModalProps) {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
 
+  const handleSubmit = async (formData: FormData) => {
+    await updateUserData(formData, address!);
+
+    refetch();
+
+    setTimeout(() => {
+      toast.success("Profile successfully updated!");
+
+      onClose();
+    }, 2000);
+  };
+
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <form
-          action={async (formData: FormData) => {
-            await updateUserData(formData, address!);
-
-            setAvatar();
-
-            toast.success("Profile successfully updated!");
-
-            onClose();
-          }}
-        >
+        <form action={handleSubmit}>
           <ModalContent className="bg-gray-950/95">
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1 text-white">
                   <div className="flex items-center justify-between pt-6">
                     <p>Edit Profile</p>
-                    <p className="py-2 px-3 text-base bg-gray-800 rounded-md">
-                      {shortenAddress(address!)}
+                    <p className="py-2 px-3 bg-gray-800 rounded-md">
+                      <Address address={address} isSliced={true} />
                     </p>
                     <button
                       className="py-2 px-3 text-base bg-gray-800 rounded-md hover:bg-gray-800/80"
