@@ -119,10 +119,8 @@ export const createUser = async ({
     name = wallet.toString().substring(0, 5);
   }
 
-  if (!imageUrl) {
-    imageUrl =
-      "https://qojtn2d8pd7yjrch.public.blob.vercel-storage.com/frog-fun-logo-X7w0iMo57guw2ad4fs9n659WfuyV3d.jpg";
-  }
+  imageUrl =
+    "https://qojtn2d8pd7yjrch.public.blob.vercel-storage.com/Frog.fun_Default_PFP-nKVI2J7DIDPs8vFvCTnkVxG4aT6asQ.png";
 
   await prisma.user.create({
     data: {
@@ -132,7 +130,6 @@ export const createUser = async ({
       email: email,
     },
   });
-
 };
 
 export async function updateUserData(

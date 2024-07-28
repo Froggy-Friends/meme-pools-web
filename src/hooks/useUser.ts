@@ -15,6 +15,7 @@ export default function useUser(address: `0x${string}`) {
 
     if (userExists) {
       const user = await fetchUser(address as `0x${string}`);
+      console.log('user', user)
       return user;
     } else if (!userExists) {
       await createUser({

@@ -4,25 +4,22 @@ import ProfileModal from "./ProfileModal";
 import { useDisclosure } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import useUser from "@/hooks/useUser";
-import { useEffect } from "react";
+import defaultPfp from "../../public/Frog.fun_Default_PFP.png";
 
 export default function ProfileAvatar() {
   const { address } = useAccount();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const { checkAndCreateUser, } = useUser(address!);
+  const { checkAndCreateUser } = useUser(address!);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: [`user`],
     queryFn: async () => {
       const data = await checkAndCreateUser();
-      return data
+      return data;
     },
     refetchOnMount: false,
   });
 
-  useEffect(() => {
-    console.log('image', data?.imageUrl)
-  }, [data])
   return (
     <>
       {data?.imageUrl ? (
@@ -35,14 +32,20 @@ export default function ProfileAvatar() {
             <Image
               src={data.imageUrl}
               alt="profile-avatar"
-              height={70}
-              width={70}
+              height={55}
+              width={55}
               className="rounded-full"
             />
           </button>
         </div>
       ) : isLoading ? (
-        <div className="h-[60px] w-[60px] bg-gray-400 animate-pulse rounded-full" />
+        <Image
+          src={defaultPfp}
+          alt="default pfp"
+          height={55}
+          width={55}
+          className="rounded-full"
+        />
       ) : (
         <div />
       )}
