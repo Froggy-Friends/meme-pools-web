@@ -1,31 +1,25 @@
 "use client";
 
 import Logo from "./Logo";
-import { FaSquareXTwitter, FaCircleInfo } from "react-icons/fa6";
-import { FaTelegram } from "react-icons/fa";
 import ConnectButton from "./ConnectButton";
 import Link from "next/link";
-import { useDisclosure } from "@nextui-org/react";
-import HowItWorksModal from "./HowItWorksModal";
+import ProfileAvatar from "./ProfileAvatar";
+import HeaderSocialLinks from "./HeaderSocialLinks";
+import { useAccount } from "wagmi";
 
 export default function Header() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isConnected } = useAccount();
 
   return (
     <header className="flex justify-between items-center h-32 px-12">
       <div className="flex gap-x-3 items-center">
-        <Link href="/"><Logo /></Link>
-        <Link href="https://x.com/frogdotfun" target="_blank">
-          <FaSquareXTwitter size={37} />
+        <Link href="/">
+          <Logo />
         </Link>
-        <FaTelegram size={35} />
-        <button onClick={onOpen}>
-          <FaCircleInfo size={35} />
-        </button>
+        <HeaderSocialLinks />
       </div>
 
-      <ConnectButton />
-      <HowItWorksModal isOpen={isOpen} onOpenChange={onOpenChange} />
+      {!isConnected ? <ConnectButton /> : <ProfileAvatar />}
     </header>
   );
 }
