@@ -28,17 +28,17 @@ export const checkUserExists = async (wallet: `0x${string}`) => {
   return userExists;
 };
 
-export const tokenNameExits = async (name: string) => {
-  const tokenNameExists = !!(await prisma.token.findFirst({
+export const checkTokenNameExists = async (name: string) => {
+  const exists = !!(await prisma.token.findFirst({
     where: {
       name: name as string,
     },
   }));
 
-  return tokenNameExists;
+  return exists;
 };
 
-export const tokenTickerExits = async (ticker: string) => {
+export const checkTokenTickerExists = async (ticker: string) => {
   const tokenTickerExists = !!(await prisma.token.findFirst({
     where: {
       ticker: ticker as string,
@@ -75,9 +75,9 @@ export const launchCoin = async (
   });
   revalidatePath("/");
 
-  const tokenNameExists = await tokenNameExits(name as string);
+  const tokenNameExists = await checkTokenNameExists(name as string);
 
-  const tokenTickerExists = await tokenTickerExits(ticker as string);
+  const tokenTickerExists = await checkTokenTickerExists(ticker as string);
 
   let errorMessage = "";
 
