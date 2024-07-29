@@ -39,13 +39,21 @@ export default function ProfileAvatar() {
           </button>
         </div>
       ) : isLoading ? (
-        <Image
-          src={defaultPfp}
-          alt="default pfp"
-          height={55}
-          width={55}
-          className="rounded-full"
-        />
+        <div>
+          <button
+            onClick={() => {
+              onOpen();
+            }}
+          >
+            <Image
+              src={defaultPfp}
+              alt="profile-avatar"
+              height={55}
+              width={55}
+              className="rounded-full"
+            />
+          </button>
+        </div>
       ) : (
         <div />
       )}

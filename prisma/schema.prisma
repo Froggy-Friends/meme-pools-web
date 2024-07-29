@@ -23,7 +23,7 @@ model Leaderboard {
 
 model Token {
   id           String        @id(map: "token_pkey") @default(uuid()) @db.Uuid
-  tokenId      Int
+  tokenId      Int           @unique
   ticker       String
   description  String
   image        String
@@ -42,7 +42,7 @@ model Token {
 model User {
   id          String        @id(map: "user_pkey") @default(uuid()) @db.Uuid
   name        String
-  wallet      String
+  wallet      String        @unique
   imageUrl    String?
   email       String?
   createdAt   DateTime      @db.Timestamptz(6) @default(now())

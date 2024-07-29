@@ -3,7 +3,7 @@ import NSFWToggle from "./NSFWToggle";
 
 export default function TokenDisplayControls() {
   return (
-    <section className="mt-12">
+    <section>
       <div className="flex gap-x-3 pb-4">
         <button>Following</button>
         <button>Terminal</button>
