@@ -20,3 +20,19 @@ export type User = {
   createdAt: Date;
   updatedat: Date | null;
 };
+
+export type Token = {
+  id: string;
+  tokenId: number;
+  ticker: string;
+  description: string;
+  image: string;
+  twitter: string | null;
+  telegram: string | null;
+  website: string | null;
+  userId: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  tokenAddress: string;
+};

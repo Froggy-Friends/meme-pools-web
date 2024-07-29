@@ -18,6 +18,16 @@ export const fetchUser = async (wallet: `0x${string}`) => {
   return user[0];
 };
 
+export const fetchUserById = async (id: string) => {
+  const user = await prisma.user.findMany({
+    where: {
+      id: id,
+    },
+  });
+
+  return user[0];
+};
+
 export const checkUserExists = async (wallet: `0x${string}`) => {
   const userExists = !!(await prisma.user.findFirst({
     where: {
@@ -169,4 +179,21 @@ export async function updateUserData(
   } else {
     return;
   }
+}
+
+export const fetchTokens = async (page = 1) => {
+  const tokens = await prisma.token.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 100,
+    skip: (page - 1) * 100,
+  })
+
+  const totalCount = await prisma.token.count();
+
+  return {
+    tokens,
+    totalCount,
+  };
 }

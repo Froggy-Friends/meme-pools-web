@@ -1,26 +1,38 @@
-"use client";
-
 import Image from "next/image";
-import placeholderLogo from "../../public/pepe-placeholder.png";
-import { motion } from "framer-motion";
+import { Token } from "@/lib/types";
+import { fetchUserById } from "@/lib/actions";
 
-export default function TokenDisplayCard() {
+type TokenDisplayCardProps = {
+  token: Token;
+};
+
+export default async function TokenDisplayCard({
+  token,
+}: TokenDisplayCardProps) {
+  const tokenCreator = await fetchUserById(token.userId);
+
   return (
-    <motion.div
-      className="flex gap-x-3 w-[31%] pb-10"
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -10, opacity: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Image src={placeholderLogo} alt="token-image" height={100} width={100} />
+    <div className="flex gap-x-3 w-[31%] pb-10 animate-fadeInSlideUp">
+      <Image src={token.image} alt="token-image" height={100} width={100} />
 
       <div className="flex flex-col">
-        <p>Created by...</p>
+        <div className="flex gap-x-2">
+          <Image
+            src={tokenCreator.imageUrl!}
+            alt="creator avatar"
+            height={20}
+            width={20}
+            className="rounded-md"
+          />
+          <p>Created by {tokenCreator.name}</p>
+        </div>
+
         <p>market cap...</p>
         <p>replies...</p>
-        <p>Name (Ticker): description...</p>
+        <p>
+          {token.name}({token.ticker}): {token.description}
+        </p>
       </div>
-    </motion.div>
+    </div>
   );
 }
