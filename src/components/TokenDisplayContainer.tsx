@@ -1,19 +1,40 @@
-import { fetchTokens } from "@/lib/actions";
+import { fetchPaginatedTokens, fetchTokens } from "@/lib/actions";
 import TokenDisplayCard from "./TokenDisplayCard";
 import PaginationControls from "./PaginationControls";
 import TokenDisplayControls from "./TokenDisplayControls";
 
 type TokenDisplayContainerProps = {
+  cursor: number;
   page: number;
 };
 
 export default async function TokenDisplayContainer({
+  cursor,
   page,
 }: TokenDisplayContainerProps) {
-  const { tokens, totalCount } = await fetchTokens(page);
+  const take = 2;
 
-  const previousPath = page > 1 ? `?page=${page - 1}` : "";
-  const nextPath = totalCount > 100 * page ? `?page=${page + 1}` : "";
+  let { tokens, totalCount } = await fetchTokens(take);
+
+  if (cursor && cursor !== totalCount + 1) {
+    tokens = await fetchPaginatedTokens(take, cursor);
+  }
+
+  const previousPathCursor = Number(tokens[0].tokenId) + take + 1;
+  const nextPathCursor = tokens[take - 1].tokenId;
+
+  const getPreviousPath = () => {
+    return page > 1 ? `?page=${page - 1}&cursor=${previousPathCursor}` : "";
+  };
+
+  const getNextPath = () => {
+    return totalCount > take * page
+      ? `?page=${page + 1}&cursor=${nextPathCursor}`
+      : "";
+  };
+
+  const previousPath = getPreviousPath();
+  const nextPath = getNextPath();
 
   return (
     <section className="flex flex-col">
@@ -23,7 +44,7 @@ export default async function TokenDisplayContainer({
       </div>
 
       <div className="flex flex-wrap justify-between w-full mt-12">
-        {tokens.map((token) => {
+        {tokens!.map((token) => {
           return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </div>

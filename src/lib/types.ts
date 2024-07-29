@@ -36,3 +36,5 @@ export type Token = {
   updatedAt: Date | null;
   tokenAddress: string;
 };
+
+export type SearchParams = { [key: string]: string | string[] | undefined };
