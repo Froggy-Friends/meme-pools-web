@@ -1,12 +1,10 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
-import { UserParams } from "./types";
+import prisma from "@/lib/prisma";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
+import { UserParams } from "./types";
 import { simulateCreateToken } from "./utils";
-
-const prisma = new PrismaClient();
 
 export const fetchUser = async (wallet: `0x${string}`) => {
   const user = await prisma.user.findMany({
