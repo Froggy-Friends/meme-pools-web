@@ -1,17 +1,22 @@
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaTelegram, FaGlobe } from "react-icons/fa";
 import Link from "next/link";
+import { Token } from "@/lib/types";
 
-export default function TokenSocials() {
+type TokenSocialsParams = {
+  token: Token;
+};
+
+export default function TokenSocials({ token }: TokenSocialsParams) {
   return (
     <div className="flex gap-x-4 items-center mt-6">
-      <Link href="">
+      <Link href={token.twitter ? token.twitter : ""}>
         <FaSquareXTwitter size={40} />
       </Link>
-      <Link href="">
+      <Link href={token.telegram ? token.telegram : ""}>
         <FaTelegram size={40} />
       </Link>
-      <Link href="">
+      <Link href={token.website ? token.website : ""}>
         <FaGlobe size={40} />
       </Link>
     </div>

@@ -1,30 +1,35 @@
 "use client";
 
 import Image from "next/image";
-import placeholderImage from "../../../public/pepe-placeholder.png";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
+import { Token, User } from "@/lib/types";
 
-export default function TokenChart() {
+type TokenChartParams = {
+  token: Token;
+  creator: User;
+};
+
+export default function TokenChart({ token, creator }: TokenChartParams) {
   return (
     <section>
       <div className="flex justify-between items-center mb-2">
         <div className="flex gap-x-2">
-          <p>Token name...</p>
-          <p>Ticker...</p>
+          <p>{token.name}</p>
+          <p>{token.ticker}</p>
           <p>Marketcap...</p>
-          <p>CA: 2fQn8ScNrMdn5xar7LBA12a....</p>
+          <p>CA: {token.tokenAddress}</p>
         </div>
 
         <div className="flex gap-x-2">
           <p>Created by</p>
           <Image
-            src={placeholderImage}
+            src={creator.imageUrl!}
             alt="creator-logo"
             height={20}
             width={20}
           />
           <p>
-            <a>CREATOR</a>
+            <a>{creator.name}</a>
           </p>
         </div>
       </div>
