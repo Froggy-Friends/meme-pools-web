@@ -6,6 +6,8 @@ import KingOfTheHillProgress from "@/components/token-details/KingOfTheHillProgr
 import TokenInfo from "@/components/token-details/TokenInfo";
 import TokenSocials from "@/components/token-details/TokenSocials";
 import TokenSwap from "@/components/token-details/TokenSwap";
+import getToken from "../getToken";
+import getEthPrice from "@/lib/getEthPrice";
 const DynamicTokenChart = dynamic(
   () => import("../../../components/token-details/TokenChart"),
   {
@@ -13,7 +15,16 @@ const DynamicTokenChart = dynamic(
   }
 );
 
-export default function TokenDetailsPage() {
+type TokenDetailsPageProps = {
+  tokenAddress: string;
+};
+
+export default async function TokenDetailsPage({
+  tokenAddress,
+}: TokenDetailsPageProps) {
+  const token = await getToken(tokenAddress);
+  const ethPrice = await getEthPrice();
+
   return (
     <main className="flex flex-col px-12 mb-20">
       <div className="flex gap-x-10 mt-20">
@@ -24,10 +35,10 @@ export default function TokenDetailsPage() {
 
         <div className="flex flex-col">
           <TokenSwap
-            tokenName="JORDO"
-            ownedAmount={100}
+            tokenAddress={token.tokenAddress}
+            tokenTicker={token.ticker.toUpperCase()}
             currPrice={2}
-            ethPrice={4000}
+            ethPrice={ethPrice}
           />
           <TokenSocials />
           <TokenInfo />
