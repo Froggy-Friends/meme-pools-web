@@ -42,10 +42,12 @@ export default function TokenSwap({
   const switchBuyToken = () => {
     if (buyToken === "ETH") {
       setBuyToken(tokenTicker);
-      setTokenAmount((tokenAmount) => ethPrice / (tokenAmount * currPrice));
+      setTokenAmount((prevEthAmount) => (prevEthAmount * ethPrice) / currPrice);
     } else {
       setBuyToken("ETH");
-      setTokenAmount((tokenAmount) => (tokenAmount * currPrice) / ethPrice);
+      setTokenAmount(
+        (prevTokenAmount) => (prevTokenAmount * currPrice) / ethPrice
+      );
     }
   };
 
