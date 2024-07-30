@@ -13,6 +13,7 @@ type TradingWidgetProps = {
   ownedAmount: number;
   currPrice: number;
   ethPrice: number;
+  tokenAddress: string;
 };
 
 const PURCHASE_AMOUNTS = [1, 5, 10];
@@ -23,6 +24,7 @@ export default function TokenSwap({
   ownedAmount,
   currPrice,
   ethPrice,
+  tokenAddress,
 }: TradingWidgetProps) {
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyToken, setBuyToken] = useState(tokenName);

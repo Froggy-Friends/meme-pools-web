@@ -3,7 +3,7 @@ import { User } from "@/lib/types";
 import { useCallback, useEffect, useState } from "react";
 
 export default function useUser(address: `0x${string}`) {
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | null>();
 
   const fetchCurrentUser = useCallback(async () => {
     const currentUser = await fetchUser(address as `0x${string}`);
