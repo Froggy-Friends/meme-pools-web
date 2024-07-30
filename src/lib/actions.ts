@@ -7,9 +7,19 @@ import { UserParams } from "./types";
 import { simulateCreateToken } from "./utils";
 
 export const fetchUser = async (wallet: `0x${string}`) => {
-  const user = await prisma.user.findMany({
+  const user = await prisma.user.findUnique({
     where: {
       wallet: wallet,
+    },
+  });
+
+  return user;
+};
+
+export const fetchUserById = async (id: string) => {
+  const user = await prisma.user.findMany({
+    where: {
+      id: id,
     },
   });
 
@@ -85,20 +95,21 @@ export const launchCoin = async (
     } else if (tokenTickerExists) {
       throw new Error("Token ticker already exists");
     } else {
-      await prisma.token.create({
-        data: {
-          tokenId: tokenId,
-          ticker: ticker as string,
-          description: description as string,
-          image: blob.url,
-          twitter: twitter as string,
-          telegram: telegram as string,
-          website: website as string,
-          name: name as string,
-          userId: user.id,
-          tokenAddress: tokenAddress,
-        },
-      });
+      user &&
+        (await prisma.token.create({
+          data: {
+            tokenId: tokenId,
+            ticker: ticker as string,
+            description: description as string,
+            image: blob.url,
+            twitter: twitter as string,
+            telegram: telegram as string,
+            website: website as string,
+            name: name as string,
+            userId: user.id,
+            tokenAddress: tokenAddress,
+          },
+        }));
     }
   } catch (error) {
     errorMessage = (error as Error).message;
@@ -147,7 +158,7 @@ export async function updateUserData(
   });
   revalidatePath("/");
 
-  blob.pathname === "undefined"
+  user && blob.pathname === "undefined"
     ? (imageUrl = user.imageUrl!)
     : (imageUrl = blob.url);
 
@@ -168,3 +179,34 @@ export async function updateUserData(
     return;
   }
 }
+
+export const fetchTokens = async (take: number) => {
+  const totalCount = await prisma.token.count();
+
+  const tokens = await prisma.token.findMany({
+    orderBy: {
+      tokenId: "desc",
+    },
+    take: take,
+  });
+
+  return {
+    tokens,
+    totalCount,
+  };
+};
+
+export const fetchPaginatedTokens = async (take: number, cursor: number) => {
+  const tokens = await prisma.token.findMany({
+    orderBy: {
+      tokenId: "desc",
+    },
+    take: take,
+    skip: 1,
+    cursor: {
+      tokenId: cursor,
+    },
+  });
+
+  return tokens;
+};
