@@ -9,6 +9,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "react-hot-toast";
+import Moralis from "moralis";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,12 +19,16 @@ export const metadata: Metadata = {
     "Launch a tradeable coin instantly in one click on http://frog.fun/",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const initialState = cookieToInitialState(config, headers().get("cookie"));
+  await Moralis.start({
+    apiKey: process.env.MORALIS_API_KEY,
+  });
+
   return (
     <html lang="en">
       <body className={`${inter.className} overflow-y-scroll`}>
