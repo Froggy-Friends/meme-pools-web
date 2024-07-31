@@ -1,28 +1,27 @@
+"use client";
+
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import ProfileModal from "./ProfileModal";
 import { useDisclosure } from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
 import useUser from "@/hooks/useUser";
-import defaultPfp from "../../public/Frog.fun_Default_PFP.png";
+import { User } from "@/lib/types";
+import ConnectButton from "./ConnectButton";
+import defaultAvatar from "../../public/Frog.fun_Default_PFP.png";
 
-export default function ProfileAvatar() {
-  const { address } = useAccount();
+type ProfileAvatarProps = {
+  user: User;
+};
+
+export default function ProfileAvatar({ user }: ProfileAvatarProps) {
+  const { address, isConnected } = useAccount();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const { checkAndCreateUser } = useUser(address!);
-
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: [`user`],
-    queryFn: async () => {
-      const data = await checkAndCreateUser();
-      return data;
-    },
-    refetchOnMount: false,
-  });
+  const { currentUser } = useUser(address!);
 
   return (
     <>
-      {data?.imageUrl ? (
+      {!isConnected && <ConnectButton />}
+      {isConnected && !user && !currentUser && (
         <div>
           <button
             onClick={() => {
@@ -30,7 +29,7 @@ export default function ProfileAvatar() {
             }}
           >
             <Image
-              src={data.imageUrl}
+              src={defaultAvatar}
               alt="profile-avatar"
               height={55}
               width={55}
@@ -38,7 +37,8 @@ export default function ProfileAvatar() {
             />
           </button>
         </div>
-      ) : isLoading ? (
+      )}
+      {isConnected && user && (
         <div>
           <button
             onClick={() => {
@@ -46,7 +46,7 @@ export default function ProfileAvatar() {
             }}
           >
             <Image
-              src={defaultPfp}
+              src={user.imageUrl!}
               alt="profile-avatar"
               height={55}
               width={55}
@@ -54,15 +54,29 @@ export default function ProfileAvatar() {
             />
           </button>
         </div>
-      ) : (
-        <div />
+      )}
+      {isConnected && !user && currentUser && (
+        <div>
+          <button
+            onClick={() => {
+              onOpen();
+            }}
+          >
+            <Image
+              src={currentUser.imageUrl!}
+              alt="profile-avatar"
+              height={55}
+              width={55}
+              className="rounded-full"
+            />
+          </button>
+        </div>
       )}
 
       <ProfileModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         onClose={onClose}
-        refetch={refetch}
       />
     </>
   );

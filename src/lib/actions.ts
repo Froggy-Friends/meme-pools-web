@@ -3,12 +3,16 @@
 import { PrismaClient } from "@prisma/client";
 import { UserParams } from "./types";
 import { put } from "@vercel/blob";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { simulateCreateToken } from "./utils";
 
 const prisma = new PrismaClient();
 
-export const fetchUser = async (wallet: `0x${string}`) => {
+export const fetchUser = unstable_cache(async (wallet: `0x${string}`) => {
+  if (!wallet) {
+    return 
+  }
+  
   const user = await prisma.user.findUnique({
     where: {
       wallet: wallet,
@@ -16,7 +20,7 @@ export const fetchUser = async (wallet: `0x${string}`) => {
   });
 
   return user;
-};
+}, ['my-app-user'], {tags: ['user']});
 
 export const fetchUserById = async (id: string) => {
   const user = await prisma.user.findUnique({
@@ -27,6 +31,7 @@ export const fetchUserById = async (id: string) => {
 
   return user;
 };
+
 
 export const checkUserExists = async (wallet: `0x${string}`) => {
   const userExists = !!(await prisma.user.findFirst({
@@ -126,6 +131,10 @@ export const createUser = async ({
   imageUrl,
   email,
 }: UserParams) => {
+  if (!wallet) {
+    return 
+  }
+
   if (!name) {
     name = wallet.toString().substring(0, 5);
   }
@@ -141,6 +150,8 @@ export const createUser = async ({
       email: email,
     },
   });
+
+  revalidateTag('user');
 };
 
 export async function updateUserData(
@@ -158,7 +169,6 @@ export async function updateUserData(
   const blob = await put(imageFile.name, imageFile, {
     access: "public",
   });
-  revalidatePath("/");
 
   user && blob.pathname === "undefined"
     ? (imageUrl = user.imageUrl!)
@@ -177,6 +187,8 @@ export async function updateUserData(
         email: email ? email : user.email,
       },
     });
+  
+  revalidateTag('user');
   } else {
     return;
   }

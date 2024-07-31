@@ -38,3 +38,16 @@ export type Token = {
 };
 
 export type SearchParams = { [key: string]: string | string[] | undefined };
+
+export type WagmiConnector = {
+  id: string;
+  name: string;
+  type: string;
+  uid: string;
+}
+
+export type WagmiConnectionsValue = {
+  accounts: `0x${string}`[];
+  chainId: number;
+  connector: WagmiConnector;
+}

@@ -1,3 +1,5 @@
+"use client"
+
 import { updateUserData } from "@/lib/actions";
 import { useAccount, useDisconnect } from "wagmi";
 import { Address } from "@coinbase/onchainkit/identity";
@@ -16,14 +18,12 @@ type HowItWorkdsModalProps = {
   isOpen: boolean;
   onOpenChange: () => void;
   onClose: () => void;
-  refetch: () => void;
 };
 
 export default function ProfileModal({
   isOpen,
   onOpenChange,
   onClose,
-  refetch,
 }: HowItWorkdsModalProps) {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
@@ -31,18 +31,16 @@ export default function ProfileModal({
   const handleSubmit = async (formData: FormData) => {
     await updateUserData(formData, address!);
 
-    refetch();
-
     setTimeout(() => {
       toast.success("Profile successfully updated!");
 
       onClose();
-    }, 2000);
+    }, 2500);
   };
 
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      {address && <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <form action={handleSubmit}>
           <ModalContent className="bg-gray-950/95">
             {(onClose) => (
@@ -108,7 +106,7 @@ export default function ProfileModal({
             )}
           </ModalContent>
         </form>
-      </Modal>
+      </Modal>}
     </>
   );
 }
