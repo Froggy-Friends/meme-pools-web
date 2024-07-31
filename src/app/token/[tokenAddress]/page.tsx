@@ -6,10 +6,11 @@ import KingOfTheHillProgress from "@/components/token-details/KingOfTheHillProgr
 import TokenInfo from "@/components/token-details/TokenInfo";
 import TokenSocials from "@/components/token-details/TokenSocials";
 import TokenSwap from "@/components/token-details/TokenSwap";
-import { getToken } from "@/app/queries/token";
 import getEthPrice from "@/lib/getEthPrice";
 import { BASE_ETH_ADDR } from "@/config/token";
 import { EvmChain } from "@/lib/getTokenPrice";
+import { fetchTokenByAddress, fetchUserById } from "@/lib/actions";
+import { redirect } from "next/navigation";
 const DynamicTokenChart = dynamic(
   () => import("../../../components/token-details/TokenChart"),
   {
@@ -24,14 +25,19 @@ type TokenDetailsPageProps = {
 export default async function TokenDetailsPage({
   tokenAddress,
 }: TokenDetailsPageProps) {
-  const token = await getToken(tokenAddress);
-  const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.sepolia);
+  const token = await fetchTokenByAddress(tokenAddress);
 
+  if (!token) {
+    redirect("/");
+  }
+
+  const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.sepolia);
+  const creator = await fetchUserById(token?.userId!);
   return (
     <main className="flex flex-col px-12 mb-20">
       <div className="flex gap-x-10 mt-20">
         <div className="w-[65%] flex flex-col">
-          <DynamicTokenChart />
+          <DynamicTokenChart token={token!} creator={creator!} />
           <CommentsAndTradesContainer />
         </div>
 
@@ -42,8 +48,8 @@ export default async function TokenDetailsPage({
             currPrice={2}
             ethPrice={ethPrice}
           />
-          <TokenSocials />
-          <TokenInfo />
+          <TokenSocials token={token!} />
+          <TokenInfo token={token!} />
           <BondingCurveProgress />
           <KingOfTheHillProgress />
           <HolderDistribution />

@@ -17,13 +17,13 @@ export const fetchUser = async (wallet: `0x${string}`) => {
 };
 
 export const fetchUserById = async (id: string) => {
-  const user = await prisma.user.findMany({
+  const user = await prisma.user.findUnique({
     where: {
       id: id,
     },
   });
 
-  return user[0];
+  return user;
 };
 
 export const checkUserExists = async (wallet: `0x${string}`) => {
@@ -209,4 +209,14 @@ export const fetchPaginatedTokens = async (take: number, cursor: number) => {
   });
 
   return tokens;
+};
+
+export const fetchTokenByAddress = async (tokenAddress: string) => {
+  const token = await prisma.token.findUnique({
+    where: {
+      tokenAddress: tokenAddress,
+    },
+  });
+
+  return token;
 };
