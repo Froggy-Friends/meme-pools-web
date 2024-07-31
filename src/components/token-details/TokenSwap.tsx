@@ -1,10 +1,10 @@
 "use client";
 
+import { DEFAULT_PRIORITY_FEE, DEFAULT_SLIPPAGE_PERCENT } from "@/config/token";
 import { useState } from "react";
-import SlippageModal from "./SlippageModal";
-import { useAccount, useBalance } from "wagmi";
 import { base } from "viem/chains";
-import { ethers } from "ethers";
+import { useBalance } from "wagmi";
+import SlippageModal from "./SlippageModal";
 
 enum TradingTab {
   BUY,
@@ -30,8 +30,10 @@ export default function TokenSwap({
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyToken, setBuyToken] = useState(tokenTicker);
   const [tokenAmount, setTokenAmount] = useState<number>(0);
-  const [slippagePercent, setSlippagePercent] = useState<number>(3);
-  const [priorityFee, setPriorityFee] = useState<number>(0.001);
+  const [slippagePercent, setSlippagePercent] = useState<number>(
+    DEFAULT_SLIPPAGE_PERCENT
+  );
+  const [priorityFee, setPriorityFee] = useState<number>(DEFAULT_PRIORITY_FEE);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
 
   const { data: balance, isLoading: isLoadingBalance } = useBalance({

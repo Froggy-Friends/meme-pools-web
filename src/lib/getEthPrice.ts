@@ -1,9 +1,7 @@
-import getTokenPrice from "./getTokenPrice";
+import getTokenPrice, { EvmChain } from "./getTokenPrice";
 
-const BASE_ETH_ADDR = "0x4200000000000000000000000000000000000006";
-
-export default async function getEthPrice() {
-  const { usdPriceFormatted } = await getTokenPrice(BASE_ETH_ADDR);
+export default async function getEthPrice(address: string, chain: EvmChain) {
+  const { usdPriceFormatted } = await getTokenPrice(address, chain);
 
   if (!usdPriceFormatted) {
     throw new Error("Error fetching ETH price");

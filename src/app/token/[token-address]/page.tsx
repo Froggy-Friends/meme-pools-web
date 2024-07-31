@@ -6,8 +6,10 @@ import KingOfTheHillProgress from "@/components/token-details/KingOfTheHillProgr
 import TokenInfo from "@/components/token-details/TokenInfo";
 import TokenSocials from "@/components/token-details/TokenSocials";
 import TokenSwap from "@/components/token-details/TokenSwap";
-import getToken from "../getToken";
+import { getToken } from "@/app/queries/token";
 import getEthPrice from "@/lib/getEthPrice";
+import { BASE_ETH_ADDR } from "@/config/token";
+import { EvmChain } from "@/lib/getTokenPrice";
 const DynamicTokenChart = dynamic(
   () => import("../../../components/token-details/TokenChart"),
   {
@@ -23,7 +25,7 @@ export default async function TokenDetailsPage({
   tokenAddress,
 }: TokenDetailsPageProps) {
   const token = await getToken(tokenAddress);
-  const ethPrice = await getEthPrice();
+  const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.sepolia);
 
   return (
     <main className="flex flex-col px-12 mb-20">
