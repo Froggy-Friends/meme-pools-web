@@ -31,7 +31,7 @@ export default async function TokenDetailsPage({
     redirect("/");
   }
 
-  const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.sepolia);
+  const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.mainnet);
   const creator = await fetchUserById(token?.userId!);
   return (
     <main className="flex flex-col px-12 mb-20">

@@ -7,7 +7,7 @@ import { UserParams } from "./types";
 import { simulateCreateToken } from "./utils";
 
 export const fetchUser = async (wallet: `0x${string}`) => {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: {
       wallet: wallet,
     },
@@ -212,7 +212,7 @@ export const fetchPaginatedTokens = async (take: number, cursor: number) => {
 };
 
 export const fetchTokenByAddress = async (tokenAddress: string) => {
-  const token = await prisma.token.findUnique({
+  const token = await prisma.token.findFirst({
     where: {
       tokenAddress: tokenAddress,
     },
