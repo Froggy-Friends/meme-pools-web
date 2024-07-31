@@ -16,7 +16,6 @@ type TradingWidgetProps = {
   tokenAddress: string;
   currPrice: number;
   ethPrice: number;
-  tokenAddress: string;
 };
 
 const PURCHASE_AMOUNTS = [1, 5, 10];
@@ -27,7 +26,6 @@ export default function TokenSwap({
   currPrice,
   tokenAddress,
   ethPrice,
-  tokenAddress,
 }: TradingWidgetProps) {
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyToken, setBuyToken] = useState(tokenTicker);
