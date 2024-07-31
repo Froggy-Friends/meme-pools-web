@@ -1,5 +1,5 @@
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
-import { User, WagmiConnectionsValue } from "./types";
+import { User, WagmiConnectionsValue, WalletAddress } from "./types";
 import { fetchUser } from "./actions";
 
 export const getUserFromCookies = async (cookieStore: ReadonlyRequestCookies) => {
@@ -26,7 +26,7 @@ export const getUserFromCookies = async (cookieStore: ReadonlyRequestCookies) =>
     }
   
     if (userAddress) {
-      user = await fetchUser(userAddress as `0x${string}`);
+      user = await fetchUser(userAddress as WalletAddress);
     }
   
     return user

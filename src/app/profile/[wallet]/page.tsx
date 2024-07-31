@@ -1,9 +1,10 @@
 import UserInfo from "@/components/profile/UserInfo";
 import { fetchUser } from "@/lib/actions"
+import { WalletAddress } from "@/lib/types";
 
 type ProfilePageProps = {
     params: {
-        wallet: `0x${string}`
+        wallet: WalletAddress
     }
 }
 

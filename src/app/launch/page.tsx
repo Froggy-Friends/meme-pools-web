@@ -2,7 +2,7 @@ import LaunchCoinForm from "@/components/LaunchCoinForm";
 
 export default function LaunchCoin() {
   return (
-    <main>  
+    <main className="mb-20">  
         <LaunchCoinForm />
     </main>
   )

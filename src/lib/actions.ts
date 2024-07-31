@@ -1,14 +1,14 @@
 "use server";
 
 import { PrismaClient } from "@prisma/client";
-import { UserParams } from "./types";
+import { UserParams, WalletAddress } from "./types";
 import { put } from "@vercel/blob";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { simulateCreateToken } from "./utils";
 
 const prisma = new PrismaClient();
 
-export const fetchUser = unstable_cache(async (wallet: `0x${string}`) => {
+export const fetchUser = unstable_cache(async (wallet: WalletAddress) => {
   if (!wallet) {
     return 
   }
@@ -33,7 +33,7 @@ export const fetchUserById = async (id: string) => {
 };
 
 
-export const checkUserExists = async (wallet: `0x${string}`) => {
+export const checkUserExists = async (wallet: WalletAddress) => {
   const userExists = !!(await prisma.user.findFirst({
     where: {
       wallet: wallet,
@@ -65,7 +65,7 @@ export const checkTokenTickerExists = async (ticker: string) => {
 
 export const launchCoin = async (
   formData: FormData,
-  address: `0x${string}`
+  address: WalletAddress
 ) => {
   const user = await fetchUser(address);
 
@@ -156,7 +156,7 @@ export const createUser = async ({
 
 export async function updateUserData(
   formData: FormData,
-  address: `0x${string}`
+  address: WalletAddress
 ) {
   const user = await fetchUser(address);
 

@@ -1,3 +1,5 @@
+export type WalletAddress = `0x${string}`;
+
 export type CreateTokenParams = {
   amount: number;
   name: string | FormDataEntryValue;
@@ -6,7 +8,7 @@ export type CreateTokenParams = {
 
 export type UserParams = {
   name?: string;
-  wallet: `0x${string}`;
+  wallet: WalletAddress;
   imageUrl?: string;
   email?: string;
 };
@@ -47,7 +49,9 @@ export type WagmiConnector = {
 }
 
 export type WagmiConnectionsValue = {
-  accounts: `0x${string}`[];
+  accounts: WalletAddress[];
   chainId: number;
   connector: WagmiConnector;
 }
+
+
