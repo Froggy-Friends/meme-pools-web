@@ -34,7 +34,8 @@ model Token {
   name         String
   createdAt    DateTime      @db.Timestamptz(6) @default(now())
   updatedAt    DateTime?     @db.Timestamptz(6) @default(now())
-  tokenAddress String        @unique 
+  tokenAddress String        @unique
+  tokenCreator String 
   leaderboard  Leaderboard[]
   user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
 }
