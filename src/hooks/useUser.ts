@@ -1,5 +1,8 @@
-import { createUser, fetchUser } from "@/lib/actions";
-import { User, WalletAddress } from "@/lib/types";
+
+import { createUser } from "@/app/profile/[wallet]/actions";
+import { fetchUser } from "@/app/profile/[wallet]/queries";
+import { User } from "@/app/profile/[wallet]/types";
+import { WalletAddress } from "@/lib/types";
 import { useCallback, useEffect, useState } from "react";
 
 export default function useUser(address: WalletAddress) {

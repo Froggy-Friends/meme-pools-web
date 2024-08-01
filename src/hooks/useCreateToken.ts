@@ -1,19 +1,49 @@
 import frogFunAbi from "@/abi/frogFun.json";
-import { CreateTokenParams } from "@/lib/types";
-import { useEthersSigner } from "@/lib/wagmi-ethers";
-import { Contract } from "ethers";
+import { CreateTokenParams, TokenCreated } from "@/app/token/[tokenAddress]/types";
+
+import { useEthersSigner } from "@/config/wagmi-ethers";
+import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
+import { toast } from "react-hot-toast";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
-  const address = process.env.CONTRACT_ADDRESS;
-  const contract = new Contract(address!, frogFunAbi.abi, signer);
+  const address = "0xc7C3785663FbE156fB7cE021aF9a722D175b5f7A";
+  const contract = new Contract(address!, frogFunAbi, signer);
 
-  const createToken = async ({ amount, name, symbol }: CreateTokenParams) => {
+  const getTokenDetails = async (
+    receipt: ContractTransactionReceipt
+  ): Promise<TokenCreated> => {
+    const event = receipt.logs.find(
+      (e) => e instanceof EventLog && e.fragment.name === "TokenCreated"
+    ) as EventLog;
+    const [creator, tokenId, reserved, tokenAddress] = event.args;
+    return {
+      creator,
+      tokenId,
+      reserved,
+      tokenAddress,
+    };
+  };
+
+  const createToken = async ({
+    reservedAmount,
+    name,
+    symbol,
+  }: CreateTokenParams) => {
     try {
-      const tx = await contract.createToken(amount, name, symbol);
-      await tx.wait();
+      const tx = await contract.createToken(reservedAmount, name, symbol);
+      const receipt = await tx.wait();
+      const { creator, tokenId, reserved, tokenAddress } =
+        await getTokenDetails(receipt);
+      return {
+        creator,
+        tokenId,
+        reserved,
+        tokenAddress,
+      };
     } catch (error) {
-      console.log("ERROR", error);
+      console.log(error);
+      toast.error("Launch token failed");
     }
   };
 

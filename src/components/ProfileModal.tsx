@@ -1,6 +1,6 @@
 "use client"
 
-import { updateUserData } from "@/lib/actions";
+
 import { useAccount, useDisconnect } from "wagmi";
 import { Address } from "@coinbase/onchainkit/identity";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@nextui-org/react";
 import FormSubmitButton from "./FormSubmitButton";
 import { toast } from "react-hot-toast";
+import { updateUserData } from "@/app/profile/[wallet]/actions";
 
 type HowItWorkdsModalProps = {
   isOpen: boolean;

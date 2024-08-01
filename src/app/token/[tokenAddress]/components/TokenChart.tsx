@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
-import { Token, User } from "@/lib/types";
+
 import Link from "next/link";
+import { Token } from "../types";
+import { User } from "@/app/profile/[wallet]/types";
 
 type TokenChartParams = {
   token: Token;

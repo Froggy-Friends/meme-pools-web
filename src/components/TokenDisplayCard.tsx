@@ -1,6 +1,6 @@
+import { fetchUserById } from "@/app/profile/[wallet]/queries";
+import { Token } from "@/app/token/[tokenAddress]/types";
 import Image from "next/image";
-import { Token } from "@/lib/types";
-import { fetchUserById } from "@/lib/actions";
 import Link from "next/link";
 
 type TokenDisplayCardProps = {

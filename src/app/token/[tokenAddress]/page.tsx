@@ -1,14 +1,16 @@
 import dynamic from "next/dynamic";
-import BondingCurveProgress from "@/components/token-details/BondingCurveProgress";
-import CommentsAndTradesContainer from "@/components/token-details/CommentsAndTradesContainer";
-import HolderDistribution from "@/components/token-details/HolderDistribution";
-import KingOfTheHillProgress from "@/components/token-details/KingOfTheHillProgress";
-import TokenInfo from "@/components/token-details/TokenInfo";
-import TokenSocials from "@/components/token-details/TokenSocials";
-import TokenSwap from "@/components/token-details/TokenSwap";
-import { fetchTokenByAddress, fetchUserById } from "@/lib/actions";
+import BondingCurveProgress from "@/app/token/[tokenAddress]/components/BondingCurveProgress";
+import CommentsAndTradesContainer from "@/app/token/[tokenAddress]/components/CommentsAndTradesContainer";
+import HolderDistribution from "@/app/token/[tokenAddress]/components/HolderDistribution";
+import KingOfTheHillProgress from "@/app/token/[tokenAddress]/components/KingOfTheHillProgress";
+import TokenInfo from "@/app/token/[tokenAddress]/components/TokenInfo";
+import TokenSocials from "@/app/token/[tokenAddress]/components/TokenSocials";
+import TokenSwap from "@/app/token/[tokenAddress]/components/TokenSwap";
+import { fetchTokenByAddress } from "./queries";
+import { fetchUserById } from "@/app/profile/[wallet]/queries";
+
 const DynamicTokenChart = dynamic(
-  () => import("../../../components/token-details/TokenChart"),
+  () => import("./components/TokenChart"),
   {
     ssr: false,
   }

@@ -3,7 +3,8 @@ import Link from "next/link";
 import ProfileAvatar from "./ProfileAvatar";
 import HeaderSocialLinks from "./HeaderSocialLinks";
 import { cookies } from "next/headers";
-import { getUserFromCookies } from "@/lib/getUserFromCookies";
+import { getUserFromCookies } from "@/app/profile/[wallet]/actions";
+
 
 
 export default async function Header() {

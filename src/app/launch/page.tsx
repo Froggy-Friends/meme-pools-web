@@ -1,4 +1,5 @@
-import LaunchCoinForm from "@/components/LaunchCoinForm";
+import LaunchCoinForm from "./components/LaunchCoinForm";
+
 
 export default function LaunchCoin() {
   return (

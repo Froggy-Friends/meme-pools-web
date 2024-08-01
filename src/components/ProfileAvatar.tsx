@@ -5,9 +5,10 @@ import { useAccount } from "wagmi";
 import ProfileModal from "./ProfileModal";
 import { useDisclosure } from "@nextui-org/react";
 import useUser from "@/hooks/useUser";
-import { User } from "@/lib/types";
+
 import ConnectButton from "./ConnectButton";
 import defaultAvatar from "../../public/Frog.fun_Default_PFP.png";
+import { User } from "@/app/profile/[wallet]/types";
 
 type ProfileAvatarProps = {
   user: User;

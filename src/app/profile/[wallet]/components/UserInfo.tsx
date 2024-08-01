@@ -1,10 +1,11 @@
 "use client";
 
-import { User } from "@/lib/types";
+
 import Image from "next/image";
-import ProfileModal from "../ProfileModal";
+import ProfileModal from "../../../../components/ProfileModal";
 import { useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
+import { User } from "../types";
 
 type UserInfoParams = {
   user: User;

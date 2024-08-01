@@ -1,7 +1,8 @@
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaTelegram, FaGlobe } from "react-icons/fa";
 import Link from "next/link";
-import { Token } from "@/lib/types";
+import { Token } from "../types";
+
 
 type TokenSocialsParams = {
   token: Token;
