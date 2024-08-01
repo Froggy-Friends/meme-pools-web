@@ -8,7 +8,7 @@ export default function LaunchCoinButton() {
   return (
     <button
       className="w-[14rem] mx-auto text-xl border-[1px] border-black rounded-lg py-2 px-3"
-      onClick={() => router.push("/launch-coin")}
+      onClick={() => router.push("/launch")}
     >
       Launch a new coin
     </button>
