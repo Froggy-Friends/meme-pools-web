@@ -1,5 +1,5 @@
 import Image from "next/image";
-import placeholderImage from "../../../public/pepe-placeholder.png";
+import placeholderImage from "../../../../../public/pepe-placeholder.png"
 
 export default function TokenComment() {
   return (
