@@ -1,21 +1,22 @@
 "use client";
 
 import useCreateToken from "@/hooks/useCreateToken";
-
 import { useAccount } from "wagmi";
 import { toast } from "react-hot-toast";
 import FormSubmitButton from "../../../components/FormSubmitButton";
 import { FaEthereum } from "react-icons/fa6";
 import { FiInfo } from "react-icons/fi";
 import { launchCoin } from "../actions";
+import { parseUnits } from "viem";
 
 export default function LaunchCoinForm() {
   const { address, isConnected } = useAccount();
   const { createToken } = useCreateToken();
 
   const handleSubmit = async (formData: FormData) => {
-    const reservedAmount = BigInt(
-      Number(formData.get("reservedAmount")) * 1e18
+    const reservedAmount = parseUnits(
+      formData.get("reservedAmount")?.toString()!,
+      18
     );
     const name = formData.get("name");
     const symbol = formData.get("ticker");
@@ -100,10 +101,8 @@ export default function LaunchCoinForm() {
 
         <div className="flex mb-1 gap-x-4">
           <div className="flex gap-x-1">
-            <label htmlFor="reservedAmount">
-            Reserved Amount
-          </label>
-          <FiInfo size={25} />
+            <label htmlFor="reservedAmount">Reserved Amount</label>
+            <FiInfo size={25} />
           </div>
 
           <div className="flex items-center mb-1 gap-x-1">
@@ -111,7 +110,6 @@ export default function LaunchCoinForm() {
             <FaEthereum size={20} />
             <p></p>
           </div>
-          
         </div>
 
         <input
