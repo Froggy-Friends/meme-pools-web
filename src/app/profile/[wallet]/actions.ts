@@ -1,13 +1,11 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { UserParams, WagmiConnectionsValue } from "./types";
+import { UserParams } from "./types";
 import { revalidateTag } from "next/cache";
 import { WalletAddress } from "@/lib/types";
 import { fetchUser } from "./queries";
 import { put } from "@vercel/blob";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
-import { User } from "@prisma/client";
 
 export const createUser = async ({
   name,
@@ -77,35 +75,3 @@ export async function updateUserData(
     return;
   }
 }
-
-export const getUserFromCookies = async (
-  cookieStore: ReadonlyRequestCookies
-) => {
-  let wagmiCookies: Storage | null = null;
-  let account = "";
-  let userAddress = "";
-  let user: User | null | undefined = null;
-  const userCookies = cookieStore.get("wagmi.store");
-
-  if (userCookies) {
-    wagmiCookies = JSON.parse(userCookies.value!);
-  }
-
-  if (wagmiCookies) {
-    account = wagmiCookies.state.connections.value
-      .flat()
-      .map((data: WagmiConnectionsValue) => {
-        return data.accounts;
-      });
-  }
-
-  if (account.length > 1) {
-    userAddress = account[1].toString();
-  }
-
-  if (userAddress) {
-    user = await fetchUser(userAddress as WalletAddress);
-  }
-
-  return user;
-};

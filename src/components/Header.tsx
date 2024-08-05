@@ -3,13 +3,11 @@ import Link from "next/link";
 import ProfileAvatar from "./ProfileAvatar";
 import HeaderSocialLinks from "./HeaderSocialLinks";
 import { cookies } from "next/headers";
-import { getUserFromCookies } from "@/app/profile/[wallet]/actions";
-
-
+import { getUserFromCookies } from "@/app/profile/[wallet]/queries";
 
 export default async function Header() {
   const cookieStore = cookies();
-  const user = await getUserFromCookies(cookieStore)
+  const user = await getUserFromCookies(cookieStore);
 
   return (
     <header className="flex justify-between items-center h-32 px-12">
