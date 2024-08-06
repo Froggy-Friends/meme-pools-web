@@ -7,13 +7,13 @@ import { fetchPaginatedTokens, fetchTokens } from "@/app/token/[tokenAddress]/qu
 type TokenDisplayContainerProps = {
   cursor: number;
   page: number;
-  filter: string;
+  tokenFilter: string;
 };
 
 export default async function TokenDisplayContainer({
   cursor,
   page,
-  filter,
+  tokenFilter,
 }: TokenDisplayContainerProps) {
   const take = 3;
 

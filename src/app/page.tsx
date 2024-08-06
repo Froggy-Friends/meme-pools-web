@@ -11,7 +11,7 @@ type HomePageProps = {
 export default function Home({ searchParams }: HomePageProps) {
   const cursor = searchParams.cursor ?? 0;
   const page = searchParams.page || 1;
-  const filter = "new"
+  const tokenFilter = "new"
 
   return (
     <main className="flex flex-col px-12">
@@ -21,7 +21,7 @@ export default function Home({ searchParams }: HomePageProps) {
 
       <TokenSearch />
 
-      <TokenDisplayContainer cursor={+cursor} page={+page} filter={filter}/>
+      <TokenDisplayContainer cursor={+cursor} page={+page} tokenFilter={tokenFilter}/>
     </main>
   );
 }
