@@ -15,8 +15,8 @@ model Leaderboard {
   cost      Int
   userId    String    @db.Uuid
   tokenId   String    @db.Uuid
-  createdAt DateTime  @db.Timestamptz(6) @default(now())
-  updatedAt DateTime? @db.Timestamptz(6) @default(now())
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @default(now()) @db.Timestamptz(6)
   token     Token     @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_fkey")
   user      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
 }
@@ -32,12 +32,13 @@ model Token {
   website      String?
   userId       String        @db.Uuid
   name         String
-  createdAt    DateTime      @db.Timestamptz(6) @default(now())
-  updatedAt    DateTime?     @db.Timestamptz(6) @default(now())
+  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime?     @default(now()) @db.Timestamptz(6)
   tokenAddress String        @unique
-  tokenCreator String 
+  tokenCreator String
   leaderboard  Leaderboard[]
   user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
+  Trades       Trades[]
 }
 
 model User {
@@ -46,8 +47,23 @@ model User {
   wallet      String        @unique
   imageUrl    String?
   email       String?
-  createdAt   DateTime      @db.Timestamptz(6) @default(now())
-  updatedat   DateTime?     @db.Timestamptz(6) @default(now())
+  createdAt   DateTime      @default(now()) @db.Timestamptz(6)
+  updatedat   DateTime?     @default(now()) @db.Timestamptz(6)
   leaderboard Leaderboard[]
   token       Token[]
+  Trades      Trades[]
+}
+
+model Trades {
+  id          String   @id(map: "trade_pkey") @default(uuid()) @db.Uuid
+  tokenId     String   @db.Uuid
+  userId      String   @db.Uuid
+  category    String
+  price       Int
+  amount      Int
+  nativeToken String
+  chain       String
+  createdAt   DateTime @default(now()) @db.Timetz(6)
+  Token       Token    @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
+  User        User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
 }
