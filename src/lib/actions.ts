@@ -1,15 +1,13 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
-import { UserParams } from "./types";
+import prisma from "@/lib/prisma";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
+import { UserParams } from "./types";
 import { simulateCreateToken } from "./utils";
 
-const prisma = new PrismaClient();
-
 export const fetchUser = async (wallet: `0x${string}`) => {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: {
       wallet: wallet,
     },
@@ -214,11 +212,11 @@ export const fetchPaginatedTokens = async (take: number, cursor: number) => {
 };
 
 export const fetchTokenByAddress = async (tokenAddress: string) => {
-  const token = await prisma.token.findUnique({
+  const token = await prisma.token.findFirst({
     where: {
-      tokenAddress: tokenAddress
+      tokenAddress: tokenAddress,
     },
-  })
+  });
 
-  return token
-}
+  return token;
+};

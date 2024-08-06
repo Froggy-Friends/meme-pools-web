@@ -1,6 +1,9 @@
 "use client";
 
+import { DEFAULT_PRIORITY_FEE, DEFAULT_SLIPPAGE_PERCENT } from "@/config/token";
 import { useState } from "react";
+import { base } from "viem/chains";
+import { useBalance } from "wagmi";
 import SlippageModal from "./SlippageModal";
 
 enum TradingTab {
@@ -9,41 +12,52 @@ enum TradingTab {
 }
 
 type TradingWidgetProps = {
-  tokenName: string;
-  ownedAmount: number;
+  tokenTicker: string;
+  tokenAddress: string;
   currPrice: number;
   ethPrice: number;
-  tokenAddress: string;
 };
 
 const PURCHASE_AMOUNTS = [1, 5, 10];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 
 export default function TokenSwap({
-  tokenName,
-  ownedAmount,
+  tokenTicker,
   currPrice,
-  ethPrice,
   tokenAddress,
+  ethPrice,
 }: TradingWidgetProps) {
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
-  const [buyToken, setBuyToken] = useState(tokenName);
+  const [buyToken, setBuyToken] = useState(tokenTicker);
   const [tokenAmount, setTokenAmount] = useState<number>(0);
-  const [slippagePercent, setSlippagePercent] = useState<number>(3);
-  const [priorityFee, setPriorityFee] = useState<number>(0.001);
+  const [slippagePercent, setSlippagePercent] = useState<number>(
+    DEFAULT_SLIPPAGE_PERCENT
+  );
+  const [priorityFee, setPriorityFee] = useState<number>(DEFAULT_PRIORITY_FEE);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
+
+  const { data: balance, isLoading: isLoadingBalance } = useBalance({
+    address: tokenAddress as `0x${string}`,
+    chainId: base.id,
+  });
 
   const switchBuyToken = () => {
     if (buyToken === "ETH") {
-      setBuyToken(tokenName);
-      setTokenAmount((tokenAmount) => ethPrice / (tokenAmount * currPrice));
+      setBuyToken(tokenTicker);
+      setTokenAmount((prevEthAmount) => (prevEthAmount * ethPrice) / currPrice);
     } else {
       setBuyToken("ETH");
-      setTokenAmount((tokenAmount) => (tokenAmount * currPrice) / ethPrice);
+      setTokenAmount(
+        (prevTokenAmount) => (prevTokenAmount * currPrice) / ethPrice
+      );
     }
   };
 
   const placeTrade = () => {};
+
+  if (isLoadingBalance) return null;
+
+  const ownedAmount = balance ? Number(balance.value) : 0;
 
   return (
     <>
@@ -83,7 +97,7 @@ export default function TokenSwap({
                 className="p-1.5 bg-neutral-900 text-neutral-400 text-xs w-max rounded-md"
                 onClick={switchBuyToken}
               >
-                Switch to {buyToken === "ETH" ? tokenName : "ETH"}
+                Switch to {buyToken === "ETH" ? tokenTicker : "ETH"}
               </button>
             )}
             <button
