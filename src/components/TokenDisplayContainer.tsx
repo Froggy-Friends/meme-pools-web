@@ -7,13 +7,15 @@ import { fetchPaginatedTokens, fetchTokens } from "@/app/token/[tokenAddress]/qu
 type TokenDisplayContainerProps = {
   cursor: number;
   page: number;
+  filter: string;
 };
 
 export default async function TokenDisplayContainer({
   cursor,
   page,
+  filter,
 }: TokenDisplayContainerProps) {
-  const take = 2;
+  const take = 3;
 
   let { tokens, totalCount } = await fetchTokens(take);
 
@@ -45,7 +47,7 @@ export default async function TokenDisplayContainer({
   return (
     <section className="flex flex-col">
       <div className="flex gap-x-6 mt-12">
-        <TokenDisplayControls />
+        <TokenDisplayControls/>
         <PaginationControls previousPath={previousPath} nextPath={nextPath} />
       </div>
 
