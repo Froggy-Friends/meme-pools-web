@@ -1,13 +1,12 @@
 import frogFunAbi from "@/abi/frogFun.json";
 import { CreateTokenParams, TokenCreated } from "@/app/token/[tokenAddress]/types";
-
 import { useEthersSigner } from "@/config/wagmi-ethers";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
 import { toast } from "react-hot-toast";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
-  const address = "0xc7C3785663FbE156fB7cE021aF9a722D175b5f7A";
+  const address = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
   const contract = new Contract(address!, frogFunAbi, signer);
 
   const getTokenDetails = async (
