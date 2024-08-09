@@ -25,9 +25,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const initialState = cookieToInitialState(config, headers().get("cookie"));
-  await Moralis.start({
-    apiKey: process.env.MORALIS_API_KEY,
-  });
+  if (!Moralis.Core.isStarted) {
+    await Moralis.start({
+      apiKey: process.env.MORALIS_API_KEY,
+    });
+  }
 
   return (
     <html lang="en">
