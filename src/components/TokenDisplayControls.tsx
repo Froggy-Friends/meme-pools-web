@@ -17,25 +17,25 @@ export default function TokenDisplayControls() {
 
       <div className="flex gap-x-2">
         <button
-          onClick={() => router.push("/new")}
+          onClick={() => router.push("/new?page=1")}
           className="p-2 border border-black rounded-lg"
         >
           New
         </button>
         <button
-          onClick={() => router.push("/trending")}
+          onClick={() => router.push("/trending?page=1")}
           className="p-2 border border-black rounded-lg"
         >
           Trending
         </button>
         <button
-          onClick={() => router.push("/topTransactions")}
+          onClick={() => router.push("/transactions?page=1")}
           className="p-2 border border-black rounded-lg"
         >
           Top Txs
         </button>
         <button
-          onClick={() => router.push("/topVolume")}
+          onClick={() => router.push("/volume?page=1")}
           className="p-2 border border-black rounded-lg"
         >
           Top Volume

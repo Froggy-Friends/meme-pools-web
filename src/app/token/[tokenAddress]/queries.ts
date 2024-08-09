@@ -1,6 +1,7 @@
-"use server"
+"use server";
 
 import prisma from "@/lib/prisma";
+import { Token } from "./types";
 
 export const checkTokenNameExists = async (name: string) => {
   const exists = !!(await prisma.token.findFirst({
@@ -22,35 +23,17 @@ export const checkTokenTickerExists = async (ticker: string) => {
   return tokenTickerExists;
 };
 
-export const fetchTokens = async (take: number) => {
-  const totalCount = await prisma.token.count();
-
-  const tokens = await prisma.token.findMany({
-    orderBy: {
-      tokenId: "desc",
-    },
-    take: take,
-  });
-
-  return {
-    tokens,
-    totalCount,
-  };
-};
-
-export const fetchPaginatedTokens = async (take: number, cursor: number) => {
-  const tokens = await prisma.token.findMany({
-    orderBy: {
-      tokenId: "desc",
-    },
-    take: take,
-    skip: 1,
-    cursor: {
-      tokenId: cursor,
-    },
-  });
+export const fetchTokens = async (tokenFilter: string, page: number): Promise<Token[]> => {
+  const response = await fetch(`https://api.frog.fun/token/${tokenFilter}?page=${page}`);
+  const tokens = await response.json();
 
   return tokens;
+};
+
+export const fetchTokenCount = async () => {
+  const tokenCount = await prisma.token.count();
+
+  return tokenCount;
 };
 
 export const fetchTokenByAddress = async (tokenAddress: string) => {
