@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
-
 import Link from "next/link";
 import { Token } from "../types";
 import { User } from "@/app/profile/[wallet]/types";

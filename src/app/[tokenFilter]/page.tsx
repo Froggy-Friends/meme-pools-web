@@ -12,7 +12,6 @@ type SortedTokenPageProps = {
 };
 
 export default function SortedTokenPage({ searchParams, params }: SortedTokenPageProps) {
-  const cursor = searchParams.cursor ?? 0;
   const page = searchParams.page || 1;
   const tokenFilter = params.tokenFilter
 
@@ -24,7 +23,7 @@ export default function SortedTokenPage({ searchParams, params }: SortedTokenPag
 
       <TokenSearch />
 
-      <TokenDisplayContainer cursor={+cursor} page={+page} tokenFilter={tokenFilter}/>
+      <TokenDisplayContainer page={+page} tokenFilter={tokenFilter}/>
     </main>
   );
 }

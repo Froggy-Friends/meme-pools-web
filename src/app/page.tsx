@@ -9,7 +9,6 @@ type HomePageProps = {
 };
 
 export default function Home({ searchParams }: HomePageProps) {
-  const cursor = searchParams.cursor ?? 0;
   const page = searchParams.page || 1;
   const tokenFilter = "new"
 
@@ -21,7 +20,7 @@ export default function Home({ searchParams }: HomePageProps) {
 
       <TokenSearch />
 
-      <TokenDisplayContainer cursor={+cursor} page={+page} tokenFilter={tokenFilter}/>
+      <TokenDisplayContainer page={+page} tokenFilter={tokenFilter}/>
     </main>
   );
 }

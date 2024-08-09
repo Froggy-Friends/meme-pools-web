@@ -1,44 +1,26 @@
-
 import TokenDisplayCard from "./TokenDisplayCard";
 import PaginationControls from "./PaginationControls";
 import TokenDisplayControls from "./TokenDisplayControls";
-import { fetchPaginatedTokens, fetchTokens } from "@/app/token/[tokenAddress]/queries";
+import { fetchTokenCount, fetchTokens } from "@/app/token/[tokenAddress]/queries";
 
 type TokenDisplayContainerProps = {
-  cursor: number;
   page: number;
   tokenFilter: string;
 };
 
 export default async function TokenDisplayContainer({
-  cursor,
   page,
   tokenFilter,
 }: TokenDisplayContainerProps) {
-  const take = 3;
-
-  let { tokens, totalCount } = await fetchTokens(take);
-
-  if (cursor && cursor !== totalCount + 1) {
-    tokens = await fetchPaginatedTokens(take, cursor);
-  }
-
-  let previousPathCursor: number | null = null;
-  let nextPathCursor: number | null = null;
-
-  if (tokens.length > 1) {
-    previousPathCursor = Number(tokens[0].tokenId) + take + 1;
-    nextPathCursor = tokens[take - 1].tokenId;
-  }
+  const tokenCount = await fetchTokenCount();
+  const tokens = await fetchTokens(tokenFilter, page);
 
   const getPreviousPath = () => {
-    return page > 1 ? `?page=${page - 1}&cursor=${previousPathCursor}` : "";
+    return page > 1 ? `/${tokenFilter}?page=${page - 1}` : "";
   };
 
   const getNextPath = () => {
-    return totalCount > take * page
-      ? `?page=${page + 1}&cursor=${nextPathCursor}`
-      : "";
+    return tokenCount > 100 * page ? `/${tokenFilter}?page=${page + 1}` : "";
   };
 
   const previousPath = getPreviousPath();
@@ -47,7 +29,7 @@ export default async function TokenDisplayContainer({
   return (
     <section className="flex flex-col">
       <div className="flex gap-x-6 mt-12">
-        <TokenDisplayControls/>
+        <TokenDisplayControls />
         <PaginationControls previousPath={previousPath} nextPath={nextPath} />
       </div>
 
