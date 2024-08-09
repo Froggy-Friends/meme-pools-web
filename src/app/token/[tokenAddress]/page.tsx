@@ -1,16 +1,17 @@
 import dynamic from "next/dynamic";
-import BondingCurveProgress from "@/components/token-details/BondingCurveProgress";
-import CommentsAndTradesContainer from "@/components/token-details/CommentsAndTradesContainer";
-import HolderDistribution from "@/components/token-details/HolderDistribution";
-import KingOfTheHillProgress from "@/components/token-details/KingOfTheHillProgress";
-import TokenInfo from "@/components/token-details/TokenInfo";
-import TokenSocials from "@/components/token-details/TokenSocials";
-import TokenSwap from "@/components/token-details/TokenSwap";
+import BondingCurveProgress from "./components/BondingCurveProgress";
+import CommentsAndTradesContainer from "./components/CommentsAndTradesContainer";
+import HolderDistribution from "./components/HolderDistribution";
+import KingOfTheHillProgress from "./components/KingOfTheHillProgress";
+import TokenInfo from "./components/TokenInfo";
+import TokenSocials from "./components/TokenSocials";
+import TokenSwap from "./components/TokenSwap";
 import getEthPrice from "@/lib/getEthPrice";
 import { BASE_ETH_ADDR } from "@/config/token";
 import { EvmChain } from "@/lib/getTokenPrice";
-import { fetchTokenByAddress, fetchUserById } from "@/lib/actions";
 import { redirect } from "next/navigation";
+import { fetchTokenByAddress } from "./queries";
+import { fetchUserById } from "@/app/profile/[wallet]/queries";
 const DynamicTokenChart = dynamic(
   () => import("./components/TokenChart"),
   {
@@ -19,12 +20,15 @@ const DynamicTokenChart = dynamic(
 );
 
 type TokenDetailsPageProps = {
-  tokenAddress: string;
+  params: {
+    tokenAddress: string;
+  }
 };
 
 export default async function TokenDetailsPage({
-  tokenAddress,
+  params,
 }: TokenDetailsPageProps) {
+  const tokenAddress = params.tokenAddress
   const token = await fetchTokenByAddress(tokenAddress);
 
   if (!token) {
