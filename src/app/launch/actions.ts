@@ -1,6 +1,6 @@
 "use server"
 
-import { WalletAddress } from "@/lib/types";
+import { Address } from "@/lib/types";
 import { fetchUser } from "../profile/[wallet]/queries";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
@@ -8,7 +8,7 @@ import prisma from "@/lib/prisma";
 
 export const launchCoin = async (
     formData: FormData,
-    address: WalletAddress,
+    address: Address,
     tokenId: number,
     tokenAddress: string,
     tokenCreator: string

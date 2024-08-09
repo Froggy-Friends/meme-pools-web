@@ -1,11 +1,11 @@
 import UserInfo from "@/app/profile/[wallet]/components/UserInfo";
 
-import { WalletAddress } from "@/lib/types";
+import { Address } from "@/lib/types";
 import { fetchUser } from "./queries";
 
 type ProfilePageProps = {
   params: {
-    wallet: WalletAddress;
+    wallet: Address;
   };
 };
 

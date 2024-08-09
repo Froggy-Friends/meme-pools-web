@@ -1,13 +1,13 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { WalletAddress } from "@/lib/types";
+import { Address } from "@/lib/types";
 import { unstable_cache } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { User, WagmiConnectionsValue } from "./types";
 
 export const fetchUser = unstable_cache(
-  async (wallet: WalletAddress) => {
+  async (wallet: Address) => {
     if (!wallet) {
       return;
     }
@@ -34,7 +34,7 @@ export const fetchUserById = async (id: string) => {
   return user;
 };
 
-export const checkUserExists = async (wallet: WalletAddress) => {
+export const checkUserExists = async (wallet: Address) => {
   const userExists = !!(await prisma.user.findFirst({
     where: {
       wallet: wallet,
@@ -70,7 +70,7 @@ export const getUserFromCookies = async (
   }
 
   if (userAddress) {
-    user = await fetchUser(userAddress as WalletAddress);
+    user = await fetchUser(userAddress as Address);
   }
 
   return user;

@@ -1,8 +1,8 @@
-import { WalletAddress } from "@/lib/types";
+import { Address } from "@/lib/types";
 
 export type UserParams = {
   name?: string;
-  wallet: WalletAddress;
+  wallet: Address;
   imageUrl?: string;
   email?: string;
 };
@@ -25,7 +25,7 @@ export type WagmiConnector = {
 };
 
 export type WagmiConnectionsValue = {
-  accounts: WalletAddress[];
+  accounts: Address[];
   chainId: number;
   connector: WagmiConnector;
 };

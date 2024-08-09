@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma";
 import { UserParams } from "./types";
 import { revalidateTag } from "next/cache";
-import { WalletAddress } from "@/lib/types";
+import { Address } from "@/lib/types";
 import { fetchUser } from "./queries";
 import { put } from "@vercel/blob";
 
@@ -26,7 +26,7 @@ export const createUser = async ({
 
   await prisma.user.create({
     data: {
-      name: name,
+      name: name!,
       wallet: wallet,
       imageUrl: imageUrl,
       email: email,
@@ -38,7 +38,7 @@ export const createUser = async ({
 
 export async function updateUserData(
   formData: FormData,
-  address: WalletAddress
+  address: Address
 ) {
   const user = await fetchUser(address);
 
