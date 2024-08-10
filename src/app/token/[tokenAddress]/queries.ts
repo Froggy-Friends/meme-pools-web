@@ -6,7 +6,7 @@ import { Token } from "./types";
 export const checkTokenNameExists = async (name: string) => {
   const exists = !!(await prisma.token.findFirst({
     where: {
-      name: name as string,
+      name: name,
     },
   }));
 
@@ -16,15 +16,20 @@ export const checkTokenNameExists = async (name: string) => {
 export const checkTokenTickerExists = async (ticker: string) => {
   const tokenTickerExists = !!(await prisma.token.findFirst({
     where: {
-      ticker: ticker as string,
+      ticker: ticker,
     },
   }));
 
   return tokenTickerExists;
 };
 
-export const fetchTokens = async (tokenFilter: string, page: number): Promise<Token[]> => {
-  const response = await fetch(`https://api.frog.fun/token/${tokenFilter}?page=${page}`);
+export const fetchTokens = async (
+  tokenFilter: string,
+  page: number
+): Promise<Token[]> => {
+  const response = await fetch(
+    `${process.env.FROG_FUN_API_URL}/token/${tokenFilter}?page=${page}`
+  );
   const tokens = await response.json();
 
   return tokens;

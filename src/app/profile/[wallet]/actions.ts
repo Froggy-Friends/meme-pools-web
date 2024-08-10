@@ -6,6 +6,7 @@ import { revalidateTag } from "next/cache";
 import { Address } from "@/lib/types";
 import { fetchUser } from "./queries";
 import { put } from "@vercel/blob";
+import { DEFAULT_PROFILE_AVATAR_URL, FETCH_USER_CACHE_TAG } from "./constants";
 
 export const createUser = async ({
   name,
@@ -21,8 +22,7 @@ export const createUser = async ({
     name = wallet.toString().substring(0, 5);
   }
 
-  imageUrl =
-    "https://qojtn2d8pd7yjrch.public.blob.vercel-storage.com/Frog.fun_Default_PFP-nKVI2J7DIDPs8vFvCTnkVxG4aT6asQ.png";
+  imageUrl = DEFAULT_PROFILE_AVATAR_URL;
 
   await prisma.user.create({
     data: {
@@ -33,13 +33,10 @@ export const createUser = async ({
     },
   });
 
-  revalidateTag("user");
+  revalidateTag(FETCH_USER_CACHE_TAG);
 };
 
-export async function updateUserData(
-  formData: FormData,
-  address: Address
-) {
+export async function updateUserData(formData: FormData, address: Address) {
   const user = await fetchUser(address);
 
   const name = formData.get("name") as string;
@@ -70,7 +67,7 @@ export async function updateUserData(
       },
     });
 
-    revalidateTag("user");
+    revalidateTag(FETCH_USER_CACHE_TAG);
   } else {
     return;
   }
