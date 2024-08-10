@@ -1,50 +1,35 @@
-import { fetchPaginatedTokens, fetchTokens } from "@/lib/actions";
+"use client";
+
+import { useTokens } from "@/hooks/useTokens";
+import { TokenFilter } from "@/lib/fetchTokens";
+import { useState } from "react";
 import TokenDisplayCard from "./TokenDisplayCard";
-import PaginationControls from "./PaginationControls";
 import TokenDisplayControls from "./TokenDisplayControls";
+import PaginationControls from "./PaginationControls";
+import useQueryParamState from "@/hooks/useQueryParamState";
 
-type TokenDisplayContainerProps = {
-  cursor: number;
-  page: number;
-};
-
-export default async function TokenDisplayContainer({
-  cursor,
-  page,
-}: TokenDisplayContainerProps) {
-  const take = 2;
-
-  let { tokens, totalCount } = await fetchTokens(take);
-
-  if (cursor && cursor !== totalCount + 1) {
-    tokens = await fetchPaginatedTokens(take, cursor);
-  }
-
-  const previousPathCursor = Number(tokens[0].tokenId) + take + 1;
-  const nextPathCursor = tokens[take - 1].tokenId;
-
-  const getPreviousPath = () => {
-    return page > 1 ? `?page=${page - 1}&cursor=${previousPathCursor}` : "";
-  };
-
-  const getNextPath = () => {
-    return totalCount > take * page
-      ? `?page=${page + 1}&cursor=${nextPathCursor}`
-      : "";
-  };
-
-  const previousPath = getPreviousPath();
-  const nextPath = getNextPath();
+export default function TokenDisplayContainer() {
+  const [filter, setFilter] = useQueryParamState<TokenFilter>(
+    "filterBy",
+    "new"
+  );
+  const [page, setPage] = useQueryParamState<number>("page", 1);
+  const { tokens, isLoadingTokens } = useTokens(filter, page);
+  if (isLoadingTokens) return <div>Loading...</div>;
 
   return (
     <section className="flex flex-col">
       <div className="flex gap-x-6 mt-12">
-        <TokenDisplayControls />
-        <PaginationControls previousPath={previousPath} nextPath={nextPath} />
+        <TokenDisplayControls filter={filter} onFilterChange={setFilter} />
+        <PaginationControls
+          back={() => setPage(page - 1)}
+          next={() => setPage(page + 1)}
+          page={page}
+        />
       </div>
 
       <div className="flex flex-wrap justify-between w-full mt-12">
-        {tokens!.map((token) => {
+        {tokens?.map((token) => {
           return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </div>

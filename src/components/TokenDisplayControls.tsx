@@ -1,7 +1,16 @@
+import { TokenFilter } from "@/lib/fetchTokens";
 import AnimationToggle from "./AnimationToggle";
 import NSFWToggle from "./NSFWToggle";
 
-export default function TokenDisplayControls() {
+type TokenDisplayControlsProps = {
+  filter: TokenFilter;
+  onFilterChange: (filter: TokenFilter) => void;
+};
+
+export default function TokenDisplayControls({
+  filter,
+  onFilterChange,
+}: TokenDisplayControlsProps) {
   return (
     <section>
       <div className="flex gap-x-3 pb-4">
@@ -15,13 +24,12 @@ export default function TokenDisplayControls() {
           id="sort-tokens"
           name="sort-tokens"
           className="border-[1px] border-black rounded-lg p-2"
+          value={filter}
+          onChange={(e) => onFilterChange(e.target.value as TokenFilter)}
         >
-          <option value="bump-order">sort: bump order</option>
-          <option value="last-reply">sort: last reply</option>
-          <option value="reply-count">sort: reply count</option>
-          <option value="market-cap">sort: market cap</option>
-          <option value="creation-time">sort: creation time</option>
-          <option value="currently-live">sort: currently live</option>
+          <option value="new">sort: newest</option>
+          <option value="trending">sort: trending</option>
+          <option value="volume">sort: volume</option>
         </select>
 
         <select

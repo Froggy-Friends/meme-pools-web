@@ -1,17 +1,13 @@
+"use client";
 import Image from "next/image";
 import { Token } from "@/lib/types";
-import { fetchUserById } from "@/lib/actions";
 import Link from "next/link";
 
 type TokenDisplayCardProps = {
   token: Token;
 };
 
-export default async function TokenDisplayCard({
-  token,
-}: TokenDisplayCardProps) {
-  const tokenCreator = await fetchUserById(token.userId);
-
+export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
   return (
     <Link
       href={`/token/${token.tokenAddress}`}
@@ -20,7 +16,7 @@ export default async function TokenDisplayCard({
       <Image src={token.image} alt="token-image" height={100} width={100} />
 
       <div className="flex flex-col">
-        {tokenCreator && (
+        {/* {tokenCreator && (
           <div className="flex gap-x-2">
             <Image
               src={tokenCreator.imageUrl!}
@@ -31,7 +27,7 @@ export default async function TokenDisplayCard({
             />
             <p>Created by {tokenCreator.name}</p>
           </div>
-        )}
+        )} */}
 
         <p>market cap...</p>
         <p>replies...</p>
