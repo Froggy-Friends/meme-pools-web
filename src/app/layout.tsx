@@ -35,7 +35,6 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${inter.className} overflow-y-scroll`}>
         <NextUIProvider>
-          <span>test</span>
           <Web3ModalProvider initialState={initialState}>
             <Header />
             <Toaster position="bottom-center" />
