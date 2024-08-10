@@ -16,11 +16,11 @@ export default async function TokenDisplayContainer({
   const tokens = await fetchTokens(tokenFilter, page);
 
   const getPreviousPath = () => {
-    return page > 1 ? `/${tokenFilter}?page=${page - 1}` : "";
+    return page > 1 ? `/?sortBy=${tokenFilter}&page=${page - 1}` : "";
   };
 
   const getNextPath = () => {
-    return tokenCount > 100 * page ? `/${tokenFilter}?page=${page + 1}` : "";
+    return tokenCount > 100 * page ? `/?sortBy=${tokenFilter}&page=${page + 1}` : "";
   };
 
   const previousPath = getPreviousPath();

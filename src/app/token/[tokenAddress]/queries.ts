@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Token } from "./types";
+import { TokenWithCreator } from "@/lib/types";
 
 export const checkTokenNameExists = async (name: string) => {
   const exists = !!(await prisma.token.findFirst({
@@ -26,7 +26,7 @@ export const checkTokenTickerExists = async (ticker: string) => {
 export const fetchTokens = async (
   tokenFilter: string,
   page: number
-): Promise<Token[]> => {
+): Promise<TokenWithCreator[]> => {
   const response = await fetch(
     `${process.env.FROG_FUN_API_URL}/token/${tokenFilter}?page=${page}`
   );

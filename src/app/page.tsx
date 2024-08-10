@@ -10,7 +10,7 @@ type HomePageProps = {
 
 export default function Home({ searchParams }: HomePageProps) {
   const page = searchParams.page || 1;
-  const tokenFilter = "new"
+  const tokenFilter = searchParams.sortBy as string || "new"
 
   return (
     <main className="flex flex-col px-12">
