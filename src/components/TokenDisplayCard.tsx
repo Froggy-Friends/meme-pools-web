@@ -1,16 +1,14 @@
-import { fetchUserById } from "@/app/profile/[wallet]/queries";
-import { Token } from "@/app/token/[tokenAddress]/types";
+import { TokenWithCreator } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 
 type TokenDisplayCardProps = {
-  token: Token;
+  token: TokenWithCreator;
 };
 
 export default async function TokenDisplayCard({
   token,
 }: TokenDisplayCardProps) {
-  const tokenCreator = await fetchUserById(token.userId);
 
   return (
     <Link
@@ -20,16 +18,16 @@ export default async function TokenDisplayCard({
       <Image src={token.image} alt="token-image" height={100} width={100} />
 
       <div className="flex flex-col">
-        {tokenCreator && (
+        {token.creator && (
           <div className="flex gap-x-2">
             <Image
-              src={tokenCreator.imageUrl!}
+              src={token.creator.imageUrl!}
               alt="creator avatar"
               height={20}
               width={20}
               className="rounded-md"
             />
-            <p>Created by {tokenCreator.name}</p>
+            <p>Created by {token.creator.name}</p>
           </div>
         )}
 
