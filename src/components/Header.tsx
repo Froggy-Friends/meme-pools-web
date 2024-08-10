@@ -1,14 +1,13 @@
-"use client";
-
 import Logo from "./Logo";
-import ConnectButton from "./ConnectButton";
 import Link from "next/link";
 import ProfileAvatar from "./ProfileAvatar";
 import HeaderSocialLinks from "./HeaderSocialLinks";
-import { useAccount } from "wagmi";
+import { cookies } from "next/headers";
+import { getUserFromCookies } from "@/app/profile/[wallet]/queries";
 
-export default function Header() {
-  const { isConnected } = useAccount();
+export default async function Header() {
+  const cookieStore = cookies();
+  const user = await getUserFromCookies(cookieStore);
 
   return (
     <header className="flex justify-between items-center h-32 px-12">
@@ -19,7 +18,7 @@ export default function Header() {
         <HeaderSocialLinks />
       </div>
 
-      {!isConnected ? <ConnectButton /> : <ProfileAvatar />}
+      <ProfileAvatar user={user!} />
     </header>
   );
 }

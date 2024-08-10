@@ -1,7 +1,12 @@
+"use client";
+
 import AnimationToggle from "./AnimationToggle";
 import NSFWToggle from "./NSFWToggle";
+import { useRouter } from "next/navigation";
 
 export default function TokenDisplayControls() {
+  const router = useRouter();
+
   return (
     <section>
       <div className="flex gap-x-3 pb-4">
@@ -11,28 +16,30 @@ export default function TokenDisplayControls() {
       </div>
 
       <div className="flex gap-x-2">
-        <select
-          id="sort-tokens"
-          name="sort-tokens"
-          className="border-[1px] border-black rounded-lg p-2"
+        <button
+          onClick={() => router.push("/new?page=1")}
+          className="p-2 border border-black rounded-lg"
         >
-          <option value="bump-order">sort: bump order</option>
-          <option value="last-reply">sort: last reply</option>
-          <option value="reply-count">sort: reply count</option>
-          <option value="market-cap">sort: market cap</option>
-          <option value="creation-time">sort: creation time</option>
-          <option value="currently-live">sort: currently live</option>
-        </select>
-
-        <select
-          id="sort-token-order"
-          name="sort-token-order"
-          className="border-[1px] border-black rounded-lg p-2"
+          New
+        </button>
+        <button
+          onClick={() => router.push("/trending?page=1")}
+          className="p-2 border border-black rounded-lg"
         >
-          <option value="descending">order: desc</option>
-          <option value="ascending">order: asc</option>
-        </select>
-
+          Trending
+        </button>
+        <button
+          onClick={() => router.push("/transactions?page=1")}
+          className="p-2 border border-black rounded-lg"
+        >
+          Top Txs
+        </button>
+        <button
+          onClick={() => router.push("/volume?page=1")}
+          className="p-2 border border-black rounded-lg"
+        >
+          Top Volume
+        </button>
         <div className="flex flex-col">
           <AnimationToggle />
           <NSFWToggle />

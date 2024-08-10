@@ -1,36 +1,26 @@
-import { fetchPaginatedTokens, fetchTokens } from "@/lib/actions";
 import TokenDisplayCard from "./TokenDisplayCard";
 import PaginationControls from "./PaginationControls";
 import TokenDisplayControls from "./TokenDisplayControls";
+import { fetchTokenCount, fetchTokens } from "@/app/token/[tokenAddress]/queries";
 
 type TokenDisplayContainerProps = {
-  cursor: number;
   page: number;
+  tokenFilter: string;
 };
 
 export default async function TokenDisplayContainer({
-  cursor,
   page,
+  tokenFilter,
 }: TokenDisplayContainerProps) {
-  const take = 2;
-
-  let { tokens, totalCount } = await fetchTokens(take);
-
-  if (cursor && cursor !== totalCount + 1) {
-    tokens = await fetchPaginatedTokens(take, cursor);
-  }
-
-  const previousPathCursor = Number(tokens[0].tokenId) + take + 1;
-  const nextPathCursor = tokens[take - 1].tokenId;
+  const tokenCount = await fetchTokenCount();
+  const tokens = await fetchTokens(tokenFilter, page);
 
   const getPreviousPath = () => {
-    return page > 1 ? `?page=${page - 1}&cursor=${previousPathCursor}` : "";
+    return page > 1 ? `/${tokenFilter}?page=${page - 1}` : "";
   };
 
   const getNextPath = () => {
-    return totalCount > take * page
-      ? `?page=${page + 1}&cursor=${nextPathCursor}`
-      : "";
+    return tokenCount > 100 * page ? `/${tokenFilter}?page=${page + 1}` : "";
   };
 
   const previousPath = getPreviousPath();

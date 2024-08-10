@@ -4,13 +4,16 @@ import TokenDisplayContainer from "@/components/TokenDisplayContainer";
 import TokenSearch from "@/components/TokenSearch";
 import { SearchParams } from "@/lib/types";
 
-type HomePageProps = {
+type SortedTokenPageProps = {
   searchParams: SearchParams;
+  params: {
+    tokenFilter: string;
+  }
 };
 
-export default function Home({ searchParams }: HomePageProps) {
+export default function SortedTokenPage({ searchParams, params }: SortedTokenPageProps) {
   const page = searchParams.page || 1;
-  const tokenFilter = "new"
+  const tokenFilter = params.tokenFilter
 
   return (
     <main className="flex flex-col px-12">

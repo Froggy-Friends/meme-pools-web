@@ -1,35 +1,34 @@
-import { checkUserExists, createUser, fetchUser } from "@/lib/actions";
-import { User } from "@/lib/types";
+
+import { createUser } from "@/app/profile/[wallet]/actions";
+import { fetchUser } from "@/app/profile/[wallet]/queries";
+import { User } from "@/app/profile/[wallet]/types";
+import { Address } from "@/lib/types";
 import { useCallback, useEffect, useState } from "react";
 
-export default function useUser(address: `0x${string}`) {
-  const [user, setUser] = useState<User | null>();
+export default function useUser(address: Address) {
+  const [currentUser, setCurrentUser] = useState<User | null>();
 
-  const fetchCurrentUser = useCallback(async () => {
-    const currentUser = await fetchUser(address as `0x${string}`);
-    setUser(currentUser);
-  }, [address]);
-
-  const checkAndCreateUser = async () => {
-    const userExists = await checkUserExists(address as `0x${string}`);
-
-    if (userExists) {
-      const user = await fetchUser(address as `0x${string}`);
-      console.log('user', user)
-      return user;
-    } else if (!userExists) {
-      await createUser({
-        wallet: address as `0x${string}`,
-      });
-
-      const user = await fetchUser(address as `0x${string}`);
-      return user;
+  const checkAndCreateUser = useCallback(async (address: Address) => {
+    if (!address) {
+      return 
     }
-  };
+
+    const user = await fetchUser(address as Address);
+   
+    if (user) {
+      setCurrentUser(user)
+    } else if (!user) {
+      await createUser({
+        wallet: address as Address,
+      });
+      const user = await fetchUser(address as Address);
+      setCurrentUser(user)
+    }
+  }, []);
 
   useEffect(() => {
-    fetchCurrentUser();
-  }, [fetchCurrentUser]);
+    checkAndCreateUser(address);
+  }, [checkAndCreateUser, address]);
 
-  return { user, checkAndCreateUser };
+  return { currentUser };
 }

@@ -1,22 +1,45 @@
 "use client";
 
 import useCreateToken from "@/hooks/useCreateToken";
-import { launchCoin } from "@/lib/actions";
 import { useAccount } from "wagmi";
 import { toast } from "react-hot-toast";
-import FormSubmitButton from "./FormSubmitButton";
+import FormSubmitButton from "../../../components/FormSubmitButton";
+import { FaEthereum } from "react-icons/fa6";
+import { FiInfo } from "react-icons/fi";
+import { launchCoin } from "../actions";
+import { parseUnits } from "viem";
 
 export default function LaunchCoinForm() {
   const { address, isConnected } = useAccount();
+  const { createToken } = useCreateToken();
 
   const handleSubmit = async (formData: FormData) => {
+    const reservedAmount = parseUnits(
+      formData.get("reservedAmount")?.toString()!,
+      18
+    );
+    const name = formData.get("name");
+    const symbol = formData.get("ticker");
+
     try {
       if (!address || !isConnected) {
         throw new Error("Wallet not connected");
       }
-  
-      const errorMessage = await launchCoin(formData, address!);
-  
+
+      const tokenDetails = await createToken({
+        reservedAmount: reservedAmount,
+        name: name!,
+        symbol: symbol!,
+      });
+
+      const errorMessage = await launchCoin(
+        formData,
+        address!,
+        Number(tokenDetails?.tokenId!),
+        tokenDetails?.tokenAddress!,
+        tokenDetails?.creator!
+      );
+
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
@@ -25,16 +48,13 @@ export default function LaunchCoinForm() {
     } catch (error) {
       toast.error((error as Error).message);
     }
-  }
+  };
 
   return (
     <section className="w-[400px] mx-auto">
       <h1 className="mx-auto text-2xl mb-6">Launch a New Coin</h1>
 
-      <form
-        action={handleSubmit}
-        className="flex flex-col"
-      >
+      <form action={handleSubmit} className="flex flex-col">
         <label htmlFor="name" className="mb-1">
           Name
         </label>
@@ -63,7 +83,7 @@ export default function LaunchCoinForm() {
         <textarea
           id="description"
           name="description"
-          className="ring-1 ring-black p-2 rounded-md mb-2 h-32"
+          className="ring-1 ring-black p-2 rounded-md mb-2 h-24"
           required
         />
 
@@ -75,6 +95,27 @@ export default function LaunchCoinForm() {
           name="image"
           type="file"
           accept="image/*"
+          className="ring-1 ring-black p-2 rounded-md mb-2"
+          required
+        />
+
+        <div className="flex mb-1 gap-x-4">
+          <div className="flex gap-x-1">
+            <label htmlFor="reservedAmount">Reserved Amount</label>
+            <FiInfo size={25} />
+          </div>
+
+          <div className="flex items-center mb-1 gap-x-1">
+            <p>Total cost</p>
+            <FaEthereum size={20} />
+            <p></p>
+          </div>
+        </div>
+
+        <input
+          id="reservedAmount"
+          name="reservedAmount"
+          type="number"
           className="ring-1 ring-black p-2 rounded-md mb-2"
           required
         />

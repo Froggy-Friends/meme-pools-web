@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
-import { Token, User } from "@/lib/types";
+import Link from "next/link";
+import { Token } from "../types";
+import { User } from "@/app/profile/[wallet]/types";
 
 type TokenChartParams = {
   token: Token;
@@ -29,7 +31,7 @@ export default function TokenChart({ token, creator }: TokenChartParams) {
             width={20}
           />
           <p>
-            <a>{creator.name}</a>
+            <Link href={`/profile/${creator.wallet}`} className="hover:underline">{creator.name}</Link>
           </p>
         </div>
       </div>

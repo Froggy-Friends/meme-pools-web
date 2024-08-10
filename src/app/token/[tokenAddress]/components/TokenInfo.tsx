@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Token } from "@/lib/types";
+import { Token } from "../types";
+
 
 type TokenInfoParams = {
   token: Token;
