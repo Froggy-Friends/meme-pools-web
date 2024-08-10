@@ -8,10 +8,14 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import fetchTokens from "@/lib/fetchTokens";
+import fetchTokens, { TokenFilter } from "@/lib/fetchTokens";
 
 type HomePageProps = {
-  searchParams: SearchParams;
+  searchParams: {
+    page: number;
+    filterBy: TokenFilter;
+    cursor: number;
+  };
 };
 
 export default async function Home({ searchParams }: HomePageProps) {
@@ -21,8 +25,8 @@ export default async function Home({ searchParams }: HomePageProps) {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["tokens", "new", 1],
-    queryFn: () => fetchTokens("new", page),
+    queryKey: ["tokens", searchParams.filterBy, 1],
+    queryFn: () => fetchTokens(searchParams.filterBy, page),
   });
 
   return (
