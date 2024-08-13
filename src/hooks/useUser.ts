@@ -1,7 +1,6 @@
-
-import { createUser } from "@/app/profile/[wallet]/actions";
-import { fetchUser } from "@/app/profile/[wallet]/queries";
-import { User } from "@/app/profile/[wallet]/types";
+import { createUser } from "@/app/(main)/profile/[wallet]/actions";
+import { fetchUser } from "@/app/(main)/profile/[wallet]/queries";
+import { User } from "@/app/(main)/profile/[wallet]/types";
 import { Address } from "@/lib/types";
 import { useCallback, useEffect, useState } from "react";
 
@@ -10,19 +9,19 @@ export default function useUser(address: Address) {
 
   const checkAndCreateUser = useCallback(async (address: Address) => {
     if (!address) {
-      return 
+      return;
     }
 
     const user = await fetchUser(address as Address);
-   
+
     if (user) {
-      setCurrentUser(user)
+      setCurrentUser(user);
     } else if (!user) {
       await createUser({
         wallet: address as Address,
       });
       const user = await fetchUser(address as Address);
-      setCurrentUser(user)
+      setCurrentUser(user);
     }
   }, []);
 

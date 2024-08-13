@@ -8,7 +8,7 @@ import useUser from "@/hooks/useUser";
 
 import ConnectButton from "./ConnectButton";
 import defaultAvatar from "../../public/Frog.fun_Default_PFP.png";
-import { User } from "@/app/profile/[wallet]/types";
+import { User } from "@/app/(main)/profile/[wallet]/types";
 
 type ProfileAvatarProps = {
   user: User;

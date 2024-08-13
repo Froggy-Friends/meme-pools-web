@@ -15,6 +15,9 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        "dark-green": "#003018",
+      },
       keyframes: {
         fadeInSlideUp: {
           "0%": { transform: "translateY(20%)", opacity: "0" },
@@ -22,7 +25,7 @@ const config: Config = {
         },
       },
       animation: {
-        fadeInSlideUp: "fadeInSlideUp 0.7s"
+        fadeInSlideUp: "fadeInSlideUp 0.7s",
       },
     },
   },

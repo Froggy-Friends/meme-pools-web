@@ -11,24 +11,21 @@ import { BASE_ETH_ADDR } from "@/config/token";
 import { EvmChain } from "@/lib/getTokenPrice";
 import { redirect } from "next/navigation";
 import { fetchTokenByAddress } from "./queries";
-import { fetchUserById } from "@/app/profile/[wallet]/queries";
-const DynamicTokenChart = dynamic(
-  () => import("./components/TokenChart"),
-  {
-    ssr: false,
-  }
-);
+import { fetchUserById } from "@/app/(main)/profile/[wallet]/queries";
+const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
+  ssr: false,
+});
 
 type TokenDetailsPageProps = {
   params: {
     tokenAddress: string;
-  }
+  };
 };
 
 export default async function TokenDetailsPage({
   params,
 }: TokenDetailsPageProps) {
-  const tokenAddress = params.tokenAddress
+  const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
   if (!token) {

@@ -1,5 +1,8 @@
 import frogFunAbi from "@/abi/frogFun.json";
-import { CreateTokenParams, TokenCreated } from "@/app/token/[tokenAddress]/types";
+import {
+  CreateTokenParams,
+  TokenCreated,
+} from "@/app/(main)/token/[tokenAddress]/types";
 import { useEthersSigner } from "@/config/wagmi-ethers";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
 import { toast } from "react-hot-toast";

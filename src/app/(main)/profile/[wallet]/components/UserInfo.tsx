@@ -1,8 +1,7 @@
 "use client";
 
-
 import Image from "next/image";
-import ProfileModal from "../../../../components/ProfileModal";
+import ProfileModal from "../../../../../components/ProfileModal";
 import { useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import { User } from "../types";

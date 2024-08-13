@@ -1,15 +1,13 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { cookieToInitialState } from "wagmi";
-import { headers } from "next/headers";
 import { config } from "@/config";
 import Web3ModalProvider from "@/context";
 import { NextUIProvider } from "@nextui-org/react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Toaster } from "react-hot-toast";
 import Moralis from "moralis";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { headers } from "next/headers";
+import { Toaster } from "react-hot-toast";
+import { cookieToInitialState } from "wagmi";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,10 +34,8 @@ export default async function RootLayout({
       <body className={`${inter.className} overflow-y-scroll`}>
         <NextUIProvider>
           <Web3ModalProvider initialState={initialState}>
-            <Header />
             <Toaster position="bottom-center" />
             {children}
-            <Footer />
           </Web3ModalProvider>
         </NextUIProvider>
       </body>

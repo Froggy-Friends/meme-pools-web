@@ -3,7 +3,7 @@ import Link from "next/link";
 import ProfileAvatar from "./ProfileAvatar";
 import HeaderSocialLinks from "./HeaderSocialLinks";
 import { cookies } from "next/headers";
-import { getUserFromCookies } from "@/app/profile/[wallet]/queries";
+import { getUserFromCookies } from "@/app/(main)/profile/[wallet]/queries";
 
 export default async function Header() {
   const cookieStore = cookies();

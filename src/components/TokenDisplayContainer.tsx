@@ -1,7 +1,10 @@
 import TokenDisplayCard from "./TokenDisplayCard";
 import PaginationControls from "./PaginationControls";
 import TokenDisplayControls from "./TokenDisplayControls";
-import { fetchTokenCount, fetchTokens } from "@/app/token/[tokenAddress]/queries";
+import {
+  fetchTokenCount,
+  fetchTokens,
+} from "@/app/(main)/token/[tokenAddress]/queries";
 
 type TokenDisplayContainerProps = {
   page: number;
@@ -20,7 +23,9 @@ export default async function TokenDisplayContainer({
   };
 
   const getNextPath = () => {
-    return tokenCount > 100 * page ? `/?sortBy=${tokenFilter}&page=${page + 1}` : "";
+    return tokenCount > 100 * page
+      ? `/?sortBy=${tokenFilter}&page=${page + 1}`
+      : "";
   };
 
   const previousPath = getPreviousPath();

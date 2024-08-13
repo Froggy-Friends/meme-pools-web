@@ -1,4 +1,4 @@
-import UserInfo from "@/app/profile/[wallet]/components/UserInfo";
+import UserInfo from "@/app/(main)/profile/[wallet]/components/UserInfo";
 
 import { Address } from "@/lib/types";
 import { fetchUser } from "./queries";
