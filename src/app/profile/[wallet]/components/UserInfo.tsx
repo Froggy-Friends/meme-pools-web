@@ -33,10 +33,11 @@ export default function UserInfo({ user }: UserInfoParams) {
         </button>
       </div>
 
-      <p className="pb-2">{user.wallet}</p>
+      {user.ethAddress && <p className="pb-2">{user.ethAddress}</p>}
+      {user.solAddress && <p className="pb-2">{user.solAddress}</p>}
 
       <Link
-        href={`https://etherscan.io/address/${user.wallet}`}
+        href={`https://etherscan.io/address/${user.ethAddress}`}
         className="hover:underline"
         target="_blank"
       >
