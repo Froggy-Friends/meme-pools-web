@@ -7,9 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate"
   },
-  "postinstall": "prisma generate",
   "dependencies": {
     "@coinbase/onchainkit": "^0.26.8",
     "@nextui-org/react": "^2.4.3",
