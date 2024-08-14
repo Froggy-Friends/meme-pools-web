@@ -44,11 +44,12 @@ model Token {
 model User {
   id          String        @id(map: "user_pkey") @default(uuid()) @db.Uuid
   name        String
-  wallet      String        @unique
   imageUrl    String?
-  email       String?
+  email       String?       @unique
   createdAt   DateTime      @default(now()) @db.Timestamptz(6)
   updatedat   DateTime?     @default(now()) @db.Timestamptz(6)
+  solAddress  String?       @unique(map: "User_solanaAddress_key")
+  ethAddress  String?       @unique(map: "User_ethereumAddress_key")
   leaderboard Leaderboard[]
   token       Token[]
   Trades      Trades[]

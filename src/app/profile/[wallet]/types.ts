@@ -10,7 +10,8 @@ export type UserParams = {
 export type User = {
   id: string;
   name: string;
-  wallet: string;
+  ethAddress: string | null;
+  solAddress: string | null;
   imageUrl: string | null;
   email: string | null;
   createdAt: Date;

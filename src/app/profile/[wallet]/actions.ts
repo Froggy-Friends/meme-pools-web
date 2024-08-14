@@ -27,7 +27,8 @@ export const createUser = async ({
   await prisma.user.create({
     data: {
       name: name!,
-      wallet: wallet,
+      solAddress: !wallet.includes("0x") ? wallet : "",
+      ethAddress: wallet.includes("0x") ? wallet : "",
       imageUrl: imageUrl,
       email: email,
     },
