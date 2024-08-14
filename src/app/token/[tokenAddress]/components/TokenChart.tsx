@@ -31,7 +31,7 @@ export default function TokenChart({ token, creator }: TokenChartParams) {
             width={20}
           />
           <p>
-            <Link href={`/profile/${creator.wallet}`} className="hover:underline">{creator.name}</Link>
+            <Link href={`/profile/${creator.ethAddress}`} className="hover:underline">{creator.name}</Link>
           </p>
         </div>
       </div>
