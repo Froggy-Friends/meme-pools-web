@@ -2,7 +2,7 @@ import { Address } from "@/lib/types";
 
 export type UserParams = {
   name?: string;
-  wallet: Address;
+  wallet: string;
   imageUrl?: string;
   email?: string;
 };
@@ -15,7 +15,7 @@ export type User = {
   imageUrl: string | null;
   email: string | null;
   createdAt: Date;
-  updatedat: Date | null;
+  updatedAt: Date | null;
 };
 
 export type WagmiConnector = {
