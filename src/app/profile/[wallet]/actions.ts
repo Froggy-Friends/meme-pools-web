@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { UserParams } from "./types";
 import { revalidateTag } from "next/cache";
 import { Address } from "@/lib/types";
-import { fetchUser } from "./queries";
+import { checkIfFollowing, fetchFollowId, fetchUser } from "./queries";
 import { put } from "@vercel/blob";
 import { DEFAULT_PROFILE_AVATAR_URL, FETCH_USER_CACHE_TAG } from "./constants";
 
@@ -65,11 +65,74 @@ export async function updateUserData(formData: FormData, address: Address) {
         name: name ? name : user.name,
         imageUrl: imageUrl,
         email: email ? email : user.email,
+        updatedAt: new Date(Date.now()),
       },
     });
 
     revalidateTag(FETCH_USER_CACHE_TAG);
   } else {
     return;
+  }
+}
+
+export const followUser = async (accountId: string, followerId: string) => {
+  let followId: string | undefined = "";
+  const following = await checkIfFollowing(accountId, followerId);
+
+  if (following) {
+    followId = await fetchFollowId(accountId, followerId)
+  }
+
+  if (!following) {
+    await prisma.follow.create({
+      data: {
+        account: accountId,
+        follower: followerId,
+        status: "Follow",
+        followedAt: new Date(Date.now()),
+      }
+    })
+  } else if (following) {
+    await prisma.follow.update({
+      where: {
+        id: followId
+      },
+      data: {
+        status: "Follow",
+        followedAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now()),
+      }
+    })
+  }
+};
+
+export const unfollowUser = async (accountId: string, followerId: string) => {
+  let followId: string | undefined = "";
+  const following = await checkIfFollowing(accountId, followerId);
+
+  if (following) {
+    followId = await fetchFollowId(accountId, followerId)
+  }
+
+  if (!following) {
+    await prisma.follow.create({
+      data: {
+        account: accountId,
+        follower: followerId,
+        status: "Unfollow",
+        unfollowedAt: new Date(Date.now()),
+      }
+    })
+  } else if (following) {
+    await prisma.follow.update({
+      where: {
+        id: followId
+      },
+      data: {
+        status: "Unfollow",
+        unfollowedAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now()),
+      }
+    })
   }
 }
