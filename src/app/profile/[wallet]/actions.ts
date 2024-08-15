@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { UserParams } from "./types";
 import { revalidateTag } from "next/cache";
 import { Address } from "@/lib/types";
-import { fetchUser } from "./queries";
+import { fetchFollow, fetchUser } from "./queries";
 import { put } from "@vercel/blob";
 import { DEFAULT_PROFILE_AVATAR_URL, FETCH_USER_CACHE_TAG } from "./constants";
 
@@ -65,6 +65,7 @@ export async function updateUserData(formData: FormData, address: Address) {
         name: name ? name : user.name,
         imageUrl: imageUrl,
         email: email ? email : user.email,
+        updatedAt: new Date(Date.now()),
       },
     });
 
@@ -73,3 +74,55 @@ export async function updateUserData(formData: FormData, address: Address) {
     return;
   }
 }
+
+export const followUser = async (accountId: string, followerId: string) => {
+  const follow = await fetchFollow(accountId, followerId);
+
+  if (!follow) {
+    await prisma.follow.create({
+      data: {
+        account: accountId,
+        follower: followerId,
+        status: "Follow",
+        followedAt: new Date(Date.now()),
+      },
+    });
+  } else {
+    await prisma.follow.update({
+      where: {
+        id: follow.id,
+      },
+      data: {
+        status: "Follow",
+        followedAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now()),
+      },
+    });
+  }
+};
+
+export const unfollowUser = async (accountId: string, followerId: string) => {
+  const follow = await fetchFollow(accountId, followerId);
+
+  if (!follow) {
+    await prisma.follow.create({
+      data: {
+        account: accountId,
+        follower: followerId,
+        status: "Unfollow",
+        unfollowedAt: new Date(Date.now()),
+      },
+    });
+  } else {
+    await prisma.follow.update({
+      where: {
+        id: follow.id,
+      },
+      data: {
+        status: "Unfollow",
+        unfollowedAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now()),
+      },
+    });
+  }
+};

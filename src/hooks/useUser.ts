@@ -13,15 +13,15 @@ export default function useUser(address: Address) {
       return 
     }
 
-    const user = await fetchUser(address as Address);
+    const user = await fetchUser(address);
    
     if (user) {
       setCurrentUser(user)
     } else if (!user) {
       await createUser({
-        wallet: address as Address,
+        wallet: address,
       });
-      const user = await fetchUser(address as Address);
+      const user = await fetchUser(address);
       setCurrentUser(user)
     }
   }, []);

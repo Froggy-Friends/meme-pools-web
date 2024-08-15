@@ -89,3 +89,14 @@ export const getUserFromCookies = async (
 
   return user;
 };
+
+export const fetchFollow = async (accountId: string, followerId: string) => {
+  const follow = await prisma.follow.findFirst({
+    where: {
+      account: accountId,
+      follower: followerId,
+    },
+  });
+
+  return follow;
+};
