@@ -90,7 +90,7 @@ export const getUserFromCookies = async (
   return user;
 };
 
-export const fetchFollowId = async (accountId: string, followerId: string) => {
+export const fetchFollow = async (accountId: string, followerId: string) => {
   const follow = await prisma.follow.findFirst({
     where: {
       account: accountId,
@@ -98,33 +98,5 @@ export const fetchFollowId = async (accountId: string, followerId: string) => {
     },
   });
 
-  return follow?.id;
-};
-
-export const checkIfFollowing = async (
-  accountId: string,
-  followerId: string
-) => {
-  const following = !!(await prisma.follow.findFirst({
-    where: {
-      account: accountId,
-      follower: followerId,
-    },
-  }));
-
-  return following;
-};
-
-export const checkFollowStatus = async (
-  accountId: string,
-  followerId: string
-) => {
-  const follow = await prisma.follow.findFirst({
-    where: {
-      account: accountId,
-      follower: followerId,
-    },
-  });
-
-  return follow?.status;
+  return follow;
 };

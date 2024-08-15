@@ -7,9 +7,11 @@ import Link from "next/link";
 import { User } from "../types";
 import { Address } from "@/lib/types";
 import useUser from "@/hooks/useUser";
-import useIsFollowingUser from "@/hooks/useIsFollowingUser";
 import { useAccount } from "wagmi";
 import { followUser, unfollowUser } from "../actions";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchFollow } from "../queries";
 
 type UserInfoParams = {
   profileUser: User;
@@ -23,19 +25,27 @@ export default function UserInfo({
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { address, isConnected } = useAccount();
   const { currentUser } = useUser(address!);
-  const { following, checkFollowing, isLoading } = useIsFollowingUser(
-    profileUser.id,
-    currentUser?.id || ""
-  );
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { status, data, refetch } = useQuery({
+    queryKey: ["isFollowing"],
+    queryFn: async () => {
+      const data = await fetchFollow(profileUser.id, currentUser?.id!);
+      return data;
+    },
+  });
 
   const handleFollow = async () => {
-    if (!following && currentUser) {
-      followUser(profileUser.id, currentUser.id);
-      await checkFollowing();
-    } else if (following && currentUser) {
-      unfollowUser(profileUser.id, currentUser.id);
-      await checkFollowing();
+    setIsLoading(true);
+
+    if (data?.status === "Unfollow" && currentUser) {
+      await followUser(profileUser.id, currentUser.id);
+    } else if (data?.status === "Follow" && currentUser) {
+      await unfollowUser(profileUser.id, currentUser.id);
     }
+
+    await refetch();
+    setIsLoading(false);
   };
 
   return (
@@ -61,15 +71,17 @@ export default function UserInfo({
           )}
         {isConnected &&
           currentUser &&
-          following !== null &&
           currentUser!.ethAddress !== profileWalletAddress && (
             <button
-              className={`${isLoading ? "border-gray-400 text-gray-400" : "border-black"} p-2 border rounded-lg font-semibold w-28`}
+              className={`${
+                isLoading ? "border-gray-400 text-gray-400" : "border-black"
+              } p-2 border rounded-lg font-semibold w-28`}
               onClick={() => handleFollow()}
-              disabled={isLoading}
+              disabled={status === "pending"}
             >
-              {!following  && "Follow"}
-              {following  && "Unfollow"}
+              {!data && "Loading..."}
+              {data?.status === "Unfollow" && "Follow"}
+              {data?.status === "Follow" && "Unfollow"}
             </button>
           )}
       </div>
