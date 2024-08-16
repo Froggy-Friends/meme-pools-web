@@ -49,15 +49,9 @@ export default function ProfileModal({
                 <ModalHeader className="flex flex-col gap-1 text-white">
                   <div className="flex items-center justify-between pt-6">
                     <p>Edit Profile</p>
-                    <p className="py-2 px-3 bg-gray-800 rounded-md">
+                    <p>
                       <Address address={address} isSliced={true} />
                     </p>
-                    <button
-                      className="py-2 px-3 text-base bg-gray-800 rounded-md hover:bg-gray-800/80"
-                      onClick={() => disconnect()}
-                    >
-                      Disconnect
-                    </button>
                   </div>
                 </ModalHeader>
                 <ModalBody>

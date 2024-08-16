@@ -64,7 +64,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
         </DropdownItem>
         <DropdownItem
           key="Profile"
-          onPress={() => router.push(`/profile/${user.ethAddress}`)}
+          onPress={() => router.push(`/profile/${user ? user.ethAddress : currentUser?.ethAddress}`)}
         >
           Profile
         </DropdownItem>
