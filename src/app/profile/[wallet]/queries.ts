@@ -101,8 +101,7 @@ export const fetchFollow = async (accountId: string, followerId: string) => {
   return follow;
 };
 
-export const fetchFollowers = async (accountId: string) => {
-  let followers: User[] = [];
+export const fetchFollowers = async (accountId: string): Promise<User[]> => {
   const results = await prisma.follow.findMany({
     where: {
       account: accountId,
@@ -116,15 +115,12 @@ export const fetchFollowers = async (accountId: string) => {
     },
   });
 
-  results.forEach((result) => {
-    followers.push(result.followerUser);
+  return results.map((result) => {
+    return result.followerUser;
   });
-
-  return followers;
 };
 
-export const fetchFollowing = async (followerId: string) => {
-  let followers: User[] = [];
+export const fetchFollowing = async (followerId: string): Promise<User[]> => {
   const results = await prisma.follow.findMany({
     where: {
       follower: followerId,
@@ -138,9 +134,7 @@ export const fetchFollowing = async (followerId: string) => {
     },
   });
 
-  results.forEach((result) => {
-    followers.push(result.followingUser);
+  return results.map((result) => {
+    return result.followingUser;
   });
-
-  return followers;
 };
