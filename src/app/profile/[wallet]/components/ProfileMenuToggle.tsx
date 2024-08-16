@@ -1,10 +1,14 @@
 import ProfileMenuButton from "./ProfileMenuButton";
 
-export default function ProfileMenuToggle() {
+type ProfileMenuToggleProps = {
+  profileAddress: string;
+}
+
+export default function ProfileMenuToggle({ profileAddress }: ProfileMenuToggleProps) {
   return (
-    <section className="flex gap-x-3 items-center mt-6">
-      <ProfileMenuButton name="Followers" />
-      <ProfileMenuButton name="Following" />
+    <section className="flex gap-x-3 items-center my-6">
+      <ProfileMenuButton name="Followers" profileAddress={profileAddress}/>
+      <ProfileMenuButton name="Following" profileAddress={profileAddress}/>
     </section>
   )
 }
