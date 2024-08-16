@@ -12,28 +12,29 @@ import { EvmChain } from "@/lib/getTokenPrice";
 import { redirect } from "next/navigation";
 import { fetchTokenByAddress } from "./queries";
 import { fetchUserById } from "@/app/profile/[wallet]/queries";
-const DynamicTokenChart = dynamic(
-  () => import("./components/TokenChart"),
-  {
-    ssr: false,
-  }
-);
+import TokenVote from "./components/TokenVote";
+import { getUserVoteStatus, getVotes } from "./actions";
+const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
+  ssr: false,
+});
 
 type TokenDetailsPageProps = {
   params: {
     tokenAddress: string;
-  }
+  };
 };
 
 export default async function TokenDetailsPage({
   params,
 }: TokenDetailsPageProps) {
-  const tokenAddress = params.tokenAddress
+  const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
   if (!token) {
     redirect("/");
   }
+
+  const votes = await getVotes(token.id);
 
   const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.mainnet);
   const creator = await fetchUserById(token?.userId!);
@@ -52,8 +53,9 @@ export default async function TokenDetailsPage({
             currPrice={2}
             ethPrice={ethPrice}
           />
-          <TokenSocials token={token!} />
-          <TokenInfo token={token!} />
+          <TokenSocials token={token} />
+          <TokenInfo token={token} />
+          <TokenVote votes={votes} tokenId={token.id} />
           <BondingCurveProgress />
           <KingOfTheHillProgress />
           <HolderDistribution />
