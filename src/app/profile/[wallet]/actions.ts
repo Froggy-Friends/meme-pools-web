@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { UserParams } from "./types";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { Address } from "@/lib/types";
 import { fetchFollow, fetchUser } from "./queries";
 import { put } from "@vercel/blob";
@@ -99,6 +99,7 @@ export const followUser = async (accountId: string, followerId: string) => {
       },
     });
   }
+  revalidatePath("/profile");
 };
 
 export const unfollowUser = async (accountId: string, followerId: string) => {
@@ -125,4 +126,5 @@ export const unfollowUser = async (accountId: string, followerId: string) => {
       },
     });
   }
+  revalidatePath("/profile");
 };

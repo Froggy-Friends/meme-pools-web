@@ -13,21 +13,21 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchFollow } from "../queries";
 import toast from "react-hot-toast";
 
-type UserInfoParams = {
+type ProfileInfoParams = {
   profileUser: User;
   profileWalletAddress: Address;
 };
 
-export default function UserInfo({
+export default function ProfileInfo({
   profileUser,
   profileWalletAddress,
-}: UserInfoParams) {
+}: ProfileInfoParams) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { address, isConnected } = useAccount();
   const { currentUser } = useUser(address!);
   const queryClient = useQueryClient();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["isFollowing"],
     queryFn: async () => {
       const data = await fetchFollow(profileUser.id, currentUser?.id!);
@@ -39,7 +39,7 @@ export default function UserInfo({
     mutationFn: async () => {
       const previousData = queryClient.getQueryData(["isFollowing"]);
 
-      if (data === "Unfollow" && currentUser) {
+      if ((data === "Unfollow" && currentUser) || (!data && currentUser)) {
         queryClient.setQueryData(["isFollowing"], "Follow");
         await followUser(profileUser.id, currentUser.id);
       } else if (data === "Follow" && currentUser) {
@@ -62,7 +62,7 @@ export default function UserInfo({
   });
 
   return (
-    <section className="items-center">
+    <section className="flex flex-col mx-auto">
       <div className="flex items-center gap-x-4 pb-4">
         <Image
           src={profileUser.imageUrl!}
@@ -90,7 +90,8 @@ export default function UserInfo({
               onClick={() => handleFollow.mutate()}
               disabled={handleFollow.isPending}
             >
-              {!data && "Loading..."}
+              {isLoading && "Loading..."}
+              {!data && !isLoading && "Follow"}
               {data === "Unfollow" && "Follow"}
               {data === "Follow" && "Unfollow"}
             </button>

@@ -1,84 +1,81 @@
 "use client";
 
-import Image from "next/image";
-import { useAccount } from "wagmi";
-import ProfileModal from "./ProfileModal";
-import { useDisclosure } from "@nextui-org/react";
+import { useAccount, useDisconnect } from "wagmi";
+import { Avatar } from "@nextui-org/react";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@nextui-org/react";
 import useUser from "@/hooks/useUser";
-
 import ConnectButton from "./ConnectButton";
 import defaultAvatar from "../../public/Frog.fun_Default_PFP.png";
 import { User } from "@/app/profile/[wallet]/types";
+import { Address } from "@coinbase/onchainkit/identity";
+import { useRouter } from "next/navigation";
 
 type ProfileAvatarProps = {
   user: User;
 };
 
 export default function ProfileAvatar({ user }: ProfileAvatarProps) {
+  const router = useRouter();
   const { address, isConnected } = useAccount();
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { disconnect } = useDisconnect();
   const { currentUser } = useUser(address!);
 
   return (
-    <>
+    <Dropdown>
       {!isConnected && <ConnectButton />}
       {isConnected && !user && !currentUser && (
-        <div>
-          <button
-            onClick={() => {
-              onOpen();
-            }}
-          >
-            <Image
-              src={defaultAvatar}
-              alt="profile-avatar"
-              height={55}
-              width={55}
-              className="rounded-full"
-            />
-          </button>
-        </div>
+        <DropdownTrigger>
+          <Avatar
+            as="button"
+            className="transition-transform"
+            src={defaultAvatar.toString()}
+            size="lg"
+          />
+        </DropdownTrigger>
       )}
       {isConnected && user && (
-        <div>
-          <button
-            onClick={() => {
-              onOpen();
-            }}
-          >
-            <Image
-              src={user.imageUrl!}
-              alt="profile-avatar"
-              height={55}
-              width={55}
-              className="rounded-full"
-            />
-          </button>
-        </div>
+        <DropdownTrigger>
+          <Avatar
+            as="button"
+            className="transition-transform"
+            src={user.imageUrl!}
+            size="lg"
+          />
+        </DropdownTrigger>
       )}
       {isConnected && !user && currentUser && (
-        <div>
-          <button
-            onClick={() => {
-              onOpen();
-            }}
-          >
-            <Image
-              src={currentUser.imageUrl!}
-              alt="profile-avatar"
-              height={55}
-              width={55}
-              className="rounded-full"
-            />
-          </button>
-        </div>
+        <DropdownTrigger>
+          <Avatar
+            as="button"
+            className="transition-transform"
+            src={currentUser.imageUrl!}
+            size="lg"
+          />
+        </DropdownTrigger>
       )}
-
-      <ProfileModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        onClose={onClose}
-      />
-    </>
+      <DropdownMenu>
+        <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
+          <Address address={address} isSliced={true} />
+        </DropdownItem>
+        <DropdownItem
+          key="Profile"
+          onPress={() =>
+            router.push(
+              `/profile/${user ? user.ethAddress : currentUser?.ethAddress}`
+            )
+          }
+        >
+          Profile
+        </DropdownItem>
+        <DropdownItem key="Disconnect" onPress={() => disconnect()}>
+          Disconnect
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   );
 }
