@@ -22,7 +22,7 @@ export async function getVotes(tokenId: string) {
   return result;
 }
 
-export async function getUserVoteStatus(tokenId: string, userId: string) {
+export async function getUserVote(tokenId: string, userId: string) {
   const vote = await prisma.vote.findFirst({
     where: {
       tokenId,

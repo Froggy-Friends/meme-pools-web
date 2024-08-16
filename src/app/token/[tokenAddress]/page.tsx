@@ -13,7 +13,12 @@ import { redirect } from "next/navigation";
 import { fetchTokenByAddress } from "./queries";
 import { fetchUserById } from "@/app/profile/[wallet]/queries";
 import TokenVote from "./components/TokenVote";
-import { getUserVoteStatus, getVotes } from "./actions";
+import { getVotes } from "./actions";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
   ssr: false,
 });
@@ -34,7 +39,11 @@ export default async function TokenDetailsPage({
     redirect("/");
   }
 
-  const votes = await getVotes(token.id);
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["votes", token.id],
+    queryFn: () => getVotes(token.id),
+  });
 
   const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.mainnet);
   const creator = await fetchUserById(token?.userId!);
@@ -55,7 +64,9 @@ export default async function TokenDetailsPage({
           />
           <TokenSocials token={token} />
           <TokenInfo token={token} />
-          <TokenVote votes={votes} tokenId={token.id} />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <TokenVote tokenId={token.id} />
+          </HydrationBoundary>
           <BondingCurveProgress />
           <KingOfTheHillProgress />
           <HolderDistribution />
