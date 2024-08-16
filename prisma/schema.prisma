@@ -39,6 +39,7 @@ model Token {
   leaderboard  Leaderboard[]
   user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
   Trades       Trades[]
+  Vote         Vote[]
 }
 
 model User {
@@ -88,10 +89,11 @@ model Follow {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model Vote {
   id         Int       @id @default(autoincrement())
-  tokenid    Int
-  userid     String?   @db.Uuid
+  tokenId    String    @db.Uuid
+  userId     String?   @db.Uuid
   status     String?   @db.VarChar(8)
   created_at DateTime? @default(now()) @db.Timestamp(6)
   updated_at DateTime? @default(now()) @db.Timestamp(6)
-  User       User?     @relation(fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vote_user_fk")
+  Token      Token     @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vote_token_fk")
+  User       User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vote_user_fk")
 }

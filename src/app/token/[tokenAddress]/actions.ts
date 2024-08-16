@@ -1,0 +1,66 @@
+"use server";
+import prisma from "@/lib/prisma";
+
+export async function getVotes(tokenId: string) {
+  const voteCounts = await prisma.vote.findMany({
+    where: {
+      tokenId,
+    },
+  });
+
+  const result: Record<string, number> = {
+    upvotes: 0,
+    downvotes: 0,
+    total: voteCounts.length,
+  };
+
+  voteCounts.forEach((voteCount) => {
+    if (voteCount.status === "upvote") result["upvotes"] += 1;
+    else if (voteCount.status === "downvote") result["downvotes"] += 1;
+  });
+
+  return result;
+}
+
+export async function getUserVoteStatus(tokenId: string, userId: string) {
+  const vote = await prisma.vote.findFirst({
+    where: {
+      tokenId,
+      userId,
+    },
+  });
+
+  return vote?.status;
+}
+
+export async function updateVote(
+  tokenId: string,
+  userId: string,
+  status: string | null
+) {
+  const existingVote = await prisma.vote.findFirst({
+    where: {
+      tokenId,
+      userId,
+    },
+  });
+
+  if (existingVote) {
+    await prisma.vote.update({
+      where: {
+        id: existingVote.id,
+      },
+      data: {
+        status,
+      },
+    });
+  } else {
+    await prisma.vote.create({
+      data: {
+        tokenId,
+        userId,
+        status,
+      },
+    });
+  }
+}
