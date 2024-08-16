@@ -115,9 +115,7 @@ export const fetchFollowers = async (accountId: string): Promise<User[]> => {
     },
   });
 
-  return results.map((result) => {
-    return result.followerUser;
-  });
+  return results.map((result) => result.followerUser);
 };
 
 export const fetchFollowing = async (followerId: string): Promise<User[]> => {
@@ -134,7 +132,5 @@ export const fetchFollowing = async (followerId: string): Promise<User[]> => {
     },
   });
 
-  return results.map((result) => {
-    return result.followingUser;
-  });
+  return results.map((result) => result.followingUser);
 };
