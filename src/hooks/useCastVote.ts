@@ -1,9 +1,7 @@
 import { updateVote } from "@/app/token/[tokenAddress]/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAccount } from "wagmi";
 
 export default function useCastVote(tokenId: string, userId: string) {
-  const { address } = useAccount();
   const queryClient = useQueryClient();
 
   const {
