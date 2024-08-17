@@ -1,5 +1,5 @@
 import { updateVote } from "@/app/token/[tokenAddress]/actions";
-import { TokenVoteData } from "@/lib/types";
+import { TokenVoteData, TokenVoteStatus } from "@/models/token";
 import { TokenVote } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -15,7 +15,7 @@ export default function useCastVote(tokenId: string, userId: string) {
     data,
     isPending: isCastingVote,
     mutate: castVote,
-  } = useMutation<void, Error, string | null, UseCastVoteContext>({
+  } = useMutation<void, Error, TokenVoteStatus | null, UseCastVoteContext>({
     mutationKey: ["castVote", tokenId],
     mutationFn: async (status) => updateVote(tokenId, userId, status),
     onMutate: async (status) => {
@@ -31,15 +31,17 @@ export default function useCastVote(tokenId: string, userId: string) {
         total: oldVotes?.total ?? 0,
       };
 
-      if (status === "upvote") {
+      if (status === TokenVoteStatus.UPVOTE) {
         optimisticData.upvotes++;
-        if (oldVoteStatus === "downvote") optimisticData.downvotes--;
-      } else if (status === "downvote") {
+        if (oldVoteStatus === TokenVoteStatus.DOWNVOTE)
+          optimisticData.downvotes--;
+      } else if (status === TokenVoteStatus.DOWNVOTE) {
         optimisticData.downvotes++;
-        if (oldVoteStatus === "upvote") optimisticData.upvotes--;
+        if (oldVoteStatus === TokenVoteStatus.UPVOTE) optimisticData.upvotes--;
       } else if (status === null) {
-        if (oldVoteStatus === "upvote") optimisticData.upvotes--;
-        if (oldVoteStatus === "downvote") optimisticData.downvotes--;
+        if (oldVoteStatus === TokenVoteStatus.UPVOTE) optimisticData.upvotes--;
+        if (oldVoteStatus === TokenVoteStatus.DOWNVOTE)
+          optimisticData.downvotes--;
       }
 
       optimisticData.total = optimisticData.upvotes + optimisticData.downvotes;

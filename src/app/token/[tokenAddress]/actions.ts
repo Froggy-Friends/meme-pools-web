@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { TokenVoteData, VoteStatus } from "@/lib/types";
+import { TokenVoteData, TokenVoteStatus } from "@/models/token";
 import { TokenVote } from "@prisma/client";
 
 export async function getVotesByTokenId(
@@ -23,9 +23,9 @@ export async function getVotesByTokenId(
   };
 
   result.forEach((item) => {
-    if (item.status === "upvote") {
+    if (item.status === TokenVoteStatus.UPVOTE) {
       voteCounts.upvotes = item._count.status;
-    } else if (item.status === "downvote") {
+    } else if (item.status === TokenVoteStatus.DOWNVOTE) {
       voteCounts.downvotes = item._count.status;
     }
     voteCounts.total += item._count.status;

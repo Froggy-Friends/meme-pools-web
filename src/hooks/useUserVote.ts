@@ -1,4 +1,3 @@
-import { VoteStatus } from "@/lib/types";
 import { getUserVote } from "../app/token/[tokenAddress]/actions";
 import { useQuery } from "@tanstack/react-query";
 import { TokenVote } from "@prisma/client";
