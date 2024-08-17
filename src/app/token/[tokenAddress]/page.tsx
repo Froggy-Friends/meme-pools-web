@@ -10,25 +10,26 @@ import getEthPrice from "@/lib/getEthPrice";
 import { BASE_ETH_ADDR } from "@/config/token";
 import { EvmChain } from "@/lib/getTokenPrice";
 import { redirect } from "next/navigation";
-import { fetchTokenByAddress } from "./queries";
+import { fetchComments, fetchTokenByAddress } from "./queries";
 import { fetchUserById } from "@/app/profile/[wallet]/queries";
-const DynamicTokenChart = dynamic(
-  () => import("./components/TokenChart"),
-  {
-    ssr: false,
-  }
-);
+import { SearchParams } from "@/lib/types";
+const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
+  ssr: false,
+});
 
 type TokenDetailsPageProps = {
   params: {
     tokenAddress: string;
-  }
+  };
+  searchParams: SearchParams;
 };
 
 export default async function TokenDetailsPage({
   params,
+  searchParams,
 }: TokenDetailsPageProps) {
-  const tokenAddress = params.tokenAddress
+  const view = (searchParams.view as string) || "comments";
+  const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
   if (!token) {
@@ -36,13 +37,20 @@ export default async function TokenDetailsPage({
   }
 
   const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.mainnet);
-  const creator = await fetchUserById(token?.userId!);
+  const creator = await fetchUserById(token.userId!);
+  const comments = await fetchComments(token.id);
+
   return (
     <main className="flex flex-col px-12 mb-20">
       <div className="flex gap-x-10 mt-20">
         <div className="w-[65%] flex flex-col">
           <DynamicTokenChart token={token!} creator={creator!} />
-          <CommentsAndTradesContainer />
+          <CommentsAndTradesContainer
+            view={view}
+            tokenAddress={tokenAddress}
+            tokenId={token.id}
+            comments={comments}
+          />
         </div>
 
         <div className="flex flex-col">

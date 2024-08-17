@@ -1,4 +1,4 @@
-import { Comment, CommentLikes, User } from "@prisma/client";
+import { CommentLikes, User } from "@prisma/client";
 
 export type CreateTokenParams = {
   reservedAmount: BigInt;
@@ -37,6 +37,6 @@ export type CommentWithLikes = {
   createdAt: Date;
   updatedAt: Date | null;
   commentLikes: CommentLikes[];
-  _count: { CommentLikes: number };
+  _count: { commentLikes: number };
   user: User;
 };
