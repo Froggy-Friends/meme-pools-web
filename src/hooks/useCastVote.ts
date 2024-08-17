@@ -1,12 +1,12 @@
 import { updateVote } from "@/app/token/[tokenAddress]/actions";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
 import useUser from "./useUser";
 
 export default function useCastVote(tokenId: string) {
   const { address } = useAccount();
   const { currentUser } = useUser(address!);
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -14,14 +14,46 @@ export default function useCastVote(tokenId: string) {
     mutate: castVote,
   } = useMutation<void, Error, string | null>({
     mutationKey: ["castVote", tokenId],
-    mutationFn: async (status) => {
-      console.log("casting vote");
-      updateVote(tokenId, currentUser?.id!, status);
+    mutationFn: async (status) => 
+      updateVote(tokenId, currentUser?.id!, status),
+    onMutate: async (status) => {
+      const oldVotes: any = await queryClient.getQueryData(["votes", tokenId]);
+      const oldUserVote: any = await queryClient.getQueryData(["userVote", tokenId]);
+
+      const optimisticData = {
+        upvotes: oldVotes.upvotes,
+        downvotes: oldVotes.downvotes,
+        total: oldVotes.total
+      }
+
+      if(status === "upvote") {
+        optimisticData.upvotes++;
+        if(oldUserVote === "downvote") optimisticData.downvotes--;
+      } else if(status === "downvote") {
+        optimisticData.downvotes++;
+        if(oldUserVote === "upvote") optimisticData.upvotes--;
+      } else if(status === null) {
+        if(oldUserVote === "upvote") optimisticData.upvotes--;
+        if(oldUserVote === "downvote") optimisticData.downvotes--;
+      }
+      
+      queryClient.setQueryData(["votes", tokenId], optimisticData);
+      queryClient.setQueryData(["userVote", tokenId], status);
+      
+      return { oldVotes, oldUserVote }
     },
 
-    onSettled: () => {
-      queryClient.invalidateQueries({
+    onError: async (error, variables, context: any) => {
+      queryClient.setQueryData(["votes", tokenId], context.oldVotesData);
+      queryClient.setQueryData(["userVote", tokenId], context.oldUserVoteData);
+    },
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ["votes", tokenId],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["userVote", tokenId],
       });
     },
   });

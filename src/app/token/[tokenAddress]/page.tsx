@@ -19,6 +19,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { getQueryClient } from "@/lib/queryClient";
 const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
   ssr: false,
 });
@@ -39,7 +40,7 @@ export default async function TokenDetailsPage({
     redirect("/");
   }
 
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["votes", token.id],
     queryFn: () => getVotes(token.id),
