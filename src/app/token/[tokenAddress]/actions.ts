@@ -1,14 +1,15 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { TokenVoteData, VoteStatus } from "@/lib/types";
 
-export async function getVotesByTokenId(tokenId: string) {
+export async function getVotesByTokenId(tokenId: string): Promise<TokenVoteData> {
   const voteCounts = await prisma.vote.findMany({
     where: {
       tokenId,
     },
   });
 
-  const result: Record<string, number> = {
+  const result = {
     upvotes: 0,
     downvotes: 0,
     total: voteCounts.length,
@@ -22,7 +23,7 @@ export async function getVotesByTokenId(tokenId: string) {
   return result;
 }
 
-export async function getUserVote(tokenId: string, userId: string) {
+export async function getUserVote(tokenId: string, userId: string): Promise<VoteStatus> {
   const vote = await prisma.vote.findFirst({
     where: {
       tokenId,
@@ -30,7 +31,7 @@ export async function getUserVote(tokenId: string, userId: string) {
     },
   });
 
-  return vote?.status;
+  return vote?.status as VoteStatus ?? null;
 }
 
 export async function updateVote(

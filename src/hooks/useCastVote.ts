@@ -1,5 +1,11 @@
 import { updateVote } from "@/app/token/[tokenAddress]/actions";
+import { TokenVoteData, VoteStatus } from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+type UseCastVoteContext = {
+  oldVotes: TokenVoteData | undefined;
+  oldUserVote: VoteStatus | undefined;
+};
 
 export default function useCastVote(tokenId: string, userId: string) {
   const queryClient = useQueryClient();
@@ -8,18 +14,17 @@ export default function useCastVote(tokenId: string, userId: string) {
     data,
     isPending: isCastingVote,
     mutate: castVote,
-  } = useMutation<void, Error, string | null>({
+  } = useMutation<void, Error, string | null, UseCastVoteContext>({
     mutationKey: ["castVote", tokenId],
     mutationFn: async (status) => 
       updateVote(tokenId, userId, status),
     onMutate: async (status) => {
-      const oldVotes: any = await queryClient.getQueryData(["votes", tokenId]);
-      const oldUserVote: any = await queryClient.getQueryData(["userVote", tokenId]);
+      const oldVotes: TokenVoteData | undefined = await queryClient.getQueryData(["votes", tokenId]);
+      const oldUserVote: VoteStatus | undefined = await queryClient.getQueryData(["userVote", tokenId]);
 
       const optimisticData = {
-        upvotes: oldVotes.upvotes,
-        downvotes: oldVotes.downvotes,
-        total: oldVotes.total
+        upvotes: oldVotes?.upvotes ?? 0,
+        downvotes: oldVotes?.downvotes ?? 0,
       }
 
       if(status === "upvote") {
@@ -39,9 +44,9 @@ export default function useCastVote(tokenId: string, userId: string) {
       return { oldVotes, oldUserVote }
     },
 
-    onError: async (error, variables, context: any) => {
-      queryClient.setQueryData(["votes", tokenId], context.oldVotes);
-      queryClient.setQueryData(["userVote", tokenId], context.oldUserVote);
+    onError: async (error, variables, context) => {
+      queryClient.setQueryData(["votes", tokenId], context?.oldVotes);
+      queryClient.setQueryData(["userVote", tokenId], context?.oldUserVote);
     },
 
     onSettled: async () => {
