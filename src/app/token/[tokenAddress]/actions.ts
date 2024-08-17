@@ -1,7 +1,7 @@
 "use server";
 import prisma from "@/lib/prisma";
 
-export async function getVotes(tokenId: string) {
+export async function getVotesByTokenId(tokenId: string) {
   const voteCounts = await prisma.vote.findMany({
     where: {
       tokenId,

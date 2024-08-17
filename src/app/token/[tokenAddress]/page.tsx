@@ -1,4 +1,15 @@
+import { fetchUserById } from "@/app/profile/[wallet]/queries";
+import { BASE_ETH_ADDR } from "@/config/token";
+import getEthPrice from "@/lib/getEthPrice";
+import { EvmChain } from "@/lib/getTokenPrice";
+import { getQueryClient } from "@/lib/queryClient";
+import {
+  dehydrate,
+  HydrationBoundary
+} from "@tanstack/react-query";
 import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
+import { getVotesByTokenId } from "./actions";
 import BondingCurveProgress from "./components/BondingCurveProgress";
 import CommentsAndTradesContainer from "./components/CommentsAndTradesContainer";
 import HolderDistribution from "./components/HolderDistribution";
@@ -6,20 +17,8 @@ import KingOfTheHillProgress from "./components/KingOfTheHillProgress";
 import TokenInfo from "./components/TokenInfo";
 import TokenSocials from "./components/TokenSocials";
 import TokenSwap from "./components/TokenSwap";
-import getEthPrice from "@/lib/getEthPrice";
-import { BASE_ETH_ADDR } from "@/config/token";
-import { EvmChain } from "@/lib/getTokenPrice";
-import { redirect } from "next/navigation";
-import { fetchTokenByAddress } from "./queries";
-import { fetchUserById } from "@/app/profile/[wallet]/queries";
 import TokenVote from "./components/TokenVote";
-import { getVotes } from "./actions";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-import { getQueryClient } from "@/lib/queryClient";
+import { fetchTokenByAddress } from "./queries";
 const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
   ssr: false,
 });
@@ -43,7 +42,7 @@ export default async function TokenDetailsPage({
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["votes", token.id],
-    queryFn: () => getVotes(token.id),
+    queryFn: () => getVotesByTokenId(token.id),
   });
 
   const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.mainnet);
