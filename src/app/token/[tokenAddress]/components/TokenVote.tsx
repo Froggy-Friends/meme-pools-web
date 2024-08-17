@@ -10,10 +10,10 @@ type VoteCountProps = {
   tokenId: string;
 };
 export default function TokenVote({ tokenId }: VoteCountProps) {
-  const { castVote, isCastingVote } = useCastVote(tokenId);
   const { votes } = useVotes(tokenId);
   const { address } = useAccount();
   const { currentUser } = useUser(address!);
+  const { castVote, isCastingVote } = useCastVote(tokenId, currentUser?.id!);
   const { userVote } = useUserVote(tokenId, currentUser?.id!);
 
   const handleVote = (status: "upvote" | "downvote" | null) => {

@@ -1,11 +1,9 @@
 import { updateVote } from "@/app/token/[tokenAddress]/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
-import useUser from "./useUser";
 
-export default function useCastVote(tokenId: string) {
+export default function useCastVote(tokenId: string, userId: string) {
   const { address } = useAccount();
-  const { currentUser } = useUser(address!);
   const queryClient = useQueryClient();
 
   const {
@@ -15,7 +13,7 @@ export default function useCastVote(tokenId: string) {
   } = useMutation<void, Error, string | null>({
     mutationKey: ["castVote", tokenId],
     mutationFn: async (status) => 
-      updateVote(tokenId, currentUser?.id!, status),
+      updateVote(tokenId, userId, status),
     onMutate: async (status) => {
       const oldVotes: any = await queryClient.getQueryData(["votes", tokenId]);
       const oldUserVote: any = await queryClient.getQueryData(["userVote", tokenId]);
