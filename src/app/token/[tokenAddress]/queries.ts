@@ -50,3 +50,30 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
 
   return token;
 };
+
+export const fetchComments = async (tokenId: string) => {
+  const comments = await prisma.comment.findMany({
+    where: {
+      tokenId: tokenId,
+    },
+    include: {
+      _count: {
+        select: {
+          commentLikes: {
+            where: {
+              status: "like",
+            },
+          },
+        },
+      },
+      commentLikes: {
+        where: {
+          status: "dislike",
+        },
+      },
+      user: true,
+    },
+  });
+
+  return comments;
+};
