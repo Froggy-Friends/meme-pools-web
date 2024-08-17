@@ -1,29 +1,43 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { TokenVoteData, VoteStatus } from "@/lib/types";
+import { Vote } from "@prisma/client";
 
-export async function getVotesByTokenId(tokenId: string): Promise<TokenVoteData> {
-  const voteCounts = await prisma.vote.findMany({
+export async function getVotesByTokenId(
+  tokenId: string
+): Promise<TokenVoteData> {
+  const result = await prisma.vote.groupBy({
+    by: ["status"],
     where: {
       tokenId,
     },
+    _count: {
+      status: true,
+    },
   });
 
-  const result = {
+  const voteCounts = {
     upvotes: 0,
     downvotes: 0,
-    total: voteCounts.length,
+    total: 0,
   };
 
-  voteCounts.forEach((voteCount) => {
-    if (voteCount.status === "upvote") result["upvotes"] += 1;
-    else if (voteCount.status === "downvote") result["downvotes"] += 1;
+  result.forEach((item) => {
+    if (item.status === "upvote") {
+      voteCounts.upvotes = item._count.status;
+    } else if (item.status === "downvote") {
+      voteCounts.downvotes = item._count.status;
+    }
+    voteCounts.total += item._count.status;
   });
 
-  return result;
+  return voteCounts;
 }
 
-export async function getUserVote(tokenId: string, userId: string): Promise<VoteStatus> {
+export async function getUserVote(
+  tokenId: string,
+  userId: string
+): Promise<Vote | null> {
   const vote = await prisma.vote.findFirst({
     where: {
       tokenId,
@@ -31,7 +45,7 @@ export async function getUserVote(tokenId: string, userId: string): Promise<Vote
     },
   });
 
-  return vote?.status as VoteStatus ?? null;
+  return vote;
 }
 
 export async function updateVote(
