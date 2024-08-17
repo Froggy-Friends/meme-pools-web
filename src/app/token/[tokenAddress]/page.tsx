@@ -3,10 +3,7 @@ import { BASE_ETH_ADDR } from "@/config/token";
 import getEthPrice from "@/lib/getEthPrice";
 import { EvmChain } from "@/lib/getTokenPrice";
 import { getQueryClient } from "@/lib/queryClient";
-import {
-  dehydrate,
-  HydrationBoundary
-} from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { getVotesByTokenId } from "./actions";
@@ -18,7 +15,8 @@ import TokenInfo from "./components/TokenInfo";
 import TokenSocials from "./components/TokenSocials";
 import TokenSwap from "./components/TokenSwap";
 import TokenVote from "./components/TokenVote";
-import { fetchTokenByAddress } from "./queries";
+import { fetchComments, fetchTokenByAddress } from "./queries";
+import { SearchParams } from "@/lib/types";
 const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
   ssr: false,
 });
@@ -27,6 +25,7 @@ type TokenDetailsPageProps = {
   params: {
     tokenAddress: string;
   };
+  searchParams: SearchParams;
 };
 
 export default async function TokenDetailsPage({
