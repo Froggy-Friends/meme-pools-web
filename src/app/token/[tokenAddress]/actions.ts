@@ -1,12 +1,12 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { TokenVoteData, VoteStatus } from "@/lib/types";
-import { Vote } from "@prisma/client";
+import { TokenVote } from "@prisma/client";
 
 export async function getVotesByTokenId(
   tokenId: string
 ): Promise<TokenVoteData> {
-  const result = await prisma.vote.groupBy({
+  const result = await prisma.tokenVote.groupBy({
     by: ["status"],
     where: {
       tokenId,
@@ -37,8 +37,8 @@ export async function getVotesByTokenId(
 export async function getUserVote(
   tokenId: string,
   userId: string
-): Promise<Vote | null> {
-  const vote = await prisma.vote.findFirst({
+): Promise<TokenVote | null> {
+  const vote = await prisma.tokenVote.findFirst({
     where: {
       tokenId,
       userId,
@@ -53,7 +53,7 @@ export async function updateVote(
   userId: string,
   status: string | null
 ) {
-  await prisma.vote.upsert({
+  await prisma.tokenVote.upsert({
     where: {
       tokenId_userId: {
         tokenId,

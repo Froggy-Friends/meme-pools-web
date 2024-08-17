@@ -1,11 +1,11 @@
 import { updateVote } from "@/app/token/[tokenAddress]/actions";
 import { TokenVoteData } from "@/lib/types";
-import { Vote } from "@prisma/client";
+import { TokenVote } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type UseCastVoteContext = {
   oldVotes: TokenVoteData | undefined;
-  oldUserVote: Vote | undefined;
+  oldUserVote: TokenVote | undefined;
 };
 
 export default function useCastVote(tokenId: string, userId: string) {
@@ -21,10 +21,9 @@ export default function useCastVote(tokenId: string, userId: string) {
     onMutate: async (status) => {
       const oldVotes: TokenVoteData | undefined =
         await queryClient.getQueryData(["votes", tokenId]);
-      const oldUserVote: Vote | undefined = await queryClient.getQueryData([
-        "userVote",
-        tokenId,
-      ]);
+      const oldUserVote: TokenVote | undefined = await queryClient.getQueryData(
+        ["userVote", tokenId]
+      );
       const oldVoteStatus = oldUserVote?.status;
       const optimisticData = {
         upvotes: oldVotes?.upvotes ?? 0,
