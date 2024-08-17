@@ -37,13 +37,16 @@ model Token {
   tokenAddress String        @unique
   tokenCreator String
   Comment      Comment[]
+  Comment      Comment[]
   leaderboard  Leaderboard[]
   user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
+  TokenVote    TokenVote[]
   TokenVote    TokenVote[]
   Trades       Trades[]
 }
 
 model User {
+  id            String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
   id            String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
   name          String
   imageUrl      String?
@@ -56,8 +59,18 @@ model User {
   CommentLikes  CommentLikes[]
   followingUser Follow[]       @relation("Follow_accountToUser")
   followerUser  Follow[]       @relation("Follow_followerToUser")
+  email         String?        @unique
+  createdAt     DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime?      @default(now()) @db.Timestamptz(6)
+  solAddress    String?        @unique(map: "User_solanaAddress_key")
+  ethAddress    String?        @unique(map: "User_ethereumAddress_key")
+  Comment       Comment[]
+  CommentLikes  CommentLikes[]
+  followingUser Follow[]       @relation("Follow_accountToUser")
+  followerUser  Follow[]       @relation("Follow_followerToUser")
   leaderboard   Leaderboard[]
   token         Token[]
+  TokenVote     TokenVote[]
   TokenVote     TokenVote[]
   Trades        Trades[]
 }
