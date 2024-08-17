@@ -36,24 +36,29 @@ model Token {
   updatedAt    DateTime?     @default(now()) @db.Timestamptz(6)
   tokenAddress String        @unique
   tokenCreator String
+  Comment      Comment[]
   leaderboard  Leaderboard[]
   user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
+  TokenVote    TokenVote[]
   Trades       Trades[]
 }
 
 model User {
-  id            String        @id(map: "user_pkey") @default(uuid()) @db.Uuid
+  id            String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
   name          String
   imageUrl      String?
-  email         String?       @unique
-  createdAt     DateTime      @default(now()) @db.Timestamptz(6)
-  updatedAt     DateTime?     @default(now()) @db.Timestamptz(6)
-  solAddress    String?       @unique(map: "User_solanaAddress_key")
-  ethAddress    String?       @unique(map: "User_ethereumAddress_key")
-  followingUser Follow[]      @relation("Follow_accountToUser")
-  followerUser  Follow[]      @relation("Follow_followerToUser")
+  email         String?        @unique
+  createdAt     DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime?      @default(now()) @db.Timestamptz(6)
+  solAddress    String?        @unique(map: "User_solanaAddress_key")
+  ethAddress    String?        @unique(map: "User_ethereumAddress_key")
+  Comment       Comment[]
+  CommentLikes  CommentLikes[]
+  followingUser Follow[]       @relation("Follow_accountToUser")
+  followerUser  Follow[]       @relation("Follow_followerToUser")
   leaderboard   Leaderboard[]
   token         Token[]
+  TokenVote     TokenVote[]
   Trades        Trades[]
 }
 
@@ -82,4 +87,41 @@ model Follow {
   unfollowedAt  DateTime? @db.Timestamptz(6)
   followingUser User      @relation("Follow_accountToUser", fields: [account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
   followerUser  User      @relation("Follow_followerToUser", fields: [follower], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey_two")
+}
+
+model Comment {
+  id           String         @id(map: "comment_pkey") @default(uuid()) @db.Uuid
+  message      String
+  author       String         @db.Uuid
+  tokenId      String         @db.Uuid
+  createdAt    DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime?      @default(now()) @db.Timestamptz(6)
+  token        Token          @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_fkey")
+  user         User           @relation(fields: [author], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
+  commentLikes CommentLikes[]
+}
+
+model CommentLikes {
+  id        String    @id(map: "comment_likes_pkey") @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  commentId String    @db.Uuid
+  status    String
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @default(now()) @db.Timestamptz(6)
+  Comment   Comment   @relation(fields: [commentId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comment_id_fkey")
+  User      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model TokenVote {
+  id         Int       @id(map: "Vote_pkey") @default(autoincrement())
+  tokenId    String    @db.Uuid
+  userId     String?   @db.Uuid
+  status     String?   @db.VarChar(8)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+  Token      Token     @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vote_token_fk")
+  User       User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vote_user_fk")
+
+  @@unique([tokenId, userId], map: "vote_token_user_unique")
 }
