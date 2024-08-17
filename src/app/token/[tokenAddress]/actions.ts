@@ -53,29 +53,20 @@ export async function updateVote(
   userId: string,
   status: string | null
 ) {
-  const existingVote = await prisma.vote.findFirst({
+  await prisma.vote.upsert({
     where: {
-      tokenId,
-      userId,
-    },
-  });
-
-  if (existingVote) {
-    await prisma.vote.update({
-      where: {
-        id: existingVote.id,
-      },
-      data: {
-        status,
-      },
-    });
-  } else {
-    await prisma.vote.create({
-      data: {
+      tokenId_userId: {
         tokenId,
         userId,
-        status,
       },
-    });
-  }
+    },
+    update: {
+      status,
+    },
+    create: {
+      tokenId,
+      userId,
+      status,
+    },
+  });
 }
