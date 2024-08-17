@@ -40,8 +40,8 @@ export default function useCastVote(tokenId: string, userId: string) {
     },
 
     onError: async (error, variables, context: any) => {
-      queryClient.setQueryData(["votes", tokenId], context.oldVotesData);
-      queryClient.setQueryData(["userVote", tokenId], context.oldUserVoteData);
+      queryClient.setQueryData(["votes", tokenId], context.oldVotes);
+      queryClient.setQueryData(["userVote", tokenId], context.oldUserVote);
     },
 
     onSettled: async () => {
