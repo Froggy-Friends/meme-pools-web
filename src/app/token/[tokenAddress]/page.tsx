@@ -1,4 +1,15 @@
+import { fetchUserById } from "@/app/profile/[wallet]/queries";
+import { BASE_ETH_ADDR } from "@/config/token";
+import getEthPrice from "@/lib/getEthPrice";
+import { EvmChain } from "@/lib/getTokenPrice";
+import { getQueryClient } from "@/lib/queryClient";
+import {
+  dehydrate,
+  HydrationBoundary
+} from "@tanstack/react-query";
 import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
+import { getVotesByTokenId } from "./actions";
 import BondingCurveProgress from "./components/BondingCurveProgress";
 import CommentsAndTradesContainer from "./components/CommentsAndTradesContainer";
 import HolderDistribution from "./components/HolderDistribution";
@@ -6,34 +17,33 @@ import KingOfTheHillProgress from "./components/KingOfTheHillProgress";
 import TokenInfo from "./components/TokenInfo";
 import TokenSocials from "./components/TokenSocials";
 import TokenSwap from "./components/TokenSwap";
-import getEthPrice from "@/lib/getEthPrice";
-import { BASE_ETH_ADDR } from "@/config/token";
-import { EvmChain } from "@/lib/getTokenPrice";
-import { redirect } from "next/navigation";
+import TokenVote from "./components/TokenVote";
 import { fetchTokenByAddress } from "./queries";
-import { fetchUserById } from "@/app/profile/[wallet]/queries";
-const DynamicTokenChart = dynamic(
-  () => import("./components/TokenChart"),
-  {
-    ssr: false,
-  }
-);
+const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
+  ssr: false,
+});
 
 type TokenDetailsPageProps = {
   params: {
     tokenAddress: string;
-  }
+  };
 };
 
 export default async function TokenDetailsPage({
   params,
 }: TokenDetailsPageProps) {
-  const tokenAddress = params.tokenAddress
+  const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
   if (!token) {
     redirect("/");
   }
+
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["votes", token.id],
+    queryFn: () => getVotesByTokenId(token.id),
+  });
 
   const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.mainnet);
   const creator = await fetchUserById(token?.userId!);
@@ -52,8 +62,11 @@ export default async function TokenDetailsPage({
             currPrice={2}
             ethPrice={ethPrice}
           />
-          <TokenSocials token={token!} />
-          <TokenInfo token={token!} />
+          <TokenSocials token={token} />
+          <TokenInfo token={token} />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <TokenVote tokenId={token.id} />
+          </HydrationBoundary>
           <BondingCurveProgress />
           <KingOfTheHillProgress />
           <HolderDistribution />
