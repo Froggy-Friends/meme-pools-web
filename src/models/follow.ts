@@ -1,4 +1,4 @@
 export enum FollowStatus {
-    FOLLOW = "follow",
-    UNFOLLOW = "unfollow"
+    FOLLOW = "Follow",
+    UNFOLLOW = "Unfollow"
 }
