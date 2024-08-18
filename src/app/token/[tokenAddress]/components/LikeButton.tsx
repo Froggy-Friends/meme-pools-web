@@ -3,62 +3,59 @@ import { FaThumbsUp, FaRegThumbsUp } from "react-icons/fa6";
 import { useAccount } from "wagmi";
 import { addCommentLike, removeCommentLike } from "../actions";
 import toast from "react-hot-toast";
-import { useQuery } from "@tanstack/react-query";
-import { fetchCommentLike } from "../queries";
-import { useState } from "react";
+import { CommentWithLikes } from "../types";
+import { getUserCommentInteraction } from "@/lib/getUserCommentInteraction";
 
 type LikesButtonProps = {
   likesCount: number;
   commentId: string;
+  comment: CommentWithLikes;
 };
 
 export default function LikeButton({
   likesCount,
   commentId,
+  comment,
 }: LikesButtonProps) {
   const { address } = useAccount();
   const { currentUser } = useUser(address!);
-  const [optiomisticLikesCount, setOptomisticLikesCount] = useState(likesCount);
-
-  const { data, refetch, isPending } = useQuery({
-    queryKey: ["commentLike", commentId],
-    queryFn: async () => {
-      const data = await fetchCommentLike(currentUser?.id!, commentId, "like");
-      return data?.id || null;
-    },
-  });
+  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
+    comment,
+    currentUser!
+  );
 
   const handleLike = async () => {
     try {
-      if (!data) {
-        setOptomisticLikesCount(optiomisticLikesCount + 1);
+      if (userCommentLike.length === 0 && userCommentDislike.length > 0) {
+        await addCommentLike(
+          currentUser?.id!,
+          commentId,
+          "like",
+          userCommentDislike[0].id
+        );
+      } else if (userCommentLike.length === 0) {
         await addCommentLike(currentUser?.id!, commentId, "like");
       } else {
-        setOptomisticLikesCount(optiomisticLikesCount - 1);
-        await removeCommentLike(data);
+        await removeCommentLike(userCommentLike[0].id);
       }
-      await refetch();
     } catch (error) {
-      setOptomisticLikesCount(likesCount);
-      !data && toast.error("Error liking comment");
-      data && toast.error("Error removing comment like");
+      console.log(error);
+      userCommentLike.length === 0 && toast.error("Error liking comment");
+      userCommentLike.length > 0 && toast.error("Error removing comment like");
     }
   };
 
   return (
     <div className="flex gap-x-2 items-center">
-      <button
-        disabled={isPending}
-        className="hover:scale-110 active:scale-95 transition"
-      >
-        {!data || (!data && isPending) ? (
+      <button className="hover:scale-110 active:scale-95 transition">
+        {userCommentLike.length === 0 ? (
           <FaRegThumbsUp size={17} onClick={() => handleLike()} />
         ) : (
           <FaThumbsUp size={17} onClick={() => handleLike()} />
         )}
       </button>
 
-      <p>{optiomisticLikesCount}</p>
+      <p>{likesCount}</p>
     </div>
   );
 }

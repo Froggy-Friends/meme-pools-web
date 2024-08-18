@@ -57,39 +57,29 @@ export const fetchComments = async (tokenId: string) => {
       tokenId: tokenId,
     },
     include: {
-      _count: {
-        select: {
-          commentLikes: {
-            where: {
-              status: "like",
-            },
-          },
-        },
-      },
-      commentLikes: {
-        where: {
-          status: "dislike",
-        },
-      },
+      commentLikes: true,
       user: true,
     },
   });
 
-  return comments;
-};
+  const commentsWithLikes = comments.map((comment) => {
+    let commentLikeCount = 0;
+    let commentDislikeCount = 0;
+    comment.commentLikes.forEach((data) => {
+      data.status === "like" && commentLikeCount++;
+      data.status === "dislike" && commentDislikeCount++;
+    });
 
-export const fetchCommentLike = async (
-  userId: string,
-  commentId: string,
-  status: string
-) => {
-  const commentLike = await prisma.commentLikes.findFirst({
-    where: {
-      userId: userId,
-      commentId: commentId,
-      status: status,
-    },
+    return {
+      ...comment,
+      commentLikeCount: commentLikeCount,
+      commentDislikeCount: commentDislikeCount,
+    };
   });
 
-  return commentLike;
+  return commentsWithLikes.sort(
+    (a, b) =>
+      b.commentLikeCount - a.commentLikeCount ||
+      a.commentDislikeCount - b.commentDislikeCount
+  );
 };

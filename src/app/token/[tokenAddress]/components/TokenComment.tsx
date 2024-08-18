@@ -31,12 +31,14 @@ export default function TokenComment({ comment, user }: TokenCommentProps) {
         </Link>
         <p>{convertDate(comment.createdAt.toString())}</p>
         <LikeButton
-          likesCount={comment._count.commentLikes}
+          likesCount={comment.commentLikeCount}
           commentId={comment.id}
+          comment={comment}
         />
         <DislikeButton
-          dislikesCount={comment.commentLikes.length}
+          dislikesCount={comment.commentDislikeCount}
           commentId={comment.id}
+          comment={comment}
         />
       </div>
 

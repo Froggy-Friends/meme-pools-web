@@ -1,7 +1,7 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
-import { TokenVote } from "@prisma/client";
+import { CommentLikes, TokenVote } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function getVotesByTokenId(
@@ -93,7 +93,8 @@ export const postComment = async (
 export const addCommentLike = async (
   userId: string,
   commentId: string,
-  status: string
+  status: string,
+  prevCommentLikeId?: string
 ) => {
   await prisma.commentLikes.create({
     data: {
@@ -102,6 +103,14 @@ export const addCommentLike = async (
       status: status,
     },
   });
+
+  if (prevCommentLikeId) {
+    await prisma.commentLikes.delete({
+      where: {
+        id: prevCommentLikeId,
+      },
+    });
+  }
 
   revalidatePath("/token");
 };

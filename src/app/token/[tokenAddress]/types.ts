@@ -37,6 +37,7 @@ export type CommentWithLikes = {
   createdAt: Date;
   updatedAt: Date | null;
   commentLikes: CommentLikes[];
-  _count: { commentLikes: number };
+  commentLikeCount: number;
+  commentDislikeCount: number;
   user: User;
 };
