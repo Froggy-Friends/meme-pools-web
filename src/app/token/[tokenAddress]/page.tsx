@@ -20,6 +20,7 @@ import TokenSwap from "./components/TokenSwap";
 import TokenVote from "./components/TokenVote";
 import { fetchComments, fetchTokenByAddress } from "./queries";
 import { SearchParams } from "@/lib/types";
+import { CommentAndTradesView, CommentAndTradesViews } from "@/models/comment";
 const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
   ssr: false,
 });
@@ -35,7 +36,9 @@ export default async function TokenDetailsPage({
   params,
   searchParams,
 }: TokenDetailsPageProps) {
-  const view = (searchParams.view as string) || "comments";
+  const view =
+    (searchParams.view as CommentAndTradesView) ||
+    CommentAndTradesViews.COMMENTS;
   const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 

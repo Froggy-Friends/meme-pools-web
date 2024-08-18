@@ -15,9 +15,10 @@ import { postComment } from "../actions";
 import useUser from "@/hooks/useUser";
 import { useAccount } from "wagmi";
 import { CommentWithLikes } from "../types";
+import { CommentAndTradesView } from "@/models/comment";
 
 type CommentsAndTradesContainerProps = {
-  view: string;
+  view: CommentAndTradesView;
   tokenAddress: string;
   tokenId: string;
   comments: CommentWithLikes[];

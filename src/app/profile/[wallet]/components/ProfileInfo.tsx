@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchFollow } from "../queries";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { FollowStatus } from "@/models/follow";
 
 type ProfileInfoParams = {
   profileUser: User;
@@ -39,16 +40,19 @@ export default function ProfileInfo({
   const handleFollow = async () => {
     try {
       setLoading(true);
-      if ((data === "Unfollow" && currentUser) || (!data && currentUser)) {
+      if (
+        (data === FollowStatus.UNFOLLOW && currentUser) ||
+        (!data && currentUser)
+      ) {
         await followUser(profileUser.id, currentUser.id);
-      } else if (data === "Follow" && currentUser) {
+      } else if (data === FollowStatus.FOLLOW && currentUser) {
         await unfollowUser(profileUser.id, currentUser.id);
       }
       await refetch();
       setLoading(false);
     } catch (error) {
-      data === "Unfollow" && toast.error("Failed to follow user");
-      data === "Follow" && toast.error("Failed to unfollow user");
+      data === FollowStatus.UNFOLLOW && toast.error("Failed to follow user");
+      data === FollowStatus.FOLLOW && toast.error("Failed to unfollow user");
     }
   };
 
@@ -84,14 +88,14 @@ export default function ProfileInfo({
               onClick={() => handleFollow()}
               disabled={isLoading}
             >
-              {!data && !isLoading && "Follow"}
-              {data === "Unfollow" && "Follow"}
-              {data === "Follow" && "Unfollow"}
+              {!data && !isLoading && FollowStatus.FOLLOW}
+              {data === FollowStatus.UNFOLLOW && FollowStatus.FOLLOW}
+              {data === FollowStatus.FOLLOW && FollowStatus.UNFOLLOW}
             </button>
           )}
-          {isLoading && (
-            <div className="bg-gray-300 h-10 w-28 animate-pulse rounded-lg"/>
-          )}
+        {isLoading && (
+          <div className="bg-gray-300 h-10 w-28 animate-pulse rounded-lg" />
+        )}
       </div>
 
       {profileUser.ethAddress && (
