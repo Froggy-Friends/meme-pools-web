@@ -10,11 +10,6 @@ type TokenCommentProps = {
   user: User;
 };
 
-const convertDate = (date: string) => {
-  const newDate = date.split("G");
-  return newDate[0];
-};
-
 export default function TokenComment({ comment, user }: TokenCommentProps) {
   return (
     <div className="flex flex-col pb-4 mb-1 w-full rounded-lg bg-gray-950/95 p-2 text-white">
@@ -29,7 +24,7 @@ export default function TokenComment({ comment, user }: TokenCommentProps) {
         <Link href={`/profile/${user.ethAddress}`} className="hover:underline">
           {user.name}
         </Link>
-        <p>{convertDate(comment.createdAt.toString())}</p>
+        <p>{comment.createdAt.toString().substring(0, 24)}</p>
         <LikeButton
           likesCount={comment.commentLikeCount}
           commentId={comment.id}
