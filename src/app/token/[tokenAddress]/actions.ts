@@ -89,3 +89,29 @@ export const postComment = async (
 
   revalidatePath("/token");
 };
+
+export const addCommentLike = async (
+  userId: string,
+  commentId: string,
+  status: string
+) => {
+  await prisma.commentLikes.create({
+    data: {
+      userId: userId,
+      commentId: commentId,
+      status: status,
+    },
+  });
+
+  revalidatePath("/token");
+};
+
+export const removeCommentLike = async (commentLikeId: string) => {
+  await prisma.commentLikes.delete({
+    where: {
+      id: commentLikeId,
+    },
+  });
+
+  revalidatePath("/token");
+};

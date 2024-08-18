@@ -2,6 +2,8 @@ import Image from "next/image";
 import { CommentWithLikes } from "../types";
 import { User } from "@prisma/client";
 import Link from "next/link";
+import LikeButton from "./LikeButton";
+import DislikeButton from "./DislikeButton";
 
 type TokenCommentProps = {
   comment: CommentWithLikes;
@@ -28,7 +30,14 @@ export default function TokenComment({ comment, user }: TokenCommentProps) {
           {user.name}
         </Link>
         <p>{convertDate(comment.createdAt.toString())}</p>
-        <p>Likes...</p>
+        <LikeButton
+          likesCount={comment._count.commentLikes}
+          commentId={comment.id}
+        />
+        <DislikeButton
+          dislikesCount={comment.commentLikes.length}
+          commentId={comment.id}
+        />
       </div>
 
       <p className="mt-2">{comment.message}</p>

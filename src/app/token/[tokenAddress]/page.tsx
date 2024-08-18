@@ -2,8 +2,11 @@ import { fetchUserById } from "@/app/profile/[wallet]/queries";
 import { BASE_ETH_ADDR } from "@/config/token";
 import getEthPrice from "@/lib/getEthPrice";
 import { EvmChain } from "@/lib/getTokenPrice";
-import { getQueryClient } from "@/lib/queryClient";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { getVotesByTokenId } from "./actions";
@@ -40,7 +43,7 @@ export default async function TokenDetailsPage({
     redirect("/");
   }
 
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["votes", token.id],
     queryFn: () => getVotesByTokenId(token.id),

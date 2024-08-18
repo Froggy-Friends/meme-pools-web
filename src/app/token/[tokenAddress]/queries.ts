@@ -77,3 +77,19 @@ export const fetchComments = async (tokenId: string) => {
 
   return comments;
 };
+
+export const fetchCommentLike = async (
+  userId: string,
+  commentId: string,
+  status: string
+) => {
+  const commentLike = await prisma.commentLikes.findFirst({
+    where: {
+      userId: userId,
+      commentId: commentId,
+      status: status,
+    },
+  });
+
+  return commentLike;
+};
