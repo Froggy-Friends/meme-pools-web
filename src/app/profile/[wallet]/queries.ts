@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { User, WagmiConnectionsValue } from "./types";
-import { FETCH_USER_CACHE_KEY, FETCH_USER_CACHE_TAG } from "@/config/user";
+import { fetchUserCacheKey, fetchUserCacheTag } from "@/config/user";
 
 export const fetchUser = unstable_cache(
   async (wallet: string) => {
@@ -27,8 +27,8 @@ export const fetchUser = unstable_cache(
 
     return user;
   },
-  [FETCH_USER_CACHE_KEY],
-  { tags: [FETCH_USER_CACHE_TAG] }
+  [fetchUserCacheKey],
+  { tags: [fetchUserCacheTag] }
 );
 
 export const fetchUserById = async (id: string) => {

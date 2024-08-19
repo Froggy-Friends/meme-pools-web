@@ -1,6 +1,6 @@
 "use client";
 
-import { DEFAULT_PRIORITY_FEE, DEFAULT_SLIPPAGE_PERCENT } from "@/config/token";
+import { defualtPriorityFee, defaultSlippagePercent } from "@/config/token";
 import { useState } from "react";
 import { base } from "viem/chains";
 import { useBalance } from "wagmi";
@@ -31,9 +31,9 @@ export default function TokenSwap({
   const [buyToken, setBuyToken] = useState(tokenTicker);
   const [tokenAmount, setTokenAmount] = useState<number>(0);
   const [slippagePercent, setSlippagePercent] = useState<number>(
-    DEFAULT_SLIPPAGE_PERCENT
+    defaultSlippagePercent
   );
-  const [priorityFee, setPriorityFee] = useState<number>(DEFAULT_PRIORITY_FEE);
+  const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
 
   const { data: balance, isLoading: isLoadingBalance } = useBalance({

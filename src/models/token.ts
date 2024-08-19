@@ -8,3 +8,12 @@ export type TokenVoteData = {
   downvotes: number;
   total: number;
 };
+
+export enum TokensPageFilters {
+  New = "new",
+  Trending = "trending",
+  Volume = "volume",
+  Transactions = "transactions",
+  Comments = "comments",
+  Votes = "votes",
+}

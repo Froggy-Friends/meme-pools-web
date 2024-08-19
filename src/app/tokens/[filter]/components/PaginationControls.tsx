@@ -14,7 +14,7 @@ export default function PaginationControls({
     "flex items-center gap-x-2 border border-black rounded-md p-2";
 
   return (
-    <section className="flex gap-x-4 self-end">
+    <section className="flex gap-x-4">
       <Link href={previousPath} className={buttonStyles}>
         <FaArrowLeft size={20} /> Prev
       </Link>

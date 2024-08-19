@@ -1,6 +1,8 @@
 import { Token, User } from "@prisma/client";
 
-export type TokenWithCreator = Token & { creator: User };
+export type TokenWithCreator = Token & { creator: User } & {
+  _count: { Comment: number };
+};
 
 export type Address = `0x${string}`;
 
