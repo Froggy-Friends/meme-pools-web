@@ -90,19 +90,19 @@ model Follow {
 }
 
 model Comment {
-  id           String         @id(map: "comment_pkey") @db.Uuid
+  id           String         @id(map: "comment_pkey") @default(uuid()) @db.Uuid
   message      String
   author       String         @db.Uuid
   tokenId      String         @db.Uuid
   createdAt    DateTime       @default(now()) @db.Timestamptz(6)
   updatedAt    DateTime?      @default(now()) @db.Timestamptz(6)
-  Token        Token          @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_fkey")
-  User         User           @relation(fields: [author], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
-  CommentLikes CommentLikes[]
+  token        Token          @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_fkey")
+  user         User           @relation(fields: [author], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
+  commentLikes CommentLikes[]
 }
 
 model CommentLikes {
-  id        String    @id(map: "comment_likes_pkey") @db.Uuid
+  id        String    @id(map: "comment_likes_pkey") @default(uuid()) @db.Uuid
   userId    String    @db.Uuid
   commentId String    @db.Uuid
   status    String

@@ -18,7 +18,9 @@ import TokenInfo from "./components/TokenInfo";
 import TokenSocials from "./components/TokenSocials";
 import TokenSwap from "./components/TokenSwap";
 import TokenVote from "./components/TokenVote";
-import { fetchTokenByAddress } from "./queries";
+import { fetchComments, fetchTokenByAddress } from "./queries";
+import { SearchParams } from "@/lib/types";
+import { CommentAndTradesView, CommentAndTradesViews } from "@/models/comment";
 const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
   ssr: false,
 });
@@ -27,11 +29,16 @@ type TokenDetailsPageProps = {
   params: {
     tokenAddress: string;
   };
+  searchParams: SearchParams;
 };
 
 export default async function TokenDetailsPage({
   params,
+  searchParams,
 }: TokenDetailsPageProps) {
+  const view =
+    (searchParams.view as CommentAndTradesView) ||
+    CommentAndTradesViews.COMMENTS;
   const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
@@ -46,13 +53,20 @@ export default async function TokenDetailsPage({
   });
 
   const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.mainnet);
-  const creator = await fetchUserById(token?.userId!);
+  const creator = await fetchUserById(token.userId!);
+  const comments = await fetchComments(token.id);
+
   return (
     <main className="flex flex-col px-12 mb-20">
       <div className="flex gap-x-10 mt-20">
         <div className="w-[65%] flex flex-col">
           <DynamicTokenChart token={token!} creator={creator!} />
-          <CommentsAndTradesContainer />
+          <CommentsAndTradesContainer
+            view={view}
+            tokenAddress={tokenAddress}
+            tokenId={token.id}
+            comments={comments}
+          />
         </div>
 
         <div className="flex flex-col">

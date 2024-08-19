@@ -16,7 +16,7 @@ export default function FormSubmitButton({
   return (
     <button className={className}>
       {pending ? (
-        <CircularProgress aria-label="Loading..." color="default" size="sm" />
+        <CircularProgress classNames={{svg: "w-6 h-6"}} aria-label="Loading..." color="default" className="px-[0.125rem]"/>
       ) : (
         children
       )}

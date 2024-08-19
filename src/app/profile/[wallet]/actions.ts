@@ -6,7 +6,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { Address } from "@/lib/types";
 import { fetchFollow, fetchUser } from "./queries";
 import { put } from "@vercel/blob";
-import { DEFAULT_PROFILE_AVATAR_URL, FETCH_USER_CACHE_TAG } from "./constants";
+import { DEFAULT_PROFILE_AVATAR_URL, FETCH_USER_CACHE_TAG } from "@/config/user";
 
 export const createUser = async ({
   name,

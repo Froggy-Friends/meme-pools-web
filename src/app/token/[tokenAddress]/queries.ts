@@ -50,3 +50,36 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
 
   return token;
 };
+
+export const fetchComments = async (tokenId: string) => {
+  const comments = await prisma.comment.findMany({
+    where: {
+      tokenId: tokenId,
+    },
+    include: {
+      commentLikes: true,
+      user: true,
+    },
+  });
+
+  const commentsWithLikes = comments.map((comment) => {
+    let commentLikeCount = 0;
+    let commentDislikeCount = 0;
+    comment.commentLikes.forEach((data) => {
+      data.status === "like" && commentLikeCount++;
+      data.status === "dislike" && commentDislikeCount++;
+    });
+
+    return {
+      ...comment,
+      commentLikeCount: commentLikeCount,
+      commentDislikeCount: commentDislikeCount,
+    };
+  });
+
+  return commentsWithLikes.sort(
+    (a, b) =>
+      b.commentLikeCount - a.commentLikeCount ||
+      a.commentDislikeCount - b.commentDislikeCount
+  );
+};

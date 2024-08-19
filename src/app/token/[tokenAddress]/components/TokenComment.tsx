@@ -1,23 +1,44 @@
 import Image from "next/image";
-import placeholderImage from "../../../../../public/pepe-placeholder.png"
+import { CommentWithLikes } from "../types";
+import { User } from "@prisma/client";
+import Link from "next/link";
+import LikeButton from "./LikeButton";
+import DislikeButton from "./DislikeButton";
+import { COMMENT_DATE_CHARACTER_LENGTH } from "@/config/comment";
 
-export default function TokenComment() {
+type TokenCommentProps = {
+  comment: CommentWithLikes;
+  user: User;
+};
+
+export default function TokenComment({ comment, user }: TokenCommentProps) {
   return (
     <div className="flex flex-col pb-4 mb-1 w-full rounded-lg bg-gray-950/95 p-2 text-white">
       <div className="flex gap-x-3">
         <Image
-          src={placeholderImage}
+          src={user.imageUrl!}
           alt="user-profile-picture"
           height={25}
           width={25}
+          className="rounded-full"
         />
-        <p>USERNAME...</p>
-        <p>Time...</p>
-        <p>Likes...</p>
-        <p>Reply...</p>
+        <Link href={`/profile/${user.ethAddress}`} className="hover:underline">
+          {user.name}
+        </Link>
+        <p>{comment.createdAt.toString().substring(0, COMMENT_DATE_CHARACTER_LENGTH)}</p>
+        <LikeButton
+          likesCount={comment.commentLikeCount}
+          commentId={comment.id}
+          comment={comment}
+        />
+        <DislikeButton
+          dislikesCount={comment.commentDislikeCount}
+          commentId={comment.id}
+          comment={comment}
+        />
       </div>
 
-      <p>Comment...</p>
+      <p className="mt-2">{comment.message}</p>
     </div>
   );
 }

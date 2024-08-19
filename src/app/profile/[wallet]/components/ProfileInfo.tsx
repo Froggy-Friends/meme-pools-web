@@ -9,9 +9,11 @@ import { Address } from "@/lib/types";
 import useUser from "@/hooks/useUser";
 import { useAccount } from "wagmi";
 import { followUser, unfollowUser } from "../actions";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { fetchFollow } from "../queries";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import { FollowStatus } from "@/models/follow";
 
 type ProfileInfoParams = {
   profileUser: User;
@@ -25,9 +27,9 @@ export default function ProfileInfo({
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { address, isConnected } = useAccount();
   const { currentUser } = useUser(address!);
-  const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["isFollowing"],
     queryFn: async () => {
       const data = await fetchFollow(profileUser.id, currentUser?.id!);
@@ -35,31 +37,24 @@ export default function ProfileInfo({
     },
   });
 
-  const handleFollow = useMutation({
-    mutationFn: async () => {
-      const previousData = queryClient.getQueryData(["isFollowing"]);
-
-      if ((data === "Unfollow" && currentUser) || (!data && currentUser)) {
-        queryClient.setQueryData(["isFollowing"], "Follow");
+  const handleFollow = async () => {
+    try {
+      setLoading(true);
+      if (
+        (data === FollowStatus.UNFOLLOW && currentUser) ||
+        (!data && currentUser)
+      ) {
         await followUser(profileUser.id, currentUser.id);
-      } else if (data === "Follow" && currentUser) {
-        queryClient.setQueryData(["isFollowing"], "Unfollow");
+      } else if (data === FollowStatus.FOLLOW && currentUser) {
         await unfollowUser(profileUser.id, currentUser.id);
       }
-      return { previousData };
-    },
-    onSettled: (context, error) => {
-      if (error) {
-        queryClient.setQueryData(["isFollowing"], context?.previousData);
-        context?.previousData === "Unfollow" &&
-          toast.error("Failed to follow user");
-        context?.previousData === "Follow" &&
-          toast.error("Failed to unfollow user");
-      } else {
-        queryClient.invalidateQueries({ queryKey: ["isFollowing"] });
-      }
-    },
-  });
+      await refetch();
+      setLoading(false);
+    } catch (error) {
+      data === FollowStatus.UNFOLLOW && toast.error("Failed to follow user");
+      data === FollowStatus.FOLLOW && toast.error("Failed to unfollow user");
+    }
+  };
 
   return (
     <section className="flex flex-col mx-auto">
@@ -83,19 +78,24 @@ export default function ProfileInfo({
             </button>
           )}
         {isConnected &&
+          !isLoading &&
           currentUser &&
           currentUser!.ethAddress !== profileWalletAddress && (
             <button
-              className="border-black p-2 border rounded-lg font-semibold w-28"
-              onClick={() => handleFollow.mutate()}
-              disabled={handleFollow.isPending}
+              className={`${
+                loading ? "border-gray-400 text-gray-400" : "border-black"
+              } p-2 border rounded-lg font-semibold w-28`}
+              onClick={() => handleFollow()}
+              disabled={isLoading}
             >
-              {isLoading && "Loading..."}
-              {!data && !isLoading && "Follow"}
-              {data === "Unfollow" && "Follow"}
-              {data === "Follow" && "Unfollow"}
+              {!data && !isLoading && FollowStatus.FOLLOW}
+              {data === FollowStatus.UNFOLLOW && FollowStatus.FOLLOW}
+              {data === FollowStatus.FOLLOW && FollowStatus.UNFOLLOW}
             </button>
           )}
+        {isLoading && (
+          <div className="bg-gray-300 h-10 w-28 animate-pulse rounded-lg" />
+        )}
       </div>
 
       {profileUser.ethAddress && (
