@@ -1,6 +1,7 @@
 import { TokenWithCreator } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
+import { IoChatbox } from "react-icons/io5";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator;
@@ -9,13 +10,15 @@ type TokenDisplayCardProps = {
 export default async function TokenDisplayCard({
   token,
 }: TokenDisplayCardProps) {
-
   return (
-    <Link
-      href={`/token/${token.tokenAddress}`}
-      className="flex gap-x-3 w-[31%] pb-10 animate-fadeInSlideUp"
-    >
-      <Image src={token.image} alt="token-image" height={100} width={100} />
+    <Link href={`/token/${token.tokenAddress}`} className="flex gap-x-3 my-2">
+      <Image
+        src={token.image}
+        alt="token-image"
+        height={150}
+        width={150}
+        className="rounded-md"
+      />
 
       <div className="flex flex-col">
         {token.creator && (
@@ -32,7 +35,10 @@ export default async function TokenDisplayCard({
         )}
 
         <p>market cap...</p>
-        <p>replies...</p>
+        <div className="flex gap-x-2 items-center">
+          <IoChatbox size={20} />
+          {token._count.Comment}
+        </div>
         <p>
           {token.name}({token.ticker}): {token.description}
         </p>
