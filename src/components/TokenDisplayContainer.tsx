@@ -1,48 +1,93 @@
-import {
-  fetchTokenCount,
-  fetchTokens,
-} from "@/app/token/[tokenAddress]/queries";
-import PaginationControls from "./PaginationControls";
+import { fetchTokens } from "@/app/token/[tokenAddress]/queries";
 import TokenDisplayCard from "./TokenDisplayCard";
-import TokenDisplayControls from "./TokenDisplayControls";
+import TokenCarousel from "./TokenCarousel";
+import Link from "next/link";
 
-type TokenDisplayContainerProps = {
-  page: number;
-  tokenFilter: string;
-};
-
-export default async function TokenDisplayContainer({
-  page,
-  tokenFilter,
-}: TokenDisplayContainerProps) {
-  const tokenCount = await fetchTokenCount();
-  const tokens = await fetchTokens(tokenFilter, page);
-
-  const getPreviousPath = () => {
-    return page > 1 ? `/?sortBy=${tokenFilter}&page=${page - 1}` : "";
-  };
-
-  const getNextPath = () => {
-    return tokenCount > 100 * page
-      ? `/?sortBy=${tokenFilter}&page=${page + 1}`
-      : "";
-  };
-
-  const previousPath = getPreviousPath();
-  const nextPath = getNextPath();
+export default async function TokenDisplayContainer() {
+  const newTokens = await fetchTokens("new", 1);
+  const trendingTokens = await fetchTokens("trending", 1);
+  const volumeTokens = await fetchTokens("volume", 1);
+  const transactionTokens = await fetchTokens("transactions", 1);
+  const commentTokens = await fetchTokens("comments", 1);
 
   return (
     <section className="flex flex-col">
-      <div className="flex gap-x-6 mt-12">
-        <TokenDisplayControls />
-        <PaginationControls previousPath={previousPath} nextPath={nextPath} />
-      </div>
-
-      <div className="flex flex-wrap justify-between w-full mt-12">
-        {tokens!.map((token) => {
-          return <TokenDisplayCard key={token.id} token={token} />;
+      <Link href="/tokens/new?page=1" className="mb-2 text-xl hover:underline">
+        New
+      </Link>
+      <TokenCarousel>
+        {newTokens!.slice(0, 14).map((token) => {
+          return (
+            <div key={token.id} className="embla__slide">
+              <TokenDisplayCard key={token.id} token={token} />
+            </div>
+          );
         })}
-      </div>
+      </TokenCarousel>
+
+      <Link
+        href="/tokens/trending?page=1"
+        className="mb-2 text-xl hover:underline"
+      >
+        Trending
+      </Link>
+      <TokenCarousel>
+        {trendingTokens!.slice(0, 14).map((token) => {
+          return (
+            <div key={token.id} className="embla__slide">
+              <TokenDisplayCard key={token.id} token={token} />
+            </div>
+          );
+        })}
+      </TokenCarousel>
+
+      <Link
+        href="/tokens/volume?page=1"
+        className="mb-2 text-xl hover:underline"
+      >
+        Volume
+      </Link>
+      <TokenCarousel>
+        {volumeTokens!.slice(0, 14).map((token) => {
+          return (
+            <div key={token.id} className="embla__slide">
+              <TokenDisplayCard key={token.id} token={token} />
+            </div>
+          );
+        })}
+      </TokenCarousel>
+
+      <Link
+        href="/tokens/transactions?page=1"
+        className="mb-2 text-xl hover:underline"
+      >
+        Transactions
+      </Link>
+      <TokenCarousel>
+        {transactionTokens!.slice(0, 14).map((token) => {
+          return (
+            <div key={token.id} className="embla__slide">
+              <TokenDisplayCard key={token.id} token={token} />
+            </div>
+          );
+        })}
+      </TokenCarousel>
+
+      <Link
+        href="/tokens/comments?page=1"
+        className="mb-2 text-xl hover:underline"
+      >
+        Comments
+      </Link>
+      <TokenCarousel>
+        {commentTokens!.slice(0, 14).map((token) => {
+          return (
+            <div key={token.id} className="embla__slide">
+              <TokenDisplayCard key={token.id} token={token} />
+            </div>
+          );
+        })}
+      </TokenCarousel>
     </section>
   );
 }
