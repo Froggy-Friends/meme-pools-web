@@ -1,7 +1,8 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
-import { TokenVote } from "@prisma/client";
+import { CommentLikes, TokenVote } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export async function getVotesByTokenId(
   tokenId: string
@@ -70,3 +71,56 @@ export async function updateVote(
     },
   });
 }
+
+export const postComment = async (
+  formData: FormData,
+  userId: string,
+  tokenId: string
+) => {
+  const comment = formData.get("comment") as string;
+
+  await prisma.comment.create({
+    data: {
+      message: comment,
+      author: userId,
+      tokenId: tokenId,
+    },
+  });
+
+  revalidatePath("/token");
+};
+
+export const addCommentLike = async (
+  userId: string,
+  commentId: string,
+  status: string,
+  prevCommentLikeId?: string
+) => {
+  await prisma.commentLikes.create({
+    data: {
+      userId: userId,
+      commentId: commentId,
+      status: status,
+    },
+  });
+
+  if (prevCommentLikeId) {
+    await prisma.commentLikes.delete({
+      where: {
+        id: prevCommentLikeId,
+      },
+    });
+  }
+
+  revalidatePath("/token");
+};
+
+export const removeCommentLike = async (commentLikeId: string) => {
+  await prisma.commentLikes.delete({
+    where: {
+      id: commentLikeId,
+    },
+  });
+
+  revalidatePath("/token");
+};

@@ -1,18 +1,22 @@
+import { CommentWithLikes } from "../types";
 import TokenComment from "./TokenComment";
 
-export default function TokenComments() {
+type TokenCommentsProps = {
+  comments: CommentWithLikes[];
+};
+
+export default function TokenComments({ comments }: TokenCommentsProps) {
   return (
     <section className="flex flex-col mt-4">
-      <TokenComment />
-      <TokenComment />
-      <TokenComment />
-      <TokenComment />
-      <TokenComment />
-      <TokenComment />
-      <TokenComment />
-      <TokenComment />
-      <TokenComment />
-      <TokenComment />
+      {comments.map((comment) => {
+        return (
+          <TokenComment
+            key={comment.id}
+            comment={comment}
+            user={comment.user}
+          />
+        );
+      })}
     </section>
   );
 }
