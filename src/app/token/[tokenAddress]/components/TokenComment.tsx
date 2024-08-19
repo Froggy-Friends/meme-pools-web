@@ -4,7 +4,7 @@ import { User } from "@prisma/client";
 import Link from "next/link";
 import LikeButton from "./LikeButton";
 import DislikeButton from "./DislikeButton";
-import { COMMENT_DATE_CHARACTER_LENGTH } from "../constants";
+import { COMMENT_DATE_CHARACTER_LENGTH } from "@/config/comment";
 
 type TokenCommentProps = {
   comment: CommentWithLikes;
