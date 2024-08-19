@@ -1,0 +1,1 @@
+export const COMMENT_DATE_CHARACTER_LENGTH = 24;
