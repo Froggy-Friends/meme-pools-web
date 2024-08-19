@@ -1,5 +1,5 @@
 import { fetchUserById } from "@/app/profile/[wallet]/queries";
-import { BASE_ETH_ADDR } from "@/config/token";
+import { baseEthAddr } from "@/config/token";
 import getEthPrice from "@/lib/getEthPrice";
 import { EvmChain } from "@/lib/getTokenPrice";
 import {
@@ -52,7 +52,7 @@ export default async function TokenDetailsPage({
     queryFn: () => getVotesByTokenId(token.id),
   });
 
-  const ethPrice = await getEthPrice(BASE_ETH_ADDR, EvmChain.mainnet);
+  const ethPrice = await getEthPrice(baseEthAddr, EvmChain.mainnet);
   const creator = await fetchUserById(token.userId!);
   const comments = await fetchComments(token.id);
 

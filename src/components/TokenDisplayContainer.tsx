@@ -2,7 +2,7 @@ import { fetchTokens } from "@/app/token/[tokenAddress]/queries";
 import TokenDisplayCard from "./TokenDisplayCard";
 import TokenCarousel from "./TokenCarousel";
 import Link from "next/link";
-import { TOKEN_CAROUSEL_LENGTH } from "@/config/token";
+import { tokenCarouselLength } from "@/config/token";
 
 export default async function TokenDisplayContainer() {
   const newTokens = await fetchTokens("new", 1);
@@ -17,12 +17,8 @@ export default async function TokenDisplayContainer() {
         New
       </Link>
       <TokenCarousel>
-        {newTokens!.slice(0, TOKEN_CAROUSEL_LENGTH).map((token) => {
-          return (
-            <div key={token.id} className="embla__slide">
-              <TokenDisplayCard key={token.id} token={token} />
-            </div>
-          );
+        {newTokens!.slice(0, tokenCarouselLength).map((token) => {
+          return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
 
@@ -33,12 +29,8 @@ export default async function TokenDisplayContainer() {
         Trending
       </Link>
       <TokenCarousel>
-        {trendingTokens!.slice(0, TOKEN_CAROUSEL_LENGTH).map((token) => {
-          return (
-            <div key={token.id} className="embla__slide">
-              <TokenDisplayCard key={token.id} token={token} />
-            </div>
-          );
+        {trendingTokens!.slice(0, tokenCarouselLength).map((token) => {
+          return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
 
@@ -49,12 +41,8 @@ export default async function TokenDisplayContainer() {
         Volume
       </Link>
       <TokenCarousel>
-        {volumeTokens!.slice(0, TOKEN_CAROUSEL_LENGTH).map((token) => {
-          return (
-            <div key={token.id} className="embla__slide">
-              <TokenDisplayCard key={token.id} token={token} />
-            </div>
-          );
+        {volumeTokens!.slice(0, tokenCarouselLength).map((token) => {
+          return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
 
@@ -65,12 +53,8 @@ export default async function TokenDisplayContainer() {
         Transactions
       </Link>
       <TokenCarousel>
-        {transactionTokens!.slice(0, TOKEN_CAROUSEL_LENGTH).map((token) => {
-          return (
-            <div key={token.id} className="embla__slide">
-              <TokenDisplayCard key={token.id} token={token} />
-            </div>
-          );
+        {transactionTokens!.slice(0, tokenCarouselLength).map((token) => {
+          return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
 
@@ -81,12 +65,8 @@ export default async function TokenDisplayContainer() {
         Comments
       </Link>
       <TokenCarousel>
-        {commentTokens!.slice(0, TOKEN_CAROUSEL_LENGTH).map((token) => {
-          return (
-            <div key={token.id} className="embla__slide">
-              <TokenDisplayCard key={token.id} token={token} />
-            </div>
-          );
+        {commentTokens!.slice(0, tokenCarouselLength).map((token) => {
+          return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
     </section>

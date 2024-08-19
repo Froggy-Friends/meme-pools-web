@@ -1,1 +1,1 @@
-export const COMMENT_DATE_CHARACTER_LENGTH = 24;
+export const commentDateCharacterLength = 24;

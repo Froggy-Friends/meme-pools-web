@@ -4,7 +4,7 @@ import { User } from "@prisma/client";
 import Link from "next/link";
 import LikeButton from "./LikeButton";
 import DislikeButton from "./DislikeButton";
-import { COMMENT_DATE_CHARACTER_LENGTH } from "@/config/comment";
+import { commentDateCharacterLength } from "@/config/comment";
 
 type TokenCommentProps = {
   comment: CommentWithLikes;
@@ -25,7 +25,11 @@ export default function TokenComment({ comment, user }: TokenCommentProps) {
         <Link href={`/profile/${user.ethAddress}`} className="hover:underline">
           {user.name}
         </Link>
-        <p>{comment.createdAt.toString().substring(0, COMMENT_DATE_CHARACTER_LENGTH)}</p>
+        <p>
+          {comment.createdAt
+            .toString()
+            .substring(0, commentDateCharacterLength)}
+        </p>
         <LikeButton
           likesCount={comment.commentLikeCount}
           commentId={comment.id}
