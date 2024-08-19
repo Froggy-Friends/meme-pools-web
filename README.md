@@ -2,6 +2,32 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+### Define Environment Variables
+Create a `.env` file in the root directory and add the following:
+```bash
+POSTGRES_PRISMA_URL=
+POSTGRES_URL_NON_POOLING=
+KV_REST_API_URL=
+KV_REST_API_TOKEN=
+KV_REST_API_READ_ONLY_TOKEN=
+```
+Ask a developer on the team for the values to these environment variables.
+
+**Important: Make sure the POSTGRES_PRISMA_URL schema is set to dev to run the app on the dev environment**
+
+### Install Dependencies
+```bash
+npm install
+```
+
+### Generate Prisma DB Definitions
+The npm install script triggers the 'postinstall' script in package.json to generate prisma db definitions.
+When the database definition changes you need to genearte new prisma definitions like this:
+```bash
+npm i -g prisma
+prisma generate
+```
+
 First, run the development server:
 
 ```bash
