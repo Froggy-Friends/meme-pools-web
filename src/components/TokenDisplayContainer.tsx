@@ -1,8 +1,8 @@
-import { fetchTokens } from "@/app/token/[tokenAddress]/queries";
+import { fetchTokens } from "@/queries/token/queries";
 import TokenDisplayCard from "./TokenDisplayCard";
 import TokenCarousel from "./TokenCarousel";
 import Link from "next/link";
-import { tokenCarouselLength } from "@/config/token";
+import { tokenCarouselLength } from "@/config/base/token";
 
 export default async function TokenDisplayContainer() {
   const newTokens = await fetchTokens("new", 1);

@@ -1,4 +1,4 @@
-import { CommentWithLikes } from "@/app/token/[tokenAddress]/types";
+import { CommentWithLikes } from "@/types/token/types";
 import { User } from "@prisma/client";
 
 export const getUserCommentInteraction = (
