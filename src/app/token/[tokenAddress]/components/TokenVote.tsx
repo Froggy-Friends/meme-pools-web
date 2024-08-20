@@ -10,15 +10,13 @@ import {
   PiArrowFatDownLight,
   PiArrowFatUpLight,
 } from "react-icons/pi";
-import { useAccount } from "wagmi";
 
 type VoteCountProps = {
   tokenId: string;
 };
 export default function TokenVote({ tokenId }: VoteCountProps) {
   const { votes } = useVotes(tokenId);
-  const { address } = useAccount();
-  const { currentUser } = useUser(address!);
+  const { currentUser } = useUser();
   const { castVote, isCastingVote } = useCastVote(tokenId, currentUser?.id!);
   const { userVote } = useUserVote(tokenId, currentUser?.id!);
   const voteStatus = userVote?.status;

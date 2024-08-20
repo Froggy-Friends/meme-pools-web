@@ -1,34 +1,36 @@
-
 import { createUser } from "@/app/profile/[wallet]/actions";
 import { fetchUser } from "@/app/profile/[wallet]/queries";
 import { User } from "@/app/profile/[wallet]/types";
-import { Address } from "@/lib/types";
 import { useCallback, useEffect, useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useAccount } from "wagmi";
 
-export default function useUser(address: Address) {
+export default function useUser() {
   const [currentUser, setCurrentUser] = useState<User | null>();
+  const { publicKey } = useWallet();
+  const { address } = useAccount();
 
-  const checkAndCreateUser = useCallback(async (address: Address) => {
-    if (!address) {
-      return 
+  const checkAndCreateUser = useCallback(async () => {
+    if (!address && !publicKey?.toString()) {
+      return;
     }
-
-    const user = await fetchUser(address);
-   
+    
+    const user = await fetchUser(address || publicKey!.toString());
+    
     if (user) {
-      setCurrentUser(user)
-    } else if (!user) {
+      setCurrentUser(user);
+    } else if (!user && address || publicKey?.toString()) {
       await createUser({
-        wallet: address,
+        wallet: address || publicKey?.toString(),
       });
-      const user = await fetchUser(address);
-      setCurrentUser(user)
+      const user = await fetchUser(address || publicKey!.toString());
+      setCurrentUser(user);
     }
-  }, []);
+  }, [address, publicKey]);
 
   useEffect(() => {
-    checkAndCreateUser(address);
-  }, [checkAndCreateUser, address]);
+    checkAndCreateUser();
+  }, [checkAndCreateUser, address, publicKey]);
 
   return { currentUser };
 }
