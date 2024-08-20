@@ -4,6 +4,8 @@ import { fetchFollowers, fetchFollowing, fetchUser } from "./queries";
 import ProfileMenuToggle from "./components/ProfileMenuToggle";
 import Followers from "./components/Followers";
 import Following from "./components/Following";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 type ProfilePageProps = {
   params: {
@@ -26,6 +28,8 @@ export default async function ProfilePage({
 
   return (
     <main className="flex flex-col px-12 mb-20">
+      <Header />
+
       <ProfileInfo profileUser={user} profileWalletAddress={params.wallet} />
 
       <div className="flex flex-col mx-auto">
@@ -33,6 +37,8 @@ export default async function ProfilePage({
         {view === "followers" && <Followers followers={followers} />}
         {view === "following" && <Following following={following} />}
       </div>
+
+      <Footer />
     </main>
   );
 }

@@ -21,6 +21,8 @@ import TokenVote from "./components/TokenVote";
 import { fetchComments, fetchTokenByAddress } from "./queries";
 import { SearchParams } from "@/lib/types";
 import { CommentAndTradesView, CommentAndTradesViews } from "@/models/comment";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 const DynamicTokenChart = dynamic(() => import("./components/TokenChart"), {
   ssr: false,
 });
@@ -58,6 +60,8 @@ export default async function TokenDetailsPage({
 
   return (
     <main className="flex flex-col px-12 mb-20">
+      <Header />
+
       <div className="flex gap-x-10 mt-20">
         <div className="w-[65%] flex flex-col">
           <DynamicTokenChart token={token!} creator={creator!} />
@@ -86,6 +90,8 @@ export default async function TokenDetailsPage({
           <HolderDistribution />
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }
