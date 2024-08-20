@@ -1,7 +1,7 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
-import { CommentLikes, TokenVote } from "@prisma/client";
+import { TokenVote } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function getVotesByTokenId(
