@@ -6,6 +6,7 @@ import Following from "../../../components/profile/Following";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { fetchFollowers, fetchFollowing, fetchUserByName } from "@/queries/profile/queries";
+import { Chains } from "@/models/chains";
 
 type ProfilePageProps = {
   params: {
@@ -28,7 +29,7 @@ export default async function ProfilePage({
 
   return (
     <main className="flex flex-col px-12 mb-20">
-      <Header />
+      <Header chain={Chains.Base}/>
 
       <ProfileInfo profileUser={user}  />
 
