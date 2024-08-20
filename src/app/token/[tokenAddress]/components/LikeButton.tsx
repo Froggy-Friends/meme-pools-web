@@ -1,6 +1,5 @@
 import useUser from "@/hooks/useUser";
 import { FaThumbsUp, FaRegThumbsUp } from "react-icons/fa6";
-import { useAccount } from "wagmi";
 import { addCommentLike, removeCommentLike } from "../actions";
 import toast from "react-hot-toast";
 import { CommentWithLikes } from "../types";
@@ -17,8 +16,7 @@ export default function LikeButton({
   commentId,
   comment,
 }: LikesButtonProps) {
-  const { address } = useAccount();
-  const { currentUser } = useUser(address!);
+  const { currentUser } = useUser();
   const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
     comment,
     currentUser!

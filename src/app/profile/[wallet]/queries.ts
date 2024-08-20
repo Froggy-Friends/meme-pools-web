@@ -7,7 +7,7 @@ import { User, WagmiConnectionsValue } from "./types";
 import { fetchUserCacheKey, fetchUserCacheTag } from "@/config/user";
 
 export const fetchUser = unstable_cache(
-  async (wallet: string) => {
+  async (wallet: string | undefined) => {
     if (!wallet) {
       return;
     }

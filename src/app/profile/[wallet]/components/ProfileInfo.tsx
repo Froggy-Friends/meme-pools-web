@@ -25,8 +25,8 @@ export default function ProfileInfo({
   profileWalletAddress,
 }: ProfileInfoParams) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const { address, isConnected } = useAccount();
-  const { currentUser } = useUser(address!);
+  const { isConnected } = useAccount();
+  const { currentUser } = useUser();
   const [loading, setLoading] = useState(false);
 
   const { data, isLoading, refetch } = useQuery({

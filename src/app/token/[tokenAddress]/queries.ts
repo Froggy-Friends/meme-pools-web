@@ -60,6 +60,9 @@ export const fetchComments = async (tokenId: string) => {
       commentLikes: true,
       user: true,
     },
+    orderBy: {
+      createdAt: "asc"
+    }
   });
 
   const commentsWithLikes = comments.map((comment) => {
@@ -77,9 +80,5 @@ export const fetchComments = async (tokenId: string) => {
     };
   });
 
-  return commentsWithLikes.sort(
-    (a, b) =>
-      b.commentLikeCount - a.commentLikeCount ||
-      a.commentDislikeCount - b.commentDislikeCount
-  );
+  return commentsWithLikes
 };

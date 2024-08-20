@@ -13,7 +13,6 @@ import { FaPencil } from "react-icons/fa6";
 import FormSubmitButton from "@/components/FormSubmitButton";
 import { postComment } from "../actions";
 import useUser from "@/hooks/useUser";
-import { useAccount } from "wagmi";
 import { CommentWithLikes } from "../types";
 import { CommentAndTradesView } from "@/models/comment";
 
@@ -30,8 +29,7 @@ export default function CommentsAndTradesContainer({
   tokenId,
   comments,
 }: CommentsAndTradesContainerProps) {
-  const { address } = useAccount();
-  const { currentUser } = useUser(address!);
+  const { currentUser } = useUser();
 
   return (
     <div className="flex flex-col">
