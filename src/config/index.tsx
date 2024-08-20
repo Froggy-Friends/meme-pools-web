@@ -9,7 +9,7 @@ if (!projectId) throw new Error("Project ID is not defined");
 export const metadata = {
   name: "Frog.fun",
   description:
-    "Launch a tradeable coin instantly in one click on http://frog.fun/",
+    "Launch a tradeable coin instantly in one click on https://frog.fun/",
   url: "https://frog.fun/",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };

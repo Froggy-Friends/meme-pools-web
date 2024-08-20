@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useState } from "react";
 import SolConnectButton from "./SolConnectButton";
+import { Chains } from "@/models/chains";
 
 type ProfileAvatarProps = {
   user: User;
@@ -29,12 +30,12 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
   const { currentUser } = useUser();
   const { publicKey, connected } = useWallet();
   const solDisconnet = useWallet().disconnect;
-  const [chain, setChain] = useState("Solana");
+  const [chain, setChain] = useState(Chains.Solana);
 
   return (
     <Dropdown>
-      {!isConnected && chain === "Base" && <EvmConnectButton />}
-      {!connected && chain === "Solana" && <SolConnectButton />}
+      {!isConnected && chain === Chains.Base && <EvmConnectButton />}
+      {!connected && chain === Chains.Solana && <SolConnectButton />}
       {isConnected ||
         (connected && !user && !currentUser && (
           <DropdownTrigger>

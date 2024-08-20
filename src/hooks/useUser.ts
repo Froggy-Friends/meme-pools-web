@@ -15,7 +15,7 @@ export default function useUser() {
       return;
     }
     
-    const user = await fetchUser(address || publicKey!.toString());
+    const user = await fetchUser(address || publicKey?.toString());
     
     if (user) {
       setCurrentUser(user);
@@ -23,7 +23,7 @@ export default function useUser() {
       await createUser({
         wallet: address || publicKey?.toString(),
       });
-      const user = await fetchUser(address || publicKey!.toString());
+      const user = await fetchUser(address || publicKey?.toString());
       setCurrentUser(user);
     }
   }, [address, publicKey]);
