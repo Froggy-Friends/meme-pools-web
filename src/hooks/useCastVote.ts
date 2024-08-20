@@ -1,4 +1,4 @@
-import { updateVote } from "@/app/token/[tokenAddress]/actions";
+import { updateVote } from "@/actions/token/actions";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
 import { TokenVote } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

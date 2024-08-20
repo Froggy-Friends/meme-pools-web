@@ -3,9 +3,14 @@ import Link from "next/link";
 import ProfileAvatar from "./ProfileAvatar";
 import HeaderSocialLinks from "./HeaderSocialLinks";
 import { cookies } from "next/headers";
-import { getUserFromCookies } from "@/app/profile/[wallet]/queries";
+import { getUserFromCookies } from "@/queries/profile/queries";
+import { Chains } from "@/models/chains";
 
-export default async function Header() {
+type HeaderProps = {
+  chain: Chains
+}
+
+export default async function Header({ chain }: HeaderProps) {
   const cookieStore = cookies();
   const user = await getUserFromCookies(cookieStore);
 
@@ -18,7 +23,7 @@ export default async function Header() {
         <HeaderSocialLinks />
       </div>
 
-      <ProfileAvatar user={user!} />
+      <ProfileAvatar user={user!} chain={chain}/>
     </header>
   );
 }
