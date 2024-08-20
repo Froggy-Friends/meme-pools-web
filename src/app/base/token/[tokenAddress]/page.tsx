@@ -26,6 +26,7 @@ import { CommentAndTradesView, CommentAndTradesViews } from "@/models/comment";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { fetchUserById } from "@/queries/profile/queries";
+import { Chains } from "@/models/chains";
 const DynamicTokenChart = dynamic(
   () => import("../../../../components/token/TokenChart"),
   {
@@ -66,7 +67,7 @@ export default async function TokenDetailsPage({
 
   return (
     <main className="flex flex-col px-12 mb-20">
-      <Header />
+      <Header chain={Chains.Base}/>
 
       <div className="flex gap-x-10 mt-20">
         <div className="w-[65%] flex flex-col">
