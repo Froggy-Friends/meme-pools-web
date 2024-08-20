@@ -5,6 +5,7 @@ import HeaderSocialLinks from "./HeaderSocialLinks";
 import { cookies } from "next/headers";
 import { getUserFromCookies } from "@/queries/profile/queries";
 import { Chains } from "@/models/chains";
+import ChainSwitcher from "./ChainSwitcher";
 
 type HeaderProps = {
   chain: Chains
@@ -22,8 +23,11 @@ export default async function Header({ chain }: HeaderProps) {
         </Link>
         <HeaderSocialLinks />
       </div>
-
-      <ProfileAvatar user={user!} chain={chain}/>
+      
+      <div className="flex items-center gap-x-4">
+        <ChainSwitcher chain={chain} />
+        <ProfileAvatar user={user!} chain={chain}/>
+      </div>
     </header>
   );
 }

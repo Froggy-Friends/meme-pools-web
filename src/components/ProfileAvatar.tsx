@@ -14,7 +14,6 @@ import defaultAvatar from "../../public/Frog.fun_Default_PFP.png";
 import { Address } from "@coinbase/onchainkit/identity";
 import { useRouter } from "next/navigation";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useState } from "react";
 import SolConnectButton from "./solana/SolConnectButton";
 import { Chains } from "@/models/chains";
 import { User } from "@prisma/client";
@@ -36,7 +35,7 @@ export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
     <Dropdown>
       {!isConnected && chain === Chains.Base && <EvmConnectButton />}
       {!connected && chain === Chains.Solana && <SolConnectButton />}
-      {isConnected && !user && !currentUser && (
+      {isConnected && !user && !currentUser && chain === Chains.Base && (
         <DropdownTrigger>
           <Avatar
             as="button"
@@ -46,7 +45,7 @@ export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
           />
         </DropdownTrigger>
       )}
-      {connected && !user && !currentUser && (
+      {connected && !user && !currentUser && chain === Chains.Solana && (
         <DropdownTrigger>
           <Avatar
             as="button"
@@ -56,7 +55,7 @@ export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
           />
         </DropdownTrigger>
       )}
-      {isConnected && user && (
+      {isConnected && user && chain === Chains.Base && (
         <DropdownTrigger>
           <Avatar
             as="button"
@@ -66,7 +65,7 @@ export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
           />
         </DropdownTrigger>
       )}
-      {connected && user && (
+      {connected && user && chain === Chains.Solana && (
         <DropdownTrigger>
           <Avatar
             as="button"
@@ -76,7 +75,7 @@ export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
           />
         </DropdownTrigger>
       )}
-      {isConnected && !user && currentUser && (
+      {isConnected && !user && currentUser && chain === Chains.Base && (
         <DropdownTrigger>
           <Avatar
             as="button"
@@ -86,7 +85,7 @@ export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
           />
         </DropdownTrigger>
       )}
-      {connected && !user && currentUser && (
+      {connected && !user && currentUser && chain === Chains.Solana && (
         <DropdownTrigger>
           <Avatar
             as="button"
@@ -98,8 +97,12 @@ export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
       )}
       <DropdownMenu>
         <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
-          {address && <Address address={address} isSliced={true} />}
-          {connected && <p>{publicKey?.toString().substring(0, 6)}</p>}
+          {chain === Chains.Base && (
+            <Address address={address} isSliced={true} />
+          )}
+          {chain === Chains.Solana && (
+            <p>{publicKey?.toString().substring(0, 6)}</p>
+          )}
         </DropdownItem>
         <DropdownItem
           key="Profile"
@@ -112,8 +115,8 @@ export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
         <DropdownItem
           key="Disconnect"
           onPress={() => {
-            isConnected && disconnect();
-            connected && solDisconnet();
+            chain === Chains.Base && disconnect();
+            chain === Chains.Solana && solDisconnet();
           }}
         >
           Disconnect
