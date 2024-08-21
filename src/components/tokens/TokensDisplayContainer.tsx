@@ -1,15 +1,18 @@
 import TokenDisplayCard from "@/components/TokenDisplayCard";
 import PaginationControls from "./PaginationControls";
 import { fetchTokenCount, fetchTokens } from "@/queries/token/queries";
+import { Chains } from "@/models/chains";
 
 type TokesnDisplayContainerProps = {
   filter: string;
   page: number;
+  chain: Chains;
 };
 
 export default async function TokensDisplayContainer({
   filter,
   page,
+  chain,
 }: TokesnDisplayContainerProps) {
   const tokenCount = await fetchTokenCount();
   const tokens = await fetchTokens(filter, page);
@@ -33,7 +36,9 @@ export default async function TokensDisplayContainer({
 
       <div className="flex flex-wrap justify-between w-full mt-12">
         {tokens!.map((token) => {
-          return <TokenDisplayCard key={token.id} token={token} />;
+          return (
+            <TokenDisplayCard key={token.id} token={token} chain={chain} />
+          );
         })}
       </div>
     </section>

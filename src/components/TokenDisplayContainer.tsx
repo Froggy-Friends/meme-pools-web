@@ -3,8 +3,15 @@ import TokenDisplayCard from "./TokenDisplayCard";
 import TokenCarousel from "./TokenCarousel";
 import Link from "next/link";
 import { tokenCarouselLength } from "@/config/base/token";
+import { Chains } from "@/models/chains";
 
-export default async function TokenDisplayContainer() {
+type TokenDisplayContainerProps = {
+  chain: Chains;
+};
+
+export default async function TokenDisplayContainer({
+  chain,
+}: TokenDisplayContainerProps) {
   const newTokens = await fetchTokens("new", 1);
   const trendingTokens = await fetchTokens("trending", 1);
   const volumeTokens = await fetchTokens("volume", 1);
@@ -13,60 +20,73 @@ export default async function TokenDisplayContainer() {
 
   return (
     <section className="flex flex-col">
-      <Link href="/tokens/new?page=1" className="mb-2 text-xl hover:underline">
+      <Link
+        href={`${chain}/tokens/new?page=1`}
+        className="mb-2 text-xl hover:underline"
+      >
         New
       </Link>
       <TokenCarousel>
         {newTokens!.slice(0, tokenCarouselLength).map((token) => {
-          return <TokenDisplayCard key={token.id} token={token} />;
+          return (
+            <TokenDisplayCard key={token.id} token={token} chain={chain} />
+          );
         })}
       </TokenCarousel>
 
       <Link
-        href="/tokens/trending?page=1"
+        href={`${chain}/tokens/trending?page=1`}
         className="mb-2 text-xl hover:underline"
       >
         Trending
       </Link>
       <TokenCarousel>
         {trendingTokens!.slice(0, tokenCarouselLength).map((token) => {
-          return <TokenDisplayCard key={token.id} token={token} />;
+          return (
+            <TokenDisplayCard key={token.id} token={token} chain={chain} />
+          );
         })}
       </TokenCarousel>
 
       <Link
-        href="/tokens/volume?page=1"
+        href={`${chain}/tokens/volume?page=1`}
         className="mb-2 text-xl hover:underline"
       >
         Volume
       </Link>
       <TokenCarousel>
         {volumeTokens!.slice(0, tokenCarouselLength).map((token) => {
-          return <TokenDisplayCard key={token.id} token={token} />;
+          return (
+            <TokenDisplayCard key={token.id} token={token} chain={chain} />
+          );
         })}
       </TokenCarousel>
 
       <Link
-        href="/tokens/transactions?page=1"
+        href={`${chain}/tokens/transactions?page=1`}
         className="mb-2 text-xl hover:underline"
       >
         Transactions
       </Link>
       <TokenCarousel>
         {transactionTokens!.slice(0, tokenCarouselLength).map((token) => {
-          return <TokenDisplayCard key={token.id} token={token} />;
+          return (
+            <TokenDisplayCard key={token.id} token={token} chain={chain} />
+          );
         })}
       </TokenCarousel>
 
       <Link
-        href="/tokens/comments?page=1"
+        href={`${chain}/tokens/comments?page=1`}
         className="mb-2 text-xl hover:underline"
       >
         Comments
       </Link>
       <TokenCarousel>
         {commentTokens!.slice(0, tokenCarouselLength).map((token) => {
-          return <TokenDisplayCard key={token.id} token={token} />;
+          return (
+            <TokenDisplayCard key={token.id} token={token} chain={chain} />
+          );
         })}
       </TokenCarousel>
     </section>

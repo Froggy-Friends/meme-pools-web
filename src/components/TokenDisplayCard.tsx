@@ -1,18 +1,24 @@
 import { TokenWithCreator } from "@/lib/types";
+import { Chains } from "@/models/chains";
 import Image from "next/image";
 import Link from "next/link";
 import { IoChatbox } from "react-icons/io5";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator;
+  chain: Chains;
 };
 
 export default async function TokenDisplayCard({
   token,
+  chain,
 }: TokenDisplayCardProps) {
   return (
     <div className="flex flex-grow-0 flex-shrink-0 w-[25%]">
-      <Link href={`/token/${token.tokenAddress}`} className="flex gap-x-3 my-2">
+      <Link
+        href={`${chain}/token/${token.tokenAddress}`}
+        className="flex gap-x-3 my-2"
+      >
         <Image
           src={token.image}
           alt="token-image"
