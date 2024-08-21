@@ -5,9 +5,16 @@ import Followers from "../../../components/profile/Followers";
 import Following from "../../../components/profile/Following";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchFollow, fetchFollowers, fetchFollowing, fetchUser, fetchUserByName } from "@/queries/profile/queries";
+import {
+  fetchFollow,
+  fetchFollowers,
+  fetchFollowing,
+  fetchUser,
+  fetchUserByName,
+} from "@/queries/profile/queries";
 import { Chains } from "@/models/chains";
 import { cookies } from "next/headers";
+import { Cookie } from "@/models/cookie";
 
 type ProfilePageProps = {
   params: {
@@ -22,7 +29,7 @@ export default async function ProfilePage({
 }: ProfilePageProps) {
   const view = (searchParams.view as string) || "followers";
   const cookieStore = cookies();
-  const currentUserEvmAddress = cookieStore.get("user-evm-address");
+  const currentUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const currentUser = await fetchUser(currentUserEvmAddress?.value);
   const user = await fetchUserByName(params.username);
   if (!user) {
@@ -34,9 +41,13 @@ export default async function ProfilePage({
 
   return (
     <main className="flex flex-col px-12 mb-20">
-      <Header chain={Chains.Base}/>
+      <Header chain={Chains.Base} />
 
-      <ProfileInfo profileUser={user} currentUser={currentUser!} isFollowing={isFollowing?.status!}/>
+      <ProfileInfo
+        profileUser={user}
+        currentUser={currentUser!}
+        isFollowing={isFollowing?.status || "false"}
+      />
 
       <div className="flex flex-col mx-auto">
         <ProfileMenuToggle profileUser={user} />

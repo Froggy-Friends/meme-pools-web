@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import FollowButton from "./FollowButton";
+import { Cookie } from "@/models/cookie";
 
 type UserCardProps = {
   user: User;
@@ -14,7 +15,7 @@ type UserCardProps = {
 
 export default async function UserCard({ user }: UserCardProps) {
   const cookieStore = cookies();
-  const userEvmAddress = cookieStore.get("user-evm-address");
+  const userEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const currentUser = await fetchUser(userEvmAddress?.value);
   const isFollowing = await fetchFollow(user.id, currentUser?.id!);
 
@@ -33,7 +34,7 @@ export default async function UserCard({ user }: UserCardProps) {
 
       {currentUser && currentUser.id !== user.id && (
         <FollowButton
-          isFollowing={isFollowing?.status!}
+          isFollowing={isFollowing?.status || "false"}
           currentUser={currentUser}
           user={user}
         />

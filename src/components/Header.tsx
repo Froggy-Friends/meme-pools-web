@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { fetchUser } from "@/queries/profile/queries";
 import { Chains } from "@/models/chains";
 import ChainSwitcher from "./ChainSwitcher";
+import { Cookie } from "@/models/cookie";
 
 type HeaderProps = {
   chain: Chains;
@@ -13,8 +14,8 @@ type HeaderProps = {
 
 export default async function Header({ chain }: HeaderProps) {
   const cookieStore = cookies();
-  const userEvmAddress = cookieStore.get("user-evm-address");
-  const userSolAddress = cookieStore.get("user-sol-address");
+  const userEvmAddress = cookieStore.get(Cookie.EvmAddress);
+  const userSolAddress = cookieStore.get(Cookie.SolanaAddress);
   const user = await fetchUser(
     chain === Chains.Base ? userEvmAddress?.value : userSolAddress?.value
   );

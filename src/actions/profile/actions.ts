@@ -11,6 +11,7 @@ import { cookies } from "next/headers";
 import { User } from "@prisma/client";
 import { FollowStatus } from "@/models/follow";
 import toast from "react-hot-toast";
+import { Cookie } from "@/models/cookie";
 
 export const createUser = async ({
   name,
@@ -133,8 +134,8 @@ export const unfollowUser = async (accountId: string, followerId: string) => {
 
 export const setUserCookies = async (user: User) => {
   const cookieStore = cookies();
-  user.ethAddress && cookieStore.set("user-evm-address", user.ethAddress);
-  user.solAddress && cookieStore.set("user-sol-address", user.solAddress);
+  user.ethAddress && cookieStore.set(Cookie.EvmAddress, user.ethAddress);
+  user.solAddress && cookieStore.set(Cookie.SolanaAddress, user.solAddress);
 };
 
 export const handleFollow = async (
