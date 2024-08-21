@@ -3,7 +3,8 @@
 import { handleFollow } from "@/actions/profile/actions";
 import { FollowStatus } from "@/models/follow";
 import { User } from "@prisma/client";
-import { useState } from "react";
+import { useOptimistic, useState } from "react";
+import toast from "react-hot-toast";
 
 type FollowButtonProps = {
   isFollowing: string;
@@ -16,22 +17,36 @@ export default function FollowButton({
   currentUser,
   user,
 }: FollowButtonProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [optomisticIsFollowing, updateIsFollowing] = useOptimistic(
+    isFollowing,
+    (state, newIsFollowing: string) => {
+      return newIsFollowing;
+    }
+  );
+  const [isPending, setIsPending] = useState(false);
 
   return (
     <button
-      className={`${
-        isLoading && "border-gray-400 text-gray-400"
-      } border-black p-1 border rounded-lg font-semibold w-28`}
+      className="border-black p-1 border rounded-lg font-semibold w-28"
+      disabled={isPending}
       onClick={async () => {
-        setIsLoading(true);
-        await handleFollow(isFollowing, user, currentUser);
-        setIsLoading(false);
+        updateIsFollowing(
+          isFollowing === FollowStatus.UNFOLLOW
+            ? FollowStatus.FOLLOW
+            : FollowStatus.UNFOLLOW
+        );
+        setIsPending(true);
+
+        const errorMessage = await handleFollow(isFollowing, user, currentUser);
+        if (errorMessage) {
+          toast.error(errorMessage as string)
+        }
+        setIsPending(false);
       }}
     >
       {!isFollowing && FollowStatus.FOLLOW}
-      {isFollowing === FollowStatus.UNFOLLOW && FollowStatus.FOLLOW}
-      {isFollowing === FollowStatus.FOLLOW && FollowStatus.UNFOLLOW}
+      {optomisticIsFollowing === FollowStatus.UNFOLLOW && FollowStatus.FOLLOW}
+      {optomisticIsFollowing === FollowStatus.FOLLOW && FollowStatus.UNFOLLOW}
     </button>
   );
 }

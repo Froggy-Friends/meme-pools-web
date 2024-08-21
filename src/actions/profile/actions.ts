@@ -143,20 +143,25 @@ export const handleFollow = async (
   user: User,
   currentUser: User
 ) => {
+  let errorMessage = "";
+
   try {
     if (
       (isFollowing === FollowStatus.UNFOLLOW && currentUser) ||
       (!isFollowing && currentUser)
     ) {
-      await followUser(user.id, currentUser.id);
+      await followUser("123", currentUser.id);
     } else if (isFollowing === FollowStatus.FOLLOW && currentUser) {
-      await unfollowUser(user.id, currentUser.id);
+      await unfollowUser("123", currentUser.id);
     }
     revalidatePath("/profile");
   } catch (error) {
-    isFollowing === FollowStatus.UNFOLLOW &&
-      toast.error("Failed to follow user");
-    isFollowing === FollowStatus.FOLLOW &&
-      toast.error("Failed to unfollow user");
+    if (isFollowing === FollowStatus.UNFOLLOW) {
+      errorMessage = "Failed to follow user";
+    } else {
+      errorMessage = "Failed to unfollow user";
+    }
   }
+
+  return errorMessage;
 };
