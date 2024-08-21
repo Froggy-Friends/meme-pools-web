@@ -6,10 +6,12 @@ import { Address } from "@/lib/types";
 import { put } from "@vercel/blob";
 import { defaultProfileAvatarUrl, fetchUserCacheTag } from "@/config/user";
 import { UserParams } from "@/app/profile/[username]/types";
-import {
-  fetchFollow,
-  fetchUser,
-} from "@/queries/profile/queries";
+import { fetchFollow, fetchUser } from "@/queries/profile/queries";
+import { cookies } from "next/headers";
+import { User } from "@prisma/client";
+import { FollowStatus } from "@/models/follow";
+import toast from "react-hot-toast";
+import { Cookie } from "@/models/cookie";
 
 export const createUser = async ({
   name,
@@ -102,7 +104,6 @@ export const followUser = async (accountId: string, followerId: string) => {
       },
     });
   }
-  revalidatePath("/profile");
 };
 
 export const unfollowUser = async (accountId: string, followerId: string) => {
@@ -129,5 +130,38 @@ export const unfollowUser = async (accountId: string, followerId: string) => {
       },
     });
   }
-  revalidatePath("/profile");
+};
+
+export const setUserCookies = async (user: User) => {
+  const cookieStore = cookies();
+  user.ethAddress && cookieStore.set(Cookie.EvmAddress, user.ethAddress);
+  user.solAddress && cookieStore.set(Cookie.SolanaAddress, user.solAddress);
+};
+
+export const handleFollow = async (
+  isFollowing: string,
+  user: User,
+  currentUser: User
+) => {
+  let errorMessage = "";
+
+  try {
+    if (
+      (isFollowing === FollowStatus.UNFOLLOW && currentUser) ||
+      (!isFollowing && currentUser)
+    ) {
+      await followUser(user.id, currentUser.id);
+    } else if (isFollowing === FollowStatus.FOLLOW && currentUser) {
+      await unfollowUser(user.id, currentUser.id);
+    }
+    revalidatePath("/profile");
+  } catch (error) {
+    if (isFollowing === FollowStatus.UNFOLLOW) {
+      errorMessage = "Failed to follow user";
+    } else {
+      errorMessage = "Failed to unfollow user";
+    }
+  }
+
+  return errorMessage;
 };

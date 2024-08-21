@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useAccount } from "wagmi";
 import { fetchUser } from "@/queries/profile/queries";
-import { createUser } from "@/actions/profile/actions";
+import { createUser, setUserCookies } from "@/actions/profile/actions";
 
 export default function useUser() {
   const [currentUser, setCurrentUser] = useState<User | null>();
@@ -19,12 +19,14 @@ export default function useUser() {
 
     if (user) {
       setCurrentUser(user);
+      await setUserCookies(user);
     } else if ((!user && address) || publicKey?.toString()) {
       await createUser({
         wallet: address || publicKey?.toString(),
       });
       const user = await fetchUser(address || publicKey?.toString());
       setCurrentUser(user);
+      user && (await setUserCookies(user));
     }
   }, [address, publicKey]);
 

@@ -6,11 +6,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Chains } from "@/models/chains";
 
-
 export default function BaseHomePage() {
   return (
     <main className="flex flex-col px-12">
-      <Header chain={Chains.Base}/>
+      <Header chain={Chains.Base} />
 
       <LaunchCoinButton />
 
@@ -18,7 +17,7 @@ export default function BaseHomePage() {
 
       <TokenSearch />
 
-      <TokenDisplayContainer />
+      <TokenDisplayContainer chain={Chains.Base} />
 
       <Footer />
     </main>

@@ -25,9 +25,13 @@ export default function TokensPage({ params, searchParams }: TokensPageProps) {
 
   return (
     <main className="flex flex-col px-12">
-      <Header chain={Chains.Base}/>
+      <Header chain={Chains.Base} />
 
-      <TokensDisplayContainer filter={filter} page={+page} />
+      <TokensDisplayContainer
+        filter={filter}
+        page={+page}
+        chain={Chains.Base}
+      />
 
       <Footer />
     </main>
