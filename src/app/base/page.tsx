@@ -4,20 +4,20 @@ import TokenDisplayContainer from "@/components/TokenDisplayContainer";
 import TokenSearch from "@/components/TokenSearch";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Chains } from "@/models/chains";
+import { Chain } from "@/models/chain";
 
 export default function BaseHomePage() {
   return (
     <main className="flex flex-col px-12">
-      <Header chain={Chains.Base} />
+      <Header chain={Chain.Base} />
 
-      <LaunchCoinButton />
+      <LaunchCoinButton chain={Chain.Base}/>
 
       <KingOfTheHill />
 
       <TokenSearch />
 
-      <TokenDisplayContainer chain={Chains.Base} />
+      <TokenDisplayContainer chain={Chain.Base} />
 
       <Footer />
     </main>

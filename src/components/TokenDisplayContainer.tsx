@@ -3,10 +3,10 @@ import TokenDisplayCard from "./TokenDisplayCard";
 import TokenCarousel from "./TokenCarousel";
 import Link from "next/link";
 import { tokenCarouselLength } from "@/config/base/token";
-import { Chains } from "@/models/chains";
+import { Chain } from "@/models/chain";
 
 type TokenDisplayContainerProps = {
-  chain: Chains;
+  chain: Chain;
 };
 
 export default async function TokenDisplayContainer({

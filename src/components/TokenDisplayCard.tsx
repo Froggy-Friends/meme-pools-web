@@ -1,12 +1,12 @@
 import { TokenWithCreator } from "@/lib/types";
-import { Chains } from "@/models/chains";
+import { Chain } from "@/models/chain";
 import Image from "next/image";
 import Link from "next/link";
 import { IoChatbox } from "react-icons/io5";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator;
-  chain: Chains;
+  chain: Chain;
 };
 
 export default async function TokenDisplayCard({

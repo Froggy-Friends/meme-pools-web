@@ -4,12 +4,12 @@ import ProfileAvatar from "./ProfileAvatar";
 import HeaderSocialLinks from "./HeaderSocialLinks";
 import { cookies } from "next/headers";
 import { fetchUser } from "@/queries/profile/queries";
-import { Chains } from "@/models/chains";
+import { Chain } from "@/models/chain";
 import ChainSwitcher from "./ChainSwitcher";
 import { Cookie } from "@/models/cookie";
 
 type HeaderProps = {
-  chain: Chains;
+  chain: Chain;
 };
 
 export default async function Header({ chain }: HeaderProps) {
@@ -17,7 +17,7 @@ export default async function Header({ chain }: HeaderProps) {
   const userEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const userSolAddress = cookieStore.get(Cookie.SolanaAddress);
   const user = await fetchUser(
-    chain === Chains.Base ? userEvmAddress?.value : userSolAddress?.value
+    chain === Chain.Base ? userEvmAddress?.value : userSolAddress?.value
   );
 
   return (
