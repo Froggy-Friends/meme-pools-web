@@ -19,12 +19,12 @@ export default function FollowButton({
 }: FollowButtonProps) {
   const queryClient = useQueryClient();
   const { data } = useQuery({
-    queryKey: ["isFollowing", currentUser.id],
+    queryKey: ["isFollowing", currentUser.id, user.id],
     initialData: isFollowing,
   });
 
   const handleClick = useMutation({
-    mutationKey: ["changeFollow", currentUser.id],
+    mutationKey: ["changeFollow", currentUser.id, user.id],
     mutationFn: async () => {
       const errorMessage = await handleFollow(data, user, currentUser);
       if (errorMessage) {
@@ -35,16 +35,17 @@ export default function FollowButton({
       const previousData = await queryClient.getQueryData([
         "isFollowing",
         currentUser.id,
+        user.id,
       ]);
 
-      if (previousData === FollowStatus.UNFOLLOW) {
+      if (previousData === FollowStatus.UNFOLLOW || previousData === "false") {
         queryClient.setQueryData(
-          ["isFollowing", currentUser.id],
+          ["isFollowing", currentUser.id, user.id],
           FollowStatus.FOLLOW
         );
       } else if (previousData === FollowStatus.FOLLOW) {
         queryClient.setQueryData(
-          ["isFollowing", currentUser.id],
+          ["isFollowing", currentUser.id, user.id],
           FollowStatus.UNFOLLOW
         );
       }
@@ -53,14 +54,14 @@ export default function FollowButton({
     },
     onError(error, variables, context) {
       queryClient.setQueryData(
-        ["isFollowing", currentUser.id],
+        ["isFollowing", currentUser.id, user.id],
         context?.previousData
       );
       toast.error((error as Error).message);
     },
     onSettled: async () => {
       queryClient.invalidateQueries({
-        queryKey: ["isFollowing", currentUser.id],
+        queryKey: ["isFollowing", currentUser.id, user.id],
       });
     },
   });
@@ -71,7 +72,7 @@ export default function FollowButton({
       disabled={handleClick.isPending}
       onClick={() => handleClick.mutate()}
     >
-      {!data && FollowStatus.FOLLOW}
+      {data === "false" && FollowStatus.FOLLOW}
       {data === FollowStatus.UNFOLLOW && FollowStatus.FOLLOW}
       {data === FollowStatus.FOLLOW && FollowStatus.UNFOLLOW}
     </button>

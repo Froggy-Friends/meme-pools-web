@@ -148,7 +148,7 @@ export const handleFollow = async (
   try {
     if (
       (isFollowing === FollowStatus.UNFOLLOW && currentUser) ||
-      (!isFollowing && currentUser)
+      (isFollowing === "false" && currentUser)
     ) {
       await followUser(user.id, currentUser.id);
     } else if (isFollowing === FollowStatus.FOLLOW && currentUser) {
