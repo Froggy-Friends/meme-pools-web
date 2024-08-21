@@ -150,9 +150,9 @@ export const handleFollow = async (
       (isFollowing === FollowStatus.UNFOLLOW && currentUser) ||
       (!isFollowing && currentUser)
     ) {
-      await followUser("123", currentUser.id);
+      await followUser(user.id, currentUser.id);
     } else if (isFollowing === FollowStatus.FOLLOW && currentUser) {
-      await unfollowUser("123", currentUser.id);
+      await unfollowUser(user.id, currentUser.id);
     }
     revalidatePath("/profile");
   } catch (error) {
