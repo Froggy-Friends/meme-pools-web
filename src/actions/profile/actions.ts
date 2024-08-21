@@ -6,11 +6,10 @@ import { Address } from "@/lib/types";
 import { put } from "@vercel/blob";
 import { defaultProfileAvatarUrl, fetchUserCacheTag } from "@/config/user";
 import { UserParams } from "@/app/profile/[username]/types";
-import { fetchFollow, fetchUser } from "@/queries/profile/queries";
-import { cookies } from "next/headers";
-import { User } from "@prisma/client";
-import { FollowStatus } from "@/models/follow";
-import toast from "react-hot-toast";
+import {
+  fetchFollow,
+  fetchUser,
+} from "@/queries/profile/queries";
 
 export const createUser = async ({
   name,
@@ -103,6 +102,7 @@ export const followUser = async (accountId: string, followerId: string) => {
       },
     });
   }
+  revalidatePath("/profile");
 };
 
 export const unfollowUser = async (accountId: string, followerId: string) => {
@@ -129,33 +129,5 @@ export const unfollowUser = async (accountId: string, followerId: string) => {
       },
     });
   }
-};
-
-export const setUserCookies = async (user: User) => {
-  const cookieStore = cookies();
-  user.ethAddress && cookieStore.set("user-evm-address", user.ethAddress);
-  user.solAddress && cookieStore.set("user-sol-address", user.solAddress);
-};
-
-export const handleFollow = async (
-  isFollowing: string,
-  user: User,
-  currentUser: User
-) => {
-  try {
-    if (
-      (isFollowing === FollowStatus.UNFOLLOW && currentUser) ||
-      (!isFollowing && currentUser)
-    ) {
-      await followUser(user.id, currentUser.id);
-    } else if (isFollowing === FollowStatus.FOLLOW && currentUser) {
-      await unfollowUser(user.id, currentUser.id);
-    }
-    revalidatePath("/profile");
-  } catch (error) {
-    isFollowing === FollowStatus.UNFOLLOW &&
-      toast.error("Failed to follow user");
-    isFollowing === FollowStatus.FOLLOW &&
-      toast.error("Failed to unfollow user");
-  }
+  revalidatePath("/profile");
 };
