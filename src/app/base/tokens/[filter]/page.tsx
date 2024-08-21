@@ -5,7 +5,7 @@ import { TokensPageFilters } from "@/models/token";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TokensDisplayContainer from "@/components/tokens/TokensDisplayContainer";
-import { Chains } from "@/models/chains";
+import { Chain } from "@/models/chain";
 
 type TokensPageProps = {
   params: {
@@ -25,12 +25,12 @@ export default function TokensPage({ params, searchParams }: TokensPageProps) {
 
   return (
     <main className="flex flex-col px-12">
-      <Header chain={Chains.Base} />
+      <Header chain={Chain.Base} />
 
       <TokensDisplayContainer
         filter={filter}
         page={+page}
-        chain={Chains.Base}
+        chain={Chain.Base}
       />
 
       <Footer />

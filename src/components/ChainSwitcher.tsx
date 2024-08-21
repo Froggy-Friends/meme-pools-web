@@ -7,13 +7,13 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@nextui-org/react";
-import { Chains } from "@/models/chains";
+import { Chain } from "@/models/chain";
 import Image from "next/image";
 import { baseLogo, solanaLogo } from "@/config/chains";
 import { useRouter } from "next/navigation";
 
 type ChainSwitcherProps = {
-  chain: Chains;
+  chain: Chain;
 };
 
 export default function ChainSwitcher({ chain }: ChainSwitcherProps) {
@@ -25,7 +25,7 @@ export default function ChainSwitcher({ chain }: ChainSwitcherProps) {
         <Avatar
           as="button"
           className="transition-transform"
-          src={chain === Chains.Solana ? solanaLogo : baseLogo}
+          src={chain === Chain.Solana ? solanaLogo : baseLogo}
           size="lg"
         />
       </DropdownTrigger>

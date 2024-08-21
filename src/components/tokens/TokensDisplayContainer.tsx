@@ -1,12 +1,12 @@
 import TokenDisplayCard from "@/components/TokenDisplayCard";
 import PaginationControls from "./PaginationControls";
 import { fetchTokenCount, fetchTokens } from "@/queries/token/queries";
-import { Chains } from "@/models/chains";
+import { Chain } from "@/models/chain";
 
 type TokesnDisplayContainerProps = {
   filter: string;
   page: number;
-  chain: Chains;
+  chain: Chain;
 };
 
 export default async function TokensDisplayContainer({

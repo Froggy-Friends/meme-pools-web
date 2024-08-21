@@ -1,4 +1,4 @@
-export enum Chains {
+export enum Chain {
   Solana = "solana",
   Base = "base",
 }

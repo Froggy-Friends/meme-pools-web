@@ -12,7 +12,7 @@ import {
   fetchUser,
   fetchUserByName,
 } from "@/queries/profile/queries";
-import { Chains } from "@/models/chains";
+import { Chain } from "@/models/chain";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
 
@@ -41,7 +41,7 @@ export default async function ProfilePage({
 
   return (
     <main className="flex flex-col px-12 mb-20">
-      <Header chain={Chains.Base} />
+      <Header chain={Chain.Base} />
 
       <ProfileInfo
         profileUser={user}
