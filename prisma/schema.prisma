@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -44,22 +45,24 @@ model Token {
 }
 
 model User {
-  id            String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
-  name          String         @unique
-  imageUrl      String?
-  email         String?        @unique
-  createdAt     DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt     DateTime?      @default(now()) @db.Timestamptz(6)
-  solAddress    String?        @unique(map: "User_solanaAddress_key")
-  ethAddress    String?        @unique(map: "User_ethereumAddress_key")
-  Comment       Comment[]
-  CommentLikes  CommentLikes[]
-  followingUser Follow[]       @relation("Follow_accountToUser")
-  followerUser  Follow[]       @relation("Follow_followerToUser")
-  leaderboard   Leaderboard[]
-  token         Token[]
-  TokenVote     TokenVote[]
-  Trades        Trades[]
+  id              String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
+  name            String         @unique(map: "unique_username")
+  imageUrl        String?
+  email           String?
+  createdAt       DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime?      @default(now()) @db.Timestamptz(6)
+  solAddress      String?        @unique(map: "User_solanaAddress_key")
+  ethAddress      String?        @unique(map: "User_ethereumAddress_key")
+  twitterUsername String?        @unique(map: "unique_twitter_username") @db.VarChar(15)
+  twitterId       BigInt?        @unique(map: "unique_twitter_id")
+  Comment         Comment[]
+  CommentLikes    CommentLikes[]
+  followingUser   Follow[]       @relation("Follow_accountToUser")
+  followerUser    Follow[]       @relation("Follow_followerToUser")
+  leaderboard     Leaderboard[]
+  token           Token[]
+  TokenVote       TokenVote[]
+  Trades          Trades[]
 }
 
 model Trades {
