@@ -4,9 +4,10 @@ import Image from "next/image";
 import ProfileModal from "./ProfileModal";
 import { useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
-import { User } from "../../app/profile/[username]/types";
+
 import { useAccount } from "wagmi";
 import FollowButton from "./FollowButton";
+import { User } from "@prisma/client";
 
 type ProfileInfoParams = {
   profileUser: User;

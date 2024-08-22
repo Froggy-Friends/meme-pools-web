@@ -1,59 +1,35 @@
-import useUser from "@/hooks/useUser";
+"use client";
+
 import { FaThumbsDown, FaRegThumbsDown } from "react-icons/fa6";
-import { addCommentLike, removeCommentLike } from "../../actions/token/actions";
-import toast from "react-hot-toast";
-import { CommentWithLikes } from "../../types/token/types";
-import { getUserCommentInteraction } from "@/lib/getUserCommentInteraction";
+import { HandleDislike } from "../../types/token/types";
+import { CommentLikes } from "@prisma/client";
+import { DefinedUseQueryResult } from "@tanstack/react-query";
 
 type DislikeButtonProps = {
-  dislikesCount: number;
-  commentId: string;
-  comment: CommentWithLikes;
+  dislikes: DefinedUseQueryResult<number, Error>;
+  commentDisLike: DefinedUseQueryResult<CommentLikes[], Error>;
+  handleDislike: HandleDislike;
 };
 
 export default function DislikeButton({
-  dislikesCount,
-  commentId,
-  comment,
+  dislikes,
+  commentDisLike,
+  handleDislike,
 }: DislikeButtonProps) {
-  const { currentUser } = useUser();
-  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
-    comment,
-    currentUser!
-  );
-
-  const handleDislike = async () => {
-    try {
-      if (userCommentDislike.length === 0 && userCommentLike.length > 0) {
-        await addCommentLike(
-          currentUser?.id!,
-          commentId,
-          "dislike",
-          userCommentLike[0].id
-        );
-      } else if (userCommentDislike.length === 0) {
-        await addCommentLike(currentUser?.id!, commentId, "dislike");
-      } else {
-        await removeCommentLike(userCommentDislike[0].id);
-      }
-    } catch (error) {
-      userCommentDislike.length === 0 && toast.error("Error disliking comment");
-      userCommentDislike.length > 0 &&
-        toast.error("Error removing comment dislike");
-    }
-  };
-
   return (
     <div className="flex gap-x-2 items-center">
-      <button className="hover:scale-110 active:scale-95 transition">
-        {userCommentDislike.length === 0 ? (
-          <FaRegThumbsDown size={17} onClick={() => handleDislike()} />
+      <button
+        className="hover:scale-110 active:scale-95 transition"
+        disabled={handleDislike.isPending}
+      >
+        {commentDisLike.data.length === 0 ? (
+          <FaRegThumbsDown size={17} onClick={() => handleDislike.mutate()} />
         ) : (
-          <FaThumbsDown size={17} onClick={() => handleDislike()} />
+          <FaThumbsDown size={17} onClick={() => handleDislike.mutate()} />
         )}
       </button>
 
-      <p>{dislikesCount}</p>
+      <p>{dislikes.data}</p>
     </div>
   );
 }

@@ -1,7 +1,6 @@
 "use server";
 
 import { Address } from "@/lib/types";
-
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
@@ -41,6 +40,7 @@ export const launchCoin = async (
           userId: user.id,
           tokenAddress: tokenAddress,
           tokenCreator: tokenCreator,
+          marketCap: 100,
         },
       }));
   } catch (error) {

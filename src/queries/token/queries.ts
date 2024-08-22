@@ -61,8 +61,8 @@ export const fetchComments = async (tokenId: string) => {
       user: true,
     },
     orderBy: {
-      createdAt: "asc"
-    }
+      createdAt: "asc",
+    },
   });
 
   const commentsWithLikes = comments.map((comment) => {
@@ -80,5 +80,59 @@ export const fetchComments = async (tokenId: string) => {
     };
   });
 
-  return commentsWithLikes
+  return commentsWithLikes;
+};
+
+export const searchTokens = async (search: string) => {
+  const tokens = await prisma.token.findMany({
+    where: {
+      OR: [
+        {
+          ticker: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
+    orderBy: {
+      _relevance: {
+        fields: ["name", "ticker"],
+        search: search,
+        sort: "asc",
+      },
+    },
+    include: {
+      _count: {
+        select: {
+          TokenVote: true,
+        },
+      },
+    },
+  });
+
+  return tokens;
+};
+
+export const searchTokensByCa = async (contractAddress: string) => {
+  const token = await prisma.token.findFirst({
+    where: {
+      tokenAddress: contractAddress,
+    },
+    include: {
+      _count: {
+        select: {
+          TokenVote: true,
+        },
+      },
+    },
+  });
+
+  return token;
 };

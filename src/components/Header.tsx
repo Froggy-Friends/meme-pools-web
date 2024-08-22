@@ -7,6 +7,7 @@ import { fetchUser } from "@/queries/profile/queries";
 import { Chain } from "@/models/chain";
 import ChainSwitcher from "./ChainSwitcher";
 import { Cookie } from "@/models/cookie";
+import TokenSearch from "./TokenSearch";
 
 type HeaderProps = {
   chain: Chain;
@@ -28,6 +29,8 @@ export default async function Header({ chain }: HeaderProps) {
         </Link>
         <HeaderSocialLinks />
       </div>
+
+      <TokenSearch chain={chain}/>
 
       <div className="flex items-center gap-x-4">
         <ChainSwitcher chain={chain} />

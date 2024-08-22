@@ -1,59 +1,37 @@
-import useUser from "@/hooks/useUser";
+"use client";
+
 import { FaThumbsUp, FaRegThumbsUp } from "react-icons/fa6";
-import { addCommentLike, removeCommentLike } from "../../actions/token/actions";
-import toast from "react-hot-toast";
-import { CommentWithLikes } from "../../types/token/types";
-import { getUserCommentInteraction } from "@/lib/getUserCommentInteraction";
+import { CommentLikes } from "@prisma/client";
+import {
+  DefinedUseQueryResult,
+} from "@tanstack/react-query";
+import { HandleLike } from "@/types/token/types";
 
 type LikesButtonProps = {
-  likesCount: number;
-  commentId: string;
-  comment: CommentWithLikes;
+  likes: DefinedUseQueryResult<number, Error>;
+  commentLike: DefinedUseQueryResult<CommentLikes[], Error>;
+  handleLike: HandleLike;
 };
 
 export default function LikeButton({
-  likesCount,
-  commentId,
-  comment,
+  likes,
+  commentLike,
+  handleLike,
 }: LikesButtonProps) {
-  const { currentUser } = useUser();
-  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
-    comment,
-    currentUser!
-  );
-
-  const handleLike = async () => {
-    try {
-      if (userCommentLike.length === 0 && userCommentDislike.length > 0) {
-        await addCommentLike(
-          currentUser?.id!,
-          commentId,
-          "like",
-          userCommentDislike[0].id
-        );
-      } else if (userCommentLike.length === 0) {
-        await addCommentLike(currentUser?.id!, commentId, "like");
-      } else {
-        await removeCommentLike(userCommentLike[0].id);
-      }
-    } catch (error) {
-      console.log(error);
-      userCommentLike.length === 0 && toast.error("Error liking comment");
-      userCommentLike.length > 0 && toast.error("Error removing comment like");
-    }
-  };
-
   return (
     <div className="flex gap-x-2 items-center">
-      <button className="hover:scale-110 active:scale-95 transition">
-        {userCommentLike.length === 0 ? (
-          <FaRegThumbsUp size={17} onClick={() => handleLike()} />
+      <button
+        className="hover:scale-110 active:scale-95 transition"
+        disabled={handleLike.isPending}
+      >
+        {commentLike.data.length === 0 ? (
+          <FaRegThumbsUp size={17} onClick={() => handleLike.mutate()} />
         ) : (
-          <FaThumbsUp size={17} onClick={() => handleLike()} />
+          <FaThumbsUp size={17} onClick={() => handleLike.mutate()} />
         )}
       </button>
 
-      <p>{likesCount}</p>
+      <p>{likes.data}</p>
     </div>
   );
 }

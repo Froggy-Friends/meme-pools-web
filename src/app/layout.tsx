@@ -32,7 +32,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} overflow-y-scroll`}>
+      <body className={`${inter.className} overflow-y-scroll bg-dark text-white`}>
         <NextUIProvider>
           <Web3ModalProvider initialState={initialState}>
             <AppWalletProvider>

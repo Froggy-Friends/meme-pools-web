@@ -17,10 +17,7 @@ import TokenInfo from "../../../../components/token/TokenInfo";
 import TokenSocials from "../../../../components/token/TokenSocials";
 import TokenSwap from "../../../../components/token/TokenSwap";
 import TokenVote from "../../../../components/token/TokenVote";
-import {
-  fetchComments,
-  fetchTokenByAddress,
-} from "../../../../queries/token/queries";
+import { fetchTokenByAddress } from "../../../../queries/token/queries";
 import { SearchParams } from "@/lib/types";
 import { CommentAndTradesView, CommentAndTradesViews } from "@/models/comment";
 import Header from "@/components/Header";
@@ -63,11 +60,10 @@ export default async function TokenDetailsPage({
 
   const ethPrice = await getEthPrice(baseEthAddr, EvmChain.mainnet);
   const creator = await fetchUserById(token.userId!);
-  const comments = await fetchComments(token.id);
 
   return (
     <main className="flex flex-col px-12 mb-20">
-      <Header chain={Chain.Base}/>
+      <Header chain={Chain.Base} />
 
       <div className="flex gap-x-10 mt-20">
         <div className="w-[65%] flex flex-col">
@@ -76,7 +72,6 @@ export default async function TokenDetailsPage({
             view={view}
             tokenAddress={tokenAddress}
             tokenId={token.id}
-            comments={comments}
           />
         </div>
 
