@@ -54,7 +54,11 @@ export default function TokenSearchModal({
     <>
       <Modal
         isOpen={isOpen}
-        onOpenChange={onOpenChange}
+        onOpenChange={() => {
+          onOpenChange();
+          setToken(null);
+          setTokens(null);
+        }}
         size="2xl"
         className="bg-dark max-h-[500px] min-h-[175px] overflow-y-auto"
         placement="top"
