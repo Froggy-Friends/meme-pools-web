@@ -10,6 +10,13 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        dark: "#131313",
+        "dark-gray": "#1B1B1B",
+        green: "#00DA6C",
+        cream: "#EBEBEB",
+        "midnight-green": "#1B281F",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
