@@ -13,10 +13,6 @@ export default function BaseHomePage() {
 
       <LaunchCoinButton chain={Chain.Base}/>
 
-      <KingOfTheHill />
-
-      <TokenSearch />
-
       <TokenDisplayContainer chain={Chain.Base} />
 
       <Footer />

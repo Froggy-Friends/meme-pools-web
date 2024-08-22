@@ -1,4 +1,4 @@
-import { CommentLikes, User } from "@prisma/client";
+import { CommentLikes, TokenVote, User } from "@prisma/client";
 
 export type CreateTokenParams = {
   reservedAmount: BigInt;
@@ -41,3 +41,5 @@ export type CommentWithLikes = {
   commentDislikeCount: number;
   user: User;
 };
+
+export type TokenWithVoteCount = Token & { _count: { TokenVote: number } };

@@ -1,14 +1,39 @@
-export default function TokenSearch() {
+"use client";
+
+import { useDisclosure } from "@nextui-org/react";
+import TokenSearchModal from "./TokenSearchModal";
+import { Chain } from "@/models/chain";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { MdKeyboardCommandKey } from "react-icons/md";
+
+type TokenSearchProps = {
+  chain: Chain;
+};
+
+export default function TokenSearch({ chain }: TokenSearchProps) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   return (
-    <section className="mt-12 mx-auto flex items-center gap-x-4">
-      <input
-        type="text"
-        placeholder="Search for token"
-        className="w-[20rem] h-10 rounded-lg ring-1 ring-black px-2"
-      />
-      <button className="border-[1px] border-black rounded-lg p-2">
-        Search
+    <section className="flex items-center gap-x-4">
+      <button
+        onClick={() => onOpen()}
+        className="flex items-center justify-between h-12 w-80 px-4 border-[0.25px] border-cream rounded-3xl bg-dark-gray"
+      >
+        <div className="flex items-center gap-x-4">
+          <FaMagnifyingGlass size={20} />
+          <p>$BODEN</p>
+        </div>
+
+        <div className="flex items-center">
+          <MdKeyboardCommandKey size={20} />
+          <p className="text-lg font-semibold">K</p>
+        </div>
       </button>
+      <TokenSearchModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        chain={chain}
+      />
     </section>
   );
 }
