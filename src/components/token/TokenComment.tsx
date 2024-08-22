@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { CommentWithLikes } from "../../types/token/types";
 import { User } from "@prisma/client";
@@ -6,6 +8,7 @@ import LikeButton from "./LikeButton";
 import DislikeButton from "./DislikeButton";
 import { commentDateCharacterLength } from "@/config/comment";
 import { getUserCommentInteraction } from "@/lib/getUserCommentInteraction";
+import useCommentLike from "@/hooks/useCommentLike";
 
 type TokenCommentProps = {
   comment: CommentWithLikes;
@@ -13,10 +16,29 @@ type TokenCommentProps = {
   currentUser: User | null;
 };
 
-export default function TokenComment({ comment, user, currentUser }: TokenCommentProps) {
+export default function TokenComment({
+  comment,
+  user,
+  currentUser,
+}: TokenCommentProps) {
   const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
     comment,
     currentUser!
+  );
+
+  const {
+    likes,
+    commentLike,
+    handleLike,
+    dislikes,
+    commentDisLike,
+    handleDislike,
+  } = useCommentLike(
+    comment,
+    userCommentLike,
+    userCommentDislike,
+    comment.commentDislikeCount,
+    comment.commentLikeCount
   );
 
   return (
@@ -38,18 +60,14 @@ export default function TokenComment({ comment, user, currentUser }: TokenCommen
             .substring(0, commentDateCharacterLength)}
         </p>
         <LikeButton
-          dislikesCount={comment.commentDislikeCount}
-          likesCount={comment.commentLikeCount}
-          comment={comment}
-          userCommentLike={userCommentLike}
-          userCommentDislike={userCommentDislike}
+          likes={likes}
+          commentLike={commentLike}
+          handleLike={handleLike}
         />
         <DislikeButton
-          dislikesCount={comment.commentDislikeCount}
-          likesCount={comment.commentLikeCount}
-          comment={comment}
-          userCommentLike={userCommentLike}
-          userCommentDislike={userCommentDislike}
+          dislikes={dislikes}
+          commentDisLike={commentDisLike}
+          handleDislike={handleDislike}
         />
       </div>
 

@@ -1,5 +1,6 @@
+import { Token } from "@prisma/client";
 import Image from "next/image";
-import { Token } from "../../types/token/types";
+
 
 type TokenInfoParams = {
   token: Token;

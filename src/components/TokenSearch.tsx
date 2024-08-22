@@ -21,7 +21,7 @@ export default function TokenSearch({ chain }: TokenSearchProps) {
       >
         <div className="flex items-center gap-x-4">
           <FaMagnifyingGlass size={20} />
-          <p>$BODEN</p>
+          <p>$FROGFUN</p>
         </div>
 
         <div className="flex items-center">

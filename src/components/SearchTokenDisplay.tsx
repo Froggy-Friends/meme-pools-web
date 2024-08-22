@@ -29,7 +29,7 @@ export default function SearchTokenDisplay({
       </div>
 
       <div className="flex w-1/4 justify-between items-center">
-        <p>$32K</p>
+        <p>{token.marketCap}</p>
         <p>{token._count.TokenVote}</p>
       </div>
     </Link>

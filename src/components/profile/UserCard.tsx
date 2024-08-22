@@ -1,11 +1,8 @@
-import { followUser, unfollowUser } from "@/actions/profile/actions";
-import { FollowStatus } from "@/models/follow";
 import { fetchFollow, fetchUser } from "@/queries/profile/queries";
 import { User } from "@prisma/client";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import FollowButton from "./FollowButton";
 import { Cookie } from "@/models/cookie";
 

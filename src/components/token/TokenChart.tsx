@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 import Link from "next/link";
-import { Token } from "../../types/token/types";
+
 import { User } from "@/app/profile/[username]/types";
+import { Token } from "@prisma/client";
 
 type TokenChartParams = {
   token: Token;

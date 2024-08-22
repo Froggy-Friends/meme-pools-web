@@ -1,32 +1,23 @@
 "use client";
 
 import { FaThumbsUp, FaRegThumbsUp } from "react-icons/fa6";
-import { CommentWithLikes } from "../../types/token/types";
 import { CommentLikes } from "@prisma/client";
-import useCommentLike from "@/hooks/useCommentLike";
+import {
+  DefinedUseQueryResult,
+} from "@tanstack/react-query";
+import { HandleLike } from "@/types/token/types";
 
 type LikesButtonProps = {
-  likesCount: number;
-  dislikesCount: number;
-  comment: CommentWithLikes;
-  userCommentLike: CommentLikes[];
-  userCommentDislike: CommentLikes[];
+  likes: DefinedUseQueryResult<number, Error>;
+  commentLike: DefinedUseQueryResult<CommentLikes[], Error>;
+  handleLike: HandleLike;
 };
 
 export default function LikeButton({
-  likesCount,
-  dislikesCount,
-  comment,
-  userCommentLike,
-  userCommentDislike,
+  likes,
+  commentLike,
+  handleLike,
 }: LikesButtonProps) {
-  const { likes, commentLike, handleLike } = useCommentLike(
-    comment,
-    userCommentLike,
-    userCommentDislike,
-    dislikesCount,
-    likesCount
-  );
   return (
     <div className="flex gap-x-2 items-center">
       <button
