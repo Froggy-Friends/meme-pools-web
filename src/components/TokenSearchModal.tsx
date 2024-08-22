@@ -1,4 +1,4 @@
-import { searchTokens } from "@/queries/token/queries";
+import { searchTokens, searchTokensByCa } from "@/queries/token/queries";
 import {
   Modal,
   ModalContent,
@@ -27,8 +27,28 @@ export default function TokenSearchModal({
   chain,
 }: TokenSearchModalProps) {
   const [tokens, setTokens] = useState<TokenWithVoteCount[] | null>(null);
+  const [token, setToken] = useState<TokenWithVoteCount | null>(null);
   const [caSearch, setCaSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === "") {
+      setTokens(null);
+      return;
+    }
+
+    if (caSearch === false) {
+      setIsLoading(true);
+      const tokens = await searchTokens(e.target.value);
+      setTokens(tokens);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+      const token = await searchTokensByCa(e.target.value);
+      setToken(token);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -36,7 +56,7 @@ export default function TokenSearchModal({
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="2xl"
-        className="bg-dark max-h-[500px] overflow-y-auto"
+        className="bg-dark max-h-[500px] min-h-[175px] overflow-y-auto"
         placement="top"
       >
         <ModalContent>
@@ -56,26 +76,28 @@ export default function TokenSearchModal({
                     innerWrapper: ["bg-dark-gray", "text-white"],
                     inputWrapper: ["bg-dark-gray"],
                   }}
-                  onChange={async (e) => {
-                    if (e.target.value === "") {
-                      setTokens(null);
-                      return;
-                    }
-                    setIsLoading(true);
-                    const tokens = await searchTokens(e.target.value);
-                    setTokens(tokens);
-                    setIsLoading(false);
+                  onChange={(e) => {
+                    handleSearch(e);
                   }}
                   startContent={<FaMagnifyingGlass size={20} />}
                   endContent={
-                    <div className="flex gap-x-4 items-center">
-                        <div>
-                        <Switch isSelected={caSearch} color="success" onValueChange={() => setCaSearch(!caSearch)}>CA</Switch>
-                        </div>
-                        <div className="flex gap-x-1 items-center">
-                            <MdKeyboardCommandKey size={20} />
-                            <p>K</p>
-                        </div>
+                    <div className="flex gap-x-6 items-center">
+                      <div className="flex items-center">
+                        <Switch
+                          size="sm"
+                          isSelected={caSearch}
+                          color="success"
+                          onValueChange={() => setCaSearch(!caSearch)}
+                          classNames={{
+                            wrapper: ["bg-white/50"],
+                          }}
+                        ></Switch>
+                        <p>CA</p>
+                      </div>
+                      <div className="flex gap-x-1 items-center">
+                        <MdKeyboardCommandKey size={20} />
+                        <p>K</p>
+                      </div>
                     </div>
                   }
                 />
@@ -88,7 +110,7 @@ export default function TokenSearchModal({
                   </div>
                 </div>
 
-                {!isLoading && (
+                {!isLoading && !caSearch && (
                   <div className="mb-2">
                     {tokens?.map((token) => {
                       return (
@@ -102,7 +124,13 @@ export default function TokenSearchModal({
                   </div>
                 )}
 
-                {isLoading && <SearchSkeleton />}
+                {!isLoading && caSearch && token && (
+                  <div className="mb-2">
+                    <SearchTokenDisplay token={token} chain={chain} />
+                  </div>
+                )}
+
+                {isLoading && <SearchSkeleton caSearch={caSearch} />}
               </ModalBody>
             </>
           )}

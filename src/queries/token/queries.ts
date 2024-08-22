@@ -90,32 +90,49 @@ export const searchTokens = async (search: string) => {
         {
           ticker: {
             contains: search,
-            mode: 'insensitive'
+            mode: "insensitive",
           },
         },
         {
           name: {
             contains: search,
-            mode: 'insensitive'
+            mode: "insensitive",
           },
         },
       ],
     },
     orderBy: {
       _relevance: {
-        fields: ['name', 'ticker'],
+        fields: ["name", "ticker"],
         search: search,
-        sort: 'asc'
+        sort: "asc",
       },
     },
     include: {
       _count: {
         select: {
           TokenVote: true,
-        }
-      }
-    }
+        },
+      },
+    },
   });
-  
+
   return tokens;
+};
+
+export const searchTokensByCa = async (contractAddress: string) => {
+  const token = await prisma.token.findFirst({
+    where: {
+      tokenAddress: contractAddress,
+    },
+    include: {
+      _count: {
+        select: {
+          TokenVote: true,
+        },
+      },
+    },
+  });
+
+  return token;
 };
