@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
 }
 
@@ -53,7 +53,6 @@ model User {
   updatedAt       DateTime?      @default(now()) @db.Timestamptz(6)
   solAddress      String?        @unique(map: "User_solanaAddress_key")
   ethAddress      String?        @unique(map: "User_ethereumAddress_key")
-  twitterUsername String?        @unique(map: "unique_twitter_username") @db.VarChar(15)
   twitterId       BigInt?        @unique(map: "unique_twitter_id")
   Comment         Comment[]
   CommentLikes    CommentLikes[]
