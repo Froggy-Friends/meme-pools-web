@@ -9,6 +9,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { Toaster } from "react-hot-toast";
 import Moralis from "moralis";
 import AppWalletProvider from "@/components/AppWalletProvider";
+import { ChainProvider } from "@/components/ChainProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,8 +37,10 @@ export default async function RootLayout({
         <NextUIProvider>
           <Web3ModalProvider initialState={initialState}>
             <AppWalletProvider>
+              <ChainProvider>
               <Toaster position="bottom-center" />
               {children}
+              </ChainProvider>
             </AppWalletProvider>
           </Web3ModalProvider>
         </NextUIProvider>
