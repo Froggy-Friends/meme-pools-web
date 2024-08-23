@@ -20,7 +20,8 @@ const config: Config = {
         "light-green": "#B2F4D3",
       },
       fontFamily: {
-        proximaSoft: ["ProximaSoft"]
+        proximaSoft: ["ProximaSoft"],
+        proximaSoftBold: ["ProximaSoftBold"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -33,13 +34,13 @@ const config: Config = {
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
         pulseStrong: {
-          "0%, 100%": { opacity: "1"},
-          "50%": { opacity: "0.3"}
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.3" },
         },
       },
       animation: {
         fadeInSlideUp: "fadeInSlideUp 0.7s",
-        pulseStrong: "pulseStrong 1.5s infinite"
+        pulseStrong: "pulseStrong 1.5s infinite",
       },
     },
   },
