@@ -30,7 +30,7 @@ export const launchCoin = async (
       (await prisma.token.create({
         data: {
           tokenId: tokenId,
-          ticker: data.ticker as string,
+          ticker: data.ticker!.toString().toUpperCase(),
           description: data.description as string,
           image: blob.url,
           twitter: data.twitter as string,

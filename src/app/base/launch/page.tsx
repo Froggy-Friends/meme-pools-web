@@ -5,9 +5,9 @@ import { Chain } from "@/models/chain";
 
 export default function LaunchCoin() {
   return (
-    <main className="mb-20">
+    <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto">
       <Header chain={Chain.Base}/>
-
+      
       <LaunchCoinForm />
 
       <Footer />
