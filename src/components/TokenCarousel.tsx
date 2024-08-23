@@ -25,16 +25,16 @@ export default function TokenCarousel({ children }: TokenCarouselProps) {
     <section className="overflow-hidden my-10" ref={emblaRef}>
       <div className="flex gap-2 mb-2">{children}</div>
 
-      <div className="flex gap-x-3">
+      <div className="flex gap-x-1 mt-6">
         <SlArrowLeft
-          size={40}
+          size={35}
           onClick={scrollPrev}
-          className="bg-gray-300 p-2 rounded-lg hover:bg-gray-200 hover:cursor-pointer"
+          className="bg-dark-gray p-2 rounded-lg hover:bg-white/[10%] hover:cursor-pointer"
         />
         <SlArrowRight
-          size={40}
+          size={35}
           onClick={scrollNext}
-          className="bg-gray-300 p-2 rounded-lg hover:bg-gray-200 hover:cursor-pointer"
+          className="bg-dark-gray p-2 rounded-lg hover:bg-white/[10%] hover:cursor-pointer"
         />
       </div>
     </section>

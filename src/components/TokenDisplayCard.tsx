@@ -1,54 +1,51 @@
+"use client";
+
+import { useChain } from "@/context/chain";
 import { TokenWithCreator } from "@/lib/types";
-import { Chain } from "@/models/chain";
 import Image from "next/image";
 import Link from "next/link";
-import { IoChatbox } from "react-icons/io5";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator;
-  chain: Chain;
 };
 
-export default async function TokenDisplayCard({
-  token,
-  chain,
-}: TokenDisplayCardProps) {
+export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
+  const { chain } = useChain();
+
   return (
-    <div className="flex flex-grow-0 flex-shrink-0 w-[25%]">
+    <div className="flex flex-grow-0 flex-shrink-0 w-[20%]">
       <Link
         href={`${chain}/token/${token.tokenAddress}`}
-        className="flex gap-x-3 my-2"
+        className="flex flex-col"
       >
-        <Image
-          src={token.image}
-          alt="token-image"
-          height={150}
-          width={150}
-          className="rounded-md"
-        />
+        <div className="w-[12.5rem] h-32 relative">
+          <Image
+            src={token.image}
+            alt="token-image"
+            fill={true}
+            className="rounded-lg"
+          />
+        </div>
 
-        <div className="flex flex-col">
-          {token.creator && (
-            <div className="flex gap-x-2">
+        <div className="flex items-center justify-between mt-3">
+          <div className="flex items-center gap-x-2">
+            {token.creator && (
               <Image
                 src={token.creator.imageUrl!}
                 alt="creator avatar"
-                height={20}
-                width={20}
-                className="rounded-md"
+                height={30}
+                width={30}
+                className="rounded-full"
               />
-              <p>Created by {token.creator.name}</p>
-            </div>
-          )}
+            )}
 
-          <p>market cap...</p>
-          <div className="flex gap-x-2 items-center">
-            <IoChatbox size={20} />
-            {token._count.Comment}
+            <p>${token.ticker}</p>
           </div>
-          <p>
-            {token.name}({token.ticker}): {token.description}
-          </p>
+
+          <div className="flex gap-x-2 text-light-green">
+            <p>${token.marketCap}</p>
+            <p>MC</p>
+          </div>
         </div>
       </Link>
     </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useAccount, useDisconnect } from "wagmi";
-import { Avatar } from "@nextui-org/react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -11,98 +10,117 @@ import {
 import useUser from "@/hooks/useUser";
 import EvmConnectButton from "./base/EvmConnectButton";
 import defaultAvatar from "../../public/Frog.fun_Default_PFP.png";
-import { Address } from "@coinbase/onchainkit/identity";
 import { useRouter } from "next/navigation";
 import { useWallet } from "@solana/wallet-adapter-react";
 import SolConnectButton from "./solana/SolConnectButton";
 import { Chain } from "@/models/chain";
 import { User } from "@prisma/client";
+import Image from "next/image";
+import { useChain } from "@/context/chain";
 
 type ProfileAvatarProps = {
   user: User;
-  chain: Chain;
 };
 
-export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
+export default function ProfileAvatar({ user }: ProfileAvatarProps) {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { currentUser } = useUser();
   const { publicKey, connected } = useWallet();
   const solDisconnet = useWallet().disconnect;
+  const { chain } = useChain();
 
   return (
-    <Dropdown>
+    <Dropdown
+      className="min-w-0 w-fit py-2 px-3 bg-dark-gray"
+      placement="bottom-end"
+    >
       {!isConnected && chain === Chain.Base && <EvmConnectButton />}
       {!connected && chain === Chain.Solana && <SolConnectButton />}
       {isConnected && !user && !currentUser && chain === Chain.Base && (
         <DropdownTrigger>
-          <Avatar
-            as="button"
-            className="transition-transform"
-            src={defaultAvatar.toString()}
-            size="lg"
-          />
+          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+            <Image
+              className="transition-transform rounded-full"
+              src={defaultAvatar.toString()}
+              alt="profile-avatar"
+              height={45}
+              width={45}
+            />
+          </div>
         </DropdownTrigger>
       )}
       {connected && !user && !currentUser && chain === Chain.Solana && (
         <DropdownTrigger>
-          <Avatar
-            as="button"
-            className="transition-transform"
-            src={defaultAvatar.toString()}
-            size="lg"
-          />
+          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+            <Image
+              className="transition-transform rounded-full"
+              src={defaultAvatar.toString()}
+              alt="profile-avatar"
+              height={45}
+              width={45}
+            />
+          </div>
         </DropdownTrigger>
       )}
       {isConnected && user && chain === Chain.Base && (
         <DropdownTrigger>
-          <Avatar
-            as="button"
-            className="transition-transform"
-            src={user.imageUrl!}
-            size="lg"
-          />
+          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+            <Image
+              className="transition-transform rounded-full"
+              src={user.imageUrl!}
+              alt="profile-avatar"
+              height={45}
+              width={45}
+            />
+          </div>
         </DropdownTrigger>
       )}
       {connected && user && chain === Chain.Solana && (
         <DropdownTrigger>
-          <Avatar
-            as="button"
-            className="transition-transform"
-            src={user.imageUrl!}
-            size="lg"
-          />
+          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+            <Image
+              className="transition-transform rounded-full"
+              src={user.imageUrl!}
+              alt="profile-avatar"
+              height={45}
+              width={45}
+            />
+          </div>
         </DropdownTrigger>
       )}
       {isConnected && !user && currentUser && chain === Chain.Base && (
         <DropdownTrigger>
-          <Avatar
-            as="button"
-            className="transition-transform"
-            src={currentUser.imageUrl!}
-            size="lg"
-          />
+          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+            <Image
+              className="transition-transform rounded-full"
+              src={currentUser.imageUrl!}
+              alt="profile-avatar"
+              height={45}
+              width={45}
+            />
+          </div>
         </DropdownTrigger>
       )}
       {connected && !user && currentUser && chain === Chain.Solana && (
         <DropdownTrigger>
-          <Avatar
-            as="button"
-            className="transition-transform"
-            src={currentUser.imageUrl!}
-            size="lg"
-          />
+          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+            <Image
+              className="transition-transform rounded-full"
+              src={currentUser.imageUrl!}
+              alt="profile-avatar"
+              height={45}
+              width={45}
+            />
+          </div>
         </DropdownTrigger>
       )}
       <DropdownMenu>
         <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
-          {chain === Chain.Base && (
-            <Address address={address} isSliced={true} />
-          )}
-          {chain === Chain.Solana && (
-            <p>{publicKey?.toString().substring(0, 6)}</p>
-          )}
+          <p className="text-[17px]">
+            Signed in as {user ? user.name : currentUser?.name}
+          </p>
         </DropdownItem>
         <DropdownItem
           key="Profile"
@@ -111,6 +129,9 @@ export default function ProfileAvatar({ user, chain }: ProfileAvatarProps) {
           }
         >
           Profile
+        </DropdownItem>
+        <DropdownItem key="Portfolio" isReadOnly>
+          <p className="text-white/[20%]">Portfolio</p>
         </DropdownItem>
         <DropdownItem
           key="Disconnect"
