@@ -30,7 +30,6 @@ export default function TokensPage({ params, searchParams }: TokensPageProps) {
       <TokensDisplayContainer
         filter={filter}
         page={+page}
-        chain={Chain.Base}
       />
 
       <Footer />
