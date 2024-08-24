@@ -9,7 +9,6 @@ import {
 } from "@nextui-org/react";
 import useUser from "@/hooks/useUser";
 import EvmConnectButton from "./base/EvmConnectButton";
-import defaultAvatar from "../../public/Frog.fun_Default_PFP.png";
 import { useRouter } from "next/navigation";
 import { useWallet } from "@solana/wallet-adapter-react";
 import SolConnectButton from "./solana/SolConnectButton";
@@ -17,6 +16,7 @@ import { Chain } from "@/models/chain";
 import { User } from "@prisma/client";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
+import { defaultProfileAvatarUrl } from "@/config/user";
 
 type ProfileAvatarProps = {
   user: User;
@@ -43,7 +43,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
           <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
-              src={defaultAvatar.toString()}
+              src={defaultProfileAvatarUrl}
               alt="profile-avatar"
               height={45}
               width={45}
@@ -56,7 +56,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
           <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
-              src={defaultAvatar.toString()}
+              src={defaultProfileAvatarUrl}
               alt="profile-avatar"
               height={45}
               width={45}
@@ -69,7 +69,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
           <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
-              src={user.imageUrl!}
+              src={user.imageUrl || defaultProfileAvatarUrl}
               alt="profile-avatar"
               height={45}
               width={45}
@@ -82,7 +82,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
           <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
-              src={user.imageUrl!}
+              src={user.imageUrl || defaultProfileAvatarUrl}
               alt="profile-avatar"
               height={45}
               width={45}
@@ -95,7 +95,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
           <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
-              src={currentUser.imageUrl!}
+              src={currentUser.imageUrl || defaultProfileAvatarUrl}
               alt="profile-avatar"
               height={45}
               width={45}
@@ -108,7 +108,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
           <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
-              src={currentUser.imageUrl!}
+              src={currentUser.imageUrl || defaultProfileAvatarUrl}
               alt="profile-avatar"
               height={45}
               width={45}

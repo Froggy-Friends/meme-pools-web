@@ -27,7 +27,7 @@ export default async function TokenDisplayContainer({
         Top Votes
       </Link>
       <TokenCarousel>
-        {votesTokens!.slice(0, tokenCarouselLength).map((token) => {
+        {votesTokens && votesTokens.slice(0, tokenCarouselLength).map((token) => {
           return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
@@ -36,7 +36,7 @@ export default async function TokenDisplayContainer({
         Top Comments
       </Link>
       <TokenCarousel>
-        {commentTokens!.slice(0, tokenCarouselLength).map((token) => {
+        {commentTokens && commentTokens.slice(0, tokenCarouselLength).map((token) => {
           return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
@@ -45,7 +45,7 @@ export default async function TokenDisplayContainer({
         Top Volume
       </Link>
       <TokenCarousel>
-        {volumeTokens!.slice(0, tokenCarouselLength).map((token) => {
+        {volumeTokens && volumeTokens.slice(0, tokenCarouselLength).map((token) => {
           return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
@@ -54,7 +54,7 @@ export default async function TokenDisplayContainer({
         Top Transactions
       </Link>
       <TokenCarousel>
-        {transactionTokens!.slice(0, tokenCarouselLength).map((token) => {
+        {transactionTokens && transactionTokens.slice(0, tokenCarouselLength).map((token) => {
           return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
@@ -63,7 +63,7 @@ export default async function TokenDisplayContainer({
         Trending
       </Link>
       <TokenCarousel>
-        {trendingTokens!.slice(0, tokenCarouselLength).map((token) => {
+        {trendingTokens && trendingTokens.slice(0, tokenCarouselLength).map((token) => {
           return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>
@@ -72,7 +72,7 @@ export default async function TokenDisplayContainer({
         Newest
       </Link>
       <TokenCarousel>
-        {newTokens!.slice(0, tokenCarouselLength).map((token) => {
+        {newTokens && newTokens.slice(0, tokenCarouselLength).map((token) => {
           return <TokenDisplayCard key={token.id} token={token} />;
         })}
       </TokenCarousel>

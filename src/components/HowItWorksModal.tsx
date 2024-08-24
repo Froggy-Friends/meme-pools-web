@@ -1,5 +1,6 @@
 "use client";
 
+import { bondingCurveLimit, bondingCurveReward } from "@/config/token";
 import {
   Modal,
   ModalContent,
@@ -45,9 +46,10 @@ export default function HowItWorksModal({
                 </ul>
                 <p>
                   When a token reaches a{" "}
-                  <span className="text-blue">$42,000</span> market cap, all
-                  remaining tokens are deposited into Raydium/Uniswap and you
-                  are rewarded <span className="text-green">$1000</span>
+                  <span className="text-blue">{bondingCurveLimit}</span> market
+                  cap, all remaining tokens are deposited into Raydium/Uniswap
+                  and you are rewarded{" "}
+                  <span className="text-green">{bondingCurveReward}</span>
                 </p>
               </ModalBody>
               <ModalFooter className="flex justify-center">

@@ -32,7 +32,7 @@ export default async function TokensDisplayContainer({
       <PaginationControls previousPath={previousPath} nextPath={nextPath} />
 
       <div className="flex flex-wrap justify-between w-full mt-12">
-        {tokens!.map((token) => {
+        {tokens && tokens.map((token) => {
           return (
             <TokenDisplayCard key={token.id} token={token} />
           );

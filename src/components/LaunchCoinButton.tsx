@@ -14,7 +14,7 @@ export default function LaunchCoinButton() {
       <Image src={rocket} alt="rocket" className="mt-10" />
 
       <button
-        className="text-2xl text-dark px-6 py-3 font-proximaSoftBold bg-green rounded-full hover:bg-green/80 active:scale-[0.98]"
+        className="text-2xl text-dark px-6 py-3 font-proximaSoftBold bg-green rounded-full hover:bg-green/80 active:scale-[0.97] transition"
         onClick={() => router.push(`${chain}/launch`)}
       >
         LAUNCH
