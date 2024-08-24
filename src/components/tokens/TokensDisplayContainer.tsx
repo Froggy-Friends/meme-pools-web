@@ -2,6 +2,7 @@ import TokenDisplayCard from "@/components/TokenDisplayCard";
 import PaginationControls from "./PaginationControls";
 import { fetchTokenCount, fetchTokens } from "@/queries/token/queries";
 import BackButton from "../BackButton";
+import { toTitleCase } from "@/lib/toTitleCase";
 
 type TokesnDisplayContainerProps = {
   filter: string;
@@ -20,7 +21,7 @@ export default async function TokensDisplayContainer({
       <BackButton />
 
       <h2 className="text-4xl font-proximaSoftBold mb-10">
-        Top {filter.charAt(0).toUpperCase() + filter.slice(1)} Tokens
+        Top {toTitleCase(filter)} Tokens
       </h2>
 
       <div className="flex flex-wrap w-[1200px]">

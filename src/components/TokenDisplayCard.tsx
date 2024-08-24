@@ -9,7 +9,7 @@ import Link from "next/link";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator;
-  className: string;
+  className?: string;
 };
 
 export default function TokenDisplayCard({
@@ -37,7 +37,9 @@ export default function TokenDisplayCard({
           <div className="flex items-center gap-x-2">
             {token.creator && (
               <Image
-                src={token.creator.imageUrl || defaultProfileAvatarUrl}
+                src={
+                  (token && token.creator.imageUrl) || defaultProfileAvatarUrl
+                }
                 alt="creator avatar"
                 height={30}
                 width={30}
