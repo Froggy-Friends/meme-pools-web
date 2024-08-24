@@ -1,21 +1,27 @@
 "use client";
 
+import { defaultProfileAvatarUrl } from "@/config/user";
 import { useChain } from "@/context/chain";
 import { TokenWithCreator } from "@/lib/types";
+import { cn } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator;
+  className: string;
 };
 
-export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
+export default function TokenDisplayCard({
+  token,
+  className,
+}: TokenDisplayCardProps) {
   const { chain } = useChain();
 
   return (
-    <div className="flex flex-grow-0 flex-shrink-0 w-[20%]">
+    <div className={cn("flex flex-grow-0 flex-shrink-0 w-[20%]", className)}>
       <Link
-        href={`${chain}/token/${token.tokenAddress}`}
+        href={`/${chain}/token/${token.tokenAddress}`}
         className="flex flex-col"
       >
         <div className="w-[12.5rem] h-32 relative">
@@ -23,7 +29,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
             src={token.image}
             alt="token-image"
             fill={true}
-            className="rounded-lg"
+            className="rounded-lg object-cover"
           />
         </div>
 
@@ -31,7 +37,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
           <div className="flex items-center gap-x-2">
             {token.creator && (
               <Image
-                src={token.creator.imageUrl!}
+                src={token.creator.imageUrl || defaultProfileAvatarUrl}
                 alt="creator avatar"
                 height={30}
                 width={30}

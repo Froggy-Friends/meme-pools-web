@@ -18,10 +18,10 @@ export default function TokenSearch() {
 
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  }, [])
+  }, [onOpen])
 
   return (
-    <section className="flex items-center gap-x-4">
+    <section className="flex items-center ml-8 gap-x-4">
       <button
         onClick={(e) => onOpen()}
         className="flex items-center justify-between h-12 w-80 px-4 border-[0.25px] border-white/[5%] rounded-3xl bg-dark-gray hover:bg-dark"

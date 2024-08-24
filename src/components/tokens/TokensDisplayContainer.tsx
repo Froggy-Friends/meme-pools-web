@@ -1,43 +1,46 @@
 import TokenDisplayCard from "@/components/TokenDisplayCard";
 import PaginationControls from "./PaginationControls";
 import { fetchTokenCount, fetchTokens } from "@/queries/token/queries";
+import BackButton from "../BackButton";
 
 type TokesnDisplayContainerProps = {
   filter: string;
-  page: number;
+  pageFilter: number;
 };
 
 export default async function TokensDisplayContainer({
   filter,
-  page,
+  pageFilter,
 }: TokesnDisplayContainerProps) {
   const tokenCount = await fetchTokenCount();
-  const tokens = await fetchTokens(filter, page);
+  const tokens = await fetchTokens(filter, pageFilter);
 
-  const getPreviousPath = () => {
-    return page > 1 ? `/?sortBy=${filter}&page=${page - 1}` : "";
-  };
-
-  const getNextPath = () => {
-    return tokenCount > 100 * page ? `/?sortBy=${filter}&page=${page + 1}` : "";
-  };
-
-  const previousPath = getPreviousPath();
-  const nextPath = getNextPath();
   return (
-    <section className="flex flex-col">
-      <h2 className="text-2xl mb-10">
-        {filter.charAt(0).toUpperCase() + filter.slice(1)}
-      </h2>
-      <PaginationControls previousPath={previousPath} nextPath={nextPath} />
+    <section className="flex flex-col mt-20">
+      <BackButton />
 
-      <div className="flex flex-wrap justify-between w-full mt-12">
-        {tokens && tokens.map((token) => {
-          return (
-            <TokenDisplayCard key={token.id} token={token} />
-          );
-        })}
+      <h2 className="text-4xl font-proximaSoftBold mb-10">
+        Top {filter.charAt(0).toUpperCase() + filter.slice(1)} Tokens
+      </h2>
+
+      <div className="flex flex-wrap w-[1200px]">
+        {tokens &&
+          tokens.map((token) => {
+            return (
+              <TokenDisplayCard
+                key={token.id}
+                token={token}
+                className="mb-6 hover:scale-[1.02] trasnsition ease-in-out duration-400"
+              />
+            );
+          })}
       </div>
+
+      <PaginationControls
+        tokenCount={tokenCount}
+        filter={filter}
+        pageFilter={pageFilter}
+      />
     </section>
   );
 }
