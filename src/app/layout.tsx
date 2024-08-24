@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { cookieToInitialState } from "wagmi";
 import { headers } from "next/headers";
@@ -9,8 +8,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { Toaster } from "react-hot-toast";
 import Moralis from "moralis";
 import AppWalletProvider from "@/components/AppWalletProvider";
-
-const inter = Inter({ subsets: ["latin"] });
+import { ChainProvider } from "@/components/ChainProvider";
 
 export const metadata: Metadata = {
   title: "Frog.fun",
@@ -32,12 +30,14 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} overflow-y-scroll bg-dark text-white`}>
+      <body className="font-proximaSoft overflow-y-scroll bg-dark text-white">
         <NextUIProvider>
           <Web3ModalProvider initialState={initialState}>
             <AppWalletProvider>
-              <Toaster position="bottom-center" />
-              {children}
+              <ChainProvider>
+                <Toaster position="bottom-center" />
+                {children}
+              </ChainProvider>
             </AppWalletProvider>
           </Web3ModalProvider>
         </NextUIProvider>

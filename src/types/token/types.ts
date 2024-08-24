@@ -29,6 +29,11 @@ export type CommentWithLikes = {
 
 export type TokenWithVoteCount = Token & { _count: { TokenVote: number } };
 
+export type TokenWithVotes = Token & { creator: User } & {
+  votes: { upVotes: number; downVotes: number };
+};
+
+
 export type HandleDislike = UseMutationResult<
   void,
   Error,

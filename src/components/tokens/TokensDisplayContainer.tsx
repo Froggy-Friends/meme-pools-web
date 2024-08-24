@@ -1,18 +1,15 @@
 import TokenDisplayCard from "@/components/TokenDisplayCard";
 import PaginationControls from "./PaginationControls";
 import { fetchTokenCount, fetchTokens } from "@/queries/token/queries";
-import { Chain } from "@/models/chain";
 
 type TokesnDisplayContainerProps = {
   filter: string;
   page: number;
-  chain: Chain;
 };
 
 export default async function TokensDisplayContainer({
   filter,
   page,
-  chain,
 }: TokesnDisplayContainerProps) {
   const tokenCount = await fetchTokenCount();
   const tokens = await fetchTokens(filter, page);
@@ -35,9 +32,9 @@ export default async function TokensDisplayContainer({
       <PaginationControls previousPath={previousPath} nextPath={nextPath} />
 
       <div className="flex flex-wrap justify-between w-full mt-12">
-        {tokens!.map((token) => {
+        {tokens && tokens.map((token) => {
           return (
-            <TokenDisplayCard key={token.id} token={token} chain={chain} />
+            <TokenDisplayCard key={token.id} token={token} />
           );
         })}
       </div>

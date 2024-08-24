@@ -1,10 +1,12 @@
+"use client";
+
+import { bondingCurveLimit, bondingCurveReward } from "@/config/token";
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
 } from "@nextui-org/react";
 
 type HowItWorkdsModalProps = {
@@ -18,37 +20,42 @@ export default function HowItWorksModal({
 }: HowItWorkdsModalProps) {
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        className="bg-dark-gray text-white p-6 max-w-[600px]"
+      >
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                How It Works
+                <p className="text-xl">How It Works</p>
               </ModalHeader>
               <ModalBody>
                 <p>
-                  Frog prevents rugs by making sure that all created tokens are
-                  safe. Each coin on pump is a fair-launch with no presale and
-                  no team allocation.
-                </p>
-                <p>Step 1: pick a coin that you like</p>
-                <p>Step 2: buy the coin on the bonding curve</p>
-                <p>
-                  Step 3: sell at any time to lock in your profits or losses
+                  <span className="text-green">Frog</span>.fun is making
+                  memecoins fun again
                 </p>
                 <p>
-                  Step 4: when enough people buy on the bonding curve it reaches
-                  a market cap of $69k
+                  Every coing launced on <span>Frog</span>.fun has:
                 </p>
+                <ul className="list-disc pl-4">
+                  <li>Fair launch</li>
+                  <li>No presale</li>
+                  <li>No team allocation</li>
+                </ul>
                 <p>
-                  Step 5: $12k of liquidity is then deposited in raydium and
-                  burned
+                  When a token reaches a{" "}
+                  <span className="text-blue">{bondingCurveLimit}</span> market
+                  cap, all remaining tokens are deposited into Raydium/Uniswap
+                  and you are rewarded{" "}
+                  <span className="text-green">{bondingCurveReward}</span>
                 </p>
               </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
+              <ModalFooter className="flex justify-center">
+                <button className="bg-green rounded-3xl h-12 w-[400px] mt-20 text-dark-gray text-xl font-proximaSoftBold hover:bg-green/80 active:scale-[0.98] transition">
+                  LAUNCH TOKEN
+                </button>
               </ModalFooter>
             </>
           )}

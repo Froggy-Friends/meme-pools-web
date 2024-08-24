@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { TokenWithCreator } from "@/lib/types";
+import { TokenWithVotes } from "@/types/token/types";
 
 export const checkTokenNameExists = async (name: string) => {
   const exists = !!(await prisma.token.findFirst({
@@ -49,6 +50,16 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
   });
 
   return token;
+};
+
+export const fetchTopVotesTokens = async () => {
+  const response = await fetch(
+    `${process.env.FROG_FUN_API_URL}/token/votes?page=1`
+  );
+
+  const tokens: TokenWithVotes[] = await response.json();
+
+  return tokens.slice(0, 3);
 };
 
 export const fetchComments = async (tokenId: string) => {
@@ -111,7 +122,11 @@ export const searchTokens = async (search: string) => {
     include: {
       _count: {
         select: {
-          TokenVote: true,
+          TokenVote: {
+            where: {
+              status: "upvote",
+            },
+          },
         },
       },
     },

@@ -4,50 +4,52 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  Input,
   Switch,
 } from "@nextui-org/react";
 import { useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { MdKeyboardCommandKey } from "react-icons/md";
 import SearchTokenDisplay from "./SearchTokenDisplay";
-import { Chain } from "@/models/chain";
 import SearchSkeleton from "./SearchSkeleton";
 import { TokenWithVoteCount } from "@/types/token/types";
+import { useDebouncedCallback } from "use-debounce";
 
 type TokenSearchModalProps = {
   isOpen: boolean;
   onOpenChange: () => void;
-  chain: Chain;
 };
 
 export default function TokenSearchModal({
   isOpen,
   onOpenChange,
-  chain,
 }: TokenSearchModalProps) {
   const [tokens, setTokens] = useState<TokenWithVoteCount[] | null>(null);
   const [token, setToken] = useState<TokenWithVoteCount | null>(null);
   const [caSearch, setCaSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const debounced = useDebouncedCallback(
+    async (value) => {
+      setIsLoading(true);
+      if (!caSearch) {
+        const tokens = await searchTokens(value);
+        console.log(tokens);
+        setTokens(tokens);
+      } else {
+        const token = await searchTokensByCa(value);
+        setToken(token);
+      }
+      setIsLoading(false);
+    },
+    500
+  );
+
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") {
       setTokens(null);
       return;
     }
-
-    if (caSearch === false) {
-      setIsLoading(true);
-      const tokens = await searchTokens(e.target.value);
-      setTokens(tokens);
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-      const token = await searchTokensByCa(e.target.value);
-      setToken(token);
-      setIsLoading(false);
-    }
+    await debounced(e.target.value);
   };
 
   return (
@@ -68,43 +70,44 @@ export default function TokenSearchModal({
             <>
               <ModalHeader></ModalHeader>
               <ModalBody className="flex flex-col">
-                <Input
-                  type="text"
-                  name="search"
-                  id="search"
-                  placeholder="search"
-                  radius="full"
-                  variant="faded"
-                  autoComplete="off"
-                  classNames={{
-                    innerWrapper: ["bg-dark-gray", "text-white"],
-                    inputWrapper: ["bg-dark-gray"],
-                  }}
-                  onChange={(e) => {
-                    handleSearch(e);
-                  }}
-                  startContent={<FaMagnifyingGlass size={20} />}
-                  endContent={
-                    <div className="flex gap-x-6 items-center">
-                      <div className="flex items-center">
-                        <Switch
-                          size="sm"
-                          isSelected={caSearch}
-                          color="success"
-                          onValueChange={() => setCaSearch(!caSearch)}
-                          classNames={{
-                            wrapper: ["bg-white/50"],
-                          }}
-                        ></Switch>
-                        <p>CA</p>
-                      </div>
-                      <div className="flex gap-x-1 items-center">
-                        <MdKeyboardCommandKey size={20} />
-                        <p>K</p>
-                      </div>
-                    </div>
-                  }
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="search"
+                    id="search"
+                    placeholder="search"
+                    autoComplete="off"
+                    autoFocus
+                    onChange={(e) => {
+                      handleSearch(e);
+                    }}
+                    className="h-10 w-full px-12 rounded-3xl bg-dark-gray border-[0.25px] border-white/[5%]"
+                  />
+                  <div
+                    className="absolute inset-y-0 left-0 pl-4  
+                    flex items-center  
+                    pointer-events-none"
+                  >
+                    <FaMagnifyingGlass size={20} />
+                  </div>
+                  <div className="absolute inset-y-0 right-[4.5rem] flex items-center">
+                    <Switch
+                      size="sm"
+                      isSelected={caSearch}
+                      color="success"
+                      onValueChange={() => setCaSearch(!caSearch)}
+                      classNames={{
+                        wrapper: ["bg-white/50"],
+                      }}
+                    ></Switch>
+                    <p>CA</p>
+                  </div>
+                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center gap-x-1 pointer-events-none">
+                    <MdKeyboardCommandKey size={20} />
+                    <p>K</p>
+                  </div>
+                </div>
+
                 <div className="flex justify-between items-center h-12 px-4">
                   <p>Token</p>
 
@@ -118,11 +121,7 @@ export default function TokenSearchModal({
                   <div className="mb-2">
                     {tokens?.map((token) => {
                       return (
-                        <SearchTokenDisplay
-                          key={token.id}
-                          token={token}
-                          chain={chain}
-                        />
+                        <SearchTokenDisplay key={token.id} token={token} />
                       );
                     })}
                   </div>
@@ -130,7 +129,7 @@ export default function TokenSearchModal({
 
                 {!isLoading && caSearch && token && (
                   <div className="mb-2">
-                    <SearchTokenDisplay token={token} chain={chain} />
+                    <SearchTokenDisplay token={token} />
                   </div>
                 )}
 

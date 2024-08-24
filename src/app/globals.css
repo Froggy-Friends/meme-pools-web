@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "ProximaSoft";
+  src: url("../../public/fonts/ProximaSoft-Regular.woff2");
+}
+
+@font-face {
+  font-family: "ProximaSoftBold";
+  src: url("../../public/fonts/ProximaSoft-Bold.woff2");
+}
