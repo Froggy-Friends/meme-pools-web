@@ -13,6 +13,7 @@ const config: Config = {
       colors: {
         dark: "#131313",
         "dark-gray": "#1B1B1B",
+        gray: "#484848",
         green: "#00DA6C",
         cream: "#EBEBEB",
         "midnight-green": "#1B281F",

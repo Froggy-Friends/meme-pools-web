@@ -15,6 +15,8 @@ import {
 import { Chain } from "@/models/chain";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
+import { toTitleCase } from "@/lib/toTitleCase";
+import BackButton from "@/components/BackButton";
 
 type ProfilePageProps = {
   params: {
@@ -27,7 +29,7 @@ export default async function ProfilePage({
   params,
   searchParams,
 }: ProfilePageProps) {
-  const view = (searchParams.view as string) || "followers";
+  const view = (searchParams.view as string) || "profile";
   const cookieStore = cookies();
   const currentUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const currentUser = await fetchUser(currentUserEvmAddress?.value);
@@ -40,17 +42,24 @@ export default async function ProfilePage({
   const following = await fetchFollowing(user.id);
 
   return (
-    <main className="flex flex-col px-12 mb-20">
+    <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto">
       <Header chain={Chain.Base} />
 
-      <ProfileInfo
-        profileUser={user}
-        currentUser={currentUser!}
-        isFollowing={isFollowing?.status || "false"}
-      />
+      <BackButton />
+
+      <h2 className="text-[56px] font-semibold">{toTitleCase(view)}</h2>
+
+      <ProfileMenuToggle profileUser={user} currentView={view} />
+
+      {view === "profile" && (
+        <ProfileInfo
+          profileUser={user}
+          currentUser={currentUser!}
+          isFollowing={isFollowing?.status || "false"}
+        />
+      )}
 
       <div className="flex flex-col mx-auto">
-        <ProfileMenuToggle profileUser={user} />
         {view === "followers" && <Followers followers={followers} />}
         {view === "following" && <Following following={following} />}
       </div>
