@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { Address } from "@/lib/types";
-import { put } from "@vercel/blob";
+import { put, PutBlobResult } from "@vercel/blob";
 import { defaultProfileAvatarUrl, fetchUserCacheTag } from "@/config/user";
 import { UserParams } from "@/app/profile/[username]/types";
 import { fetchFollow, fetchUser } from "@/queries/profile/queries";
@@ -45,19 +45,28 @@ export const createUser = async ({
 export async function updateUserData(formData: FormData, address: Address) {
   const user = await fetchUser(address);
 
-  const name = formData.get("name") as string;
+  const name = formData.get("username") as string;
 
-  const imageFile = formData.get("profileImage") as File;
+  const imageFile = formData.get("profile-picture") as File;
+
+  const ethAddress = formData.get("ethereum-address") as string;
+
+  const solAddress = formData.get("solana-address") as string;
 
   let imageUrl = "";
+  let blob: PutBlobResult;
 
-  const blob = await put(imageFile.name, imageFile, {
-    access: "public",
-  });
+  if (imageFile) {
+    blob = await put(imageFile.name, imageFile, {
+      access: "public",
+    });
 
-  user && blob.pathname === "undefined"
-    ? (imageUrl = user.imageUrl!)
-    : (imageUrl = blob.url);
+    user && user.imageUrl && blob.pathname === "undefined"
+      ? (imageUrl = user.imageUrl)
+      : (imageUrl = blob.url);
+  } else {
+    imageUrl = defaultProfileAvatarUrl;
+  }
 
   const email = formData.get("email") as string;
 
@@ -67,9 +76,11 @@ export async function updateUserData(formData: FormData, address: Address) {
         id: user.id,
       },
       data: {
-        name: name ? name : user.name,
+        name: name || user.name,
         imageUrl: imageUrl,
-        email: email ? email : user.email,
+        email: email || user.email,
+        ethAddress: ethAddress || user.ethAddress,
+        solAddress: solAddress || user.solAddress,
         updatedAt: new Date(Date.now()),
       },
     });

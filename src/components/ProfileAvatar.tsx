@@ -40,7 +40,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       {!connected && chain === Chain.Solana && <SolConnectButton />}
       {isConnected && !user && !currentUser && chain === Chain.Base && (
         <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
               src={defaultProfileAvatarUrl}
@@ -53,7 +53,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       )}
       {connected && !user && !currentUser && chain === Chain.Solana && (
         <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
               src={defaultProfileAvatarUrl}
@@ -66,7 +66,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       )}
       {isConnected && user && chain === Chain.Base && (
         <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
               src={user.imageUrl || defaultProfileAvatarUrl}
@@ -79,7 +79,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       )}
       {connected && user && chain === Chain.Solana && (
         <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
               src={user.imageUrl || defaultProfileAvatarUrl}
@@ -92,7 +92,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       )}
       {isConnected && !user && currentUser && chain === Chain.Base && (
         <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
               src={currentUser.imageUrl || defaultProfileAvatarUrl}
@@ -105,7 +105,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       )}
       {connected && !user && currentUser && chain === Chain.Solana && (
         <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-white/[5%] rounded-lg p-2 cursor-pointer">
+          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
             <Image
               className="transition-transform rounded-full"
               src={currentUser.imageUrl || defaultProfileAvatarUrl}

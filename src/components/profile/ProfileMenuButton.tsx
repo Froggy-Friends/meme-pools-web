@@ -1,25 +1,36 @@
 "use client";
 
+import { toTitleCase } from "@/lib/toTitleCase";
+import { cn } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 type ProfileMenuButtonProps = {
   view: string;
   profileUser: User;
+  currentView: string;
+  className?: string;
 };
 
 export default function ProfileMenuButton({
   view,
   profileUser,
+  currentView,
+  className,
 }: ProfileMenuButtonProps) {
   const router = useRouter();
 
   return (
     <button
-      className="border border-black rounded-lg p-2"
+      className={cn(
+        "bg-dark-gray border-[0.25px] border-white/[5%] rounded-3xl py-2 px-4 text-lg hover:bg-gray",
+        view === toTitleCase(currentView) && "bg-gray",
+        className
+      )}
       onClick={() =>
         router.push(`/profile/${profileUser.name}?view=${view.toLowerCase()}`)
       }
+      disabled={view === "Portfolio" || view === "Achievements"}
     >
       {view}
     </button>

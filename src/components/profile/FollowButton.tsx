@@ -68,7 +68,7 @@ export default function FollowButton({
 
   return (
     <button
-      className="border-black p-1 border rounded-lg font-semibold w-28"
+      className="bg-green text-dark font-proximaSoftBold text-xl rounded-3xl py-2 w-36 hover:bg-light-green active:scale-[0.98] transition"
       disabled={handleClick.isPending}
       onClick={() => handleClick.mutate()}
     >

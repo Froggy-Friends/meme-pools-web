@@ -1,13 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import ProfileModal from "./ProfileModal";
-import { useDisclosure } from "@nextui-org/react";
-import Link from "next/link";
-
 import { useAccount } from "wagmi";
 import FollowButton from "./FollowButton";
 import { User } from "@prisma/client";
+import { FaXTwitter } from "react-icons/fa6";
+import EditProfileForm from "./EditProfileForm";
 
 type ProfileInfoParams = {
   profileUser: User;
@@ -20,30 +18,23 @@ export default function ProfileInfo({
   currentUser,
   isFollowing,
 }: ProfileInfoParams) {
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { isConnected } = useAccount();
 
   return (
-    <section className="flex flex-col mx-auto">
-      <div className="flex items-center gap-x-4 pb-4">
+    <section className="flex">
+      <div className="flex flex-col items-center mt-6 gap-y-5">
         <Image
           src={profileUser.imageUrl!}
           alt="user-avatar"
-          height={40}
-          width={40}
+          height={120}
+          width={120}
           className="rounded-full"
         />
-        <p className="text-lg font-semibold">{profileUser.name}</p>
-        {isConnected &&
-          currentUser &&
-          currentUser.name === profileUser.name && (
-            <button
-              onClick={() => onOpen()}
-              className="p-2 border border-black rounded-lg font-semibold"
-            >
-              Edit profile
-            </button>
-          )}
+
+        <button className="flex gap-x-2 justify-center items-center bg-dark-gray border-[0.25px] border-white/[5%] rounded-3xl w-36 py-2 text-lg hover:bg-gray">
+          <p>Connect</p> <FaXTwitter size={20} />
+        </button>
+
         {isConnected &&
           currentUser &&
           currentUser!.name !== profileUser.name && (
@@ -55,23 +46,7 @@ export default function ProfileInfo({
           )}
       </div>
 
-      {profileUser.ethAddress && (
-        <p className="pb-2">{profileUser.ethAddress}</p>
-      )}
-
-      <Link
-        href={`https://etherscan.io/address/${profileUser.ethAddress}`}
-        className="hover:underline"
-        target="_blank"
-      >
-        View on Etherscan
-      </Link>
-
-      <ProfileModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        onClose={onClose}
-      />
+      <EditProfileForm profileUser={profileUser} />
     </section>
   );
 }
