@@ -21,7 +21,7 @@ export default function Error({
 
   return (
     <main className="text-center min-h-[100vh]">
-      <h1 className="mb-5 text-3xl mt-40">User not found</h1>
+      <h1 className="mb-5 text-3xl pt-40">User not found</h1>
       <button
         className="hover:bg-gray active:scale-95 bg-dark-gray py-2 px-4 border-[1px] border-white/20 rounded-3xl"
         onClick={

@@ -17,8 +17,12 @@ export default async function UserCard({ user, view }: UserCardProps) {
   const cookieStore = cookies();
   const userEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const currentUser = await fetchUser(userEvmAddress?.value);
-  const isFollowing = await fetchFollow(user.id, currentUser?.id!);
-  const followTime = getDateDifference(isFollowing?.followedAt);
+  const isFollowing =
+    currentUser && (await fetchFollow(user.id, currentUser?.id));
+  const isFollowed =
+    currentUser && (await fetchFollow(currentUser?.id, user.id));
+  const followingTime = getDateDifference(isFollowing?.followedAt);
+  const followedTime = getDateDifference(isFollowed?.followedAt);
 
   return (
     <div className="flex items-center justify-between w-[700px] h-[70px]  px-4 bg-dark-gray rounded-lg ">
@@ -40,10 +44,10 @@ export default async function UserCard({ user, view }: UserCardProps) {
         </Link>
 
         {view === "followers" && (
-          <p className="text-gray text-xl">Followed you {followTime} ago</p>
+          <p className="text-gray text-xl">Followed you {followedTime} ago</p>
         )}
         {view === "following" && (
-          <p className="text-gray text-xl">Followed {followTime} ago</p>
+          <p className="text-gray text-xl">Followed {followingTime} ago</p>
         )}
       </div>
 
