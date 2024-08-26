@@ -3,13 +3,21 @@ import UserCard from "./UserCard";
 
 type FollowingProps = {
   following: User[];
+  profileUser: User;
 };
 
-export default function Following({ following }: FollowingProps) {
+export default function Following({ following, profileUser }: FollowingProps) {
   return (
-    <section className="flex gap-x-4">
+    <section className="flex flex-col gap-y-2 mt-6">
       {following.map((user) => {
-        return <UserCard key={user.id} user={user} />;
+        return (
+          <UserCard
+            key={user.id}
+            user={user}
+            view="following"
+            profileUser={profileUser}
+          />
+        );
       })}
     </section>
   );

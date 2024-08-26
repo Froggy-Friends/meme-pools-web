@@ -17,6 +17,7 @@ import { User } from "@prisma/client";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import { defaultProfileAvatarUrl } from "@/config/user";
+import { getUserDisplayName } from "@/lib/getUserDisplayName";
 
 type ProfileAvatarProps = {
   user: User;
@@ -118,29 +119,40 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       )}
       <DropdownMenu>
         <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
-          <p className="text-[17px]">
-            Signed in as {user ? user.name : currentUser?.name}
+          <p className="text-lg">
+            {user && `Signed in as ${getUserDisplayName(user)}`}
+            {!user &&
+              currentUser &&
+              `Signed in as ${getUserDisplayName(currentUser)}`}
           </p>
         </DropdownItem>
         <DropdownItem
+          className="dark"
           key="Profile"
           onPress={() =>
             router.push(`/profile/${user ? user.name : currentUser?.name}`)
           }
         >
-          Profile
-        </DropdownItem>
-        <DropdownItem key="Portfolio" isReadOnly>
-          <p className="text-white/[20%]">Portfolio</p>
+          <p className="text-[17px]">Profile</p>
         </DropdownItem>
         <DropdownItem
+          key="Portfolio"
+          className="hover:cursor-default"
+          isReadOnly
+        >
+          <p className="text-[17px] text-white/[20%] hover:cursor-default">
+            Portfolio
+          </p>
+        </DropdownItem>
+        <DropdownItem
+          className="dark"
           key="Disconnect"
           onPress={() => {
             chain === Chain.Base && disconnect();
             chain === Chain.Solana && solDisconnet();
           }}
         >
-          Disconnect
+          <p className="text-[17px]">Disconnect</p>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

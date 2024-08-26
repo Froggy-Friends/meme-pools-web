@@ -29,12 +29,12 @@ export default function TokenCarousel({ children }: TokenCarouselProps) {
         <SlArrowLeft
           size={35}
           onClick={scrollPrev}
-          className="bg-dark-gray p-2 rounded-lg hover:bg-white/[10%] hover:cursor-pointer"
+          className="bg-dark-gray p-2 rounded-lg hover:bg-gray hover:cursor-pointer transition"
         />
         <SlArrowRight
           size={35}
           onClick={scrollNext}
-          className="bg-dark-gray p-2 rounded-lg hover:bg-white/[10%] hover:cursor-pointer"
+          className="bg-dark-gray p-2 rounded-lg hover:bg-gray hover:cursor-pointer transition"
         />
       </div>
     </section>

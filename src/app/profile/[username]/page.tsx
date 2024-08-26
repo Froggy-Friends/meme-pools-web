@@ -59,10 +59,12 @@ export default async function ProfilePage({
         />
       )}
 
-      <div className="flex flex-col mx-auto">
-        {view === "followers" && <Followers followers={followers} />}
-        {view === "following" && <Following following={following} />}
-      </div>
+      {view === "followers" && (
+        <Followers followers={followers} profileUser={user} />
+      )}
+      {view === "following" && (
+        <Following following={following} profileUser={user} />
+      )}
 
       <Footer />
     </main>

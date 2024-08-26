@@ -35,6 +35,7 @@ export default function ChainSwitcher() {
       <DropdownMenu>
         <DropdownItem
           key="Solana"
+          className="dark"
           onPress={() => {
             router.push("/solana");
             setChain(Chain.Solana);
@@ -47,6 +48,7 @@ export default function ChainSwitcher() {
         </DropdownItem>
         <DropdownItem
           key="Base"
+          className="dark"
           onPress={() => {
             router.push("/base");
             setChain(Chain.Base);
