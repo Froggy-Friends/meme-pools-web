@@ -96,14 +96,24 @@ export default function LaunchCoinForm() {
             <label htmlFor="ticker" className="mb-1">
               Ticker
             </label>
-            <input
-              {...register("ticker")}
-              id="ticker"
-              type="text"
-              className={inputStyles}
-              autoComplete="off"
-              required
-            />
+            <div className="relative">
+              <input
+                {...register("ticker")}
+                id="ticker"
+                type="text"
+                className={cn(inputStyles, "pl-7")}
+                autoComplete="off"
+                required
+              />
+              <div
+                className="absolute inset-y-0 left-0 pl-2 pb-5  
+                    flex items-center  
+                    pointer-events-none text-xl"
+              >
+                $
+              </div>
+            </div>
+
             <label htmlFor="reservedAmount" className="mb-1">
               Reserved Supply
             </label>
@@ -112,7 +122,7 @@ export default function LaunchCoinForm() {
                 {...register("reservedAmount")}
                 id="reservedAmount"
                 type="number"
-                className={cn(inputStyles, "pl-12")}
+                className={cn(inputStyles, "pl-[2.75rem]")}
                 autoComplete="off"
                 required
               />
