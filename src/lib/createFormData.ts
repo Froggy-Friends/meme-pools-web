@@ -8,11 +8,21 @@ export const createFormData = (data: LaunchFormValues) => {
   formData.set("reservedAmount", data.reservedAmount);
   formData.set("description", data.description);
   formData.set("image", data.image[0]);
-  data.twitter && formData.set("twitter", data.twitter);
-  data.telegram && formData.set("telegram", data.telegram);
-  data.website && formData.set("website", data.website);
-  data.discord && formData.set("discord", data.discord);
-  data.other && formData.set("other", data.other);
+  if (data.twitter) {
+    formData.set("twitter", data.twitter);
+  }
+  if (data.telegram) {
+    formData.set("telegram", data.telegram);
+  }
+  if (data.website) {
+    formData.set("website", data.website);
+  }
+  if (data.discord) {
+    formData.set("discord", data.discord);
+  }
+  if (data.other) {
+    formData.set("other", data.other);
+  }
 
   return formData;
 };
