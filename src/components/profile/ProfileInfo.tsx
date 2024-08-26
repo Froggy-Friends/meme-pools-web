@@ -6,6 +6,7 @@ import FollowButton from "./FollowButton";
 import { User } from "@prisma/client";
 import { FaXTwitter } from "react-icons/fa6";
 import EditProfileForm from "./EditProfileForm";
+import { FollowStatus } from "@/models/follow";
 
 type ProfileInfoParams = {
   profileUser: User;
@@ -31,7 +32,7 @@ export default function ProfileInfo({
           className="rounded-full"
         />
 
-        <button className="flex gap-x-2 justify-center items-center bg-dark-gray border-[0.25px] border-white/[5%] rounded-3xl w-36 py-2 text-lg hover:bg-gray">
+        <button className="flex gap-x-2 justify-center items-center bg-dark-gray border-[0.25px] border-white/[5%] rounded-3xl w-36 py-2 text-lg hover:bg-gray transition">
           <p>Connect</p> <FaXTwitter size={20} />
         </button>
 

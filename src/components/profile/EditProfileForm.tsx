@@ -21,22 +21,28 @@ export default function EditProfileForm({
 }: HowItWorkdsModalProps) {
   const router = useRouter();
   const [userExists, setUserExists] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState(false);
   const { address } = useAccount();
   const { currentUser } = useUser();
+  const disabled = profileUser.id !== currentUser?.id;
   const inputStyles =
     "h-10 w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-1 ring-gray";
 
   const handleSubmit = async (formData: FormData) => {
-    const username = formData.get("username");
+    try {
+      const username = formData.get("username");
 
-    address && (await updateUserData(formData, address));
+      address && (await updateUserData(formData, address));
 
-    setTimeout(() => {
-      toast.success("Profile successfully updated!");
-    }, 2000)
+      setTimeout(() => {
+        toast.success("Profile successfully updated!");
+      }, 2000);
 
-    if (username) {
-      router.push(`/profile/${username}`);
+      if (username) {
+        router.push(`/profile/${username}`);
+      }
+    } catch (error) {
+      toast.error("Error updating profile");
     }
   };
 
@@ -44,6 +50,8 @@ export default function EditProfileForm({
     const usernameExists = await fetchUserByName(value);
     if (usernameExists) {
       setUserExists(true);
+    } else if (!usernameExists && value !== "") {
+      setUsernameAvailable(true);
     }
   }, 500);
 
@@ -56,18 +64,29 @@ export default function EditProfileForm({
             {userExists && (
               <p className="text-red-500">Username already exists</p>
             )}
+            {usernameAvailable && (
+              <p className="text-green">Username available</p>
+            )}
           </div>
           <input
             type="text"
             id="username"
             name="username"
-            className={cn(inputStyles, userExists && "ring-red-500")}
+            minLength={1}
+            maxLength={44}
+            className={cn(
+              inputStyles,
+              userExists && "ring-red-500",
+              usernameAvailable && "ring-green"
+            )}
             autoComplete="off"
-            placeholder={profileUser.name}
+            defaultValue={profileUser.name}
             onChange={async (e) => {
               setUserExists(false);
+              setUsernameAvailable(false);
               await debounced(e.target.value);
             }}
+            disabled={disabled}
           />
 
           <label htmlFor="email">Email</label>
@@ -77,7 +96,8 @@ export default function EditProfileForm({
             name="email"
             className={inputStyles}
             autoComplete="off"
-            placeholder={profileUser.email || ""}
+            defaultValue={profileUser.email || ""}
+            disabled={disabled}
           />
 
           <label htmlFor="profile-picture">Profile Picture</label>
@@ -87,6 +107,7 @@ export default function EditProfileForm({
             name="profile-picture"
             className={`${inputStyles} file:mt-1 file:bg-gray file:rounded-lg file:text-white file:border-0 file:px-2 file:py-1 file:hover:cursor-pointer file:hover:bg-gray/80`}
             autoComplete="off"
+            disabled={disabled}
           />
         </div>
 
@@ -97,8 +118,11 @@ export default function EditProfileForm({
             id="ethereum-address"
             name="ethereum-address"
             className={inputStyles}
+            pattern="^(0x)[0-9a-fA-F]{40}$"
+            title="Enter a valid Ethereum address."
             autoComplete="off"
-            placeholder={profileUser.ethAddress || ""}
+            defaultValue={profileUser.ethAddress || ""}
+            disabled={disabled}
           />
 
           <label htmlFor="solana-address">Solana Address</label>
@@ -108,12 +132,13 @@ export default function EditProfileForm({
             name="solana-address"
             className={inputStyles}
             autoComplete="off"
-            placeholder={profileUser.solAddress || ""}
+            defaultValue={profileUser.solAddress || ""}
+            disabled={disabled}
           />
         </div>
       </div>
 
-      {currentUser && currentUser.id === profileUser.id && (
+      {!disabled && (
         <FormSubmitButton
           disabled={userExists}
           className={cn(

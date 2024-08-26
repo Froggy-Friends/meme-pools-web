@@ -7,9 +7,9 @@ type FollowersProps = {
 
 export default function Followers({ followers }: FollowersProps) {
   return (
-    <section className="flex gap-x-4">
+    <section className="flex flex-col gap-y-2 mt-6">
       {followers.map((user) => {
-        return <UserCard key={user.id} user={user} />;
+        return <UserCard key={user.id} user={user} view="followers" />;
       })}
     </section>
   );

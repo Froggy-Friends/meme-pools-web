@@ -8,7 +8,7 @@ export default function EvmConnectButton() {
   return (
     <>
       <button
-        className="py-2 px-4 rounded-md bg-green text-white/90 font-bold hover:bg-green-500/85"
+        className="py-2 px-4 rounded-md bg-green text-dark text-xl font-proximaSoftBold hover:bg-light-green active:scale-[0.97] transition"
         onClick={() => open()}
       >
         Connect

@@ -2,6 +2,7 @@
 
 import { handleFollow } from "@/actions/profile/actions";
 import { FollowStatus } from "@/models/follow";
+import { cn } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -10,12 +11,14 @@ type FollowButtonProps = {
   isFollowing: string;
   currentUser: User;
   user: User;
+  className?: string;
 };
 
 export default function FollowButton({
   isFollowing,
   currentUser,
   user,
+  className,
 }: FollowButtonProps) {
   const queryClient = useQueryClient();
   const { data } = useQuery({
@@ -68,7 +71,13 @@ export default function FollowButton({
 
   return (
     <button
-      className="bg-green text-dark font-proximaSoftBold text-xl rounded-3xl py-2 w-36 hover:bg-light-green active:scale-[0.98] transition"
+      className={cn(
+        "text-xl rounded-3xl py-2 w-36 text-dark font-proximaSoftBold active:scale-[0.98] transition",
+        data === "false" ||
+          (data === FollowStatus.UNFOLLOW && "bg-cream/85  hover:bg-cream"),
+        data === FollowStatus.FOLLOW && "bg-green hover:bg-light-green",
+        className
+      )}
       disabled={handleClick.isPending}
       onClick={() => handleClick.mutate()}
     >
