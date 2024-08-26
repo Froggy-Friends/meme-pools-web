@@ -2,7 +2,6 @@
 
 import { Address } from "@/lib/types";
 import { put } from "@vercel/blob";
-import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { getTokenInfo } from "../../lib/getTokenInfo";
 import { fetchUser } from "@/queries/profile/queries";
@@ -12,16 +11,17 @@ export const launchCoin = async (
   address: Address,
   tokenId: number,
   tokenAddress: string,
-  tokenCreator: string
+  tokenCreator: string,
 ) => {
   const user = await fetchUser(address);
 
   const data = getTokenInfo(formData);
 
-  const blob = await put(data.image.name, data.image, {
+  const image = data.image as File;
+
+  const blob = await put(image.name, image, {
     access: "public",
   });
-  revalidatePath("/");
 
   let errorMessage = "";
 

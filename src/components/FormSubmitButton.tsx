@@ -7,17 +7,19 @@ type FormSubmitButtonProps = {
   children: React.ReactNode;
   className: string;
   disabled?: boolean;
+  isSubmitting?: boolean;
 };
 
 export default function FormSubmitButton({
   children,
   className,
   disabled,
+  isSubmitting
 }: FormSubmitButtonProps) {
   const { pending } = useFormStatus();
   return (
     <button className={className} disabled={disabled}>
-      {pending ? (
+      {pending || isSubmitting ? (
         <CircularProgress
           classNames={{
             svg: "w-6 h-6",

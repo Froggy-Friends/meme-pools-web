@@ -1,11 +1,13 @@
 export const getTokenInfo = (formData: FormData) => {
-  const name = formData.get("name") as string;
-  const ticker = formData.get("ticker") as string;
-  const description = formData.get("description") as string;
-  const image = formData.get("image") as File;
-  const twitter = formData.get("twitter") as string;
-  const telegram = formData.get("telegram") as string;
-  const website = formData.get("website") as string;
+  const name = formData.get("name") as string
+  const ticker = formData.get("ticker") as string
+  const description = formData.get("description") as string
+  const image = formData.get("image") as File
+  const twitter = formData.get("twitter") as string
+  const telegram = formData.get("telegram") as string
+  const website = formData.get("website") as string
+  const discord = formData.get("discord") as string
+  const other = formData.get("other") as string
 
   const data = {
     name: name,
@@ -15,6 +17,8 @@ export const getTokenInfo = (formData: FormData) => {
     twitter: twitter,
     telegram: telegram,
     website: website,
+    discord: discord,
+    other: other,
   };
 
   return data;
