@@ -31,6 +31,8 @@ model Token {
   twitter      String?
   telegram     String?
   website      String?
+  discord      String?
+  other        String?
   userId       String        @db.Uuid
   name         String
   createdAt    DateTime      @default(now()) @db.Timestamptz(6)
