@@ -16,7 +16,8 @@ import { Chain } from "@/models/chain";
 import { User } from "@prisma/client";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
-import { defaultProfileAvatarUrl, usernameDisplayLength } from "@/config/user";
+import { defaultProfileAvatarUrl } from "@/config/user";
+import { getUserDisplayName } from "@/lib/getUserDisplayName";
 
 type ProfileAvatarProps = {
   user: User;
@@ -119,18 +120,10 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       <DropdownMenu>
         <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
           <p className="text-lg">
-            {user && user.name.length > usernameDisplayLength
-              ? `Signed in as ${
-                  user.name.substring(0, usernameDisplayLength) + "..."
-                }`
-              : `Signed in as ${user.name}`}
+            {user && `Signed in as ${getUserDisplayName(user)}`}
             {!user &&
-            currentUser &&
-            currentUser?.name.length > usernameDisplayLength
-              ? `Signed in as ${
-                  currentUser.name.substring(0, usernameDisplayLength) + "..."
-                }`
-              : !user && currentUser && `Signed in as ${currentUser.name}`}
+              currentUser &&
+              `Signed in as ${getUserDisplayName(currentUser)}`}
           </p>
         </DropdownItem>
         <DropdownItem

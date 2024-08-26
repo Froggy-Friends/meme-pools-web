@@ -5,24 +5,28 @@ import Image from "next/image";
 import Link from "next/link";
 import FollowButton from "./FollowButton";
 import { Cookie } from "@/models/cookie";
-import { defaultProfileAvatarUrl, usernameDisplayLength } from "@/config/user";
-import { getDateDifference } from "@/lib/getDateDifference";
+import { defaultProfileAvatarUrl } from "@/config/user";
+import { getTimeDifference } from "@/lib/getTimeDifference";
+import { getUserDisplayName } from "@/lib/getUserDisplayName";
 
 type UserCardProps = {
   user: User;
   view: string;
+  profileUser: User;
 };
 
-export default async function UserCard({ user, view }: UserCardProps) {
+export default async function UserCard({
+  user,
+  view,
+  profileUser,
+}: UserCardProps) {
   const cookieStore = cookies();
   const userEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const currentUser = await fetchUser(userEvmAddress?.value);
-  const isFollowing =
-    currentUser && (await fetchFollow(user.id, currentUser?.id));
-  const isFollowed =
-    currentUser && (await fetchFollow(currentUser?.id, user.id));
-  const followingTime = getDateDifference(isFollowing?.followedAt);
-  const followedTime = getDateDifference(isFollowed?.followedAt);
+  const isFollowing = await fetchFollow(user.id, profileUser.id);
+  const isFollowed = await fetchFollow(profileUser.id, user.id);
+  const followingTime = getTimeDifference(isFollowing?.followedAt);
+  const followedTime = getTimeDifference(isFollowed?.followedAt);
 
   return (
     <div className="flex items-center justify-between w-[700px] h-[70px]  px-4 bg-dark-gray rounded-lg ">
@@ -38,16 +42,14 @@ export default async function UserCard({ user, view }: UserCardProps) {
           href={`/profile/${user.name}`}
           className="hover:underline font-proximaSoftBold text-xl"
         >
-          {user.name.length > usernameDisplayLength
-            ? user.name.substring(0, usernameDisplayLength) + "..."
-            : user.name}
+          {getUserDisplayName(user)}
         </Link>
 
         {view === "followers" && (
-          <p className="text-gray text-xl">Followed you {followedTime} ago</p>
+          <p className="text-gray text-lg">Followed you {followedTime}</p>
         )}
         {view === "following" && (
-          <p className="text-gray text-xl">Followed {followingTime} ago</p>
+          <p className="text-gray text-lg">Followed {followingTime}</p>
         )}
       </div>
 

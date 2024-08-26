@@ -59,8 +59,12 @@ export default async function ProfilePage({
         />
       )}
 
-      {view === "followers" && <Followers followers={followers} />}
-      {view === "following" && <Following following={following} />}
+      {view === "followers" && (
+        <Followers followers={followers} profileUser={user} />
+      )}
+      {view === "following" && (
+        <Following following={following} profileUser={user} />
+      )}
 
       <Footer />
     </main>

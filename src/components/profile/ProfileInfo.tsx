@@ -6,7 +6,6 @@ import FollowButton from "./FollowButton";
 import { User } from "@prisma/client";
 import { FaXTwitter } from "react-icons/fa6";
 import EditProfileForm from "./EditProfileForm";
-import { FollowStatus } from "@/models/follow";
 
 type ProfileInfoParams = {
   profileUser: User;

@@ -1,9 +1,9 @@
-import { User } from "@/app/profile/[username]/types";
 import { useCallback, useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useAccount } from "wagmi";
 import { fetchUser } from "@/queries/profile/queries";
 import { createUser, setUserCookies } from "@/actions/profile/actions";
+import { User } from "@prisma/client";
 
 export default function useUser() {
   const [currentUser, setCurrentUser] = useState<User | null>();
