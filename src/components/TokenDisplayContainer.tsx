@@ -19,7 +19,7 @@ export default async function TokenDisplayContainer({
   const commentTokens = await fetchTokens("comments", 1);
   const votesTokens = await fetchTokens("votes", 1);
   const linkStyles =
-    "-mb-3 text-xl text-xl font-proximaSoftBold w-40 hover:underline hover:text-white/80";
+    "-mb-3 text-2xl font-proximaSoftBold max-w-48 hover:underline hover:text-white/80";
 
   return (
     <section className="flex flex-col mt-20">
