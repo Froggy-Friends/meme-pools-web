@@ -15,6 +15,7 @@ import Image from "next/image";
 import { cn } from "@nextui-org/react";
 import { solanaLogo } from "@/config/chains";
 import ethLogo from "../../../public/eth-logo.svg";
+import { useRouter } from "next/navigation";
 
 export type LaunchFormValues = {
   name: string;
@@ -33,13 +34,19 @@ export default function LaunchCoinForm() {
   const { address, isConnected } = useAccount();
   const { createToken } = useCreateToken();
   const { chain } = useChain();
-  const { register, handleSubmit, resetField, reset, formState } =
-    useForm<LaunchFormValues>();
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    resetField,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<LaunchFormValues>();
   const inputStyles =
     "h-10 w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
   const onSubmit = handleSubmit(async (data: LaunchFormValues) => {
     const formData = createFormData(data);
-    const reservedAmount = parseUnits(data.reservedAmount, 18);
+    const reservedAmount = parseUnits(data.reservedAmount, 18) || BigInt(0);
 
     try {
       if (!address || !isConnected) {
@@ -71,6 +78,7 @@ export default function LaunchCoinForm() {
       }
 
       reset();
+      router.push(`/${chain}/token/${tokenDetails.tokenAddress}`);
     } catch (error) {
       toast.error((error as Error).message);
     }
@@ -81,29 +89,50 @@ export default function LaunchCoinForm() {
       <form onSubmit={onSubmit} className="flex flex-col items-center">
         <div className="flex gap-x-10">
           <div className="flex flex-col">
-            <label htmlFor="name" className="mb-1">
-              Name
-            </label>
+            <div className="flex gap-x-4">
+              <label htmlFor="name" className="mb-1">
+                Name
+              </label>
+              {errors.name && (
+                <p className="text-red-500">{errors.name.message}</p>
+              )}
+            </div>
             <input
-              {...register("name")}
+              {...register("name", {
+                required: "Token name is required",
+                maxLength: {
+                  value: 50,
+                  message: "Token name must be 50 characters or less",
+                },
+              })}
               id="name"
               type="text"
               className={inputStyles}
               autoComplete="off"
-              required
             />
 
-            <label htmlFor="ticker" className="mb-1">
-              Ticker
-            </label>
+            <div className="flex gap-x-4">
+              <label htmlFor="ticker" className="mb-1">
+                Ticker
+              </label>
+              {errors.ticker && (
+                <p className="text-red-500">{errors.ticker.message}</p>
+              )}
+            </div>
+
             <div className="relative">
               <input
-                {...register("ticker")}
+                {...register("ticker", {
+                  required: "Token ticker is required",
+                  maxLength: {
+                    value: 50,
+                    message: "Token ticker must be 50 characters or less",
+                  },
+                })}
                 id="ticker"
                 type="text"
                 className={cn(inputStyles, "pl-7")}
                 autoComplete="off"
-                required
               />
               <div
                 className="absolute inset-y-0 left-0 pl-2 pb-5  
@@ -124,7 +153,6 @@ export default function LaunchCoinForm() {
                 type="number"
                 className={cn(inputStyles, "pl-[2.75rem]")}
                 autoComplete="off"
-                required
               />
               <div
                 className="absolute inset-y-0 left-0 pl-2 pb-5  
@@ -152,25 +180,38 @@ export default function LaunchCoinForm() {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="description" className="mb-1">
-              Description
-            </label>
+            <div className="flex gap-x-4">
+              <label htmlFor="description" className="mb-1">
+                Description
+              </label>
+              {errors.description && (
+                <p className="text-red-500">{errors.description.message}</p>
+              )}
+            </div>
             <textarea
-              {...register("description")}
+              {...register("description", {
+                required: "Token description is required",
+              })}
               id="description"
               className="h-32 w-[450px] mb-5 px-2 py-1 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
-              required
             />
-            <label htmlFor="image" className="mb-1">
-              Image
-            </label>
+
+            <div className="flex gap-x-4">
+              <label htmlFor="image" className="mb-1">
+                Image
+              </label>
+              {errors.image && (
+                <p className="text-red-500">{errors.image.message}</p>
+              )}
+            </div>
             <input
-              {...register("image")}
+              {...register("image", {
+                required: "Token image is required",
+              })}
               id="image"
               type="file"
               accept="image/*"
               className={`${inputStyles} file:mt-1 file:bg-gray file:rounded-lg file:text-white file:border-0 file:px-2 file:py-1 file:hover:cursor-pointer file:hover:bg-gray/80`}
-              required
             />
           </div>
         </div>
@@ -212,7 +253,7 @@ export default function LaunchCoinForm() {
         </div>
 
         <FormSubmitButton
-          isSubmitting={formState.isSubmitting}
+          isSubmitting={isSubmitting}
           className="h-10 w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
         >
           <p className="text-dark font-proximaSoftBold">HAVE SOME FUN</p>
