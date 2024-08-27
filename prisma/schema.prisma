@@ -57,6 +57,7 @@ model User {
   solAddress    String?        @unique(map: "User_solanaAddress_key")
   ethAddress    String?        @unique(map: "User_ethereumAddress_key")
   twitterId     BigInt?        @unique(map: "unique_twitter_id")
+  twitterFollowers             BigInt?
   Comment       Comment[]
   CommentLikes  CommentLikes[]
   followingUser Follow[]       @relation("Follow_accountToUser")
