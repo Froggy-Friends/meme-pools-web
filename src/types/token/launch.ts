@@ -1,0 +1,1 @@
+export type LaunchModalInputs = "twitter" | "telegram" | "website" | "discord" | "other";

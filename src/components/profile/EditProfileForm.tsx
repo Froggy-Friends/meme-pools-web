@@ -26,7 +26,7 @@ export default function EditProfileForm({
   const { currentUser } = useUser();
   const disabled = profileUser.id !== currentUser?.id;
   const inputStyles =
-    "h-10 w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-1 ring-gray";
+    "h-10 w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
 
   const handleSubmit = async (formData: FormData) => {
     try {
