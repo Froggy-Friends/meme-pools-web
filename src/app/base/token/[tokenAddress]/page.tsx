@@ -11,12 +11,9 @@ import { redirect } from "next/navigation";
 import { getVotesByTokenId } from "../../../../actions/token/actions";
 import BondingCurveProgress from "../../../../components/token/BondingCurveProgress";
 import CommentsAndTradesContainer from "../../../../components/token/CommentsAndTradesContainer";
-import HolderDistribution from "../../../../components/token/HolderDistribution";
-import KingOfTheHillProgress from "../../../../components/token/KingOfTheHillProgress";
+import VotingProgress from "@/components/token/VotingProgress";
 import TokenInfo from "../../../../components/token/TokenInfo";
-import TokenSocials from "../../../../components/token/TokenSocials";
 import TokenSwap from "../../../../components/token/TokenSwap";
-import TokenVote from "../../../../components/token/TokenVote";
 import { fetchTokenByAddress } from "../../../../queries/token/queries";
 import { SearchParams } from "@/lib/types";
 import { CommentAndTradesView, CommentAndTradesViews } from "@/models/comment";
@@ -24,6 +21,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { fetchUserById } from "@/queries/profile/queries";
 import { Chain } from "@/models/chain";
+import BackButton from "@/components/BackButton";
+
 const DynamicTokenChart = dynamic(
   () => import("../../../../components/token/TokenChart"),
   {
@@ -59,20 +58,21 @@ export default async function TokenDetailsPage({
   });
 
   const ethPrice = await getEthPrice(baseEthAddr, EvmChain.mainnet);
-  const creator = await fetchUserById(token.userId!);
+  const creator = await fetchUserById(token.userId);
 
   return (
-    <main className="flex flex-col px-12 mb-20">
+    <main className="flex flex-col max-w-[1200px] min-h-[100vh] px-4 mx-auto">
       <Header chain={Chain.Base} />
 
-      <div className="flex gap-x-10 mt-20">
+      <BackButton />
+
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <TokenInfo token={token} creator={creator} />
+      </HydrationBoundary>
+
+      <div className="flex gap-x-10">
         <div className="w-[65%] flex flex-col">
-          <DynamicTokenChart token={token!} creator={creator!} />
-          <CommentsAndTradesContainer
-            view={view}
-            tokenAddress={tokenAddress}
-            tokenId={token.id}
-          />
+          <DynamicTokenChart />
         </div>
 
         <div className="flex flex-col">
@@ -82,17 +82,16 @@ export default async function TokenDetailsPage({
             currPrice={2}
             ethPrice={ethPrice}
           />
-          <TokenSocials token={token} />
-          <TokenInfo token={token} />
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <TokenVote tokenId={token.id} />
-          </HydrationBoundary>
+
           <BondingCurveProgress />
-          <KingOfTheHillProgress />
-          <HolderDistribution />
+          <VotingProgress token={token} />
         </div>
       </div>
-
+      <CommentsAndTradesContainer
+        view={view}
+        tokenAddress={tokenAddress}
+        tokenId={token.id}
+      />
       <Footer />
     </main>
   );

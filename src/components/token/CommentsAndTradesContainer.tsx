@@ -16,14 +16,25 @@ export default function CommentsAndTradesContainer({
   tokenId,
 }: CommentsAndTradesContainerProps) {
   return (
-    <div className="flex flex-col">
-      <div className="flex gap-x-2">
-        <ToggleViewButton name="Comments" tokenAddress={tokenAddress} />
-        <ToggleViewButton name="Trades" tokenAddress={tokenAddress} />
-        {view === "comments" && <CommentForm tokenId={tokenId} />}
+    <section>
+      <div className="flex flex-col w-full h-[450px] my-20 p-6 bg-dark-gray rounded-xl overflow-y-auto">
+        <div className="flex gap-x-2">
+          <ToggleViewButton
+            name="Trades"
+            tokenAddress={tokenAddress}
+            view={view}
+          />
+          <ToggleViewButton
+            name="Comments"
+            tokenAddress={tokenAddress}
+            view={view}
+          />
+        </div>
+        {view === "comments" && <TokenComments tokenId={tokenId} />}
+        {view === "trades" && <TokenTrades />}
       </div>
-      {view === "comments" && <TokenComments tokenId={tokenId} />}
-      {view === "trades" && <TokenTrades />}
-    </div>
+
+      {view === "comments" && <CommentForm tokenId={tokenId} />}
+    </section>
   );
 }

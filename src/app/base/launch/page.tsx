@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export default function LaunchCoin() {
   return (
-    <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto">
+    <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto px-4">
       <Header chain={Chain.Base} />
 
       <div className="flex justify-between items-center w-[72.5%]">

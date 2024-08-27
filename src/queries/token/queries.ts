@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { TokenWithCreator } from "@/lib/types";
+import { TokenVoteStatus } from "@/models/token";
 import { TokenWithVotes } from "@/types/token/types";
 
 export const checkTokenNameExists = async (name: string) => {
@@ -46,6 +47,17 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
   const token = await prisma.token.findFirst({
     where: {
       tokenAddress: tokenAddress,
+    },
+    include: {
+      _count: {
+        select: {
+          TokenVote: {
+            where: {
+              status: TokenVoteStatus.UPVOTE,
+            },
+          },
+        },
+      },
     },
   });
 

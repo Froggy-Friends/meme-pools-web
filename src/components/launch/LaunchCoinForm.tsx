@@ -217,7 +217,7 @@ export default function LaunchCoinForm() {
         </div>
 
         <div className="flex flex-col mt-10">
-          <p className="mb-1 ml-5 text-lg">Optional Links</p>
+          <p className="mb-1 ml-5">Optional Links</p>
 
           <div className="flex w-[975px] justify-between">
             <LaunchCoinFormModal

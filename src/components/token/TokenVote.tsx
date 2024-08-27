@@ -26,26 +26,40 @@ export default function TokenVote({ tokenId }: VoteCountProps) {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 w-20">
       <button
         onClick={() => handleVote(TokenVoteStatus.UPVOTE)}
         disabled={isCastingVote}
+        className="flex gap-x-1 items-center"
       >
         {voteStatus === TokenVoteStatus.UPVOTE ? (
-          <PiArrowFatUpFill />
+          <PiArrowFatUpFill
+            size={25}
+            className="text-blue hover:scale-[1.03] transition"
+          />
         ) : (
-          <PiArrowFatUpLight />
+          <PiArrowFatUpLight
+            size={25}
+            className="text-blue hover:scale-[1.03] transition"
+          />
         )}
         {votes?.upvotes ?? 0}
       </button>
       <button
         onClick={() => handleVote(TokenVoteStatus.DOWNVOTE)}
         disabled={isCastingVote}
+        className="flex gap-x-1 items-center"
       >
         {voteStatus === TokenVoteStatus.DOWNVOTE ? (
-          <PiArrowFatDownFill />
+          <PiArrowFatDownFill
+            size={25}
+            className="hover:scale-[1.03] transition"
+          />
         ) : (
-          <PiArrowFatDownLight />
+          <PiArrowFatDownLight
+            size={25}
+            className="hover:scale-[1.03] transition"
+          />
         )}
         {votes?.downvotes ?? 0}
       </button>

@@ -6,9 +6,11 @@ import { User } from "@prisma/client";
 import Link from "next/link";
 import LikeButton from "./LikeButton";
 import DislikeButton from "./DislikeButton";
-import { commentDateCharacterLength } from "@/config/comment";
 import { getUserCommentInteraction } from "@/lib/getUserCommentInteraction";
 import useCommentLike from "@/hooks/useCommentLike";
+import { defaultProfileAvatarUrl } from "@/config/user";
+import { getTimeDifference } from "@/lib/getTimeDifference";
+import { getUserDisplayName } from "@/lib/getUserDisplayName";
 
 type TokenCommentProps = {
   comment: CommentWithLikes;
@@ -42,23 +44,32 @@ export default function TokenComment({
   );
 
   return (
-    <div className="flex flex-col pb-4 mb-1 w-full rounded-lg bg-gray-950/95 p-2 text-white">
-      <div className="flex gap-x-3">
+    <div className="flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1">
+      <div className="flex items-center gap-x-4">
         <Image
-          src={user.imageUrl!}
+          src={user.imageUrl || defaultProfileAvatarUrl}
           alt="user-profile-picture"
-          height={25}
-          width={25}
+          height={50}
+          width={50}
           className="rounded-full"
         />
-        <Link href={`/profile/${user.name}`} className="hover:underline">
-          {user.name}
-        </Link>
-        <p>
-          {comment.createdAt
-            .toString()
-            .substring(0, commentDateCharacterLength)}
-        </p>
+
+        <div className="flex flex-col">
+          <div className="flex gap-x-4">
+            <Link
+              href={`/profile/${user.name}`}
+              className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
+            >
+              {getUserDisplayName(user)}
+            </Link>
+            <p className="text-gray">{getTimeDifference(comment.createdAt)}</p>
+          </div>
+
+          <p>{comment.message}</p>
+        </div>
+      </div>
+
+      <div className="flex gap-x-3">
         <LikeButton
           likes={likes}
           commentLike={commentLike}
@@ -70,8 +81,6 @@ export default function TokenComment({
           handleDislike={handleDislike}
         />
       </div>
-
-      <p className="mt-2">{comment.message}</p>
     </div>
   );
 }

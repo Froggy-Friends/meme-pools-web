@@ -1,6 +1,11 @@
+import { TokenWithVoteCount } from "@/types/token/types";
 import { Progress } from "@nextui-org/react";
 
-export default function BondingCurveProgress() {
+type VotingProgressProps = {
+  token: TokenWithVoteCount;
+};
+
+export default function VotingProgress({ token }: VotingProgressProps) {
   return (
     <section className="mt-6 w-[350px]">
       <Progress
@@ -16,8 +21,15 @@ export default function BondingCurveProgress() {
         }}
         showValueLabel={true}
         className="max-w-md pb-2"
-        label="Bonding Curve Progress"
+        label="Voting Progress"
       />
+
+      {token && (
+        <p className="text-cream">
+          ${token.ticker} has {token._count.TokenVote} votes and need 1,000 more
+          to take third place on the leaderboard.
+        </p>
+      )}
     </section>
   );
 }
