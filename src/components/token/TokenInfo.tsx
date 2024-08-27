@@ -4,9 +4,9 @@ import CopyButton from "../CopyButton";
 import { Address } from "@/lib/types";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { TokenWithVoteCount } from "@/types/token/types";
-import { sliceAddress } from "@/lib/sliceAddress";
 import TokenVote from "./TokenVote";
 import TokenSocials from "./TokenSocials";
+import { formatAddress } from "@/lib/formatAddress";
 
 
 type TokenInfoParams = {
@@ -50,7 +50,7 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
           <div className="flex flex-col">
             <p className="text-gray text-lg mb-2">CA</p>
             <div className="flex gap-x-2">
-              <p className="text-xl">{sliceAddress(token.tokenAddress)}</p>
+              <p className="text-xl">{formatAddress(token.tokenAddress, 5)}</p>
               <CopyButton tokenAddress={token.tokenAddress as Address} />
             </div>
           </div>
