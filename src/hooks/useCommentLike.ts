@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useUser from "./useUser";
 import { addCommentLike, removeCommentLike } from "@/actions/token/actions";
-import { CommentWithLikes } from "@/types/token/types";
+import { CommentLikesWithUser, CommentWithLikes } from "@/types/token/types";
 import { CommentLikes, User } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
@@ -10,8 +10,8 @@ import { Channel } from "@/models/channel";
 import { CommentLikeStatus } from "@/models/comment";
 
 type CommentLikesChannelReturn = {
-  add: CommentLikes & { user: User };
-  remove: CommentLikes & { user: User };
+  add: CommentLikesWithUser;
+  remove: CommentLikesWithUser;
 };
 
 export default function useCommentLike(
@@ -49,8 +49,8 @@ export default function useCommentLike(
   let newLike: CommentLikes;
 
   useEffect(() => {
-    const pusher = new Pusher("a015e9f0282a4e388fd7", {
-      cluster: "us3",
+    const pusher = new Pusher('a015e9f0282a4e388fd7', {
+      cluster: 'us3',
     });
 
     const channel = pusher.subscribe(Channel.CommentLikes);

@@ -56,3 +56,5 @@ export type HandleLike = UseMutationResult<
     initialDislikeData: unknown;
   }
 >;
+
+export type CommentLikesWithUser = CommentLikes & { user: User };

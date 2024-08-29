@@ -10,7 +10,7 @@ import useCommentLike from "@/hooks/useCommentLike";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { getTimeDifference } from "@/lib/getTimeDifference";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
-import useUserCommentInteraction from "@/hooks/useUserCommentInteraction";
+import { getUserCommentInteraction } from "@/lib/getUserCommentInteraction";
 
 type TokenCommentProps = {
   comment: CommentWithLikes;
@@ -23,7 +23,7 @@ export default function TokenComment({
   user,
   currentUser,
 }: TokenCommentProps) {
-  const { userCommentLike, userCommentDislike } = useUserCommentInteraction(
+  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
     comment,
     currentUser!
   );

@@ -1,5 +1,5 @@
 "use server";
-import { pusher } from "@/config/pusher";
+import { getPusher } from "@/config/pusher";
 import prisma from "@/lib/prisma";
 import { Channel } from "@/models/channel";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
@@ -33,8 +33,6 @@ export async function getVotesByTokenId(
     voteCounts.total += item._count.status;
   });
 
-  pusher.trigger(Channel.Votes, tokenId, voteCounts);
-  
   return voteCounts;
 }
 
@@ -57,6 +55,7 @@ export async function updateVote(
   userId: string,
   status: string | null
 ) {
+  const pusher = getPusher();
   await prisma.tokenVote.upsert({
     where: {
       tokenId_userId: {
@@ -73,6 +72,9 @@ export async function updateVote(
       status,
     },
   });
+
+  const voteCounts = await getVotesByTokenId(tokenId);
+  pusher.trigger(Channel.Votes, tokenId, voteCounts);
 }
 
 export const postComment = async (
@@ -80,6 +82,7 @@ export const postComment = async (
   userId: string,
   tokenId: string
 ) => {
+  const pusher = getPusher();
   const message = formData.get("comment") as string;
 
   const comment = await prisma.comment.create({
@@ -103,6 +106,7 @@ export const addCommentLike = async (
   status: string,
   prevCommentLikeId?: string
 ) => {
+  const pusher = getPusher();
   let remove: CommentLikes | null = null;
 
   const result = await prisma.commentLikes.create({
@@ -141,6 +145,7 @@ export const removeCommentLike = async (
   commentLikeId: string,
   commentId: string
 ) => {
+  const pusher = getPusher();
   const result = await prisma.commentLikes.delete({
     where: {
       id: commentLikeId,
