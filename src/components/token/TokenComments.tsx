@@ -4,9 +4,9 @@ import TokenComment from "./TokenComment";
 import { CommentWithLikes } from "@/types/token/types";
 import { User } from "@prisma/client";
 import { useEffect, useState } from "react";
-import Pusher from "pusher-js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Channel } from "@/models/channel";
+import { usePusher } from "@/hooks/usePusher";
 
 type TokenCommentsProps = {
   comments: CommentWithLikes[];
@@ -20,6 +20,7 @@ export default function TokenComments({
   tokenId,
 }: TokenCommentsProps) {
   const queryClient = useQueryClient();
+  const pusher = usePusher();
   const [tokenComments, setTokenComments] = useState(comments);
 
   const { data } = useQuery({
@@ -28,9 +29,6 @@ export default function TokenComments({
   });
 
   useEffect(() => {
-    const pusher = new Pusher("a015e9f0282a4e388fd7", {
-      cluster: "us3",
-    });
     const channel = pusher.subscribe(Channel.Comment);
 
     channel.bind(tokenId, (newData: CommentWithLikes) => {

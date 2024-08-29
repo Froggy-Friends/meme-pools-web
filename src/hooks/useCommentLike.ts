@@ -5,9 +5,9 @@ import { CommentLikesWithUser, CommentWithLikes } from "@/types/token/types";
 import { CommentLikes, User } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
-import Pusher from "pusher-js";
 import { Channel } from "@/models/channel";
 import { CommentLikeStatus } from "@/models/comment";
+import { usePusher } from "./usePusher";
 
 type CommentLikesChannelReturn = {
   add: CommentLikesWithUser;
@@ -23,6 +23,7 @@ export default function useCommentLike(
 ) {
   const { currentUser } = useUser();
   const queryClient = useQueryClient();
+  const pusher = usePusher();
 
   const dislikes = useQuery({
     queryKey: ["commentDislikesCount", comment.id],
@@ -49,10 +50,6 @@ export default function useCommentLike(
   let newLike: CommentLikes;
 
   useEffect(() => {
-    const pusher = new Pusher('a015e9f0282a4e388fd7', {
-      cluster: 'us3',
-    });
-
     const channel = pusher.subscribe(Channel.CommentLikes);
 
     const updatedLikes = {

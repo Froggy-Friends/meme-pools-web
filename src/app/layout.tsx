@@ -9,6 +9,7 @@ import { Toaster } from "react-hot-toast";
 import Moralis from "moralis";
 import AppWalletProvider from "@/components/AppWalletProvider";
 import { ChainProvider } from "@/components/ChainProvider";
+import { PusherProvider } from "@/providers/PusherProvider";
 
 export const metadata: Metadata = {
   title: "Frog.fun",
@@ -35,8 +36,10 @@ export default async function RootLayout({
           <Web3ModalProvider initialState={initialState}>
             <AppWalletProvider>
               <ChainProvider>
-                <Toaster position="bottom-center" />
-                {children}
+                <PusherProvider>
+                  <Toaster position="bottom-center" />
+                  {children}
+                </PusherProvider>
               </ChainProvider>
             </AppWalletProvider>
           </Web3ModalProvider>
