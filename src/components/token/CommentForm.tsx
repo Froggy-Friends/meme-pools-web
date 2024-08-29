@@ -1,8 +1,10 @@
 "use client";
 
 import { postComment } from "@/actions/token/actions";
-import FormSubmitButton from "../FormSubmitButton";
 import useUser from "@/hooks/useUser";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CommentWithLikes } from "@/types/token/types";
+import toast from "react-hot-toast";
 
 type CommentFormProps = {
   tokenId: string;
@@ -10,11 +12,53 @@ type CommentFormProps = {
 
 export default function CommentForm({ tokenId }: CommentFormProps) {
   const { currentUser } = useUser();
+  const queryClient = useQueryClient();
+
+  const addComment = useMutation({
+    mutationKey: ["add-comment", tokenId],
+    mutationFn: async (formData: FormData) => {
+      currentUser && postComment(formData, currentUser.id, tokenId);
+    },
+    onMutate: async (formData: FormData) => {
+      const message = formData.get("comment") as string;
+      const newComment = {
+        message: message,
+        author: currentUser?.id,
+        tokenId: tokenId,
+        createdAt: new Date(Date.now()),
+        commentLikes: [],
+        commentLikeCount: 0,
+        commentDislikeCount: 0,
+        user: currentUser,
+      };
+
+      const initialComments: CommentWithLikes[] | undefined =
+        await queryClient.getQueryData(["token-comments", tokenId]);
+
+      initialComments &&
+        queryClient.setQueryData(
+          ["token-comments", tokenId],
+          [...initialComments, newComment]
+        );
+
+      return { initialComments };
+    },
+    onError(error, variables, context) {
+      queryClient.setQueryData(
+        ["token-comments", tokenId],
+        context?.initialComments
+      );
+      toast.error("Error adding comment");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["token-comments", tokenId] });
+    },
+  });
 
   return (
     <form
       action={(formData) => {
-        currentUser && postComment(formData, currentUser.id, tokenId);
+        addComment.mutate(formData);
       }}
       className="w-[780px] h-72 flex flex-col mb-20 p-6 bg-dark-gray rounded-xl"
     >
@@ -24,9 +68,9 @@ export default function CommentForm({ tokenId }: CommentFormProps) {
         name="comment"
         id="comment"
       />
-      <FormSubmitButton className="bg-green h-10 w-28 rounded-3xl mt-4 py-1 px-8 text-dark font-proximaSoftBold active:scale-[0.97] self-end hover:bg-light-green transition">
+      <button className="bg-green h-10 w-28 rounded-3xl mt-4 py-1 px-8 text-dark font-proximaSoftBold active:scale-[0.97] self-end hover:bg-light-green transition">
         <p>POST</p>
-      </FormSubmitButton>
+      </button>
     </form>
   );
 }

@@ -1,28 +1,68 @@
+"use client";
+
 import TokenComment from "./TokenComment";
-import { cookies } from "next/headers";
-import { Cookie } from "@/models/cookie";
-import { fetchUser } from "@/queries/profile/queries";
-import { fetchComments } from "@/queries/token/queries";
+import { CommentWithLikes } from "@/types/token/types";
+import { User } from "@prisma/client";
+import { useEffect, useState } from "react";
+import Pusher from "pusher-js";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Channel } from "@/models/channel";
 
 type TokenCommentsProps = {
+  comments: CommentWithLikes[];
+  user: User | null;
   tokenId: string;
 };
 
-export default async function TokenComments({ tokenId }: TokenCommentsProps) {
-  const cookieStore = cookies();
-  const currentUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
-  const currentUser = await fetchUser(currentUserEvmAddress?.value);
-  const comments = await fetchComments(tokenId);
+export default function TokenComments({
+  comments,
+  user,
+  tokenId,
+}: TokenCommentsProps) {
+  const queryClient = useQueryClient();
+  const [tokenComments, setTokenComments] = useState(comments);
+
+  const { data } = useQuery({
+    queryKey: ["token-comments", tokenId],
+    initialData: comments,
+  });
+
+  useEffect(() => {
+    const pusher = new Pusher("a015e9f0282a4e388fd7", {
+      cluster: "us3",
+    });
+    const channel = pusher.subscribe(Channel.Comment);
+
+    channel.bind(tokenId, (newData: CommentWithLikes) => {
+      queryClient.setQueryData(
+        ["token-comments", tokenId],
+        [
+          ...tokenComments,
+          { ...newData, commentLikeCount: 0, commentDislikeCount: 0 },
+        ]
+      );
+      setTokenComments((prev) => [
+        ...prev,
+        { ...newData, commentLikeCount: 0, commentDislikeCount: 0 },
+      ]);
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+      pusher.disconnect();
+    };
+  }, [queryClient, tokenComments, tokenId]);
 
   return (
     <section className="flex flex-col mt-4">
-      {comments.map((comment) => {
+      {data.map((comment) => {
         return (
           <TokenComment
             key={comment.id}
             comment={comment}
             user={comment.user}
-            currentUser={currentUser || null}
+            currentUser={user || null}
           />
         );
       })}

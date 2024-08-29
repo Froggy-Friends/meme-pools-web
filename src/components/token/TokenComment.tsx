@@ -6,11 +6,11 @@ import { User } from "@prisma/client";
 import Link from "next/link";
 import LikeButton from "./LikeButton";
 import DislikeButton from "./DislikeButton";
-import { getUserCommentInteraction } from "@/lib/getUserCommentInteraction";
 import useCommentLike from "@/hooks/useCommentLike";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { getTimeDifference } from "@/lib/getTimeDifference";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
+import useUserCommentInteraction from "@/hooks/useUserCommentInteraction";
 
 type TokenCommentProps = {
   comment: CommentWithLikes;
@@ -23,7 +23,7 @@ export default function TokenComment({
   user,
   currentUser,
 }: TokenCommentProps) {
-  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
+  const { userCommentLike, userCommentDislike } = useUserCommentInteraction(
     comment,
     currentUser!
   );

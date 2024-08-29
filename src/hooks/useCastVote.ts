@@ -2,6 +2,9 @@ import { updateVote } from "@/actions/token/actions";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
 import { TokenVote } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import Pusher from "pusher-js";
+import { Channel } from "@/models/channel";
 
 type UseCastVoteContext = {
   oldVotes: TokenVoteData | undefined;
@@ -10,6 +13,24 @@ type UseCastVoteContext = {
 
 export default function useCastVote(tokenId: string, userId: string) {
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const pusher = new Pusher("a015e9f0282a4e388fd7", {
+      cluster: "us3",
+    });
+
+    const channel = pusher.subscribe(Channel.Votes);
+
+    channel.bind(tokenId, (newData: TokenVoteData) => {
+      queryClient.setQueryData(["votes", tokenId], newData);
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+      pusher.disconnect();
+    };
+  }, [queryClient, tokenId]);
 
   const {
     data,

@@ -18,6 +18,7 @@ import Image from "next/image";
 import { useChain } from "@/context/chain";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
+import { setUserCookies } from "@/actions/profile/actions";
 
 type ProfileAvatarProps = {
   user: User;
@@ -29,7 +30,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
   const { disconnect } = useDisconnect();
   const { currentUser } = useUser();
   const { publicKey, connected } = useWallet();
-  const solDisconnet = useWallet().disconnect;
+  const solDisconnect = useWallet().disconnect;
   const { chain } = useChain();
 
   return (
@@ -147,9 +148,14 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
         <DropdownItem
           className="dark"
           key="Disconnect"
-          onPress={() => {
-            chain === Chain.Base && disconnect();
-            chain === Chain.Solana && solDisconnet();
+          onPress={async () => {
+            if (chain === Chain.Base) {
+              disconnect();
+              await setUserCookies(null, Chain.Base);
+            } else if (chain === Chain.Solana) {
+              solDisconnect();
+              await setUserCookies(null, Chain.Solana);
+            }
           }}
         >
           <p className="text-[17px]">Disconnect</p>

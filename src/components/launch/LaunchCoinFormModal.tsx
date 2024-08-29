@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { UseFormRegister, UseFormResetField } from "react-hook-form";
 import { LaunchFormValues } from "./LaunchCoinForm";
-import { LaunchModalInputs } from "@/types/token/launch";
+import { LaunchModalInputs } from "@/types/launch/types";
 
 type LaunchCoinFormModalProps = {
   name: LaunchModalInputs;
