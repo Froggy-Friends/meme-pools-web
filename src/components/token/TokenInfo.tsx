@@ -11,13 +11,13 @@ import { formatAddress } from "@/lib/formatAddress";
 type TokenInfoParams = {
   token: TokenWithVoteCount;
   creator: User | null;
-  currentUser: User | null;
+  cachedUser: User | null;
 };
 
 export default function TokenInfo({
   token,
   creator,
-  currentUser,
+  cachedUser,
 }: TokenInfoParams) {
   return (
     <section className="flex flex-col my-2 gap-y-2">
@@ -48,7 +48,7 @@ export default function TokenInfo({
       <div className="flex gap-x-10 mt-10">
         <div className="flex flex-col">
           <p className="text-gray text-lg mb-2">Votes</p>
-          <TokenVote tokenId={token.id} user={currentUser} />
+          <TokenVote tokenId={token.id} cachedUser={cachedUser} />
         </div>
 
         <div className="flex flex-col">

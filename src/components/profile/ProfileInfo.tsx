@@ -9,13 +9,13 @@ import EditProfileForm from "./EditProfileForm";
 
 type ProfileInfoParams = {
   profileUser: User;
-  currentUser: User;
+  cachedUser: User | null;
   isFollowing: string;
 };
 
 export default function ProfileInfo({
   profileUser,
-  currentUser,
+  cachedUser,
   isFollowing,
 }: ProfileInfoParams) {
   const { isConnected } = useAccount();
@@ -36,11 +36,11 @@ export default function ProfileInfo({
         </button>
 
         {isConnected &&
-          currentUser &&
-          currentUser!.name !== profileUser.name && (
+          cachedUser &&
+          cachedUser!.name !== profileUser.name && (
             <FollowButton
               isFollowing={isFollowing}
-              currentUser={currentUser}
+              cachedUser={cachedUser}
               user={profileUser}
             />
           )}

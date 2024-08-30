@@ -10,13 +10,13 @@ import Pusher from "pusher-js";
 
 type TokenCommentsProps = {
   comments: CommentWithLikes[];
-  user: User | null;
+  cachedUser: User | null;
   tokenId: string;
 };
 
 export default function TokenComments({
   comments,
-  user,
+  cachedUser,
   tokenId,
 }: TokenCommentsProps) {
   const queryClient = useQueryClient();
@@ -69,8 +69,8 @@ export default function TokenComments({
           <TokenComment
             key={comment.id}
             comment={comment}
-            user={comment.user}
-            currentUser={user || null}
+            author={comment.user}
+            cachedUser={cachedUser || null}
           />
         );
       })}

@@ -14,16 +14,19 @@ import { User } from "@prisma/client";
 
 type VoteCountProps = {
   tokenId: string;
-  user: User | null;
+  cachedUser: User | null;
 };
-export default function TokenVote({ tokenId, user }: VoteCountProps) {
+export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
   const { votes } = useVotes(tokenId);
   const { currentUser } = useUser();
   const { castVote, isCastingVote } = useCastVote(
     tokenId,
-    user?.id! || currentUser?.id!
+    cachedUser?.id! || currentUser?.id!
   );
-  const { userVote } = useUserVote(tokenId, user?.id! || currentUser?.id!);
+  const { userVote } = useUserVote(
+    tokenId,
+    cachedUser?.id! || currentUser?.id!
+  );
   const voteStatus = userVote?.status;
 
   const handleVote = (status: TokenVoteStatus | null) => {

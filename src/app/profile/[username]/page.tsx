@@ -31,15 +31,15 @@ export default async function ProfilePage({
 }: ProfilePageProps) {
   const view = (searchParams.view as string) || "profile";
   const cookieStore = cookies();
-  const currentUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
-  const currentUser = await fetchUser(currentUserEvmAddress?.value);
-  const user = await fetchUserByName(params.username);
-  if (!user) {
+  const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
+  const cachedUser = await fetchUser(cachedUserEvmAddress?.value);
+  const profileUser = await fetchUserByName(params.username);
+  if (!profileUser) {
     throw new Error("User not found");
   }
-  const isFollowing = await fetchFollow(user.id, currentUser?.id!);
-  const followers = await fetchFollowers(user.id);
-  const following = await fetchFollowing(user.id);
+  const isFollowing = await fetchFollow(profileUser.id, cachedUser?.id!);
+  const followers = await fetchFollowers(profileUser.id);
+  const following = await fetchFollowing(profileUser.id);
 
   return (
     <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto">
@@ -49,21 +49,21 @@ export default async function ProfilePage({
 
       <h2 className="text-[56px] font-semibold">{toTitleCase(view)}</h2>
 
-      <ProfileMenuToggle profileUser={user} currentView={view} />
+      <ProfileMenuToggle profileUser={profileUser} currentView={view} />
 
       {view === "profile" && (
         <ProfileInfo
-          profileUser={user}
-          currentUser={currentUser!}
+          profileUser={profileUser}
+          cachedUser={cachedUser || null}
           isFollowing={isFollowing?.status || "false"}
         />
       )}
 
       {view === "followers" && (
-        <Followers followers={followers} profileUser={user} />
+        <Followers followers={followers} profileUser={profileUser} />
       )}
       {view === "following" && (
-        <Following following={following} profileUser={user} />
+        <Following following={following} profileUser={profileUser} />
       )}
 
       <Footer />

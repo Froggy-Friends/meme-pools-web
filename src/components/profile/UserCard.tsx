@@ -21,8 +21,8 @@ export default async function UserCard({
   profileUser,
 }: UserCardProps) {
   const cookieStore = cookies();
-  const userEvmAddress = cookieStore.get(Cookie.EvmAddress);
-  const currentUser = await fetchUser(userEvmAddress?.value);
+  const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
+  const cachedUser = await fetchUser(cachedUserEvmAddress?.value);
   const isFollowing = await fetchFollow(user.id, profileUser.id);
   const isFollowed = await fetchFollow(profileUser.id, user.id);
   const followingTime = getTimeDifference(isFollowing?.followedAt);
@@ -53,10 +53,10 @@ export default async function UserCard({
         )}
       </div>
 
-      {currentUser && currentUser.id !== user.id && (
+      {cachedUser && cachedUser.id !== user.id && (
         <FollowButton
           isFollowing={isFollowing?.status || "false"}
-          currentUser={currentUser}
+          cachedUser={cachedUser}
           user={user}
           className="w-28 py-[0.375rem]"
         />
