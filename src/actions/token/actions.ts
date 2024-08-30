@@ -1,8 +1,9 @@
 "use server";
+import { getPusher } from "@/config/pusher";
 import prisma from "@/lib/prisma";
+import { Channel } from "@/models/channel";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
-import { TokenVote } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+import { CommentLikes, TokenVote } from "@prisma/client";
 
 export async function getVotesByTokenId(
   tokenId: string
@@ -54,6 +55,7 @@ export async function updateVote(
   userId: string,
   status: string | null
 ) {
+  const pusher = getPusher();
   await prisma.tokenVote.upsert({
     where: {
       tokenId_userId: {
@@ -70,6 +72,9 @@ export async function updateVote(
       status,
     },
   });
+
+  const voteCounts = await getVotesByTokenId(tokenId);
+  pusher.trigger(Channel.Votes, tokenId, voteCounts);
 }
 
 export const postComment = async (
@@ -77,17 +82,22 @@ export const postComment = async (
   userId: string,
   tokenId: string
 ) => {
-  const comment = formData.get("comment") as string;
+  const pusher = getPusher();
+  const message = formData.get("comment") as string;
 
-  await prisma.comment.create({
+  const comment = await prisma.comment.create({
     data: {
-      message: comment,
+      message: message,
       author: userId,
       tokenId: tokenId,
     },
+    include: {
+      commentLikes: true,
+      user: true,
+    },
   });
 
-  revalidatePath("/token");
+  pusher.trigger(Channel.Comment, tokenId, comment);
 };
 
 export const addCommentLike = async (
@@ -96,31 +106,57 @@ export const addCommentLike = async (
   status: string,
   prevCommentLikeId?: string
 ) => {
-  await prisma.commentLikes.create({
+  const pusher = getPusher();
+  let remove: CommentLikes | null = null;
+
+  const result = await prisma.commentLikes.create({
     data: {
       userId: userId,
       commentId: commentId,
       status: status,
     },
-  });
-
-  if (prevCommentLikeId) {
-    await prisma.commentLikes.delete({
-      where: {
-        id: prevCommentLikeId,
-      },
-    });
-  }
-
-  revalidatePath("/token");
-};
-
-export const removeCommentLike = async (commentLikeId: string) => {
-  await prisma.commentLikes.delete({
-    where: {
-      id: commentLikeId,
+    include: {
+      User: true,
     },
   });
 
-  revalidatePath("/token");
+  if (prevCommentLikeId) {
+    const result = await prisma.commentLikes.delete({
+      where: {
+        id: prevCommentLikeId,
+      },
+      include: {
+        User: true,
+      },
+    });
+
+    remove = result;
+  }
+
+  pusher.trigger(Channel.CommentLikes, commentId, {
+    add: result,
+    remove: remove,
+  });
+
+  return result;
+};
+
+export const removeCommentLike = async (
+  commentLikeId: string,
+  commentId: string
+) => {
+  const pusher = getPusher();
+  const result = await prisma.commentLikes.delete({
+    where: {
+      id: commentLikeId,
+    },
+    include: {
+      User: true,
+    },
+  });
+
+  pusher.trigger(Channel.CommentLikes, commentId, {
+    add: null,
+    remove: result,
+  });
 };

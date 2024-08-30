@@ -8,7 +8,7 @@ import { User } from "@prisma/client";
 export default function useUser() {
   const [currentUser, setCurrentUser] = useState<User | null>();
   const { publicKey } = useWallet();
-  const { address } = useAccount();
+  const { address, isDisconnected } = useAccount();
 
   const checkAndCreateUser = useCallback(async () => {
     if (!address && !publicKey?.toString()) {
@@ -33,6 +33,10 @@ export default function useUser() {
   useEffect(() => {
     checkAndCreateUser();
   }, [checkAndCreateUser, address, publicKey]);
+
+  useEffect(() => {
+    setCurrentUser(null);
+  }, [isDisconnected]);
 
   return { currentUser };
 }

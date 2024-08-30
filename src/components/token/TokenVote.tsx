@@ -10,15 +10,20 @@ import {
   PiArrowFatDownLight,
   PiArrowFatUpLight,
 } from "react-icons/pi";
+import { User } from "@prisma/client";
 
 type VoteCountProps = {
   tokenId: string;
+  user: User | null;
 };
-export default function TokenVote({ tokenId }: VoteCountProps) {
+export default function TokenVote({ tokenId, user }: VoteCountProps) {
   const { votes } = useVotes(tokenId);
   const { currentUser } = useUser();
-  const { castVote, isCastingVote } = useCastVote(tokenId, currentUser?.id!);
-  const { userVote } = useUserVote(tokenId, currentUser?.id!);
+  const { castVote, isCastingVote } = useCastVote(
+    tokenId,
+    user?.id! || currentUser?.id!
+  );
+  const { userVote } = useUserVote(tokenId, user?.id! || currentUser?.id!);
   const voteStatus = userVote?.status;
 
   const handleVote = (status: TokenVoteStatus | null) => {

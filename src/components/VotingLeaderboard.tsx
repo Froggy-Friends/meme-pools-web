@@ -47,7 +47,7 @@ export default async function VotingLeaderboard() {
 
             <div className="flex items-center gap-x-1">
               <PiArrowFatUpFill size={25} />
-              <p>{token.votes.upVotes}</p>
+              <p>{token.voteCount.upVotes}</p>
             </div>
           </div>
         );

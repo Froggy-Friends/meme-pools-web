@@ -2,6 +2,9 @@ import { updateVote } from "@/actions/token/actions";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
 import { TokenVote } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { Channel } from "@/models/channel";
+import Pusher from "pusher-js"
 
 type UseCastVoteContext = {
   oldVotes: TokenVoteData | undefined;
@@ -10,6 +13,27 @@ type UseCastVoteContext = {
 
 export default function useCastVote(tokenId: string, userId: string) {
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
+      throw new Error("Missing pusher env variables");
+    }
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER
+    })
+
+    const channel = pusher.subscribe(Channel.Votes);
+
+    channel.bind(tokenId, (newData: TokenVoteData) => {
+      queryClient.setQueryData(["votes", tokenId], newData);
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+      pusher.disconnect();
+    };
+  }, [queryClient, tokenId]);
 
   const {
     data,
