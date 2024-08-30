@@ -26,6 +26,8 @@ export default function FollowButton({
     initialData: isFollowing,
   });
 
+  console.log(data);
+
   const handleClick = useMutation({
     mutationKey: ["changeFollow", currentUser.id, user.id],
     mutationFn: async () => {
@@ -73,8 +75,7 @@ export default function FollowButton({
     <button
       className={cn(
         "text-xl rounded-3xl py-2 w-36 text-dark font-proximaSoftBold active:scale-[0.98] transition",
-        data === "false" ||
-          (data === FollowStatus.UNFOLLOW && "bg-cream/85  hover:bg-cream"),
+        data && data !== FollowStatus.FOLLOW && "bg-cream/85  hover:bg-cream",
         data === FollowStatus.FOLLOW &&
           "bg-dark text-white font-proximaSoft border-[0.25px] border-white/[5%] hover:bg-red-500/[4%] hover:text-red-500 hover:border-red-500 transition",
         className

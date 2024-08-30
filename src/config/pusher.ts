@@ -7,18 +7,18 @@ if (!process.env.PUSHER_APP_ID) {
 export const getPusher = (): Pusher => {
   if (
     !process.env.PUSHER_APP_ID ||
-    !process.env.PUSHER_KEY ||
+    !process.env.NEXT_PUBLIC_PUSHER_KEY ||
     !process.env.PUSHER_SECRET ||
-    !process.env.PUSHER_CLUSTER
+    !process.env.NEXT_PUBLIC_PUSHER_CLUSTER
   ) {
     throw new Error("Missing env variables");
   }
 
   const pusher = new Pusher({
     appId: process.env.PUSHER_APP_ID,
-    key: process.env.PUSHER_KEY,
+    key: process.env.NEXT_PUBLIC_PUSHER_KEY,
     secret: process.env.PUSHER_SECRET,
-    cluster: process.env.PUSHER_CLUSTER,
+    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
   });
 
   return pusher;

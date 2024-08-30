@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { Channel } from "@/models/channel";
 import { CommentLikeStatus } from "@/models/comment";
-import { usePusher } from "./usePusher";
+import Pusher from "pusher-js";
 
 type CommentLikesChannelReturn = {
   add: CommentLikesWithUser;
@@ -23,7 +23,6 @@ export default function useCommentLike(
 ) {
   const { currentUser } = useUser();
   const queryClient = useQueryClient();
-  const pusher = usePusher();
 
   const dislikes = useQuery({
     queryKey: ["commentDislikesCount", comment.id],
@@ -50,6 +49,17 @@ export default function useCommentLike(
   let newLike: CommentLikes;
 
   useEffect(() => {
+    if (
+      !process.env.NEXT_PUBLIC_PUSHER_CLUSTER ||
+      !process.env.NEXT_PUBLIC_PUSHER_KEY
+    ) {
+      throw new Error("Missing pusher env variables");
+    }
+    
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
+
     const channel = pusher.subscribe(Channel.CommentLikes);
 
     const updatedLikes = {

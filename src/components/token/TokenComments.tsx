@@ -6,7 +6,7 @@ import { User } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Channel } from "@/models/channel";
-import { usePusher } from "@/hooks/usePusher";
+import Pusher from "pusher-js";
 
 type TokenCommentsProps = {
   comments: CommentWithLikes[];
@@ -20,7 +20,6 @@ export default function TokenComments({
   tokenId,
 }: TokenCommentsProps) {
   const queryClient = useQueryClient();
-  const pusher = usePusher();
   const [tokenComments, setTokenComments] = useState(comments);
 
   const { data } = useQuery({
@@ -29,6 +28,17 @@ export default function TokenComments({
   });
 
   useEffect(() => {
+    if (
+      !process.env.NEXT_PUBLIC_PUSHER_CLUSTER ||
+      !process.env.NEXT_PUBLIC_PUSHER_KEY
+    ) {
+      throw new Error("Missing pusher env variables");
+    }
+    
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
+
     const channel = pusher.subscribe(Channel.Comment);
 
     channel.bind(tokenId, (newData: CommentWithLikes) => {
