@@ -9,29 +9,29 @@ import toast from "react-hot-toast";
 
 type FollowButtonProps = {
   isFollowing: string;
-  currentUser: User;
+  cachedUser: User;
   user: User;
   className?: string;
 };
 
 export default function FollowButton({
   isFollowing,
-  currentUser,
+  cachedUser,
   user,
   className,
 }: FollowButtonProps) {
   const queryClient = useQueryClient();
   const { data } = useQuery({
-    queryKey: ["isFollowing", currentUser.id, user.id],
+    queryKey: ["isFollowing", cachedUser.id, user.id],
     initialData: isFollowing,
   });
 
   console.log(data);
 
   const handleClick = useMutation({
-    mutationKey: ["changeFollow", currentUser.id, user.id],
+    mutationKey: ["changeFollow", cachedUser.id, user.id],
     mutationFn: async () => {
-      const errorMessage = await handleFollow(data, user, currentUser);
+      const errorMessage = await handleFollow(data, user, cachedUser);
       if (errorMessage) {
         throw new Error(errorMessage);
       }
@@ -39,18 +39,18 @@ export default function FollowButton({
     onMutate: async () => {
       const previousData = await queryClient.getQueryData([
         "isFollowing",
-        currentUser.id,
+        cachedUser.id,
         user.id,
       ]);
 
       if (previousData === FollowStatus.UNFOLLOW || previousData === "false") {
         queryClient.setQueryData(
-          ["isFollowing", currentUser.id, user.id],
+          ["isFollowing", cachedUser.id, user.id],
           FollowStatus.FOLLOW
         );
       } else if (previousData === FollowStatus.FOLLOW) {
         queryClient.setQueryData(
-          ["isFollowing", currentUser.id, user.id],
+          ["isFollowing", cachedUser.id, user.id],
           FollowStatus.UNFOLLOW
         );
       }
@@ -59,14 +59,14 @@ export default function FollowButton({
     },
     onError(error, variables, context) {
       queryClient.setQueryData(
-        ["isFollowing", currentUser.id, user.id],
+        ["isFollowing", cachedUser.id, user.id],
         context?.previousData
       );
       toast.error((error as Error).message);
     },
     onSettled: async () => {
       queryClient.invalidateQueries({
-        queryKey: ["isFollowing", currentUser.id, user.id],
+        queryKey: ["isFollowing", cachedUser.id, user.id],
       });
     },
   });

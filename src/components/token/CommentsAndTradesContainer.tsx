@@ -10,14 +10,14 @@ type CommentsAndTradesContainerProps = {
   view: CommentAndTradesView;
   tokenAddress: string;
   tokenId: string;
-  currentUser: User | null;
+  cachedUser: User | null;
 };
 
 export default async function CommentsAndTradesContainer({
   view,
   tokenAddress,
   tokenId,
-  currentUser,
+  cachedUser,
 }: CommentsAndTradesContainerProps) {
   const comments = await fetchComments(tokenId);
 
@@ -39,7 +39,7 @@ export default async function CommentsAndTradesContainer({
         {view === "comments" && (
           <TokenComments
             comments={comments}
-            user={currentUser || null}
+            cachedUser={cachedUser || null}
             tokenId={tokenId}
           />
         )}

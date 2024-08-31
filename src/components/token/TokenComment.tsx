@@ -14,18 +14,18 @@ import { getUserCommentInteraction } from "@/lib/getUserCommentInteraction";
 
 type TokenCommentProps = {
   comment: CommentWithLikes;
-  user: User;
-  currentUser: User | null;
+  author: User;
+  cachedUser: User | null;
 };
 
 export default function TokenComment({
   comment,
-  user,
-  currentUser,
+  author,
+  cachedUser,
 }: TokenCommentProps) {
   const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
     comment,
-    currentUser!
+    cachedUser!
   );
 
   const {
@@ -47,7 +47,7 @@ export default function TokenComment({
     <div className="flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1">
       <div className="flex items-center gap-x-4">
         <Image
-          src={user.imageUrl || defaultProfileAvatarUrl}
+          src={author.imageUrl || defaultProfileAvatarUrl}
           alt="user-profile-picture"
           height={50}
           width={50}
@@ -57,10 +57,10 @@ export default function TokenComment({
         <div className="flex flex-col">
           <div className="flex gap-x-4">
             <Link
-              href={`/profile/${user.name}`}
+              href={`/profile/${author.name}`}
               className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
             >
-              {getUserDisplayName(user)}
+              {getUserDisplayName(author)}
             </Link>
             <p className="text-gray">{getTimeDifference(comment.createdAt)}</p>
           </div>

@@ -50,8 +50,8 @@ export default async function TokenDetailsPage({
   const ethPrice = await getEthPrice(baseEthAddr, EvmChain.mainnet);
   const creator = await fetchUserById(token.userId);
   const cookieStore = cookies();
-  const currentUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
-  const currentUser = await fetchUser(currentUserEvmAddress?.value);
+  const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
+  const cachedUser = await fetchUser(cachedUserEvmAddress?.value);
 
   return (
     <main className="flex flex-col max-w-[1200px] min-h-[100vh] px-4 mx-auto">
@@ -62,7 +62,7 @@ export default async function TokenDetailsPage({
       <TokenInfo
         token={token}
         creator={creator}
-        currentUser={currentUser || null}
+        cachedUser={cachedUser || null}
       />
 
       <div className="flex gap-x-10">
@@ -86,7 +86,7 @@ export default async function TokenDetailsPage({
         view={view}
         tokenAddress={tokenAddress}
         tokenId={token.id}
-        currentUser={currentUser || null}
+        cachedUser={cachedUser || null}
       />
       <Footer />
     </main>
