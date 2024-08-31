@@ -3,6 +3,7 @@ export enum Channel {
   CommentLikes = "comment-likes",
   Votes = "votes",
   Follow = "follow",
+  CreateToken = "create-token",
   Buy = "buy",
   Sell = "sell",
 }
