@@ -22,13 +22,13 @@ export default function ChainSwitcher() {
       placement="bottom-end"
     >
       <DropdownTrigger>
-        <div className="bg-dark-gray hover:bg-gray transition rounded-lg p-2 cursor-pointer">
+        <div className="hover:bg-gray transition rounded-lg p-2 cursor-pointer">
           <Image
             className="transition-transform"
             src={chain === Chain.Solana ? solanaLogo : baseLogo}
             alt="chain-logo"
-            height={45}
-            width={45}
+            height={36}
+            width={36}
           />
         </div>
       </DropdownTrigger>

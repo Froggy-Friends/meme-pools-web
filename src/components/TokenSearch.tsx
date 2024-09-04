@@ -21,19 +21,19 @@ export default function TokenSearch() {
   }, [onOpen]);
 
   return (
-    <section className="flex items-center ml-8 gap-x-4">
+    <section className="flex items-center gap-x-4">
       <button
         onClick={(e) => onOpen()}
-        className="flex items-center justify-between h-12 w-80 px-4 border-[0.25px] border-white/[5%] rounded-3xl bg-dark-gray hover:bg-gray transition"
+        className="flex items-center justify-between h-8 w-1/3 px-4 border-[0.25px] border-white/[5%] rounded-lg bg-dark-gray hover:bg-gray transition"
       >
         <div className="flex items-center gap-x-4">
-          <FaMagnifyingGlass size={20} />
-          <p>$FROGFUN</p>
+          <FaMagnifyingGlass size={16} />
+          <p className="text-light-gray">Search token</p>
         </div>
 
-        <div className="flex items-center">
-          <MdKeyboardCommandKey size={20} />
-          <p className="text-lg font-semibold">K</p>
+        <div className="flex items-center bg-dark rounded-[4px] h-6 px-2">
+          <MdKeyboardCommandKey size={14} />
+          <p className="font-semibold text-sm">K</p>
         </div>
       </button>
       <TokenSearchModal isOpen={isOpen} onOpenChange={onOpenChange} />
