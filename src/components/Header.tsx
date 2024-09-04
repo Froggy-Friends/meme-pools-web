@@ -6,10 +6,11 @@ import ChainSwitcher from "./ChainSwitcher";
 import { Cookie } from "@/models/cookie";
 import TokenSearch from "./TokenSearch";
 import LogoPopover from "./LogoPopover";
+import LaunchCoinButton from "./LaunchCoinButton";
 
 type HeaderProps = {
   chain: Chain;
-}
+};
 
 export default async function Header({ chain }: HeaderProps) {
   const cookieStore = cookies();
@@ -18,14 +19,13 @@ export default async function Header({ chain }: HeaderProps) {
   const user = await fetchUser(
     chain === Chain.Base ? userEvmAddress?.value : userSolAddress?.value
   );
-  
+
   return (
     <header className="flex justify-between items-center h-32">
       <LogoPopover />
 
-      <TokenSearch />
-
       <div className="flex items-center gap-x-4">
+        <LaunchCoinButton />
         <ChainSwitcher />
         <ProfileAvatar user={user!} />
       </div>
