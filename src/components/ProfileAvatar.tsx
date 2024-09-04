@@ -33,6 +33,23 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
   const solDisconnect = useWallet().disconnect;
   const { chain } = useChain();
 
+  const getProfilePicture = () => {
+    if (
+      (isConnected && !user && !currentUser && chain === Chain.Base) ||
+      (connected && !user && !currentUser && chain === Chain.Solana)
+    )
+      return defaultProfileAvatarUrl;
+    if (
+      (isConnected && user && chain === Chain.Base) ||
+      (connected && user && chain === Chain.Solana) ||
+      (isConnected && !user && currentUser && chain === Chain.Base) ||
+      (connected && !user && currentUser && chain === Chain.Solana)
+    )
+      return user.imageUrl || defaultProfileAvatarUrl;
+
+    return defaultProfileAvatarUrl;
+  };
+
   return (
     <Dropdown
       className="min-w-0 w-fit py-2 px-3 bg-dark-gray"
@@ -40,84 +57,17 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
     >
       {!isConnected && chain === Chain.Base && <EvmConnectButton />}
       {!connected && chain === Chain.Solana && <SolConnectButton />}
-      {isConnected && !user && !currentUser && chain === Chain.Base && (
-        <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
-            <Image
-              className="transition-transform rounded-full"
-              src={defaultProfileAvatarUrl}
-              alt="profile-avatar"
-              height={45}
-              width={45}
-            />
-          </div>
-        </DropdownTrigger>
-      )}
-      {connected && !user && !currentUser && chain === Chain.Solana && (
-        <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
-            <Image
-              className="transition-transform rounded-full"
-              src={defaultProfileAvatarUrl}
-              alt="profile-avatar"
-              height={45}
-              width={45}
-            />
-          </div>
-        </DropdownTrigger>
-      )}
-      {isConnected && user && chain === Chain.Base && (
-        <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
-            <Image
-              className="transition-transform rounded-full"
-              src={user.imageUrl || defaultProfileAvatarUrl}
-              alt="profile-avatar"
-              height={45}
-              width={45}
-            />
-          </div>
-        </DropdownTrigger>
-      )}
-      {connected && user && chain === Chain.Solana && (
-        <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
-            <Image
-              className="transition-transform rounded-full"
-              src={user.imageUrl || defaultProfileAvatarUrl}
-              alt="profile-avatar"
-              height={45}
-              width={45}
-            />
-          </div>
-        </DropdownTrigger>
-      )}
-      {isConnected && !user && currentUser && chain === Chain.Base && (
-        <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
-            <Image
-              className="transition-transform rounded-full"
-              src={currentUser.imageUrl || defaultProfileAvatarUrl}
-              alt="profile-avatar"
-              height={45}
-              width={45}
-            />
-          </div>
-        </DropdownTrigger>
-      )}
-      {connected && !user && currentUser && chain === Chain.Solana && (
-        <DropdownTrigger>
-          <div className="bg-dark-gray hover:bg-gray rounded-lg p-2 cursor-pointer">
-            <Image
-              className="transition-transform rounded-full"
-              src={currentUser.imageUrl || defaultProfileAvatarUrl}
-              alt="profile-avatar"
-              height={45}
-              width={45}
-            />
-          </div>
-        </DropdownTrigger>
-      )}
+      <DropdownTrigger>
+        <div className="hover:bg-gray rounded-lg p-2 cursor-pointer">
+          <Image
+            className="transition-transform rounded-full"
+            src={getProfilePicture()}
+            alt="profile-avatar"
+            height={36}
+            width={36}
+          />
+        </div>
+      </DropdownTrigger>
       <DropdownMenu>
         <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
           <p className="text-lg">
