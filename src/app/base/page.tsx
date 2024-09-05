@@ -15,11 +15,6 @@ export default async function BaseHomePage() {
       <Header chain={Chain.Base} />
 
       <div className="flex flex-col gap-6">
-        {/* <div className="flex justify-between">
-          <NewsContainer />
-          <VotingLeaderboard />
-        </div> */}
-
         <div className="h-[400px] rounded-lg bg-dark-gray p-4 flex flex-col gap-6">
           <div className="flex items-center justify-between w-full">
             <span className="font-proximaSoftBold uppercase">Leaderboard</span>

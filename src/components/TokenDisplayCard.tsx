@@ -3,6 +3,7 @@
 import { useChain } from "@/context/chain";
 import { MAX_MARKET_CAP } from "@/lib/constants";
 import { TokenWithCreator } from "@/lib/types";
+import { TokenWithVotes } from "@/types/token/types";
 import { cn } from "@nextui-org/react";
 import { isServer } from "@tanstack/react-query";
 import Image from "next/image";
@@ -12,7 +13,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 type TokenDisplayCardProps = {
-  token: TokenWithCreator;
+  token: TokenWithCreator | TokenWithVotes;
   className?: string;
   layout?: "horizontal" | "vertical";
 };
