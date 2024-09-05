@@ -29,7 +29,7 @@ export type CommentWithLikes = {
 
 export type TokenWithVoteCount = Token & { _count: { TokenVote: number } };
 
-export type TokenWithVotes = Token & { user: User } & {
+export type TokenWithVotes = Token & { user: User }  & {
   voteCount: { upVotes: number; downVotes: number };
 };
 

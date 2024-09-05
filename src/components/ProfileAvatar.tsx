@@ -26,10 +26,10 @@ type ProfileAvatarProps = {
 
 export default function ProfileAvatar({ user }: ProfileAvatarProps) {
   const router = useRouter();
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { currentUser } = useUser();
-  const { publicKey, connected } = useWallet();
+  const { connected } = useWallet();
   const solDisconnect = useWallet().disconnect;
   const { chain } = useChain();
 
@@ -47,7 +47,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
     )
       return user.imageUrl || defaultProfileAvatarUrl;
 
-    return defaultProfileAvatarUrl;
+    return defaultProfileAvatarUrl; 
   };
 
   return (

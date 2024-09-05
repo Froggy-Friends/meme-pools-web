@@ -1,9 +1,7 @@
-import { fetchTokens } from "@/queries/token/queries";
-import TokenDisplayCard from "./TokenDisplayCard";
-import TokenCarousel from "./TokenCarousel";
-import Link from "next/link";
 import { tokenCarouselLength } from "@/config/base/token";
 import { Chain } from "@/models/chain";
+import { fetchTokens } from "@/queries/token/queries";
+import TokenDisplayCard from "./TokenDisplayCard";
 
 type TokenDisplayContainerProps = {
   chain: Chain;
