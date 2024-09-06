@@ -1,20 +1,24 @@
-import { tokenCarouselLength } from "@/config/base/token";
+import useTokens from "@/hooks/useTokens";
 import { Chain } from "@/models/chain";
-import { fetchTokens } from "@/queries/token/queries";
+import { TokenFilter } from "@/models/token";
 import TokenDisplayCard from "./TokenDisplayCard";
 
 type TokenDisplayContainerProps = {
   chain: Chain;
+  filter: TokenFilter;
+  page: number;
 };
 
-export default async function TokenDisplayContainer({
+export default function TokenDisplayContainer({
   chain,
+  filter,
+  page,
 }: TokenDisplayContainerProps) {
-  const newTokens = await fetchTokens("new", 1);
-
+  const { tokens } = useTokens(filter, page);
+  if (!tokens || tokens.length === 0) return null;
   return (
     <section className="grid grid-cols-9 gap-5">
-      {newTokens.slice(0, tokenCarouselLength).map((token) => {
+      {tokens.map((token) => {
         return <TokenDisplayCard key={token.id} token={token} />;
       })}
     </section>

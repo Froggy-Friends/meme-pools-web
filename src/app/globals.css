@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  padding-right: 0 !important; /* NextUI adds padding to account for scrollbar */
+}
+
 @font-face {
   font-family: "ProximaSoft";
   src: url("../../public/fonts/ProximaSoft-Regular.woff2");

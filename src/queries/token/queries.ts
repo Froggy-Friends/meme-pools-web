@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { TokenWithCreator } from "@/lib/types";
-import { TokenVoteStatus } from "@/models/token";
+import { TokenFilter, TokenVoteStatus } from "@/models/token";
 import { TokenWithVotes } from "@/types/token/types";
 
 export const checkTokenNameExists = async (name: string) => {
@@ -26,7 +26,7 @@ export const checkTokenTickerExists = async (ticker: string) => {
 };
 
 export const fetchTokens = async (
-  tokenFilter: string,
+  tokenFilter: TokenFilter,
   page: number
 ): Promise<TokenWithCreator[]> => {
   const response = await fetch(
