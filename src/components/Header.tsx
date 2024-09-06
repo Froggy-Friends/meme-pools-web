@@ -7,6 +7,7 @@ import { Cookie } from "@/models/cookie";
 import TokenSearch from "./TokenSearch";
 import LogoPopover from "./LogoPopover";
 import LaunchCoinButton from "./LaunchCoinButton";
+import HowItWorksButton from "./HowItWorksButton";
 
 type HeaderProps = {
   chain: Chain;
@@ -26,6 +27,7 @@ export default async function Header({ chain }: HeaderProps) {
 
       <div className="flex items-center gap-x-4">
         <LaunchCoinButton />
+        <HowItWorksButton />
         <ChainSwitcher />
         <ProfileAvatar user={user!} />
       </div>
