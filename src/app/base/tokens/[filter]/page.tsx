@@ -1,7 +1,7 @@
 import { SearchParams } from "@/lib/types";
 import { redirect } from "next/navigation";
-import { validTokensPageFilters } from "@/config/base/token";
-import { TokensPageFilters } from "@/models/token";
+import { validTokenFilter } from "@/config/base/token";
+import { TokenFilter } from "@/models/token";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TokensDisplayContainer from "@/components/tokens/TokensDisplayContainer";
@@ -9,7 +9,7 @@ import { Chain } from "@/models/chain";
 
 type TokensPageProps = {
   params: {
-    filter: TokensPageFilters;
+    filter: TokenFilter;
   };
   searchParams: SearchParams;
 };
@@ -17,7 +17,7 @@ type TokensPageProps = {
 export default function TokensPage({ params, searchParams }: TokensPageProps) {
   const filter = params.filter;
   const page = searchParams.page || 1;
-  const isValidFilter = validTokensPageFilters.includes(filter);
+  const isValidFilter = validTokenFilter.includes(filter);
 
   if (!isValidFilter) {
     redirect("/");

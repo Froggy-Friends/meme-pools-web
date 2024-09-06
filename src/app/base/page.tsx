@@ -1,15 +1,27 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import TokenCarousel from "@/components/TokenCarousel";
 import TokenDisplayCard from "@/components/TokenDisplayCard";
-import TokenDisplayContainer from "@/components/TokenDisplayContainer";
-import TokenSearch from "@/components/TokenSearch";
+import TokenPageContent from "@/components/TokenPageContent";
 import VotingLeaderboard from "@/components/VotingLeaderboard";
 import { Chain } from "@/models/chain";
+import { TokenFilter } from "@/models/token";
 import { fetchTopVotesTokens } from "@/queries/token/queries";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 export default async function BaseHomePage() {
   const tokens = await fetchTopVotesTokens();
+
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["tokens", TokenFilter.New, 1],
+    queryFn: fetchTopVotesTokens,
+  });
+
   return (
     <main className="flex flex-col min-h-[100vh] mx-32 px-4">
       <Header chain={Chain.Base} />
@@ -31,8 +43,9 @@ export default async function BaseHomePage() {
           </div>
         </div>
 
-        <TokenSearch />
-        <TokenDisplayContainer chain={Chain.Base} />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <TokenPageContent chain={Chain.Base} />
+        </HydrationBoundary>
       </div>
 
       <Footer />
