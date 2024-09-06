@@ -9,7 +9,7 @@ export type TokenVoteData = {
   total: number;
 };
 
-export enum TokensPageFilters {
+export enum TokenFilter {
   New = "new",
   Trending = "trending",
   Volume = "volume",
