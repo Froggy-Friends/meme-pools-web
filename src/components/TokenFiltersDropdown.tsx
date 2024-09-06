@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/react";
 import { FaChevronDown } from "react-icons/fa6";
 import { TokenFilter } from "@/models/token";
+import { validTokenFilter } from "@/config/base/token";
 
 type TokenFiltersDropdownProps = {
   selectedFilter: TokenFilter;
@@ -21,8 +22,10 @@ export default function TokenFiltersDropdown({
 }: TokenFiltersDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const formattedFilter =
-    selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1);
+  const formatFilter = (filter: TokenFilter) =>
+    filter.charAt(0).toUpperCase() + filter.slice(1);
+
+  const formattedFilter = formatFilter(selectedFilter);
 
   return (
     <Dropdown onOpenChange={setIsOpen} className="bg-dark-gray">
@@ -42,12 +45,11 @@ export default function TokenFiltersDropdown({
         }}
         onAction={(newFilter) => onFilterChange(newFilter as TokenFilter)}
       >
-        <DropdownItem key="new">New</DropdownItem>
-        <DropdownItem key="trending">Trending</DropdownItem>
-        <DropdownItem key="volume">Volume</DropdownItem>
-        <DropdownItem key="transactions">Transactions</DropdownItem>
-        <DropdownItem key="comments">Comments</DropdownItem>
-        <DropdownItem key="votes">Votes</DropdownItem>
+        {validTokenFilter.map((filter) => (
+          <DropdownItem key={filter} onClick={() => onFilterChange(filter)}>
+            {formatFilter(filter)}
+          </DropdownItem>
+        ))}
       </DropdownMenu>
     </Dropdown>
   );
