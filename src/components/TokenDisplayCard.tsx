@@ -4,7 +4,6 @@ import { useChain } from "@/context/chain";
 import { MAX_MARKET_CAP } from "@/lib/constants";
 import { TokenWithCreator } from "@/lib/types";
 import { TokenWithVotes } from "@/types/token/types";
-import { cn } from "@nextui-org/react";
 import { isServer } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,13 +13,11 @@ import { FaXTwitter } from "react-icons/fa6";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator | TokenWithVotes;
-  className?: string;
   layout?: "horizontal" | "vertical";
 };
 
 export default function TokenDisplayCard({
   token,
-  className,
   layout = "vertical",
 }: TokenDisplayCardProps) {
   const { chain } = useChain();

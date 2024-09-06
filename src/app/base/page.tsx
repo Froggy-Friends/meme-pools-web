@@ -15,45 +15,41 @@ import {
 
 export default async function BaseHomePage() {
   const queryClient = new QueryClient();
+  const topTokens = await fetchTopVotesTokens();
 
   const defaultTokensQueryKey = ["tokens", TokenFilter.New, 1];
 
   await queryClient.prefetchQuery({
     queryKey: defaultTokensQueryKey,
-    queryFn: () => fetchTokens(TokenFilter.New, 1),
+    queryFn: async () => fetchTokens(TokenFilter.New, 1),
   });
-
-  const tokens: TokenWithVotes[] | undefined = await queryClient.getQueryData(
-    defaultTokensQueryKey
-  );
 
   return (
     <main className="flex flex-col min-h-[100vh] mx-32 px-4">
       <Header chain={Chain.Base} />
-
-      <div className="flex flex-col gap-6">
-        <div className="h-[400px] rounded-lg bg-dark-gray p-4 flex flex-col gap-6">
-          <div className="flex items-center justify-between w-full">
-            <span className="font-proximaSoftBold uppercase">Leaderboard</span>
-            {tokens && tokens.length > 0 && (
-              <VotingLeaderboard tokens={tokens} />
-            )}
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <div className="flex flex-col gap-6">
+          <div className="h-[400px] rounded-lg bg-dark-gray p-4 flex flex-col gap-6">
+            <div className="flex items-center justify-between w-full">
+              <span className="font-proximaSoftBold uppercase">
+                Leaderboard
+              </span>
+              <VotingLeaderboard tokens={topTokens} />
+            </div>
+            <div className="bg-dark px-2.5 py-10 flex items-center gap-2.5 overflow-x-auto overflow-y-hidden rounded-lg w-full h-[320px]">
+              {topTokens.map((token) => (
+                <TokenDisplayCard
+                  key={token.id}
+                  token={token}
+                  layout="horizontal"
+                />
+              ))}
+            </div>
           </div>
-          <div className="bg-dark px-2.5 py-10 flex items-center gap-2.5 overflow-x-auto overflow-y-hidden rounded-lg w-full h-[320px]">
-            {tokens?.map((token) => (
-              <TokenDisplayCard
-                key={token.id}
-                token={token}
-                layout="horizontal"
-              />
-            ))}
-          </div>
-        </div>
 
-        <HydrationBoundary state={dehydrate(queryClient)}>
           <TokenPageContent chain={Chain.Base} />
-        </HydrationBoundary>
-      </div>
+        </div>
+      </HydrationBoundary>
 
       <Footer />
     </main>

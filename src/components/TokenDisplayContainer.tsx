@@ -15,7 +15,7 @@ export default function TokenDisplayContainer({
   page,
 }: TokenDisplayContainerProps) {
   const { tokens } = useTokens(filter, page);
-  if (!tokens) return null;
+  if (!tokens || tokens.length === 0) return null;
   return (
     <section className="grid grid-cols-9 gap-5">
       {tokens.map((token) => {
