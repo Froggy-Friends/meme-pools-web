@@ -30,7 +30,10 @@ export default function useCreateToken() {
     symbol,
   }: CreateTokenParams) => {
     try {
-      const tx = await contract.createToken(reservedAmount, name, symbol);
+      const cost = await contract.calculateReservePrice(reservedAmount);
+      const tx = await contract.createToken(name, symbol, reservedAmount, {
+        value: cost,
+      });
       const receipt = await tx.wait();
       const { creator, tokenId, reserved, tokenAddress } =
         await getTokenDetails(receipt);
