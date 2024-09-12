@@ -1,5 +1,4 @@
-import frogFunAbi from "@/abi/frogFun.json";
-
+import { frogFunAbi } from "@/abi/frogFun";
 import { useEthersSigner } from "@/config/base/wagmi-ethers";
 import { CreateTokenParams, TokenCreated } from "@/types/token/types";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
@@ -31,7 +30,10 @@ export default function useCreateToken() {
     symbol,
   }: CreateTokenParams) => {
     try {
-      const tx = await contract.createToken(reservedAmount, name, symbol);
+      const cost = await contract.calculateReservePrice(reservedAmount);
+      const tx = await contract.createToken(name, symbol, reservedAmount, {
+        value: cost,
+      });
       const receipt = await tx.wait();
       const { creator, tokenId, reserved, tokenAddress } =
         await getTokenDetails(receipt);
