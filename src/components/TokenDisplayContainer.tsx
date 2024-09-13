@@ -7,12 +7,14 @@ type TokenDisplayContainerProps = {
   chain: Chain;
   filter: TokenFilter;
   page: number;
+  onPageChange: (page: number) => void;
 };
 
 export default function TokenDisplayContainer({
   chain,
   filter,
   page,
+  onPageChange,
 }: TokenDisplayContainerProps) {
   const { tokens } = useTokens(filter, page);
   if (!tokens || tokens.length === 0) return null;
