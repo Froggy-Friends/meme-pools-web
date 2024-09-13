@@ -1,6 +1,5 @@
 import { wethAddress } from "@/config/eth/token";
 import getEthPrice from "@/lib/getEthPrice";
-import { EvmChain } from "@/lib/getTokenPrice";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import BondingCurveProgress from "../../../../components/token/BondingCurveProgress";
@@ -47,8 +46,7 @@ export default async function TokenDetailsPage({
     redirect("/");
   }
 
-  const ethPrice = await getEthPrice(wethAddress, EvmChain.mainnet);
-  console.log("eth price: ", ethPrice);
+  const ethPrice = await getEthPrice(wethAddress);
   const creator = await fetchUserById(token.userId);
   const cookieStore = cookies();
   const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
