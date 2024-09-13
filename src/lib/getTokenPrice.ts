@@ -10,5 +10,6 @@ export default async function getTokenPrice(address: string, chain: EvmChain) {
     chain,
     address,
   });
+  console.log("get token price response: ", res);
   return res.toJSON();
 }

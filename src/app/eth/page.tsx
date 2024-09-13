@@ -6,14 +6,13 @@ import VotingLeaderboard from "@/components/VotingLeaderboard";
 import { Chain } from "@/models/chain";
 import { TokenFilter } from "@/models/token";
 import { fetchTokens, fetchTopVotesTokens } from "@/queries/token/queries";
-import { TokenWithVotes } from "@/types/token/types";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
 
-export default async function BaseHomePage() {
+export default async function EthHomePage() {
   const queryClient = new QueryClient();
   const topTokens = await fetchTopVotesTokens();
 
@@ -26,7 +25,7 @@ export default async function BaseHomePage() {
 
   return (
     <main className="flex flex-col min-h-[100vh] mx-32 px-4">
-      <Header chain={Chain.Base} />
+      <Header chain={Chain.Eth} />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <div className="flex flex-col gap-6">
           <div className="h-[400px] rounded-lg bg-dark-gray p-4 flex flex-col gap-6">
@@ -47,7 +46,7 @@ export default async function BaseHomePage() {
             </div>
           </div>
 
-          <TokenPageContent chain={Chain.Base} />
+          <TokenPageContent chain={Chain.Eth} />
         </div>
       </HydrationBoundary>
 

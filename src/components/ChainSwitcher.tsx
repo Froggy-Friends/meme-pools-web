@@ -8,13 +8,20 @@ import {
 } from "@nextui-org/react";
 import { Chain } from "@/models/chain";
 import Image from "next/image";
-import { baseLogo, solanaLogo } from "@/config/chains";
+import { baseLogo, solanaLogo, ethLogo } from "@/config/chains";
 import { useRouter } from "next/navigation";
 import { useChain } from "@/context/chain";
 
 export default function ChainSwitcher() {
   const router = useRouter();
   const { chain, setChain } = useChain();
+
+  const getChainLogo = (chain: Chain) => {
+    if (chain === Chain.Base) return baseLogo;
+    else if (chain === Chain.Eth) return ethLogo;
+    else if (chain === Chain.Solana) return solanaLogo;
+    else return ethLogo;
+  }
 
   return (
     <Dropdown
@@ -25,14 +32,27 @@ export default function ChainSwitcher() {
         <div className="hover:bg-gray transition rounded-lg p-2 cursor-pointer">
           <Image
             className="transition-transform"
-            src={chain === Chain.Solana ? solanaLogo : baseLogo}
+            src={getChainLogo(chain)}
             alt="chain-logo"
             height={36}
             width={36}
           />
         </div>
       </DropdownTrigger>
-      <DropdownMenu>
+      <DropdownMenu disabledKeys={["Solana", "Base"]}>
+        <DropdownItem
+            key="Eth"
+            className="dark"
+            onPress={() => {
+              router.push("/eth");
+              setChain(Chain.Eth);
+            }}
+          >
+            <div className="flex items-center gap-x-3">
+              <Image src={ethLogo} alt="eth-logo" height={40} width={40} />
+              <p className="text-[17px]">ETH</p>
+            </div>
+          </DropdownItem>
         <DropdownItem
           key="Solana"
           className="dark"
@@ -55,7 +75,7 @@ export default function ChainSwitcher() {
           }}
         >
           <div className="flex items-center gap-x-3">
-            <Image src={baseLogo} alt="solana-logo" height={40} width={40} />
+            <Image src={baseLogo} alt="base-logo" height={40} width={40} />
             <p className="text-[17px]">Base</p>
           </div>
         </DropdownItem>

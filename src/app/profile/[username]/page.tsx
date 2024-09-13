@@ -43,7 +43,7 @@ export default async function ProfilePage({
 
   return (
     <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto">
-      <Header chain={Chain.Base} />
+      <Header chain={Chain.Eth} />
 
       <BackButton />
 

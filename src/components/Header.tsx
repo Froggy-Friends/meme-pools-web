@@ -4,7 +4,6 @@ import { fetchUser } from "@/queries/profile/queries";
 import { Chain } from "@/models/chain";
 import ChainSwitcher from "./ChainSwitcher";
 import { Cookie } from "@/models/cookie";
-import TokenSearch from "./TokenSearch";
 import LogoPopover from "./LogoPopover";
 import LaunchCoinButton from "./LaunchCoinButton";
 import HowItWorksButton from "./HowItWorksButton";
@@ -18,7 +17,7 @@ export default async function Header({ chain }: HeaderProps) {
   const userEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const userSolAddress = cookieStore.get(Cookie.SolanaAddress);
   const user = await fetchUser(
-    chain === Chain.Base ? userEvmAddress?.value : userSolAddress?.value
+    chain === Chain.Eth ? userEvmAddress?.value : userSolAddress?.value
   );
 
   return (

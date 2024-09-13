@@ -145,7 +145,7 @@ export const unfollowUser = async (accountId: string, followerId: string) => {
 
 export const setUserCookies = async (user: User | null, chain?: Chain) => {
   const cookieStore = cookies();
-  if (!user && chain === Chain.Base) {
+  if (!user && chain === Chain.Eth) {
     cookieStore.set(Cookie.EvmAddress, "");
   } else if (!user && chain === Chain.Solana) {
     cookieStore.set(Cookie.SolanaAddress, "");

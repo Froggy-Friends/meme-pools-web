@@ -13,8 +13,7 @@ import { useChain } from "@/context/chain";
 import { Chain } from "@/models/chain";
 import Image from "next/image";
 import { cn } from "@nextui-org/react";
-import { solanaLogo } from "@/config/chains";
-import ethLogo from "../../../public/eth-logo.svg";
+import { solanaLogo, ethLogo } from "@/config/chains";
 import { useRouter } from "next/navigation";
 
 export type LaunchFormValues = {
@@ -167,7 +166,7 @@ export default function LaunchCoinForm() {
                     width={28}
                   />
                 )}
-                {chain === Chain.Base && (
+                {chain === Chain.Eth && (
                   <Image
                     src={ethLogo}
                     alt="ethereum-logo"
