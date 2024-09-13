@@ -1,12 +1,14 @@
 "use client";
 
 import { useChain } from "@/context/chain";
+import useIsMounted from "@/hooks/useIsMounted";
 import { MAX_MARKET_CAP } from "@/lib/constants";
 import { TokenWithCreator } from "@/lib/types";
 import { TokenWithVotes } from "@/types/token/types";
 import { isServer } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { CiGlobe } from "react-icons/ci";
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -29,7 +31,9 @@ export default function TokenDisplayCard({
 
   const isHorizontal = layout === "horizontal";
 
-  if (isServer) return null;
+  const isMounted = useIsMounted();
+
+  if (!isMounted) return null;
 
   return (
     <div
