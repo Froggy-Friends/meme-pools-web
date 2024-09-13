@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { FaChevronDown } from "react-icons/fa6";
 import { TokenFilter } from "@/models/token";
-import { validTokenFilter } from "@/config/base/token";
+import { validTokenFilter } from "@/config/eth/token";
 
 type TokenFiltersDropdownProps = {
   selectedFilter: TokenFilter;

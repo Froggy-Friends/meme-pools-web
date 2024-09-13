@@ -61,7 +61,7 @@ export default function SlippageModal({ isOpen, onClose }: SlippageModalProps) {
               />
               <span className="text-neutral-400 text-xs">
                 A higher priority fee will make your transactions confirm
-                faster. This is the transaction fee that you pay to the Base
+                faster. This is the transaction fee that you pay to the Eth
                 network on each trade.
               </span>
             </div>

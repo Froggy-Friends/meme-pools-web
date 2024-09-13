@@ -5,7 +5,7 @@ import { ChainContext } from "@/context/chain";
 import { Chain } from "@/models/chain";
 
 export const ChainProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [chain, setChain] = useState<Chain>(Chain.Base);
+  const [chain, setChain] = useState<Chain>(Chain.Eth);
 
   return (
     <ChainContext.Provider value={{ chain, setChain }}>

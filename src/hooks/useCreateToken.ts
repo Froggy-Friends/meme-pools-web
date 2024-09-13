@@ -1,5 +1,5 @@
 import { frogFunAbi } from "@/abi/frogFun";
-import { useEthersSigner } from "@/config/base/wagmi-ethers";
+import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { CreateTokenParams, TokenCreated } from "@/types/token/types";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
 import { toast } from "react-hot-toast";

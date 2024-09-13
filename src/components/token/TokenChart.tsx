@@ -9,7 +9,7 @@ export default function TokenChart() {
         theme="dark"
         width="100%"
         height="600px"
-        symbol="SOLUSD"
+        symbol="ETHUSD"
       ></AdvancedRealTimeChart>
     </section>
   );

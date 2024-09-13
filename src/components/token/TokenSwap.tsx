@@ -3,9 +3,9 @@
 import {
   defualtPriorityFee,
   defaultSlippagePercent,
-} from "@/config/base/token";
+} from "@/config/eth/token";
 import { useState } from "react";
-import { base } from "viem/chains";
+import { mainnet } from "viem/chains";
 import { useBalance } from "wagmi";
 import SlippageModal from "./SlippageModal";
 
@@ -41,7 +41,7 @@ export default function TokenSwap({
 
   const { data: balance, isLoading: isLoadingBalance } = useBalance({
     address: tokenAddress as `0x${string}`,
-    chainId: base.id,
+    chainId: mainnet.id,
   });
 
   const switchBuyToken = () => {

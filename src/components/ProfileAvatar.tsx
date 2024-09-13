@@ -8,7 +8,7 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import useUser from "@/hooks/useUser";
-import EvmConnectButton from "./base/EvmConnectButton";
+import EvmConnectButton from "./eth/EvmConnectButton";
 import { useRouter } from "next/navigation";
 import { useWallet } from "@solana/wallet-adapter-react";
 import SolConnectButton from "./solana/SolConnectButton";
@@ -35,14 +35,14 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
 
   const getProfilePicture = () => {
     if (
-      (isConnected && !user && !currentUser && chain === Chain.Base) ||
+      (isConnected && !user && !currentUser && chain === Chain.Eth) ||
       (connected && !user && !currentUser && chain === Chain.Solana)
     )
       return defaultProfileAvatarUrl;
     if (
-      (isConnected && user && chain === Chain.Base) ||
+      (isConnected && user && chain === Chain.Eth) ||
       (connected && user && chain === Chain.Solana) ||
-      (isConnected && !user && currentUser && chain === Chain.Base) ||
+      (isConnected && !user && currentUser && chain === Chain.Eth) ||
       (connected && !user && currentUser && chain === Chain.Solana)
     )
       return user.imageUrl || defaultProfileAvatarUrl;
@@ -55,7 +55,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       className="min-w-0 w-fit py-2 px-3 bg-dark-gray"
       placement="bottom-end"
     >
-      {!isConnected && chain === Chain.Base && <EvmConnectButton />}
+      {!isConnected && chain === Chain.Eth && <EvmConnectButton />}
       {!connected && chain === Chain.Solana && <SolConnectButton />}
       <DropdownTrigger>
         <div className="hover:bg-gray rounded-lg p-2 cursor-pointer">
@@ -99,9 +99,9 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
           className="dark"
           key="Disconnect"
           onPress={async () => {
-            if (chain === Chain.Base) {
+            if (chain === Chain.Eth) {
               disconnect();
-              await setUserCookies(null, Chain.Base);
+              await setUserCookies(null, Chain.Eth);
             } else if (chain === Chain.Solana) {
               solDisconnect();
               await setUserCookies(null, Chain.Solana);
