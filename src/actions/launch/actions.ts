@@ -9,9 +9,8 @@ import { fetchUser } from "@/queries/profile/queries";
 export const launchCoin = async (
   formData: FormData,
   address: Address,
-  tokenId: number,
   tokenAddress: string,
-  tokenCreator: string,
+  tokenCreator: string
 ) => {
   const user = await fetchUser(address);
 
@@ -29,7 +28,6 @@ export const launchCoin = async (
     user &&
       (await prisma.token.create({
         data: {
-          tokenId: tokenId,
           ticker: data.ticker.toUpperCase(),
           description: data.description,
           image: blob.url,

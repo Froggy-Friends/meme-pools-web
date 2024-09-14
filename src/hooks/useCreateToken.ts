@@ -15,12 +15,13 @@ export default function useCreateToken() {
     const event = receipt.logs.find(
       (e) => e instanceof EventLog && e.fragment.name === "TokenCreated"
     ) as EventLog;
-    const [creator, tokenId, reserved, tokenAddress] = event.args;
+    const [tokenAddress, creator, name, symbol, reserved] = event.args;
     return {
-      creator,
-      tokenId,
-      reserved,
       tokenAddress,
+      creator,
+      name,
+      symbol,
+      reserved,
     };
   };
 
@@ -30,18 +31,22 @@ export default function useCreateToken() {
     symbol,
   }: CreateTokenParams) => {
     try {
-      const cost = await contract.calculateReservePrice(reservedAmount);
+      const [price, cost, fee, total] = await contract.calculateReservePrice(
+        reservedAmount
+      );
       const tx = await contract.createToken(name, symbol, reservedAmount, {
-        value: cost,
+        value: total,
       });
       const receipt = await tx.wait();
-      const { creator, tokenId, reserved, tokenAddress } =
-        await getTokenDetails(receipt);
+      const { creator, reserved, tokenAddress } = await getTokenDetails(
+        receipt
+      );
       return {
-        creator,
-        tokenId,
-        reserved,
         tokenAddress,
+        creator,
+        name,
+        symbol,
+        reserved,
       };
     } catch (error) {
       console.log(error);
