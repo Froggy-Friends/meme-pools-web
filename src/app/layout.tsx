@@ -30,7 +30,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="font-proximaSoft overflow-y-scroll bg-dark text-white">
+      <body className="font-proximaSoft overflow-y-scroll bg-dark text-white dark">
         <NextUIProvider>
           <Web3ModalProvider initialState={initialState}>
             <AppWalletProvider>
