@@ -5,13 +5,19 @@ import { MdRefresh } from "react-icons/md";
 type TokenRefreshButtonProps = {
   tokenFilter: TokenFilter;
   tokenPage: number;
+  reverse: boolean;
 };
 
 export default function TokenRefreshButton({
   tokenFilter,
   tokenPage,
+  reverse,
 }: TokenRefreshButtonProps) {
-  const { refetch } = useTokens(tokenFilter, tokenPage);
+  const { refetch } = useTokens({
+    filter: tokenFilter,
+    page: tokenPage,
+    reverse,
+  });
 
   return (
     <button
