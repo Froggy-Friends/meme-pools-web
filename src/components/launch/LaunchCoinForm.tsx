@@ -65,7 +65,6 @@ export default function LaunchCoinForm() {
       const errorMessage = await launchCoin(
         formData,
         address,
-        Number(tokenDetails.tokenId),
         tokenDetails.tokenAddress,
         tokenDetails.creator
       );
