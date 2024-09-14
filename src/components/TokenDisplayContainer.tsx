@@ -8,11 +8,7 @@ type TokenDisplayContainerProps = {
   reverse: boolean;
 };
 
-export default function TokenDisplayContainer({
-  filter,
-  page,
-  reverse,
-}: TokenDisplayContainerProps) {
+export default function TokenDisplayContainer({ filter, page, reverse }: TokenDisplayContainerProps) {
   const { tokens } = useTokens({
     filter,
     page,
@@ -20,8 +16,8 @@ export default function TokenDisplayContainer({
   });
   if (!tokens || tokens.length === 0) return null;
   return (
-    <section className="grid grid-cols-9 gap-5">
-      {tokens.map((token) => {
+    <section className="grid grid-cols-7 gap-3">
+      {tokens.map(token => {
         return <TokenDisplayCard key={token.id} token={token} />;
       })}
     </section>
