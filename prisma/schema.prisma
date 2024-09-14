@@ -24,7 +24,6 @@ model Leaderboard {
 
 model Token {
   id           String        @id(map: "token_pkey") @default(uuid()) @db.Uuid
-  tokenId      Int           @unique
   ticker       String
   description  String
   image        String
