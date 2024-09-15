@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import rocket from "../../public/rocket.svg";
 import { useChain } from "@/context/chain";
 
 export default function LaunchCoinButton() {
@@ -11,10 +10,10 @@ export default function LaunchCoinButton() {
 
   return (
     <button
-      onClick={() => router.push(`${chain}/launch`)}
-      className="flex items-center gap-2.5 rounded-lg bg-green px-4 py-2 font-proximaSoftBold text-black hover:bg-opacity-80 transition-all"
+      onClick={() => router.push(`/${chain}/launch`)}
+      className="flex items-center gap-2.5 h-8 w-38 text-sm rounded-lg bg-green px-4 py-2 font-proximaSoftBold text-black hover:bg-opacity-80 transition-all"
     >
-      <Image src={rocket} alt="rocket" />
+      <Image src="/rocket-black.svg" alt="rocket" width={16} height={16} />
       Launch Token
     </button>
   );

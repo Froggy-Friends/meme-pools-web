@@ -1,12 +1,7 @@
 "use client";
 
 import { useAccount, useDisconnect } from "wagmi";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-} from "@nextui-org/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import useUser from "@/hooks/useUser";
 import EvmConnectButton from "./eth/EvmConnectButton";
 import { useRouter } from "next/navigation";
@@ -33,38 +28,18 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
   const solDisconnect = useWallet().disconnect;
   const { chain } = useChain();
 
-  const getProfilePicture = () => {
-    if (
-      (isConnected && !user && !currentUser && chain === Chain.Eth) ||
-      (connected && !user && !currentUser && chain === Chain.Solana)
-    )
-      return defaultProfileAvatarUrl;
-    if (
-      (isConnected && user && chain === Chain.Eth) ||
-      (connected && user && chain === Chain.Solana) ||
-      (isConnected && !user && currentUser && chain === Chain.Eth) ||
-      (connected && !user && currentUser && chain === Chain.Solana)
-    )
-      return user.imageUrl || defaultProfileAvatarUrl;
-
-    return defaultProfileAvatarUrl; 
-  };
-
   return (
-    <Dropdown
-      className="min-w-0 w-fit py-2 px-3 bg-dark-gray"
-      placement="bottom-end"
-    >
+    <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
       {!isConnected && chain === Chain.Eth && <EvmConnectButton />}
       {!connected && chain === Chain.Solana && <SolConnectButton />}
       <DropdownTrigger>
         <div className="hover:bg-gray rounded-lg p-2 cursor-pointer">
           <Image
             className="transition-transform rounded-full"
-            src={getProfilePicture()}
+            src={user?.imageUrl || defaultProfileAvatarUrl}
             alt="profile-avatar"
-            height={36}
-            width={36}
+            height={25}
+            width={25}
           />
         </div>
       </DropdownTrigger>
@@ -72,28 +47,18 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
         <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
           <p className="text-lg">
             {user && `Signed in as ${getUserDisplayName(user)}`}
-            {!user &&
-              currentUser &&
-              `Signed in as ${getUserDisplayName(currentUser)}`}
+            {!user && currentUser && `Signed in as ${getUserDisplayName(currentUser)}`}
           </p>
         </DropdownItem>
         <DropdownItem
           className="dark"
           key="Profile"
-          onPress={() =>
-            router.push(`/profile/${user ? user.name : currentUser?.name}`)
-          }
+          onPress={() => router.push(`/profile/${user ? user.name : currentUser?.name}`)}
         >
           <p className="text-[17px]">Profile</p>
         </DropdownItem>
-        <DropdownItem
-          key="Portfolio"
-          className="hover:cursor-default"
-          isReadOnly
-        >
-          <p className="text-[17px] text-white/[20%] hover:cursor-default">
-            Portfolio
-          </p>
+        <DropdownItem key="Portfolio" className="hover:cursor-default" isReadOnly>
+          <p className="text-[17px] text-white/[20%] hover:cursor-default">Portfolio</p>
         </DropdownItem>
         <DropdownItem
           className="dark"

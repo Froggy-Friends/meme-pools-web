@@ -8,10 +8,11 @@ export type CreateTokenParams = {
 };
 
 export type TokenCreated = {
-  creator: string;
-  tokenId: number;
-  reserved: number;
   tokenAddress: string;
+  creator: string;
+  name: string;
+  symbol: string;
+  reserved: number;
 };
 
 export type CommentWithLikes = {
@@ -29,7 +30,7 @@ export type CommentWithLikes = {
 
 export type TokenWithVoteCount = Token & { _count: { TokenVote: number } };
 
-export type TokenWithVotes = Token & { user: User }  & {
+export type TokenWithVotes = Token & { user: User } & {
   voteCount: { upVotes: number; downVotes: number };
 };
 

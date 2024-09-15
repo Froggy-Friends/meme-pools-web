@@ -3,7 +3,6 @@ import LaunchCoinForm from "@/components/launch/LaunchCoinForm";
 import Footer from "@/components/Footer";
 import { Chain } from "@/models/chain";
 import BackButton from "@/components/BackButton";
-import rocket from "../../../../public/rocket.svg";
 import Image from "next/image";
 
 export default function LaunchCoin() {
@@ -21,7 +20,7 @@ export default function LaunchCoin() {
               <span className="text-green">FROG</span>.FUN
             </span>
           </h1>
-          <Image src={rocket} alt="rocket" height={50} width={50} />
+          <Image src="/rocket-white.svg" alt="rocket" height={50} width={50} />
         </div>
       </div>
 
