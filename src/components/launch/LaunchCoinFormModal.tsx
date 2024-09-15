@@ -52,7 +52,9 @@ export default function LaunchCoinFormModal({
                 <label htmlFor={name} className="mb-1 text-xl">
                   Add {toTitleCase(name)} Link
                 </label>
-                <IoMdCloseCircle height={25} width={25} />
+                <button onClick={onClose}>
+                  <IoMdCloseCircle height={25} width={25} />
+                </button>
               </ModalHeader>
               <ModalBody>
                 <input
