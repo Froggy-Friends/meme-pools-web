@@ -15,6 +15,9 @@ export const fetchUser = unstable_cache(
       where: {
         OR: [
           {
+            name: wallet
+          },
+          {
             solAddress: wallet,
           },
           {
