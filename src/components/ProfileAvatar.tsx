@@ -38,8 +38,8 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
             className="transition-transform rounded-full"
             src={user?.imageUrl || defaultProfileAvatarUrl}
             alt="profile-avatar"
-            height={36}
-            width={36}
+            height={25}
+            width={25}
           />
         </div>
       </DropdownTrigger>

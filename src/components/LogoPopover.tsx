@@ -17,8 +17,8 @@ export default function LogoPopover() {
           <Image
             src={frogFunLogo}
             alt="Frog Fun Logo"
-            height={75}
-            width={75}
+            height={23}
+            width={32}
             className="hover:scale-[1.03] transition"
           />
           <IoIosArrowDown size={25} />

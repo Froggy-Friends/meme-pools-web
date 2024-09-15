@@ -34,8 +34,8 @@ export default function ChainSwitcher() {
             className="transition-transform"
             src={getChainLogo(chain)}
             alt="chain-logo"
-            height={36}
-            width={36}
+            height={25}
+            width={25}
           />
         </div>
       </DropdownTrigger>
@@ -49,7 +49,7 @@ export default function ChainSwitcher() {
             }}
           >
             <div className="flex items-center gap-x-3">
-              <Image src={ethLogo} alt="eth-logo" height={40} width={40} />
+              <Image src={ethLogo} alt="eth-logo" height={25} width={25} />
               <p className="text-[17px]">ETH</p>
             </div>
           </DropdownItem>
@@ -62,7 +62,7 @@ export default function ChainSwitcher() {
           }}
         >
           <div className="flex items-center gap-x-3">
-            <Image src={solanaLogo} alt="solana-logo" height={40} width={40} />
+            <Image src={solanaLogo} alt="solana-logo" height={25} width={25} />
             <p className="text-[17px]">Solana</p>
           </div>
         </DropdownItem>
@@ -75,7 +75,7 @@ export default function ChainSwitcher() {
           }}
         >
           <div className="flex items-center gap-x-3">
-            <Image src={baseLogo} alt="base-logo" height={40} width={40} />
+            <Image src={baseLogo} alt="base-logo" height={25} width={25} />
             <p className="text-[17px]">Base</p>
           </div>
         </DropdownItem>
