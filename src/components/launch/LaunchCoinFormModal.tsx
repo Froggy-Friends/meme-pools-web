@@ -10,6 +10,7 @@ import {
 import { UseFormRegister, UseFormResetField } from "react-hook-form";
 import { LaunchFormValues } from "./LaunchCoinForm";
 import { LaunchModalInputs } from "@/types/launch/types";
+import { IoMdCloseCircle } from "react-icons/io";
 
 type LaunchCoinFormModalProps = {
   name: LaunchModalInputs;
@@ -41,16 +42,19 @@ export default function LaunchCoinFormModal({
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="xl"
-        className="bg-dark text-white"
+        className="bg-dark text-white w-[700px] h-[500px] p-3"
         hideCloseButton={true}
       >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex justify-between">
                 <label htmlFor={name} className="mb-1 text-xl">
                   Add {toTitleCase(name)} Link
                 </label>
+                <button onClick={onClose}>
+                  <IoMdCloseCircle height={25} width={25} />
+                </button>
               </ModalHeader>
               <ModalBody>
                 <input
