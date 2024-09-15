@@ -66,7 +66,8 @@ export default function LaunchCoinForm() {
         formData,
         address,
         tokenDetails.tokenAddress,
-        tokenDetails.creator
+        tokenDetails.creator,
+        chain
       );
 
       if (errorMessage) {
