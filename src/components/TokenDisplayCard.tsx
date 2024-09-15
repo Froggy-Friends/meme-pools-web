@@ -33,28 +33,32 @@ export default function TokenDisplayCard({ token, layout = "vertical" }: TokenDi
         isHorizontal ? "flex-row w-[450px] min-w-[450px] h-[240px] min-h-[240px]" : "flex-col h-[320px]"
       }`}
     >
-      <Link href={`/${chain}/token/${token.tokenAddress}`} className="flex w-full h-full">
+      <div className="flex w-full h-full">
         <div className={`flex ${isHorizontal ? "flex-row" : "flex-col"} w-full h-full`}>
-          <div className={`${isHorizontal ? "w-[225px]" : "h-[160px] min-h-[160px]"}`}>
-            <Image
-              src={token.image}
-              alt={token.name}
-              width={220}
-              height={160}
-              className="w-full h-full border-b-2 border-dark border-dotted"
-            />
-          </div>
+          <Link href={`/${chain}/token/${token.tokenAddress}`}>
+            <div className={`${isHorizontal ? "w-[225px]" : "h-[160px] min-h-[160px]"}`}>
+              <Image
+                src={token.image}
+                alt={token.name}
+                width={220}
+                height={160}
+                className="w-full h-full border-b-2 border-dark border-dotted"
+              />
+            </div>
+          </Link>
           <div className={`flex flex-col ${isHorizontal ? "w-[225px]" : "w-full h-full"} overflow-hidden`}>
             <div className="flex flex-col px-3 mt-3">
-              <div className="flex items-center gap-2.5">
-                <span>{token.name}</span>
-                <span className="bg-green rounded-[4px] text-xs text-black px-2 py-1">${token.ticker}</span>
-              </div>
+              <Link href={`/${chain}/token/${token.tokenAddress}`}>
+                <div className="flex items-center gap-2.5">
+                  <span>{token.name}</span>
+                  <span className="bg-green rounded-[4px] text-xs text-black px-2 py-1">${token.ticker}</span>
+                </div>
+              </Link>
 
               <div className="flex items-center overflow-hidden gap-1 text-xs my-2">
                 <span className="block w-max">Created by:</span>
                 <Link
-                  href={`/${token.user.name}`}
+                  href={`/profile/${token.user.name}`}
                   className="text-light-green truncate overflow-hidden block w-1/2 underline"
                 >
                   {token.user.name}
@@ -96,7 +100,7 @@ export default function TokenDisplayCard({ token, layout = "vertical" }: TokenDi
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }
