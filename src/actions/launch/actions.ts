@@ -10,7 +10,8 @@ export const launchCoin = async (
   formData: FormData,
   address: Address,
   tokenAddress: string,
-  tokenCreator: string
+  tokenCreator: string,
+  chain: string
 ) => {
   const user = await fetchUser(address);
 
@@ -38,6 +39,7 @@ export const launchCoin = async (
           userId: user.id,
           tokenAddress: tokenAddress,
           tokenCreator: tokenCreator,
+          chain: chain,
           marketCap: 100,
         },
       }));

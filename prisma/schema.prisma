@@ -38,6 +38,7 @@ model Token {
   updatedAt    DateTime?     @default(now()) @db.Timestamptz(6)
   tokenAddress String        @unique
   tokenCreator String
+  chain        String
   marketCap    Int
   Comment      Comment[]
   leaderboard  Leaderboard[]
