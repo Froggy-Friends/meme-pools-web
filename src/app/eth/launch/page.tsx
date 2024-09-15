@@ -20,7 +20,7 @@ export default function LaunchCoin() {
               <span className="text-green">FROG</span>.FUN
             </span>
           </h1>
-          <Image src="/rocket-white.svg" className='color-blue' alt="rocket" height={50} width={50} />
+          <Image src="/rocket-white.svg" alt="rocket" height={50} width={50} />
         </div>
       </div>
 
