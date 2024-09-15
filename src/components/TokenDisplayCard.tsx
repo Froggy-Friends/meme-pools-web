@@ -42,7 +42,7 @@ export default function TokenDisplayCard({ token, layout = "vertical" }: TokenDi
                 alt={token.name}
                 width={220}
                 height={160}
-                className="w-full h-full border-b-2 border-dark border-dotted"
+                className="w-full h-full object-cover border-b-2 border-dark border-dotted"
               />
             </div>
           </Link>
