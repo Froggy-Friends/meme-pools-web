@@ -10,7 +10,7 @@ export default function LaunchCoinButton() {
 
   return (
     <button
-      onClick={() => router.push(`/${chain}/launch`)}
+      onClick={() => router.push(`/${chain.name}/launch`)}
       className="flex items-center gap-2.5 h-8 w-38 text-sm rounded-lg bg-green px-4 py-2 font-proximaSoftBold text-black hover:bg-opacity-80 transition-all"
     >
       <Image src="/rocket-black.svg" alt="rocket" width={16} height={16} />

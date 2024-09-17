@@ -21,17 +21,21 @@ type ProfileAvatarProps = {
 
 export default function ProfileAvatar({ user }: ProfileAvatarProps) {
   const router = useRouter();
+  const { chain } = useChain();
+  const { currentUser } = useUser();
+
+  // evm hooks
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const { currentUser } = useUser();
+
+  // sol hooks
   const { connected } = useWallet();
   const solDisconnect = useWallet().disconnect;
-  const { chain } = useChain();
 
   return (
     <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
-      {!isConnected && chain === Chain.Eth && <EvmConnectButton />}
-      {!connected && chain === Chain.Solana && <SolConnectButton />}
+      {!isConnected && chain.name === Chain.Eth && <EvmConnectButton />}
+      {!connected && chain.name === Chain.Solana && <SolConnectButton />}
       <DropdownTrigger>
         <div className="hover:bg-gray rounded-lg p-2 cursor-pointer">
           <Image
@@ -64,10 +68,10 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
           className="dark"
           key="Disconnect"
           onPress={async () => {
-            if (chain === Chain.Eth) {
+            if (chain.name === Chain.Eth) {
               disconnect();
               await setUserCookies(null, Chain.Eth);
-            } else if (chain === Chain.Solana) {
+            } else if (chain.name === Chain.Solana) {
               solDisconnect();
               await setUserCookies(null, Chain.Solana);
             }

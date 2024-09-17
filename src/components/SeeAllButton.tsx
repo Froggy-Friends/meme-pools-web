@@ -11,7 +11,7 @@ export default function SeeAllButton() {
   return (
     <button
       className="flex items-center gap-x-2 mx-auto text-lg text-light-green -mt-1 hover:text-light-green/80"
-      onClick={() => router.push(`/${chain}/tokens/votes?page=1`)}
+      onClick={() => router.push(`/${chain.name}/tokens/votes?page=1`)}
     >
       <p>See All</p>
       <FaExternalLinkAlt size={18} />

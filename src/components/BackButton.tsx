@@ -10,7 +10,7 @@ export default function BackButton() {
   return (
     <button
       className="bg-dark-gray border-[0.25px] border-white/[5%] rounded-3xl w-24 px-3 py-2 mt-10 mb-6 text-lg hover:bg-gray active:scale-[0.97] transition"
-      onClick={() => router.push(`/${chain}`)}
+      onClick={() => router.push(`/${chain.name}`)} // TODO: make this go back
     >
       Back
     </button>

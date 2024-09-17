@@ -35,7 +35,7 @@ export default function TokenDisplayCard({ token, layout = "vertical" }: TokenDi
     >
       <div className="flex w-full h-full">
         <div className={`flex ${isHorizontal ? "flex-row" : "flex-col"} w-full h-full`}>
-          <Link href={`/${chain}/token/${token.tokenAddress}`}>
+          <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
             <div className={`${isHorizontal ? "w-[225px]" : "h-[160px] min-h-[160px]"}`}>
               <Image
                 src={token.image}
@@ -48,7 +48,7 @@ export default function TokenDisplayCard({ token, layout = "vertical" }: TokenDi
           </Link>
           <div className={`flex flex-col ${isHorizontal ? "w-[225px]" : "w-full h-full"} overflow-hidden`}>
             <div className="flex flex-col px-3 mt-3">
-              <Link href={`/${chain}/token/${token.tokenAddress}`}>
+              <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
                 <div className="flex items-center gap-2.5">
                   <span>{token.name}</span>
                   <span className="bg-green rounded-[4px] text-xs text-black px-2 py-1">${token.ticker}</span>
