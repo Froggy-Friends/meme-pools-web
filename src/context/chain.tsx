@@ -1,4 +1,4 @@
-import { Chain, ChainConfig } from "@/models/chain";
+import { ChainConfig } from "@/models/chain";
 import { createContext, useContext } from "react";
 
 export type ChainContextProps = {

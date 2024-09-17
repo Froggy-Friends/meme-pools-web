@@ -2,13 +2,14 @@
 
 import { useState, FC, ReactNode } from "react";
 import { ChainContext } from "@/context/chain";
-import { Chain, ChainConfig } from "@/models/chain";
+import { ChainConfig } from "@/models/chain";
+import { usePathname } from "next/navigation";
+import { getChainConfig } from "@/lib/chains";
 
 export const ChainProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [chain, setChain] = useState<ChainConfig>({
-    name: Chain.Eth,
-    id: Number(process.env.NEXT_PUBLIC_ETH_CHAIN_ID),
-  });
+  const pathname = usePathname();
+  const chainConfig = getChainConfig(pathname);
+  const [chain, setChain] = useState<ChainConfig>(chainConfig);
 
   return <ChainContext.Provider value={{ chain, setChain }}>{children}</ChainContext.Provider>;
 };
