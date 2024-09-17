@@ -20,6 +20,7 @@ PUSHER_SECRET=
 NEXT_PUBLIC_ETH_CHAIN_ID=
 NEXT_PUBLIC_BASE_CHAIN_ID=
 NEXT_PUBLIC_SOLANA_CHAIN_ID=
+BLOB_READ_WRITE_TOKEN=
 ```
 
 Ask a developer on the team for the values to these environment variables.

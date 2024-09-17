@@ -15,7 +15,9 @@ export default function useCreateToken() {
     const event = receipt.logs.find(
       (e) => e instanceof EventLog && e.fragment.name === "TokenCreated"
     ) as EventLog;
+
     const [tokenAddress, creator, name, symbol, reserved] = event.args;
+
     return {
       tokenAddress,
       creator,
@@ -38,9 +40,11 @@ export default function useCreateToken() {
         value: total,
       });
       const receipt = await tx.wait();
+
       const { creator, reserved, tokenAddress } = await getTokenDetails(
         receipt
       );
+
       return {
         tokenAddress,
         creator,

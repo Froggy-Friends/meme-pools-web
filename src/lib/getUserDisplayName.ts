@@ -5,7 +5,11 @@ export const getUserDisplayName = (user: User) => {
   if (!user) {
     return "----";
   } else if (user.name.length > usernameDisplayLength) {
-    return user.name.substring(0, usernameDisplayLength) + "...";
+    return (
+      user.name.substring(0, usernameDisplayLength) +
+      "..." +
+      user.name.substring(user.name.length - 4)
+    );
   } else {
     return user.name;
   }

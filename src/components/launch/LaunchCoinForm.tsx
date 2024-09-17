@@ -42,6 +42,7 @@ export default function LaunchCoinForm() {
     formState: { errors, isSubmitting },
   } = useForm<LaunchFormValues>();
   const inputStyles = "h-10 w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+
   const onSubmit = handleSubmit(async (data: LaunchFormValues) => {
     const formData = createFormData(data);
     const reservedAmount = parseUnits(data.reservedAmount, 18) || BigInt(0);
