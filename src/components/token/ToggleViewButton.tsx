@@ -10,18 +10,12 @@ type ToggleViewButtonProps = {
   view: string;
 };
 
-export default function ToggleViewButton({
-  name,
-  tokenAddress,
-  view,
-}: ToggleViewButtonProps) {
+export default function ToggleViewButton({ name, tokenAddress, view }: ToggleViewButtonProps) {
   const router = useRouter();
   const { chain } = useChain();
   return (
     <button
-      onClick={() =>
-        router.push(`/${chain}/token/${tokenAddress}?view=${name.toLowerCase()}`)
-      }
+      onClick={() => router.push(`/${chain.name}/token/${tokenAddress}?view=${name.toLowerCase()}`)}
       className={cn(
         "bg-dark rounded-3xl py-[0.375rem] px-3 text-white hover:bg-gray",
         view === name.toLowerCase() && "bg-gray"

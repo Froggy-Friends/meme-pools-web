@@ -4,13 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useChain } from "@/context/chain";
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const router = useRouter();
   const { chain } = useChain();
 
@@ -26,7 +20,7 @@ export default function Error({
         className="hover:bg-gray active:scale-95 bg-dark-gray py-2 px-4 border-[1px] border-white/20 rounded-3xl"
         onClick={
           // Attempt to recover by trying to re-render the segment
-          () => router.push(`/${chain}`)
+          () => router.push(`/${chain.name}`)
         }
       >
         Return home
