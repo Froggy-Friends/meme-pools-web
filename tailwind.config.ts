@@ -21,7 +21,8 @@ const config: Config = {
         "midnight-green": "#1B281F",
         blue: "#B2C6F4",
         "light-green": "#B2F4D3",
-        purple: "#9945FF",
+        solana: "#9945FF",
+        based: "#0052FF",
       },
       fontFamily: {
         proximaSoft: ["ProximaSoft"],

@@ -9,7 +9,7 @@ export default function SolanaHomePage() {
 
       <section className="flex justify-center py-32">
         <h2 className="text-5xl font-bold">
-          COMMING <span className="text-green">SOON</span> TO <span className="text-purple">SOLANA</span>
+          COMING <span className="text-green">SOON</span> TO <span className="text-solana">SOLANA</span>
         </h2>
       </section>
 
