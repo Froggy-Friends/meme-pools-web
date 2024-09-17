@@ -36,7 +36,7 @@ export default function ChainSwitcher() {
           />
         </div>
       </DropdownTrigger>
-      <DropdownMenu>
+      <DropdownMenu disabledKeys={["Solana", "Base"]}>
         <DropdownItem
           key="Eth"
           className="dark"
