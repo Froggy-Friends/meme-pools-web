@@ -134,13 +134,11 @@ export const followUser = async (accountId: string, followerId: string) => {
 
   const pusher = getPusher();
   pusher.trigger(Channel.Follow, accountId, {
-    feedData: follow
-      ? {
-          user: follow.followerUser,
-          date: follow.followedAt,
-          value: follow.followingUser.name,
-        }
-      : null,
+    feedData: {
+      user: follow.followerUser,
+      date: follow.followedAt,
+      value: follow.followingUser.name,
+    },
   });
 };
 
@@ -179,13 +177,11 @@ export const unfollowUser = async (accountId: string, followerId: string) => {
 
   const pusher = getPusher();
   pusher.trigger(Channel.Unfollow, accountId, {
-    feedData: follow
-      ? {
-          user: follow.followerUser,
-          date: follow.unfollowedAt,
-          value: follow.followingUser.name,
-        }
-      : null,
+    feedData: {
+      user: follow.followerUser,
+      date: follow.unfollowedAt,
+      value: follow.followingUser.name,
+    },
   });
 };
 
