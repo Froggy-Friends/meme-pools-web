@@ -6,6 +6,9 @@ import { mainnet } from "viem/chains";
 import { useBalance } from "wagmi";
 import SlippageModal from "./SlippageModal";
 import Image from "next/image";
+import { Input } from "@nextui-org/react";
+import { ethLogo } from "@/config/chains";
+import { useChain } from "@/context/chain";
 
 enum TradingTab {
   BUY,
@@ -23,6 +26,7 @@ const PURCHASE_AMOUNTS = [1, 5, 10];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 
 export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPrice }: TradingWidgetProps) {
+  const { chain } = useChain();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyToken, setBuyToken] = useState(tokenTicker);
   const [tokenAmount, setTokenAmount] = useState<number>(0);
@@ -83,33 +87,21 @@ export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPri
             <Image src="/setting.svg" alt="slippage" height={20} width={20} />
           </button>
         </div>
-        <div className="flex flex-col gap-2 mt-8">
-          <div className="w-full flex items-center justify-between">
-            {activeTab === TradingTab.BUY && (
-              <button
-                className="p-1.5 bg-neutral-900 text-neutral-400 text-xs w-max rounded-md"
-                onClick={switchBuyToken}
-              >
-                Switch to {buyToken === "ETH" ? tokenTicker : "ETH"}
-              </button>
-            )}
-            <button
-              className="p-1.5 bg-neutral-900 text-neutral-400 text-xs w-max rounded-md ml-auto"
-              onClick={() => setIsSlippageModalOpen(true)}
-            >
-              Set max slippage
-            </button>
-          </div>
-          <div className="w-full flex items-center border border-white rounded-md bg-transparent p-2 placeholder-neutral-400 text-sm focus-within::ring-white focus:ring-1 text-white gap-1">
-            <input
-              type="number"
-              onChange={e => setTokenAmount(+e.target.value)}
-              value={tokenAmount}
-              className="w-full bg-transparent focus:outline-none border-none h-full"
-              placeholder="0.0"
-            />
-            <span>{buyToken}</span>
-          </div>
+        <div className="flex flex-col gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[200px]">
+          <Input
+            classNames={{ input: "ml-8 appearance-none", inputWrapper: ["h-[55px] bg-dark"] }}
+            type="number"
+            radius="full"
+            placeholder="0.0"
+            onChange={e => setTokenAmount(Number(e.target.value))}
+            value={tokenAmount.toString()}
+            startContent={
+              <span className="flex items-center gap-2">
+                <Image src={ethLogo} alt="Eth" width={35} height={35} />
+                <p className="uppercase">{chain.name}</p>
+              </span>
+            }
+          />
           <div className="flex items-center gap-2">
             <button
               onClick={() => setTokenAmount(0)}
