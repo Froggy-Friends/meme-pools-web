@@ -23,6 +23,8 @@ const config: Config = {
         "light-green": "#B2F4D3",
         yellow: "#F4F4B2",
         rose: "#F4B9B2",
+        solana: "#9945FF",
+        based: "#0052FF",
       },
       fontFamily: {
         proximaSoft: ["ProximaSoft"],

@@ -1,10 +1,9 @@
-import { Chain } from "@/models/chain";
-import { createContext, useContext, ReactNode } from "react";
-
+import { ChainConfig } from "@/models/chain";
+import { createContext, useContext } from "react";
 
 export type ChainContextProps = {
-  chain: Chain;
-  setChain: (chain: Chain) => void;
+  chain: ChainConfig;
+  setChain: (chain: ChainConfig) => void;
 };
 
 export const ChainContext = createContext<ChainContextProps | undefined>(undefined);

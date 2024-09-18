@@ -17,6 +17,10 @@ NEXT_PUBLIC_PUSHER_CLUSTER=
 NEXT_PUBLIC_PUSHER_KEY=
 PUSHER_APP_ID=
 PUSHER_SECRET=
+NEXT_PUBLIC_ETH_CHAIN_ID=
+NEXT_PUBLIC_BASE_CHAIN_ID=
+NEXT_PUBLIC_SOLANA_CHAIN_ID=
+BLOB_READ_WRITE_TOKEN=
 ```
 
 Ask a developer on the team for the values to these environment variables.
@@ -78,8 +82,9 @@ Frog-fun-web is the source of truth for db schema updates.
 Changes are made through prisma db migrations (db changes).
 
 Migration steps:
+
 1. Make changes to schema.prisma file
 2. Run `npx prisma migrate dev --name short_description_underscored` (add unique description with underscores)
-3. Review the new  migration file prisma generated in the `prisma/migrations` folder
+3. Review the new migration file prisma generated in the `prisma/migrations` folder
 4. For production migrations run `npx prisma migrate deploy`
 5. Update prisma client with `npx prisma generate`

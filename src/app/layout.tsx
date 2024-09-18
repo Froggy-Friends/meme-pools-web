@@ -12,8 +12,7 @@ import { ChainProvider } from "@/components/ChainProvider";
 
 export const metadata: Metadata = {
   title: "Frog.fun",
-  description:
-    "Launch a tradeable coin instantly in one click on http://frog.fun/",
+  description: "Launch a tradeable coin instantly in one click on http://frog.fun/",
 };
 
 export default async function RootLayout({

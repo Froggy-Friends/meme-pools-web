@@ -41,8 +41,8 @@ export default function LaunchCoinForm() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<LaunchFormValues>();
-  const inputStyles =
-    "h-10 w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+  const inputStyles = "h-10 w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+
   const onSubmit = handleSubmit(async (data: LaunchFormValues) => {
     const formData = createFormData(data);
     const reservedAmount = parseUnits(data.reservedAmount, 18) || BigInt(0);
@@ -67,7 +67,7 @@ export default function LaunchCoinForm() {
         address,
         tokenDetails.tokenAddress,
         tokenDetails.creator,
-        chain
+        chain.name
       );
 
       if (errorMessage) {
@@ -77,7 +77,7 @@ export default function LaunchCoinForm() {
       }
 
       reset();
-      router.push(`/${chain}/token/${tokenDetails.tokenAddress}`);
+      router.push(`/${chain.name}/token/${tokenDetails.tokenAddress}`);
     } catch (error) {
       toast.error((error as Error).message);
     }
@@ -92,9 +92,7 @@ export default function LaunchCoinForm() {
               <label htmlFor="name" className="mb-1">
                 Name
               </label>
-              {errors.name && (
-                <p className="text-red-500">{errors.name.message}</p>
-              )}
+              {errors.name && <p className="text-red-500">{errors.name.message}</p>}
             </div>
             <input
               {...register("name", {
@@ -114,9 +112,7 @@ export default function LaunchCoinForm() {
               <label htmlFor="ticker" className="mb-1">
                 Ticker
               </label>
-              {errors.ticker && (
-                <p className="text-red-500">{errors.ticker.message}</p>
-              )}
+              {errors.ticker && <p className="text-red-500">{errors.ticker.message}</p>}
             </div>
 
             <div className="relative">
@@ -158,22 +154,8 @@ export default function LaunchCoinForm() {
                     flex items-center  
                     pointer-events-none"
               >
-                {chain === Chain.Solana && (
-                  <Image
-                    src={solanaLogo}
-                    alt="solana-logo"
-                    height={28}
-                    width={28}
-                  />
-                )}
-                {chain === Chain.Eth && (
-                  <Image
-                    src={ethLogo}
-                    alt="ethereum-logo"
-                    height={28}
-                    width={28}
-                  />
-                )}
+                {chain.name === Chain.Solana && <Image src={solanaLogo} alt="solana-logo" height={28} width={28} />}
+                {chain.name === Chain.Eth && <Image src={ethLogo} alt="ethereum-logo" height={28} width={28} />}
               </div>
             </div>
           </div>
@@ -183,9 +165,7 @@ export default function LaunchCoinForm() {
               <label htmlFor="description" className="mb-1">
                 Description
               </label>
-              {errors.description && (
-                <p className="text-red-500">{errors.description.message}</p>
-              )}
+              {errors.description && <p className="text-red-500">{errors.description.message}</p>}
             </div>
             <textarea
               {...register("description", {
@@ -199,9 +179,7 @@ export default function LaunchCoinForm() {
               <label htmlFor="image" className="mb-1">
                 Image
               </label>
-              {errors.image && (
-                <p className="text-red-500">{errors.image.message}</p>
-              )}
+              {errors.image && <p className="text-red-500">{errors.image.message}</p>}
             </div>
             <input
               {...register("image", {
@@ -219,35 +197,16 @@ export default function LaunchCoinForm() {
           <p className="mb-1 ml-5">Optional Links</p>
 
           <div className="flex w-[975px] justify-between">
-            <LaunchCoinFormModal
-              name="twitter"
-              pattern="https://x.com/*"
-              register={register}
-              resetField={resetField}
-            />
-            <LaunchCoinFormModal
-              name="telegram"
-              register={register}
-              resetField={resetField}
-            />
-            <LaunchCoinFormModal
-              name="website"
-              pattern="https://.*"
-              register={register}
-              resetField={resetField}
-            />
+            <LaunchCoinFormModal name="twitter" pattern="https://x.com/*" register={register} resetField={resetField} />
+            <LaunchCoinFormModal name="telegram" register={register} resetField={resetField} />
+            <LaunchCoinFormModal name="website" pattern="https://.*" register={register} resetField={resetField} />
             <LaunchCoinFormModal
               name="discord"
               pattern="https://discord.gg/*"
               register={register}
               resetField={resetField}
             />
-            <LaunchCoinFormModal
-              name="other"
-              pattern="https://.*"
-              register={register}
-              resetField={resetField}
-            />
+            <LaunchCoinFormModal name="other" pattern="https://.*" register={register} resetField={resetField} />
           </div>
         </div>
 

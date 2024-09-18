@@ -1,20 +1,21 @@
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 import { cookieStorage, createStorage } from "wagmi";
-import { mainnet, sepolia, baseSepolia } from "wagmi/chains";
+import { mainnet, sepolia, baseSepolia, base } from "wagmi/chains";
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
+export const env = process.env.NODE_ENV;
 
 if (!projectId) throw new Error("Project ID is not defined");
 
 export const metadata = {
   name: "Frog.fun",
-  description:
-    "Launch a tradeable coin instantly in one click on https://frog.fun/",
+  description: "Launch a tradeable coin instantly in one click on https://frog.fun/",
   url: "https://frog.fun/",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
-const chains = [mainnet, sepolia, baseSepolia] as const;
+const chains = env === "production" ? ([mainnet, base] as const) : ([sepolia, baseSepolia] as const);
+
 export const config = defaultWagmiConfig({
   chains,
   projectId,
@@ -24,4 +25,3 @@ export const config = defaultWagmiConfig({
     storage: cookieStorage,
   }),
 });
-

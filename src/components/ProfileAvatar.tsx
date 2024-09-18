@@ -4,7 +4,6 @@ import { useAccount, useDisconnect } from "wagmi";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import useUser from "@/hooks/useUser";
 import EvmConnectButton from "./eth/EvmConnectButton";
-import { useRouter } from "next/navigation";
 import { useWallet } from "@solana/wallet-adapter-react";
 import SolConnectButton from "./solana/SolConnectButton";
 import { Chain } from "@/models/chain";
@@ -14,24 +13,28 @@ import { useChain } from "@/context/chain";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { setUserCookies } from "@/actions/profile/actions";
+import Link from "next/link";
 
 type ProfileAvatarProps = {
   user: User;
 };
 
 export default function ProfileAvatar({ user }: ProfileAvatarProps) {
-  const router = useRouter();
+  const { chain } = useChain();
+  const { currentUser } = useUser();
+
+  // evm hooks
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const { currentUser } = useUser();
+
+  // sol hooks
   const { connected } = useWallet();
   const solDisconnect = useWallet().disconnect;
-  const { chain } = useChain();
 
   return (
     <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
-      {!isConnected && chain === Chain.Eth && <EvmConnectButton />}
-      {!connected && chain === Chain.Solana && <SolConnectButton />}
+      {!isConnected && chain.name === Chain.Eth && <EvmConnectButton />}
+      {!connected && chain.name === Chain.Solana && <SolConnectButton />}
       <DropdownTrigger>
         <div className="hover:bg-gray rounded-lg p-2 cursor-pointer">
           <Image
@@ -50,12 +53,10 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
             {!user && currentUser && `Signed in as ${getUserDisplayName(currentUser)}`}
           </p>
         </DropdownItem>
-        <DropdownItem
-          className="dark"
-          key="Profile"
-          onPress={() => router.push(`/profile/${user ? user.name : currentUser?.name}`)}
-        >
-          <p className="text-[17px]">Profile</p>
+        <DropdownItem className="dark" key="Profile">
+          <Link href={`/profile/${user ? user.name : currentUser?.name}`}>
+            <p className="text-[17px]">Profile</p>
+          </Link>
         </DropdownItem>
         <DropdownItem key="Portfolio" className="hover:cursor-default" isReadOnly>
           <p className="text-[17px] text-white/[20%] hover:cursor-default">Portfolio</p>
@@ -64,10 +65,10 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
           className="dark"
           key="Disconnect"
           onPress={async () => {
-            if (chain === Chain.Eth) {
+            if (chain.name === Chain.Eth) {
               disconnect();
               await setUserCookies(null, Chain.Eth);
-            } else if (chain === Chain.Solana) {
+            } else if (chain.name === Chain.Solana) {
               solDisconnect();
               await setUserCookies(null, Chain.Solana);
             }
