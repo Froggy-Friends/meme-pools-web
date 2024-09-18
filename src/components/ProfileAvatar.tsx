@@ -4,7 +4,6 @@ import { useAccount, useDisconnect } from "wagmi";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import useUser from "@/hooks/useUser";
 import EvmConnectButton from "./eth/EvmConnectButton";
-import { useRouter } from "next/navigation";
 import { useWallet } from "@solana/wallet-adapter-react";
 import SolConnectButton from "./solana/SolConnectButton";
 import { Chain } from "@/models/chain";
@@ -14,13 +13,13 @@ import { useChain } from "@/context/chain";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { setUserCookies } from "@/actions/profile/actions";
+import Link from "next/link";
 
 type ProfileAvatarProps = {
   user: User;
 };
 
 export default function ProfileAvatar({ user }: ProfileAvatarProps) {
-  const router = useRouter();
   const { chain } = useChain();
   const { currentUser } = useUser();
 
@@ -54,12 +53,10 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
             {!user && currentUser && `Signed in as ${getUserDisplayName(currentUser)}`}
           </p>
         </DropdownItem>
-        <DropdownItem
-          className="dark"
-          key="Profile"
-          onPress={() => router.push(`/profile/${user ? user.name : currentUser?.name}`)}
-        >
-          <p className="text-[17px]">Profile</p>
+        <DropdownItem className="dark" key="Profile">
+          <Link href={`/profile/${user ? user.name : currentUser?.name}`}>
+            <p className="text-[17px]">Profile</p>
+          </Link>
         </DropdownItem>
         <DropdownItem key="Portfolio" className="hover:cursor-default" isReadOnly>
           <p className="text-[17px] text-white/[20%] hover:cursor-default">Portfolio</p>
