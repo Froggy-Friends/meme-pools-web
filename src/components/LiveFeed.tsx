@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useImmer } from "use-immer";
 import Image from "next/image";
 import { defaultProfileAvatarUrl } from "@/config/user";
+import { Virtuoso } from "react-virtuoso";
 
 const channelToAction: Record<Channel, { name: string; color: string }> = {
   [Channel.Follow]: {
@@ -89,22 +90,20 @@ export default function LiveFeed() {
 
   const formatFeedData = (data: FeedData) => {
     const action = channelToAction[data.channel];
-    const isCommentChannel =
-      data.channel === Channel.Comment ||
-      data.channel === Channel.CommentLikes ||
-      data.channel === Channel.CommentDislikes;
+    const isCommentVoteChannel = data.channel === Channel.CommentLikes || data.channel === Channel.CommentDislikes;
+    const isCommentChannel = data.channel === Channel.Comment || isCommentVoteChannel;
 
     return (
-      <div className="text-xs font-proximaSoft">
+      <div className="text-xs font-proximaSoft flex items-center gap-1">
         <Image
           src={data.user.imageUrl || defaultProfileAvatarUrl}
           alt="user-profile-picture"
           height={16}
           width={16}
-          className="rounded-full mr-3"
+          className="rounded-full mr-2"
         />
-        <span>{data.user.name}</span> <span className={action.color}>{action.name}</span>{" "}
-        {isCommentChannel && "comment "}
+        <span>{data.user.name}</span> <span className={action.color}>{action.name}</span>
+        {isCommentVoteChannel && "comment "}
         <span className="text-light-green">{isCommentChannel ? `"${data.value}"` : data.value}</span>
       </div>
     );
@@ -119,12 +118,16 @@ export default function LiveFeed() {
         </span>
       </div>
       <div className="flex flex-col gap-2.5">
-        {feedData.map((data, index) => (
-          <div key={index} className="flex items-center justify-between text-xs font-proximaSoft">
-            <div className="w-full truncate line-clamp-1 overflow-hidden">{formatFeedData(data)}</div>
-            <span className="text-[8px] block w-max shrink-0">{getTimeDifference(data.date)}</span>
-          </div>
-        ))}
+        <Virtuoso
+          style={{ height: "400px" }}
+          totalCount={feedData.length}
+          itemContent={index => (
+            <div key={index} className="flex items-center justify-between text-xs font-proximaSoft">
+              <div className="w-full truncate line-clamp-1 overflow-hidden">{formatFeedData(feedData[index])}</div>
+              <span className="text-[8px] block w-max shrink-0">{getTimeDifference(feedData[index].date)}</span>
+            </div>
+          )}
+        />
       </div>
     </div>
   );
