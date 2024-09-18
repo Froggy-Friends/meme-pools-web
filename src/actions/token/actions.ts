@@ -94,7 +94,7 @@ export async function updateVote(
     feedData:
       vote && vote.status !== null
         ? {
-            user: vote.User?.name,
+            user: vote.User,
             date: new Date().toISOString(),
             value: vote.Token.ticker,
           }
@@ -125,7 +125,7 @@ export const postComment = async (
   pusher.trigger(Channel.Comment, tokenId, {
     comment,
     feedData: {
-      user: comment.user.name,
+      user: comment.user,
       date: comment.createdAt,
       value: comment.message,
     },
@@ -184,7 +184,7 @@ export const addCommentLike = async (
     add: result,
     remove: remove,
     feedData: {
-      user: result.User.name,
+      user: result.User,
       date: result.createdAt,
       value: result.Comment.message,
     },

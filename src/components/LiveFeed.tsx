@@ -6,6 +6,8 @@ import { Channel } from "@/models/channel";
 import { FeedData } from "@/models/feedData";
 import { useEffect } from "react";
 import { useImmer } from "use-immer";
+import Image from "next/image";
+import { defaultProfileAvatarUrl } from "@/config/user";
 
 const channelToAction: Record<Channel, { name: string; color: string }> = {
   [Channel.Follow]: {
@@ -94,7 +96,15 @@ export default function LiveFeed() {
 
     return (
       <div className="text-xs font-proximaSoft">
-        <span>{data.user}</span> <span className={action.color}>{action.name}</span> {isCommentChannel && "comment "}
+        <Image
+          src={data.user.imageUrl || defaultProfileAvatarUrl}
+          alt="user-profile-picture"
+          height={16}
+          width={16}
+          className="rounded-full mr-3"
+        />
+        <span>{data.user.name}</span> <span className={action.color}>{action.name}</span>{" "}
+        {isCommentChannel && "comment "}
         <span className="text-light-green">{isCommentChannel ? `"${data.value}"` : data.value}</span>
       </div>
     );
@@ -111,9 +121,7 @@ export default function LiveFeed() {
       <div className="flex flex-col gap-2.5">
         {feedData.map((data, index) => (
           <div key={index} className="flex items-center justify-between text-xs font-proximaSoft">
-            <div className="w-full truncate line-clamp-1 overflow-hidden">
-              {formatFeedData(data)}fffffffffffffffffffffffffffffff
-            </div>
+            <div className="w-full truncate line-clamp-1 overflow-hidden">{formatFeedData(data)}</div>
             <span className="text-[8px] block w-max shrink-0">{getTimeDifference(data.date)}</span>
           </div>
         ))}
