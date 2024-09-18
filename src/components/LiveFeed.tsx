@@ -3,10 +3,11 @@
 import getClientPusher from "@/lib/getClientPusher";
 import { getTimeDifference } from "@/lib/getTimeDifference";
 import { Channel } from "@/models/channel";
+import { FeedData } from "@/models/feedData";
 import { useEffect } from "react";
 import { useImmer } from "use-immer";
 
-const channelToAction = {
+const channelToAction: Record<Channel, { name: string; color: string }> = {
   [Channel.Follow]: {
     name: "followed",
     color: "text-green",
@@ -33,6 +34,18 @@ const channelToAction = {
   },
   [Channel.Downvotes]: {
     name: "downvoted",
+    color: "text-rose",
+  },
+  [Channel.CreateToken]: {
+    name: "created",
+    color: "text-green",
+  },
+  [Channel.Buy]: {
+    name: "bought",
+    color: "text-green",
+  },
+  [Channel.Sell]: {
+    name: "sold",
     color: "text-rose",
   },
 };
@@ -72,12 +85,17 @@ export default function LiveFeed() {
     };
   }, []);
 
-  const formatFeedData = (data: any) => {
+  const formatFeedData = (data: FeedData) => {
     const action = channelToAction[data.channel];
+    const isCommentChannel =
+      data.channel === Channel.Comment ||
+      data.channel === Channel.CommentLikes ||
+      data.channel === Channel.CommentDislikes;
+
     return (
       <div className="text-xs font-proximaSoft">
-        <span>{data.user}</span> <span className={action.color}>{action.name}</span>{" "}
-        <span className="text-light-green">{data.value}</span>
+        <span>{data.user}</span> <span className={action.color}>{action.name}</span> {isCommentChannel && "comment "}
+        <span className="text-light-green">{isCommentChannel ? `"${data.value}"` : data.value}</span>
       </div>
     );
   };
@@ -90,11 +108,13 @@ export default function LiveFeed() {
           <div className="w-2 h-2 rounded-full bg-green"></div> Live
         </span>
       </div>
-      <div>
+      <div className="flex flex-col gap-2.5">
         {feedData.map((data, index) => (
           <div key={index} className="flex items-center justify-between text-xs font-proximaSoft">
-            <div className="w-full">{formatFeedData(data)}</div>
-            <span className="text-[8px] block w-max">{getTimeDifference(data.date)}</span>
+            <div className="w-full truncate line-clamp-1 overflow-hidden">
+              {formatFeedData(data)}fffffffffffffffffffffffffffffff
+            </div>
+            <span className="text-[8px] block w-max shrink-0">{getTimeDifference(data.date)}</span>
           </div>
         ))}
       </div>
