@@ -21,6 +21,7 @@ export default function ChainSwitcher() {
   // see src/configs/chains for configs
   const handleChainSwitch = (chainConfig: ChainConfig) => {
     setChain(chainConfig);
+    router.push(`/${chainConfig.name}`);
   };
 
   return (
@@ -37,40 +38,19 @@ export default function ChainSwitcher() {
         </div>
       </DropdownTrigger>
       <DropdownMenu disabledKeys={["Solana", "Base"]}>
-        <DropdownItem
-          key="Eth"
-          className="dark"
-          onPress={() => {
-            router.push("/eth");
-            handleChainSwitch(chainConfigs.eth);
-          }}
-        >
+        <DropdownItem key="Eth" className="dark" onPress={() => handleChainSwitch(chainConfigs.eth)}>
           <div className="flex items-center gap-x-3">
             <Image src={ethLogo} alt="eth-logo" height={25} width={25} />
             <p className="text-[17px]">ETH</p>
           </div>
         </DropdownItem>
-        <DropdownItem
-          key="Solana"
-          className="dark"
-          onPress={() => {
-            router.push("/solana");
-            handleChainSwitch(chainConfigs.solana);
-          }}
-        >
+        <DropdownItem key="Solana" className="dark" onPress={() => handleChainSwitch(chainConfigs.solana)}>
           <div className="flex items-center gap-x-3">
             <Image src={solanaLogo} alt="solana-logo" height={25} width={25} />
             <p className="text-[17px]">Solana</p>
           </div>
         </DropdownItem>
-        <DropdownItem
-          key="Base"
-          className="dark"
-          onPress={() => {
-            router.push("/base");
-            handleChainSwitch(chainConfigs.base);
-          }}
-        >
+        <DropdownItem key="Base" className="dark" onPress={() => handleChainSwitch(chainConfigs.base)}>
           <div className="flex items-center gap-x-3">
             <Image src={baseLogo} alt="base-logo" height={25} width={25} />
             <p className="text-[17px]">Base</p>
