@@ -5,6 +5,7 @@ import { useState } from "react";
 import { mainnet } from "viem/chains";
 import { useBalance } from "wagmi";
 import SlippageModal from "./SlippageModal";
+import Image from "next/image";
 
 enum TradingTab {
   BUY,
@@ -53,28 +54,33 @@ export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPri
   return (
     <>
       <div className="p-3 rounded-lg w-[350px] bg-gray-950/90 flex flex-col">
-        <div className="w-full flex items-center gap-2">
-          <button
-            onClick={() => {
-              setActiveTab(TradingTab.BUY);
-              setTokenAmount(0);
-            }}
-            className={`w-[65px] h-[35px] rounded-3xl text-white ${
-              activeTab === TradingTab.BUY ? "bg-gray" : "bg-dark-gray"
-            }`}
-          >
-            Buy
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab(TradingTab.SELL);
-              setTokenAmount(0);
-            }}
-            className={`w-[65px] h-[35px] rounded-3xl text-white ${
-              activeTab === TradingTab.SELL ? "bg-gray" : "bg-dark-gray"
-            }`}
-          >
-            Sell
+        <div className="w-full flex justify-between items-center">
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setActiveTab(TradingTab.BUY);
+                setTokenAmount(0);
+              }}
+              className={`w-[65px] h-[35px] rounded-3xl text-white ${
+                activeTab === TradingTab.BUY ? "bg-gray" : "bg-dark-gray"
+              }`}
+            >
+              Buy
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab(TradingTab.SELL);
+                setTokenAmount(0);
+              }}
+              className={`w-[65px] h-[35px] rounded-3xl text-white ${
+                activeTab === TradingTab.SELL ? "bg-gray" : "bg-dark-gray"
+              }`}
+            >
+              Sell
+            </button>
+          </div>
+          <button className="flex justify-center items-center w-[65px] h-[35px] rounded-3xl bg-dark-gray">
+            <Image src="/setting.svg" alt="slippage" height={20} width={20} />
           </button>
         </div>
         <div className="flex flex-col gap-2 mt-8">
