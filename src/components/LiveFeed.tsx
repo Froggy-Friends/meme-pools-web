@@ -2,8 +2,7 @@
 
 import getClientPusher from "@/lib/getClientPusher";
 import { getTimeDifference } from "@/lib/getTimeDifference";
-import { Channel, ChannelComment } from "@/models/channel";
-import { FeedData } from "@/models/feedData";
+import { Channel } from "@/models/channel";
 import { useEffect } from "react";
 import { useImmer } from "use-immer";
 
@@ -18,11 +17,15 @@ const channelToAction = {
   },
   [Channel.Comment]: {
     name: "commented",
-    color: "text-light-green",
+    color: "text-green",
   },
   [Channel.CommentLikes]: {
     name: "liked",
-    color: "text-light-green",
+    color: "text-green",
+  },
+  [Channel.CommentDislikes]: {
+    name: "disliked",
+    color: "text-rose",
   },
   [Channel.Upvotes]: {
     name: "upvoted",
@@ -30,7 +33,7 @@ const channelToAction = {
   },
   [Channel.Downvotes]: {
     name: "downvoted",
-    color: "text-red",
+    color: "text-rose",
   },
 };
 
@@ -41,21 +44,21 @@ export default function LiveFeed() {
     const channels = Object.values(Channel);
     const subscribedChannels = channels.map(channelName => pusher.subscribe(channelName));
 
-    const handleEvent = (channel: Channel, _: string, data: any) => {
-      if (Object.keys(data).length > 0) {
+    const handleEvent = (channel: Channel, _: string, { feedData }: any) => {
+      if (feedData) {
         setFeedData(draft => {
           draft.unshift({
             channel: channel,
-            user: data.user,
-            date: data.date,
-            value: data.value,
+            user: feedData.user,
+            date: feedData.date,
+            value: feedData.value,
           });
         });
       }
     };
 
     subscribedChannels.forEach(channel => {
-      channel.bind_global((eventName: string, data: ChannelComment) => {
+      channel.bind_global((eventName: string, data: any) => {
         handleEvent(channel.name as Channel, eventName, data);
       });
     });
@@ -73,7 +76,8 @@ export default function LiveFeed() {
     const action = channelToAction[data.channel];
     return (
       <div className="text-xs font-proximaSoft">
-        <span>{data.user}</span> <span className={action.color}>{action.name}</span> <span>{data.value}</span>
+        <span>{data.user}</span> <span className={action.color}>{action.name}</span>{" "}
+        <span className="text-light-green">{data.value}</span>
       </div>
     );
   };

@@ -4,7 +4,7 @@ import { TokenVote } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Channel } from "@/models/channel";
-import Pusher from "pusher-js"
+import Pusher from "pusher-js";
 
 type UseCastVoteContext = {
   oldVotes: TokenVoteData | undefined;
@@ -15,22 +15,34 @@ export default function useCastVote(tokenId: string, userId: string) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
+    if (
+      !process.env.NEXT_PUBLIC_PUSHER_CLUSTER ||
+      !process.env.NEXT_PUBLIC_PUSHER_KEY
+    ) {
       throw new Error("Missing pusher env variables");
     }
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER
-    })
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
 
-    const channel = pusher.subscribe(Channel.Votes);
+    const upvotesChannel = pusher.subscribe(Channel.Upvotes);
+    const downvotesChannel = pusher.subscribe(Channel.Downvotes);
 
-    channel.bind(tokenId, (newData: TokenVoteData) => {
+    upvotesChannel.bind(tokenId, (newData: TokenVoteData) => {
+      queryClient.setQueryData(["votes", tokenId], newData);
+    });
+
+    downvotesChannel.bind(tokenId, (newData: TokenVoteData) => {
       queryClient.setQueryData(["votes", tokenId], newData);
     });
 
     return () => {
-      channel.unbind_all();
-      channel.unsubscribe();
+      upvotesChannel.unbind_all();
+      upvotesChannel.unsubscribe();
+
+      downvotesChannel.unbind_all();
+      downvotesChannel.unsubscribe();
+
       pusher.disconnect();
     };
   }, [queryClient, tokenId]);

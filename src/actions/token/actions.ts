@@ -2,6 +2,7 @@
 import { getPusher } from "@/config/pusher";
 import prisma from "@/lib/prisma";
 import { Channel } from "@/models/channel";
+import { CommentLikeStatus } from "@/models/comment";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
 import { CommentLikes, TokenVote } from "@prisma/client";
 
@@ -56,7 +57,7 @@ export async function updateVote(
   status: string | null
 ) {
   const pusher = getPusher();
-  await prisma.tokenVote.upsert({
+  const vote = await prisma.tokenVote.upsert({
     where: {
       tokenId_userId: {
         tokenId,
@@ -71,10 +72,34 @@ export async function updateVote(
       userId,
       status,
     },
+    include: {
+      User: {
+        select: {
+          name: true,
+        },
+      },
+      Token: {
+        select: {
+          ticker: true,
+        },
+      },
+    },
   });
 
   const voteCounts = await getVotesByTokenId(tokenId);
-  pusher.trigger(Channel.Votes, tokenId, voteCounts);
+  const channel =
+    status === TokenVoteStatus.UPVOTE ? Channel.Upvotes : Channel.Downvotes;
+  pusher.trigger(channel, tokenId, {
+    voteCounts,
+    feedData:
+      vote && vote.status !== null
+        ? {
+            user: vote.User?.name,
+            date: new Date().toISOString(),
+            value: vote.Token.ticker,
+          }
+        : null,
+  });
 }
 
 export const postComment = async (
@@ -97,7 +122,14 @@ export const postComment = async (
     },
   });
 
-  pusher.trigger(Channel.Comment, tokenId, comment);
+  pusher.trigger(Channel.Comment, tokenId, {
+    comment,
+    feedData: {
+      user: comment.user.name,
+      date: comment.createdAt,
+      value: comment.message,
+    },
+  });
 };
 
 export const addCommentLike = async (
@@ -117,6 +149,11 @@ export const addCommentLike = async (
     },
     include: {
       User: true,
+      Comment: {
+        select: {
+          message: true,
+        },
+      },
     },
   });
 
@@ -127,15 +164,30 @@ export const addCommentLike = async (
       },
       include: {
         User: true,
+        Comment: {
+          select: {
+            message: true,
+          },
+        },
       },
     });
 
     remove = result;
   }
 
-  pusher.trigger(Channel.CommentLikes, commentId, {
+  let channel =
+    status === CommentLikeStatus.LIKE
+      ? Channel.CommentLikes
+      : Channel.CommentDislikes;
+
+  pusher.trigger(channel, commentId, {
     add: result,
     remove: remove,
+    feedData: {
+      user: result.User.name,
+      date: result.createdAt,
+      value: result.Comment.message,
+    },
   });
 
   return result;

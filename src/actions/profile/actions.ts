@@ -8,10 +8,12 @@ import { defaultProfileAvatarUrl, fetchUserCacheTag } from "@/config/user";
 import { UserParams } from "@/app/profile/[username]/types";
 import { fetchFollow, fetchUser } from "@/queries/profile/queries";
 import { cookies } from "next/headers";
-import { User } from "@prisma/client";
+import { Follow, User } from "@prisma/client";
 import { FollowStatus } from "@/models/follow";
 import { Cookie } from "@/models/cookie";
 import { Chain } from "@/models/chain";
+import { getPusher } from "@/config/pusher";
+import { Channel } from "@/models/channel";
 
 export const createUser = async ({
   name,
@@ -91,56 +93,100 @@ export async function updateUserData(formData: FormData, address: Address) {
   }
 }
 
-export const followUser = async (accountId: string, followerId: string) => {
-  const follow = await fetchFollow(accountId, followerId);
+type FollowWithFollower = Follow & {
+  followerUser: User;
+  followingUser: User;
+};
 
-  if (!follow) {
-    await prisma.follow.create({
+export const followUser = async (accountId: string, followerId: string) => {
+  const existingFollow = await fetchFollow(accountId, followerId);
+  let follow: FollowWithFollower | null = null;
+
+  if (!existingFollow) {
+    follow = await prisma.follow.create({
       data: {
         account: accountId,
         follower: followerId,
         status: "Follow",
         followedAt: new Date(Date.now()),
       },
+      include: {
+        followerUser: true,
+        followingUser: true,
+      },
     });
   } else {
-    await prisma.follow.update({
+    follow = await prisma.follow.update({
       where: {
-        id: follow.id,
+        id: existingFollow.id,
       },
       data: {
         status: "Follow",
         followedAt: new Date(Date.now()),
         updatedAt: new Date(Date.now()),
       },
+      include: {
+        followerUser: true,
+        followingUser: true,
+      },
     });
   }
+
+  const pusher = getPusher();
+  pusher.trigger(Channel.Follow, accountId, {
+    feedData: follow
+      ? {
+          user: follow.followerUser.name,
+          date: follow.followedAt,
+          value: follow.followingUser.name,
+        }
+      : null,
+  });
 };
 
 export const unfollowUser = async (accountId: string, followerId: string) => {
-  const follow = await fetchFollow(accountId, followerId);
-
-  if (!follow) {
-    await prisma.follow.create({
+  const existingFollow = await fetchFollow(accountId, followerId);
+  let follow: FollowWithFollower | null = null;
+  if (!existingFollow) {
+    follow = await prisma.follow.create({
       data: {
         account: accountId,
         follower: followerId,
         status: "Unfollow",
         unfollowedAt: new Date(Date.now()),
       },
+      include: {
+        followerUser: true,
+        followingUser: true,
+      },
     });
   } else {
-    await prisma.follow.update({
+    follow = await prisma.follow.update({
       where: {
-        id: follow.id,
+        id: existingFollow.id,
       },
       data: {
         status: "Unfollow",
         unfollowedAt: new Date(Date.now()),
         updatedAt: new Date(Date.now()),
       },
+      include: {
+        followerUser: true,
+        followingUser: true,
+      },
     });
   }
+
+  const pusher = getPusher();
+  pusher.trigger(Channel.Unfollow, accountId, {
+    feedData: follow
+      ? {
+          user: follow.followerUser.name,
+          date: follow.unfollowedAt,
+          value: follow.followingUser.name,
+        }
+      : null,
+  });
 };
 
 export const setUserCookies = async (user: User | null, chain?: Chain) => {

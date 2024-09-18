@@ -14,11 +14,7 @@ type TokenCommentsProps = {
   tokenId: string;
 };
 
-export default function TokenComments({
-  comments,
-  cachedUser,
-  tokenId,
-}: TokenCommentsProps) {
+export default function TokenComments({ comments, cachedUser, tokenId }: TokenCommentsProps) {
   const queryClient = useQueryClient();
   const [tokenComments, setTokenComments] = useState(comments);
 
@@ -28,31 +24,22 @@ export default function TokenComments({
   });
 
   useEffect(() => {
-    if (
-      !process.env.NEXT_PUBLIC_PUSHER_CLUSTER ||
-      !process.env.NEXT_PUBLIC_PUSHER_KEY
-    ) {
+    if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
       throw new Error("Missing pusher env variables");
     }
-    
+
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });
 
     const channel = pusher.subscribe(Channel.Comment);
 
-    channel.bind(tokenId, (newData: CommentWithLikes) => {
+    channel.bind(tokenId, ({ comment }: { comment: CommentWithLikes }) => {
       queryClient.setQueryData(
         ["token-comments", tokenId],
-        [
-          ...tokenComments,
-          { ...newData, commentLikeCount: 0, commentDislikeCount: 0 },
-        ]
+        [...tokenComments, { ...comment, commentLikeCount: 0, commentDislikeCount: 0 }]
       );
-      setTokenComments((prev) => [
-        ...prev,
-        { ...newData, commentLikeCount: 0, commentDislikeCount: 0 },
-      ]);
+      setTokenComments(prev => [...prev, { ...comment, commentLikeCount: 0, commentDislikeCount: 0 }]);
     });
 
     return () => {
@@ -64,14 +51,9 @@ export default function TokenComments({
 
   return (
     <section className="flex flex-col mt-4">
-      {data.map((comment) => {
+      {data.map(comment => {
         return (
-          <TokenComment
-            key={comment.id}
-            comment={comment}
-            author={comment.user}
-            cachedUser={cachedUser || null}
-          />
+          <TokenComment key={comment.id} comment={comment} author={comment.user} cachedUser={cachedUser || null} />
         );
       })}
     </section>
