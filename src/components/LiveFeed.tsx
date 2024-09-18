@@ -54,13 +54,13 @@ const channelToAction: Record<Channel, { name: string; color: string }> = {
 };
 
 export default function LiveFeed() {
-  const [feedData, setFeedData] = useImmer<any[]>([]);
+  const [feedData, setFeedData] = useImmer<FeedData[]>([]);
   useEffect(() => {
     const pusher = getClientPusher();
     const channels = Object.values(Channel);
     const subscribedChannels = channels.map(channelName => pusher.subscribe(channelName));
 
-    const handleEvent = (channel: Channel, _: string, { feedData }: any) => {
+    const handleEvent = (channel: Channel, _: string, feedData: FeedData) => {
       if (feedData) {
         setFeedData(draft => {
           draft.unshift({
@@ -74,9 +74,18 @@ export default function LiveFeed() {
     };
 
     subscribedChannels.forEach(channel => {
-      channel.bind_global((eventName: string, data: any) => {
-        handleEvent(channel.name as Channel, eventName, data);
-      });
+      channel.bind_global(
+        (
+          eventName: string,
+          {
+            feedData,
+          }: {
+            feedData: FeedData;
+          }
+        ) => {
+          handleEvent(channel.name as Channel, eventName, feedData);
+        }
+      );
     });
 
     return () => {
