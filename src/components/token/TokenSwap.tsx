@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  defualtPriorityFee,
-  defaultSlippagePercent,
-} from "@/config/eth/token";
+import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
 import { useState } from "react";
 import { mainnet } from "viem/chains";
 import { useBalance } from "wagmi";
@@ -24,18 +21,11 @@ type TradingWidgetProps = {
 const PURCHASE_AMOUNTS = [1, 5, 10];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 
-export default function TokenSwap({
-  tokenTicker,
-  currPrice,
-  tokenAddress,
-  ethPrice,
-}: TradingWidgetProps) {
+export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPrice }: TradingWidgetProps) {
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyToken, setBuyToken] = useState(tokenTicker);
   const [tokenAmount, setTokenAmount] = useState<number>(0);
-  const [slippagePercent, setSlippagePercent] = useState<number>(
-    defaultSlippagePercent
-  );
+  const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
   const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
 
@@ -47,12 +37,10 @@ export default function TokenSwap({
   const switchBuyToken = () => {
     if (buyToken === "ETH") {
       setBuyToken(tokenTicker);
-      setTokenAmount((prevEthAmount) => (prevEthAmount * ethPrice) / currPrice);
+      setTokenAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
     } else {
       setBuyToken("ETH");
-      setTokenAmount(
-        (prevTokenAmount) => (prevTokenAmount * currPrice) / ethPrice
-      );
+      setTokenAmount(prevTokenAmount => (prevTokenAmount * currPrice) / ethPrice);
     }
   };
 
@@ -71,10 +59,8 @@ export default function TokenSwap({
               setActiveTab(TradingTab.BUY);
               setTokenAmount(0);
             }}
-            className={`w-1/2 py-1 rounded-md ${
-              activeTab === TradingTab.BUY
-                ? "bg-green-500 text-neutral-900"
-                : "text-neutral-500 bg-neutral-900"
+            className={`w-[65px] h-[35px] rounded-3xl text-white ${
+              activeTab === TradingTab.BUY ? "bg-gray" : "bg-dark-gray"
             }`}
           >
             Buy
@@ -84,10 +70,8 @@ export default function TokenSwap({
               setActiveTab(TradingTab.SELL);
               setTokenAmount(0);
             }}
-            className={`w-1/2 py-1 rounded-md ${
-              activeTab === TradingTab.SELL
-                ? "bg-red-500 text-white"
-                : "text-neutral-500 bg-neutral-900"
+            className={`w-[65px] h-[35px] rounded-3xl text-white ${
+              activeTab === TradingTab.SELL ? "bg-gray" : "bg-dark-gray"
             }`}
           >
             Sell
@@ -113,7 +97,7 @@ export default function TokenSwap({
           <div className="w-full flex items-center border border-white rounded-md bg-transparent p-2 placeholder-neutral-400 text-sm focus-within::ring-white focus:ring-1 text-white gap-1">
             <input
               type="number"
-              onChange={(e) => setTokenAmount(+e.target.value)}
+              onChange={e => setTokenAmount(+e.target.value)}
               value={tokenAmount}
               className="w-full bg-transparent focus:outline-none border-none h-full"
               placeholder="0.0"
@@ -129,7 +113,7 @@ export default function TokenSwap({
               reset
             </button>
             {activeTab === TradingTab.BUY
-              ? PURCHASE_AMOUNTS.map((amount) => (
+              ? PURCHASE_AMOUNTS.map(amount => (
                   <button
                     key={amount}
                     onClick={() => setTokenAmount(amount)}
@@ -138,12 +122,10 @@ export default function TokenSwap({
                     {amount} {buyToken}
                   </button>
                 ))
-              : SELL_AMOUNTS.map((amount) => (
+              : SELL_AMOUNTS.map(amount => (
                   <button
                     key={amount}
-                    onClick={() =>
-                      setTokenAmount(+((amount / ownedAmount) * 100).toFixed(2))
-                    }
+                    onClick={() => setTokenAmount(+((amount / ownedAmount) * 100).toFixed(2))}
                     className="p-1.5 bg-neutral-900 text-neutral-400 text-xs w-max rounded-md"
                   >
                     {amount}%
