@@ -8,7 +8,6 @@ import LogoPopover from "./LogoPopover";
 import LaunchCoinButton from "./LaunchCoinButton";
 import HowItWorksButton from "./HowItWorksButton";
 import TokenSearch from "./TokenSearch";
-import BackButton from "./BackButton";
 
 type HeaderProps = {
   chain: Chain;
@@ -24,8 +23,7 @@ export default async function Header({ chain }: HeaderProps) {
     <header className="flex justify-between items-center h-20">
       <LogoPopover />
 
-      <div className="flex gap-2 ml-60">
-        <BackButton />
+      <div className="flex ml-60">
         <TokenSearch />
       </div>
 
