@@ -39,9 +39,12 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
       </Link>
       <Dropdown>
         <DropdownTrigger>
-          <button className={linkStyles}>
-            <Image src="/share.svg" alt="share" width={25} height={25} />
-          </button>
+          <div className="flex gap-2">
+            <button className={linkStyles}>
+              <Image src="/share.svg" alt="share" width={25} height={25} />
+            </button>
+            <Image src="/down-arrow.svg" alt="more" width={12} height={9} />
+          </div>
         </DropdownTrigger>
         <DropdownMenu aria-label="Share options">
           <DropdownItem key="share-link" onPress={() => handleShareLink()}>
