@@ -58,7 +58,7 @@ export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPri
 
   return (
     <>
-      <div className="p-3 rounded-lg w-[350px] bg-gray-950/90 flex flex-col">
+      <div className="flex flex-col rounded-lg w-[350px] mt-7">
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
             <button
