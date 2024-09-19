@@ -9,49 +9,7 @@ import { useImmer } from "use-immer";
 import Image from "next/image";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { Virtuoso } from "react-virtuoso";
-
-const channelToAction: Record<Channel, { name: string; color: string }> = {
-  [Channel.Follow]: {
-    name: "followed",
-    color: "text-green",
-  },
-  [Channel.Unfollow]: {
-    name: "unfollowed",
-    color: "text-red",
-  },
-  [Channel.Comment]: {
-    name: "commented",
-    color: "text-green",
-  },
-  [Channel.CommentLikes]: {
-    name: "liked",
-    color: "text-green",
-  },
-  [Channel.CommentDislikes]: {
-    name: "disliked",
-    color: "text-rose",
-  },
-  [Channel.Upvotes]: {
-    name: "upvoted",
-    color: "text-light-green",
-  },
-  [Channel.Downvotes]: {
-    name: "downvoted",
-    color: "text-rose",
-  },
-  [Channel.CreateToken]: {
-    name: "created",
-    color: "text-green",
-  },
-  [Channel.Buy]: {
-    name: "bought",
-    color: "text-green",
-  },
-  [Channel.Sell]: {
-    name: "sold",
-    color: "text-rose",
-  },
-};
+import { channelConfigs } from "@/lib/feed";
 
 export default function LiveFeed() {
   const [feedData, setFeedData] = useImmer<FeedData[]>([]);
@@ -98,7 +56,7 @@ export default function LiveFeed() {
   }, []);
 
   const formatFeedData = (data: FeedData) => {
-    const action = channelToAction[data.channel];
+    const action = channelConfigs[data.channel];
     const isCommentVoteChannel = data.channel === Channel.CommentLikes || data.channel === Channel.CommentDislikes;
     const isCommentChannel = data.channel === Channel.Comment || isCommentVoteChannel;
 
