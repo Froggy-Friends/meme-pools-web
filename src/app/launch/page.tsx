@@ -2,17 +2,14 @@ import Header from "@/components/Header";
 import LaunchCoinForm from "@/components/launch/LaunchCoinForm";
 import Footer from "@/components/Footer";
 import { Chain } from "@/models/chain";
-import BackButton from "@/components/BackButton";
 import Image from "next/image";
 
 export default function LaunchCoin() {
   return (
-    <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto px-4">
-      <Header chain={Chain.Eth} showSearch />
+    <main className="flex flex-col max-w-[1200px] min-w-[1200px] min-h-[100vh] mx-auto px-4">
+      <Header chain={Chain.Eth} />
 
       <div className="flex justify-between items-center w-[72.5%]">
-        <BackButton />
-
         <div className="flex items-center mt-4 gap-x-4">
           <h1 className="text-5xl">
             Launch on{" "}

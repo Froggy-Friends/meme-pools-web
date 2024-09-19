@@ -10,7 +10,6 @@ import { Chain } from "@/models/chain";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
 import { toTitleCase } from "@/lib/toTitleCase";
-import BackButton from "@/components/BackButton";
 
 type ProfilePageProps = {
   params: {
@@ -34,9 +33,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
 
   return (
     <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto">
-      <Header chain={Chain.Eth} showSearch />
-
-      <BackButton />
+      <Header chain={Chain.Eth} />
 
       <h2 className="text-[56px] font-semibold">{toTitleCase(view)}</h2>
 
