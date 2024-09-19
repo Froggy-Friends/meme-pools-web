@@ -1,12 +1,7 @@
 import { User } from "@prisma/client";
 import Image from "next/image";
-import CopyButton from "../CopyButton";
-import { Address } from "@/lib/types";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { TokenWithVoteCount } from "@/types/token/types";
-import TokenVote from "./TokenVote";
-import TokenSocials from "./TokenSocials";
-import { formatAddress } from "@/lib/formatAddress";
 
 type TokenInfoParams = {
   token: TokenWithVoteCount;
@@ -14,52 +9,24 @@ type TokenInfoParams = {
   cachedUser: User | null;
 };
 
-export default function TokenInfo({
-  token,
-  creator,
-  cachedUser,
-}: TokenInfoParams) {
+export default function TokenInfo({ token, creator }: TokenInfoParams) {
   return (
-    <section className="flex flex-col my-2 gap-y-2">
-      <div className="flex items-center gap-x-2">
-        <Image
-          src={token.image}
-          alt="token-image"
-          height={60}
-          width={60}
-          className="rounded-full"
-        />
-
-        <p className="text-4xl font-proximaSoftBold">${token.ticker}</p>
+    <section className="flex flex-col w-full my-2 gap-y-4 pb-14">
+      <div className="flex items-center gap-4">
+        <Image src={token.image} alt="token-image" height={50} width={50} className="h-[50px] w-[50px] rounded-3xl" />
+        <p className="text-6xl font-proximaSoftBold">${token.ticker}</p>
       </div>
 
       <div className="flex items-center gap-x-2">
         <Image
           src={(creator && creator.imageUrl) || defaultProfileAvatarUrl}
           alt="creator-logo"
-          height={35}
-          width={35}
+          height={18}
+          width={18}
           className="rounded-full"
         />
 
         <p>{token.description}</p>
-      </div>
-
-      <div className="flex gap-x-10 mt-10">
-        <div className="flex flex-col">
-          <p className="text-gray text-lg mb-2">Votes</p>
-          <TokenVote tokenId={token.id} cachedUser={cachedUser} />
-        </div>
-
-        <div className="flex flex-col">
-          <p className="text-gray text-lg mb-2">CA</p>
-          <div className="flex gap-x-2">
-            <p className="text-xl">{formatAddress(token.tokenAddress, 5)}</p>
-            <CopyButton tokenAddress={token.tokenAddress as Address} />
-          </div>
-        </div>
-
-        <TokenSocials token={token} />
       </div>
     </section>
   );
