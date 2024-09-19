@@ -5,13 +5,7 @@ import Followers from "../../../components/profile/Followers";
 import Following from "../../../components/profile/Following";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import {
-  fetchFollow,
-  fetchFollowers,
-  fetchFollowing,
-  fetchUser,
-  fetchUserByName,
-} from "@/queries/profile/queries";
+import { fetchFollow, fetchFollowers, fetchFollowing, fetchUser, fetchUserByName } from "@/queries/profile/queries";
 import { Chain } from "@/models/chain";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
@@ -25,10 +19,7 @@ type ProfilePageProps = {
   searchParams: SearchParams;
 };
 
-export default async function ProfilePage({
-  params,
-  searchParams,
-}: ProfilePageProps) {
+export default async function ProfilePage({ params, searchParams }: ProfilePageProps) {
   const view = (searchParams.view as string) || "profile";
   const cookieStore = cookies();
   const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
@@ -43,7 +34,7 @@ export default async function ProfilePage({
 
   return (
     <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto">
-      <Header chain={Chain.Eth} />
+      <Header chain={Chain.Eth} showSearch />
 
       <BackButton />
 
@@ -59,12 +50,8 @@ export default async function ProfilePage({
         />
       )}
 
-      {view === "followers" && (
-        <Followers followers={followers} profileUser={profileUser} />
-      )}
-      {view === "following" && (
-        <Following following={following} profileUser={profileUser} />
-      )}
+      {view === "followers" && <Followers followers={followers} profileUser={profileUser} />}
+      {view === "following" && <Following following={following} profileUser={profileUser} />}
 
       <Footer />
     </main>

@@ -47,7 +47,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
 
   return (
     <main className="flex flex-col max-w-[1200px] min-h-[100vh] px-4 mx-auto">
-      <Header chain={Chain.Eth} />
+      <Header chain={Chain.Eth} showSearch />
 
       <BackButton />
 
