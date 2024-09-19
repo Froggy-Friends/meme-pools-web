@@ -25,9 +25,8 @@ export default function VotingProgress({ token }: VotingProgressProps) {
       />
 
       {token && (
-        <p className="text-cream">
-          ${token.ticker} has {token._count.TokenVote} votes and need 1,000 more
-          to take third place on the leaderboard.
+        <p className="text-cream pt-4">
+          ${token.ticker} has {token._count.TokenVote} votes and need 1,000 more to take third place on the leaderboard.
         </p>
       )}
     </section>
