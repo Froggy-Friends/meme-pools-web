@@ -20,7 +20,7 @@ export default async function Header({ chain }: HeaderProps) {
   const user = await fetchUser(chain === Chain.Eth ? userEvmAddress?.value : userSolAddress?.value);
 
   return (
-    <header className="flex justify-between items-center h-20">
+    <header className="flex justify-between items-center h-20 mb-10">
       <LogoPopover />
 
       <div className="flex ml-60">
