@@ -14,7 +14,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { fetchUser, fetchUserById } from "@/queries/profile/queries";
 import { Chain } from "@/models/chain";
-import BackButton from "@/components/BackButton";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
 import TokenActions from "@/components/token/TokenActions";
@@ -48,8 +47,6 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
   return (
     <main className="flex flex-col max-w-[1200px] min-h-[100vh] px-4 mx-auto">
       <Header chain={Chain.Eth} />
-
-      <BackButton />
 
       <TokenInfo token={token} creator={creator} cachedUser={cachedUser || null} />
 

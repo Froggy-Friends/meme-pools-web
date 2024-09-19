@@ -7,6 +7,7 @@ import { Cookie } from "@/models/cookie";
 import LogoPopover from "./LogoPopover";
 import LaunchCoinButton from "./LaunchCoinButton";
 import HowItWorksButton from "./HowItWorksButton";
+import TokenSearch from "./TokenSearch";
 
 type HeaderProps = {
   chain: Chain;
@@ -16,15 +17,17 @@ export default async function Header({ chain }: HeaderProps) {
   const cookieStore = cookies();
   const userEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const userSolAddress = cookieStore.get(Cookie.SolanaAddress);
-  const user = await fetchUser(
-    chain === Chain.Eth ? userEvmAddress?.value : userSolAddress?.value
-  );
+  const user = await fetchUser(chain === Chain.Eth ? userEvmAddress?.value : userSolAddress?.value);
 
   return (
-    <header className="flex justify-between items-center h-32">
+    <header className="flex justify-between items-center h-20 mb-10">
       <LogoPopover />
 
-      <div className="flex items-center gap-x-4">
+      <div className="flex ml-60">
+        <TokenSearch />
+      </div>
+
+      <div className="flex items-center gap-2">
         <LaunchCoinButton />
         <HowItWorksButton />
         <ChainSwitcher />
