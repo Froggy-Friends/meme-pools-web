@@ -6,11 +6,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { MdKeyboardCommandKey } from "react-icons/md";
 import { useEffect } from "react";
 
-type TokenSearchProps = {
-  classNames?: string;
-};
-
-export default function TokenSearch({ classNames }: TokenSearchProps) {
+export default function TokenSearch() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
@@ -26,10 +22,10 @@ export default function TokenSearch({ classNames }: TokenSearchProps) {
   }, [onOpen]);
 
   return (
-    <section className={`flex items-center gap-x-4 w-2/3 ${classNames}`}>
+    <section className="flex justify-center items-center w-[330px]">
       <button
         onClick={e => onOpen()}
-        className="flex items-center justify-between h-8 w-1/3 px-4 border-[0.25px] border-white/[5%] rounded-lg bg-dark-gray hover:bg-gray transition"
+        className="flex items-center justify-between h-8 w-full px-4 border-[0.25px] border-white/[5%] rounded-lg bg-dark-gray hover:bg-gray transition"
       >
         <div className="flex items-center gap-x-4">
           <FaMagnifyingGlass size={16} />
