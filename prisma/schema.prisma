@@ -30,16 +30,16 @@ model Token {
   twitter      String?
   telegram     String?
   website      String?
-  discord      String?
-  other        String?
   userId       String        @db.Uuid
   name         String
   createdAt    DateTime      @default(now()) @db.Timestamptz(6)
   updatedAt    DateTime?     @default(now()) @db.Timestamptz(6)
   tokenAddress String        @unique
   tokenCreator String
-  chain        String
   marketCap    Int
+  discord      String?
+  other        String?
+  chain        String
   Comment      Comment[]
   leaderboard  Leaderboard[]
   user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
@@ -48,24 +48,24 @@ model Token {
 }
 
 model User {
-  id            String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
-  name          String         @unique(map: "unique_username")
-  imageUrl      String?
-  email         String?
-  createdAt     DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt     DateTime?      @default(now()) @db.Timestamptz(6)
-  solAddress    String?        @unique(map: "User_solanaAddress_key")
-  ethAddress    String?        @unique(map: "User_ethereumAddress_key")
-  twitterId     BigInt?        @unique(map: "unique_twitter_id")
-  twitterFollowers             BigInt?
-  Comment       Comment[]
-  CommentLikes  CommentLikes[]
-  followingUser Follow[]       @relation("Follow_accountToUser")
-  followerUser  Follow[]       @relation("Follow_followerToUser")
-  leaderboard   Leaderboard[]
-  token         Token[]
-  TokenVote     TokenVote[]
-  Trades        Trades[]
+  id               String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
+  name             String         @unique(map: "unique_username")
+  imageUrl         String?
+  email            String?
+  createdAt        DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime?      @default(now()) @db.Timestamptz(6)
+  solAddress       String?        @unique(map: "User_solanaAddress_key")
+  ethAddress       String?        @unique(map: "User_ethereumAddress_key")
+  twitterId        BigInt?        @unique(map: "unique_twitter_id")
+  twitterFollowers BigInt?
+  Comment          Comment[]
+  CommentLikes     CommentLikes[]
+  followingUser    Follow[]       @relation("Follow_accountToUser")
+  followerUser     Follow[]       @relation("Follow_followerToUser")
+  leaderboard      Leaderboard[]
+  token            Token[]
+  TokenVote        TokenVote[]
+  Trades           Trades[]
 }
 
 model Trades {

@@ -21,6 +21,8 @@ const config: Config = {
         "midnight-green": "#1B281F",
         blue: "#B2C6F4",
         "light-green": "#B2F4D3",
+        yellow: "#F4F4B2",
+        rose: "#F4B9B2",
         solana: "#9945FF",
         based: "#0052FF",
       },

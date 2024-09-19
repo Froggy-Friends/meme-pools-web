@@ -18,24 +18,10 @@ type TokenCommentProps = {
   cachedUser: User | null;
 };
 
-export default function TokenComment({
-  comment,
-  author,
-  cachedUser,
-}: TokenCommentProps) {
-  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
-    comment,
-    cachedUser!
-  );
+export default function TokenComment({ comment, author, cachedUser }: TokenCommentProps) {
+  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(comment, cachedUser!);
 
-  const {
-    likes,
-    commentLike,
-    handleLike,
-    dislikes,
-    commentDisLike,
-    handleDislike,
-  } = useCommentLike(
+  const { likes, commentLike, handleLike, dislikes, commentDisLike, handleDislike } = useCommentLike(
     comment,
     userCommentLike,
     userCommentDislike,
@@ -70,16 +56,8 @@ export default function TokenComment({
       </div>
 
       <div className="flex gap-x-3">
-        <LikeButton
-          likes={likes}
-          commentLike={commentLike}
-          handleLike={handleLike}
-        />
-        <DislikeButton
-          dislikes={dislikes}
-          commentDisLike={commentDisLike}
-          handleDislike={handleDislike}
-        />
+        <LikeButton likes={likes} commentLike={commentLike} handleLike={handleLike} />
+        <DislikeButton dislikes={dislikes} commentDisLike={commentDisLike} handleDislike={handleDislike} />
       </div>
     </div>
   );
