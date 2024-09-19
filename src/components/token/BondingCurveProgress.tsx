@@ -11,7 +11,7 @@ export default function BondingCurveProgress() {
           base: "max-w-md",
           track: "drop-shadow-md bg-dark-gray h-4",
           indicator: "bg-light-green",
-          label: "tracking-wider font-small text-default-600",
+          label: "tracking-wider font-small text-light-gray",
           value: "text-foreground/60 text-gray",
         }}
         showValueLabel={true}

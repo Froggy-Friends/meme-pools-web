@@ -17,13 +17,11 @@ import { Chain } from "@/models/chain";
 import BackButton from "@/components/BackButton";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
+import TokenActions from "@/components/token/TokenActions";
 
-const DynamicTokenChart = dynamic(
-  () => import("../../../../components/token/TokenChart"),
-  {
-    ssr: false,
-  }
-);
+const DynamicTokenChart = dynamic(() => import("../../../../components/token/TokenChart"), {
+  ssr: false,
+});
 
 type TokenDetailsPageProps = {
   params: {
@@ -32,13 +30,8 @@ type TokenDetailsPageProps = {
   searchParams: SearchParams;
 };
 
-export default async function TokenDetailsPage({
-  params,
-  searchParams,
-}: TokenDetailsPageProps) {
-  const view =
-    (searchParams.view as CommentAndTradesView) ||
-    CommentAndTradesViews.COMMENTS;
+export default async function TokenDetailsPage({ params, searchParams }: TokenDetailsPageProps) {
+  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.COMMENTS;
   const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
@@ -58,18 +51,15 @@ export default async function TokenDetailsPage({
 
       <BackButton />
 
-      <TokenInfo
-        token={token}
-        creator={creator}
-        cachedUser={cachedUser || null}
-      />
+      <TokenInfo token={token} creator={creator} cachedUser={cachedUser || null} />
 
-      <div className="flex gap-x-10">
-        <div className="w-[65%] flex flex-col">
+      <div className="flex gap-x-10 w-full">
+        <div className="flex-[3] flex flex-col">
+          <TokenActions token={token} cachedUser={cachedUser || null} />
           <DynamicTokenChart />
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex-1 flex flex-col">
           <TokenSwap
             tokenAddress={token.tokenAddress}
             tokenTicker={token.ticker.toUpperCase()}

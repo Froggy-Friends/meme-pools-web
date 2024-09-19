@@ -4,7 +4,6 @@ import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
 import HeaderSocialLinks from "./HeaderSocialLinks";
 import frogFunLogo from "../../public/frog-fun-logo.svg";
 import Image from "next/image";
-import { IoIosArrowDown } from "react-icons/io";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -29,7 +28,7 @@ export default function LogoPopover() {
             width={32}
             className="hover:scale-[1.03] transition"
           />
-          <IoIosArrowDown size={25} />
+          <Image src="/down-arrow.svg" alt="more" width={12} height={9} />
         </div>
       </PopoverTrigger>
       <PopoverContent onMouseLeave={() => setIsOpen(false)}>

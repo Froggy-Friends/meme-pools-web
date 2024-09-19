@@ -16,7 +16,7 @@ export default function VotingProgress({ token }: VotingProgressProps) {
           base: "max-w-md",
           track: "drop-shadow-md bg-dark-gray h-4",
           indicator: "bg-light-green",
-          label: "tracking-wider font-small text-default-600",
+          label: "tracking-wider font-small text-light-gray",
           value: "text-foreground/60 text-gray",
         }}
         showValueLabel={true}
@@ -25,9 +25,8 @@ export default function VotingProgress({ token }: VotingProgressProps) {
       />
 
       {token && (
-        <p className="text-cream">
-          ${token.ticker} has {token._count.TokenVote} votes and need 1,000 more
-          to take third place on the leaderboard.
+        <p className="text-cream pt-4">
+          ${token.ticker} has {token._count.TokenVote} votes and need 1,000 more to take third place on the leaderboard.
         </p>
       )}
     </section>
