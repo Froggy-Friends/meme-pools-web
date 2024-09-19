@@ -3,7 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
 
-export const getTimeDifference = (date: Date | null | undefined) => {
+export const getTimeDifference = (date: Date | string | null | undefined) => {
   if (!date) {
     return;
   }

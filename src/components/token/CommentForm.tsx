@@ -23,7 +23,7 @@ export default function CommentForm({ tokenId }: CommentFormProps) {
       const message = formData.get("comment") as string;
       const newComment = {
         message: message,
-        author: currentUser?.id,
+        author: currentUser?.name,
         tokenId: tokenId,
         createdAt: new Date(Date.now()),
         commentLikes: [],
@@ -32,22 +32,17 @@ export default function CommentForm({ tokenId }: CommentFormProps) {
         user: currentUser,
       };
 
-      const initialComments: CommentWithLikes[] | undefined =
-        await queryClient.getQueryData(["token-comments", tokenId]);
+      const initialComments: CommentWithLikes[] | undefined = await queryClient.getQueryData([
+        "token-comments",
+        tokenId,
+      ]);
 
-      initialComments &&
-        queryClient.setQueryData(
-          ["token-comments", tokenId],
-          [...initialComments, newComment]
-        );
+      initialComments && queryClient.setQueryData(["token-comments", tokenId], [...initialComments, newComment]);
 
       return { initialComments };
     },
     onError(error, variables, context) {
-      queryClient.setQueryData(
-        ["token-comments", tokenId],
-        context?.initialComments
-      );
+      queryClient.setQueryData(["token-comments", tokenId], context?.initialComments);
       toast.error("Error adding comment");
     },
     onSettled: () => {
@@ -57,7 +52,7 @@ export default function CommentForm({ tokenId }: CommentFormProps) {
 
   return (
     <form
-      action={(formData) => {
+      action={formData => {
         addComment.mutate(formData);
       }}
       className="w-[780px] h-72 flex flex-col mb-20 p-6 bg-dark-gray rounded-xl"

@@ -14,19 +14,12 @@ type FollowButtonProps = {
   className?: string;
 };
 
-export default function FollowButton({
-  isFollowing,
-  cachedUser,
-  user,
-  className,
-}: FollowButtonProps) {
+export default function FollowButton({ isFollowing, cachedUser, user, className }: FollowButtonProps) {
   const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ["isFollowing", cachedUser.id, user.id],
     initialData: isFollowing,
   });
-
-  console.log(data);
 
   const handleClick = useMutation({
     mutationKey: ["changeFollow", cachedUser.id, user.id],
@@ -37,31 +30,18 @@ export default function FollowButton({
       }
     },
     onMutate: async () => {
-      const previousData = await queryClient.getQueryData([
-        "isFollowing",
-        cachedUser.id,
-        user.id,
-      ]);
+      const previousData = await queryClient.getQueryData(["isFollowing", cachedUser.id, user.id]);
 
       if (previousData === FollowStatus.UNFOLLOW || previousData === "false") {
-        queryClient.setQueryData(
-          ["isFollowing", cachedUser.id, user.id],
-          FollowStatus.FOLLOW
-        );
+        queryClient.setQueryData(["isFollowing", cachedUser.id, user.id], FollowStatus.FOLLOW);
       } else if (previousData === FollowStatus.FOLLOW) {
-        queryClient.setQueryData(
-          ["isFollowing", cachedUser.id, user.id],
-          FollowStatus.UNFOLLOW
-        );
+        queryClient.setQueryData(["isFollowing", cachedUser.id, user.id], FollowStatus.UNFOLLOW);
       }
 
       return { previousData };
     },
     onError(error, variables, context) {
-      queryClient.setQueryData(
-        ["isFollowing", cachedUser.id, user.id],
-        context?.previousData
-      );
+      queryClient.setQueryData(["isFollowing", cachedUser.id, user.id], context?.previousData);
       toast.error((error as Error).message);
     },
     onSettled: async () => {

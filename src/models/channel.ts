@@ -1,9 +1,12 @@
 export enum Channel {
   Comment = "comment",
   CommentLikes = "comment-likes",
-  Votes = "votes",
+  CommentDislikes = "comment-dislikes",
+  Upvotes = "votes",
+  Downvotes = "downvotes",
   Follow = "follow",
+  Unfollow = "unfollow",
   CreateToken = "create-token",
-  Buy = "buy",
-  Sell = "sell",
+  Buy = "buy", // TODO - implement when buy/sell is implemented
+  Sell = "sell", // TODO - implement when buy/sell is implemented
 }

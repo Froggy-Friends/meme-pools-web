@@ -33,9 +33,18 @@ export default function LogoPopover() {
       </PopoverTrigger>
       <PopoverContent onMouseLeave={() => setIsOpen(false)}>
         <div className="flex flex-col">
-          <h2 className="text-2xl font-bold">
-            <span className="text-green">FROG</span>.FUN
-          </h2>
+          <Link className="flex gap-2 text-2xl font-bold cursor-pointer" href="/">
+            <Image
+              src={frogFunLogo}
+              alt="Frog Fun Logo"
+              height={23}
+              width={32}
+              className="hover:scale-[1.03] transition"
+            />
+            <div>
+              <span className="text-green">FROG</span>.FUN
+            </div>
+          </Link>
 
           <Link href="https://docs.frog.fun/privacy" target="_blank">
             <p className="cursor-pointer text-lg pt-6 hover:text-green">Privacy Policy</p>

@@ -55,19 +55,17 @@ export default function useCommentLike(
     ) {
       throw new Error("Missing pusher env variables");
     }
-    
+
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });
-
-    const channel = pusher.subscribe(Channel.CommentLikes);
 
     const updatedLikes = {
       likes: likesCount,
       dislikes: dislikesCount,
     };
 
-    channel.bind(comment.id, async (newData: CommentLikesChannelReturn) => {
+    const handleChannelUpdate = (newData: CommentLikesChannelReturn) => {
       if (newData.add && !newData.remove) {
         if (newData.add.status === CommentLikeStatus.LIKE) {
           updatedLikes.likes++;
@@ -121,11 +119,30 @@ export default function useCommentLike(
           );
         }
       }
-    });
+    };
+
+    const likesChannel = pusher.subscribe(Channel.CommentLikes);
+    const dislikesChannel = pusher.subscribe(Channel.CommentDislikes);
+
+    likesChannel.bind(
+      comment.id,
+      async (newData: CommentLikesChannelReturn) => {
+        handleChannelUpdate(newData);
+      }
+    );
+
+    dislikesChannel.bind(
+      comment.id,
+      async (newData: CommentLikesChannelReturn) => {
+        handleChannelUpdate(newData);
+      }
+    );
 
     return () => {
-      channel.unbind_all();
-      channel.unsubscribe();
+      likesChannel.unbind_all();
+      likesChannel.unsubscribe();
+      dislikesChannel.unbind_all();
+      dislikesChannel.unsubscribe();
       pusher.disconnect();
     };
   }, [comment.id, queryClient, likesCount, dislikesCount]);

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 export default function TokenSearch() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   useEffect(() => {
     const down = (e: any) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -21,10 +22,10 @@ export default function TokenSearch() {
   }, [onOpen]);
 
   return (
-    <section className="w-2/3 flex items-center gap-x-4">
+    <section className="flex justify-center items-center w-[330px]">
       <button
-        onClick={(e) => onOpen()}
-        className="flex items-center justify-between h-8 w-1/3 px-4 border-[0.25px] border-white/[5%] rounded-lg bg-dark-gray hover:bg-gray transition"
+        onClick={e => onOpen()}
+        className="flex items-center justify-between h-8 w-full px-4 border-[0.25px] border-white/[5%] rounded-lg bg-dark-gray hover:bg-gray transition"
       >
         <div className="flex items-center gap-x-4">
           <FaMagnifyingGlass size={16} />
