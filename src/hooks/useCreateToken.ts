@@ -1,4 +1,5 @@
 import { frogFunAbi } from "@/abi/frogFun";
+import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { CreateTokenParams, TokenCreated } from "@/types/token/types";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
@@ -6,8 +7,7 @@ import { toast } from "react-hot-toast";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
-  const address = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-  const contract = new Contract(address!, frogFunAbi, signer);
+  const contract = new Contract(contractAddress, frogFunAbi, signer);
 
   const getTokenDetails = async (
     receipt: ContractTransactionReceipt
