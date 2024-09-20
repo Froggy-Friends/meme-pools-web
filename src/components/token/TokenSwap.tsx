@@ -54,11 +54,11 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
     }
   };
 
-  const handleBuyAmountChange = (value: number | null) => {
+  const handleBuyAmountChange = (value: number | null, tokenName: string, tokenImg: string) => {
     setBuyAmount(value || 0);
   };
 
-  const handleSellAmountChange = (value: number | null) => {
+  const handleSellAmountChange = (value: number | null, tokenName: string, tokenImg: string) => {
     setSellAmount(value || 0);
   };
 
@@ -109,10 +109,22 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
         </div>
         <div className="flex flex-col gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[200px]">
           {activeTab === TradingTab.BUY && (
-            <TokenInput ticker="ETH" tickerSrc={ethLogo} onChange={handleBuyAmountChange} />
+            <TokenInput
+              ticker={token.ticker}
+              tickerSrc={token.image}
+              chainTicker="ETH"
+              chainTickerSrc={ethLogo}
+              onChange={handleBuyAmountChange}
+            />
           )}
           {activeTab === TradingTab.SELL && (
-            <TokenInput ticker={token.ticker} tickerSrc={token.image} onChange={handleSellAmountChange} />
+            <TokenInput
+              ticker={token.ticker}
+              tickerSrc={token.image}
+              chainTicker="ETH"
+              chainTickerSrc={ethLogo}
+              onChange={handleSellAmountChange}
+            />
           )}
           <div className="flex items-center pl-4 gap-2">
             {showPresets && (
