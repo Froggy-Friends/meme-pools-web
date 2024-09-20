@@ -1,4 +1,5 @@
 import { Chain, ChainConfigs } from "@/models/chain";
+import { baseChainId, ethChainId, solanaChainId } from "./env";
 
 export const solanaLogo =
   "https://qojtn2d8pd7yjrch.public.blob.vercel-storage.com/Solana-Logo-aJnrhtpHiDx3ahUVRx1b8nn69drIar.svg";
@@ -10,14 +11,14 @@ export const ethLogo =
 export const chainConfigs: ChainConfigs = {
   eth: {
     name: Chain.Eth,
-    id: Number(process.env.NEXT_PUBLIC_ETH_CHAIN_ID),
+    id: ethChainId,
   },
   base: {
     name: Chain.Base,
-    id: Number(process.env.NEXT_PUBLIC_BASE_CHAIN_ID),
+    id: baseChainId,
   },
   solana: {
     name: Chain.Solana,
-    id: Number(process.env.NEXT_PUBLIC_SOLANA_CHAIN_ID),
+    id: solanaChainId,
   },
 };

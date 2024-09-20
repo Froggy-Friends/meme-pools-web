@@ -1,5 +1,6 @@
 "use server";
 
+import { frogFunApi } from "@/config/env";
 import prisma from "@/lib/prisma";
 import { TokenWithCreator } from "@/lib/types";
 import { TokenFilter, TokenVoteStatus } from "@/models/token";
@@ -30,7 +31,7 @@ export const fetchTokens = async (
   page: number
 ): Promise<TokenWithCreator[]> => {
   const response = await fetch(
-    `${process.env.FROG_FUN_API_URL}/token/${tokenFilter}?page=${page}`
+    `${frogFunApi}/token/${tokenFilter}?page=${page}`
   );
   const tokens = await response.json();
 
@@ -66,7 +67,7 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
 
 export const fetchTopVotesTokens = async () => {
   const response = await fetch(
-    `${process.env.FROG_FUN_API_URL}/token/votes?page=1`
+    `${frogFunApi}/token/votes?page=1`
   );
 
   const tokens: TokenWithVotes[] = await response.json();
