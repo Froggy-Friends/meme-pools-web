@@ -11,26 +11,7 @@ export default function useBuyToken() {
   const contract = new Contract(address!, frogFunAbi, signer);
 
   const buyToken = async (address: string, amount: bigint) => {
-    try {
-      const [price, cost, fee, total] = await contract.calculateBuyPrice(
-        address,
-        amount
-      );
-      console.log("buy price: ", price);
-      console.log("buy cost: ", cost);
-      console.log("buy fee: ", fee);
-      console.log("buy total: ", total);
 
-      return {
-        price,
-        cost,
-        fee,
-        total
-      };
-    } catch (error) {
-      console.log(error);
-      toast.error("Buy token error");
-    }
   }
 
   return buyToken;
