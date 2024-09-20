@@ -1,10 +1,10 @@
 "use server";
 
-import { Address } from "@/lib/types";
 import { put } from "@vercel/blob";
 import prisma from "@/lib/prisma";
 import { getTokenInfo } from "../../lib/getTokenInfo";
 import { fetchUser } from "@/queries/profile/queries";
+import { Address } from "viem";
 
 export const launchCoin = async (
   formData: FormData,

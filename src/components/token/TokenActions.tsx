@@ -1,10 +1,10 @@
 import CopyButton from "../CopyButton";
-import { Address } from "@/lib/types";
 import TokenVote from "./TokenVote";
 import TokenSocials from "./TokenSocials";
 import { formatAddress } from "@/lib/formatAddress";
 import { TokenWithVoteCount } from "@/types/token/types";
 import { User } from "@prisma/client";
+import { Address } from "viem";
 
 type TokenActionsProps = {
   token: TokenWithVoteCount;
