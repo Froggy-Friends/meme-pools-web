@@ -1,4 +1,4 @@
-import { Address } from "@/lib/types";
+import { Address } from "viem";
 
 export type UserParams = {
   name?: string;
