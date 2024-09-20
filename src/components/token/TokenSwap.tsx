@@ -79,17 +79,12 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
 
   const tokensByPercentage = (amount: number, totalOwned: number) => {
     const tokens = (amount / totalOwned) * 100;
-    console.log("tokens by percentage: ", tokens);
     return tokens;
   };
 
   const buyTokens = async () => {
     const buyAmountWei = parseUnits(buyAmount.toString(), 18);
-    console.log("buy for address: ", tokenAddress);
-    console.log("buy amount wei: ", buyAmountWei);
-
     const bought = await buyToken(tokenAddress, buyAmountWei);
-    console.log("bought: ", bought);
   };
 
   const sellTokens = () => {};
