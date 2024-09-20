@@ -1,9 +1,9 @@
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 import { cookieStorage, createStorage } from "wagmi";
 import { mainnet, sepolia, baseSepolia, base } from "wagmi/chains";
+import { isProd } from "./env";
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
-export const env = process.env.NEXT_PUBLIC_ENV;
 
 if (!projectId) throw new Error("Project ID is not defined");
 
@@ -13,8 +13,6 @@ export const metadata = {
   url: "https://frog.fun/",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
-
-export const isProd = env === "prod";
 
 export const wagmiChains = {
   eth: isProd ? mainnet : sepolia,
