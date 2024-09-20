@@ -3,7 +3,7 @@
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
 import { ChangeEvent, useState } from "react";
 import { mainnet } from "viem/chains";
-import { useBalance } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import SlippageModal from "./SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
@@ -13,6 +13,7 @@ import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
 import { Input } from "@nextui-org/react";
 import TokenSwitcher from "./TokenSwitcher";
+import { wagmiChains } from "@/config";
 
 enum TradingTab {
   BUY,
@@ -25,15 +26,16 @@ type TradingWidgetProps = {
   ethPrice: number;
 };
 
-const PURCHASE_AMOUNTS = ["1", "2", "3", "4"];
-const SELL_AMOUNTS = ["25", "50", "75", "100"];
+const PURCHASE_AMOUNTS = [1, 2, 3, 4];
+const SELL_AMOUNTS = [25, 50, 75, 100];
 
 export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetProps) {
+  const { address } = useAccount();
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
-  const [buyAmount, setBuyAmount] = useState("");
-  const [sellAmount, setSellAmount] = useState("");
+  const [buyAmount, setBuyAmount] = useState(0);
+  const [sellAmount, setSellAmount] = useState(0);
   const [buyTokenName, setBuyTokenName] = useState(token.ticker);
   const [buyTokenSrc, setBuyTokenSrc] = useState(token.image);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
@@ -44,12 +46,12 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   const buyPrice = useBuyPrice();
   const tokenAmountRule = /^\d*\.?\d{0,10}$/; // Regex to match numbers with up to ten decimal places
 
-  const { data: balance, isLoading: isLoadingBalance } = useBalance({
-    address: tokenAddress as `0x${string}`,
-    chainId: mainnet.id,
+  // native token balance (eth)
+  const { data: balance } = useBalance({
+    address: address,
+    chainId: wagmiChains.eth.id,
   });
-
-  const ownedAmount = balance ? Number(balance.value) : 0;
+  const ownedAmount = 0;
 
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 
@@ -58,12 +60,12 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
 
     // Allow empty input
     if (inputValue === "") {
-      setBuyAmount("");
+      setBuyAmount(0);
       return;
     }
 
     if (tokenAmountRule.test(inputValue)) {
-      setBuyAmount(inputValue);
+      setBuyAmount(parseFloat(inputValue));
     }
   };
 
@@ -72,17 +74,19 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
 
     // Allow empty input
     if (inputValue === "") {
-      setSellAmount("");
+      setSellAmount(0);
       return;
     }
 
     if (tokenAmountRule.test(inputValue)) {
-      setSellAmount(inputValue);
+      setSellAmount(parseFloat(inputValue));
     }
   };
 
-  const tokensByPercentage = (amount: string, totalOwned: number) => {
-    return ((parseFloat(amount) / totalOwned) * 100).toFixed(2);
+  const tokensByPercentage = (amount: number, totalOwned: number) => {
+    const tokens = (amount / totalOwned) * 100;
+    console.log("tokens by percentage: ", tokens);
+    return tokens;
   };
 
   const buyTokens = async () => {
@@ -104,7 +108,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
             <button
               onClick={() => {
                 setActiveTab(TradingTab.BUY);
-                setBuyAmount("");
+                setBuyAmount(0);
               }}
               className={`w-[65px] h-[35px] rounded-3xl text-white ${
                 activeTab === TradingTab.BUY ? "bg-gray" : "bg-dark-gray"
@@ -115,7 +119,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
             <button
               onClick={() => {
                 setActiveTab(TradingTab.SELL);
-                setSellAmount("");
+                setSellAmount(0);
               }}
               className={`w-[65px] h-[35px] rounded-3xl text-white ${
                 activeTab === TradingTab.SELL ? "bg-gray" : "bg-dark-gray"
@@ -136,7 +140,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
                 inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
               }}
               placeholder="0.0"
-              value={buyAmount}
+              value={buyAmount.toString()}
               onChange={handleBuyAmountChange}
               type="text"
               radius="full"
@@ -160,7 +164,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
                 inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
               }}
               placeholder="0.0"
-              value={sellAmount}
+              value={sellAmount.toString()}
               onChange={handleSellAmountChange}
               type="text"
               radius="full"
@@ -181,7 +185,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
           <div className="flex items-center pl-4 gap-2">
             {showPresets && (
               <button
-                onClick={() => (activeTab === TradingTab.BUY ? setBuyAmount("") : setSellAmount(""))}
+                onClick={() => (activeTab === TradingTab.BUY ? setBuyAmount(0) : setSellAmount(0))}
                 className="flex items-center justify-center bg-dark rounded-2xl p-2"
               >
                 <Image src="/reset.svg" alt="reset" width={10} height={10} />
