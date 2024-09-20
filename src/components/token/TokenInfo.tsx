@@ -17,12 +17,12 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
         <p className="text-6xl font-proximaSoftBold">${token.ticker}</p>
       </div>
 
-      <div className="flex items-center gap-x-2">
+      <div className="flex items-center gap-x-4">
         <Image
           src={(creator && creator.imageUrl) || defaultProfileAvatarUrl}
           alt="creator-logo"
-          height={18}
-          width={18}
+          height={25}
+          width={25}
           className="rounded-full"
         />
 
