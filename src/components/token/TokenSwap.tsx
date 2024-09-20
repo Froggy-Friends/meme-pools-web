@@ -126,7 +126,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
             <Image src="/setting.svg" alt="slippage" height={20} width={20} />
           </button>
         </div>
-        <div className="flex flex-col gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[200px]">
+        <div className="flex flex-col justify-between gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[200px]">
           {activeTab === TradingTab.BUY && (
             <Input
               classNames={{
