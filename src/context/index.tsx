@@ -1,6 +1,6 @@
 "use client";
 
-import { config, projectId } from "@/config";
+import { config, projectId } from "@/config/wagmi";
 import { ReactNode, useState } from "react";
 
 import { createWeb3Modal } from "@web3modal/wagmi/react";
@@ -18,13 +18,7 @@ createWeb3Modal({
   enableOnramp: true,
 });
 
-export default function Web3ModalProvider({
-  children,
-  initialState,
-}: {
-  children: ReactNode;
-  initialState?: State;
-}) {
+export default function Web3ModalProvider({ children, initialState }: { children: ReactNode; initialState?: State }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
