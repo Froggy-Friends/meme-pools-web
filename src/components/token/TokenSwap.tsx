@@ -1,7 +1,7 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { mainnet } from "viem/chains";
 import { useBalance } from "wagmi";
 import SlippageModal from "./SlippageModal";
@@ -9,10 +9,10 @@ import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
 import { parseUnits } from "viem";
-import TokenInput from "./TokenInput";
-import { ethLogo } from "@/config/chains";
 import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
+import { Input } from "@nextui-org/react";
+import TokenSwitcher from "./TokenSwitcher";
 
 enum TradingTab {
   BUY,
@@ -25,41 +25,64 @@ type TradingWidgetProps = {
   ethPrice: number;
 };
 
-const PURCHASE_AMOUNTS = [1, 2, 3, 4];
-const SELL_AMOUNTS = [25, 50, 75, 100];
+const PURCHASE_AMOUNTS = ["1", "2", "3", "4"];
+const SELL_AMOUNTS = ["25", "50", "75", "100"];
 
 export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetProps) {
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
-  const [buyAmount, setBuyAmount] = useState(0);
-  const [sellAmount, setSellAmount] = useState(0);
+  const [buyAmount, setBuyAmount] = useState("");
+  const [sellAmount, setSellAmount] = useState("");
+  const [buyTokenName, setBuyTokenName] = useState(token.ticker);
+  const [buyTokenSrc, setBuyTokenSrc] = useState(token.image);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
   const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
   const [showPresets, setShowPresets] = useState(false);
   const buyToken = useBuyToken();
   const buyPrice = useBuyPrice();
+  const tokenAmountRule = /^\d*\.?\d{0,10}$/; // Regex to match numbers with up to ten decimal places
 
   const { data: balance, isLoading: isLoadingBalance } = useBalance({
     address: tokenAddress as `0x${string}`,
     chainId: mainnet.id,
   });
 
-  const switchBuyToken = () => {
-    if (ticker === "ETH") {
-      setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
-    } else {
-      setSellAmount(prevTokenAmount => (prevTokenAmount * currPrice) / ethPrice);
+  const ownedAmount = balance ? Number(balance.value) : 0;
+
+  // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
+
+  const handleBuyAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+
+    // Allow empty input
+    if (inputValue === "") {
+      setBuyAmount("");
+      return;
+    }
+
+    if (tokenAmountRule.test(inputValue)) {
+      setBuyAmount(inputValue);
     }
   };
 
-  const handleBuyAmountChange = (value: number | null, tokenName: string, tokenImg: string) => {
-    setBuyAmount(value || 0);
+  const handleSellAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+
+    // Allow empty input
+    if (inputValue === "") {
+      setSellAmount("");
+      return;
+    }
+
+    if (tokenAmountRule.test(inputValue)) {
+      setSellAmount(inputValue);
+    }
   };
 
-  const handleSellAmountChange = (value: number | null, tokenName: string, tokenImg: string) => {
-    setSellAmount(value || 0);
+  const tokensByPercentage = (amount: string, totalOwned: number) => {
+    return ((parseFloat(amount) / totalOwned) * 100).toFixed(2);
   };
 
   const buyTokens = async () => {
@@ -73,8 +96,6 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
 
   const sellTokens = () => {};
 
-  const ownedAmount = balance ? Number(balance.value) : 0;
-
   return (
     <>
       <div className="flex flex-col rounded-lg w-[350px] mt-7">
@@ -83,7 +104,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
             <button
               onClick={() => {
                 setActiveTab(TradingTab.BUY);
-                setBuyAmount(0);
+                setBuyAmount("");
               }}
               className={`w-[65px] h-[35px] rounded-3xl text-white ${
                 activeTab === TradingTab.BUY ? "bg-gray" : "bg-dark-gray"
@@ -94,7 +115,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
             <button
               onClick={() => {
                 setActiveTab(TradingTab.SELL);
-                setSellAmount(0);
+                setSellAmount("");
               }}
               className={`w-[65px] h-[35px] rounded-3xl text-white ${
                 activeTab === TradingTab.SELL ? "bg-gray" : "bg-dark-gray"
@@ -109,27 +130,58 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
         </div>
         <div className="flex flex-col gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[200px]">
           {activeTab === TradingTab.BUY && (
-            <TokenInput
-              ticker={token.ticker}
-              tickerSrc={token.image}
-              chainTicker="ETH"
-              chainTickerSrc={ethLogo}
+            <Input
+              classNames={{
+                input: "ml-10 appearance-none",
+                inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
+              }}
+              placeholder="0.0"
+              value={buyAmount}
               onChange={handleBuyAmountChange}
+              type="text"
+              radius="full"
+              startContent={
+                <TokenSwitcher
+                  imgName={buyTokenName}
+                  imgSrc={buyTokenSrc}
+                  token={token}
+                  onChange={(ticker, tickerSrc) => {
+                    setBuyTokenName(ticker);
+                    setBuyTokenSrc(tickerSrc);
+                  }}
+                />
+              }
             />
           )}
           {activeTab === TradingTab.SELL && (
-            <TokenInput
-              ticker={token.ticker}
-              tickerSrc={token.image}
-              chainTicker="ETH"
-              chainTickerSrc={ethLogo}
+            <Input
+              classNames={{
+                input: "ml-10 appearance-none",
+                inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
+              }}
+              placeholder="0.0"
+              value={sellAmount}
               onChange={handleSellAmountChange}
+              type="text"
+              radius="full"
+              startContent={
+                <span className="flex items-center gap-2">
+                  <Image
+                    className="h-[35px] w-[35px] rounded-3xl cursor-pointer"
+                    src={token.image}
+                    alt="ticker"
+                    width={35}
+                    height={35}
+                  />
+                  <p className="uppercase">${token.ticker}</p>
+                </span>
+              }
             />
           )}
           <div className="flex items-center pl-4 gap-2">
             {showPresets && (
               <button
-                onClick={() => (activeTab === TradingTab.BUY ? setBuyAmount(0) : setSellAmount(0))}
+                onClick={() => (activeTab === TradingTab.BUY ? setBuyAmount("") : setSellAmount(""))}
                 className="flex items-center justify-center bg-dark rounded-2xl p-2"
               >
                 <Image src="/reset.svg" alt="reset" width={10} height={10} />
@@ -152,9 +204,9 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
               SELL_AMOUNTS.map(amount => (
                 <button
                   key={amount}
-                  onClick={() => setSellAmount(+((amount / ownedAmount) * 100).toFixed(2))}
+                  onClick={() => setSellAmount(tokensByPercentage(amount, ownedAmount))}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl ${
-                    amount === sellAmount ? "bg-gray" : "bg-dark"
+                    tokensByPercentage(amount, ownedAmount) === sellAmount ? "bg-gray" : "bg-dark"
                   }`}
                 >
                   {amount}%
