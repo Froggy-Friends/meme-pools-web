@@ -2,7 +2,6 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { Address } from "@/lib/types";
 import { put, PutBlobResult } from "@vercel/blob";
 import { defaultProfileAvatarUrl, fetchUserCacheTag } from "@/config/user";
 import { UserParams } from "@/app/profile/[username]/types";
@@ -14,6 +13,7 @@ import { Cookie } from "@/models/cookie";
 import { Chain } from "@/models/chain";
 import { getPusher } from "@/config/pusher";
 import { Channel } from "@/models/channel";
+import { Address } from "viem";
 
 export const createUser = async ({
   name,

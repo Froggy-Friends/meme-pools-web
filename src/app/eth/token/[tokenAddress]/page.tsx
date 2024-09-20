@@ -57,12 +57,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
         </div>
 
         <div className="flex-1 flex flex-col">
-          <TokenSwap
-            tokenAddress={token.tokenAddress}
-            tokenTicker={token.ticker.toUpperCase()}
-            currPrice={2}
-            ethPrice={ethPrice}
-          />
+          <TokenSwap token={token} currPrice={2} ethPrice={ethPrice} />
 
           <BondingCurveProgress />
           <VotingProgress token={token} />
