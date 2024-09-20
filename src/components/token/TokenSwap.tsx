@@ -2,8 +2,6 @@
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
 import { ChangeEvent, useState } from "react";
-import { mainnet } from "viem/chains";
-import { useAccount, useBalance } from "wagmi";
 import SlippageModal from "./SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
@@ -14,6 +12,7 @@ import useBuyPrice from "@/hooks/useBuyPrice";
 import { Input } from "@nextui-org/react";
 import TokenSwitcher from "./TokenSwitcher";
 import { wagmiChains } from "@/config";
+import useEthBalance from "@/hooks/useEthBalance";
 
 enum TradingTab {
   BUY,
@@ -30,7 +29,6 @@ const PURCHASE_AMOUNTS = [1, 2, 3, 4];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 
 export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetProps) {
-  const { address } = useAccount();
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
@@ -45,12 +43,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   const buyToken = useBuyToken();
   const buyPrice = useBuyPrice();
   const tokenAmountRule = /^\d*\.?\d{0,10}$/; // Regex to match numbers with up to ten decimal places
-
-  // native token balance (eth)
-  const { data: balance } = useBalance({
-    address: address,
-    chainId: wagmiChains.eth.id,
-  });
+  const ethBalance = useEthBalance(wagmiChains.eth.id);
   const ownedAmount = 0;
 
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
