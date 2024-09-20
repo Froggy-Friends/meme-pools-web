@@ -6,13 +6,14 @@ import SlippageModal from "./SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
-import { parseUnits } from "viem";
+import { Address, parseUnits } from "viem";
 import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
 import { Input } from "@nextui-org/react";
 import TokenSwitcher from "./TokenSwitcher";
 import { wagmiChains } from "@/config";
 import useEthBalance from "@/hooks/useEthBalance";
+import useTokenBalance from "@/hooks/useTokenBalance";
 
 enum TradingTab {
   BUY,
@@ -44,7 +45,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   const buyPrice = useBuyPrice();
   const tokenAmountRule = /^\d*\.?\d{0,10}$/; // Regex to match numbers with up to ten decimal places
   const ethBalance = useEthBalance(wagmiChains.eth.id);
-  const ownedAmount = 0;
+  const tokenBalance = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
 
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 
@@ -201,9 +202,9 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
               SELL_AMOUNTS.map(amount => (
                 <button
                   key={amount}
-                  onClick={() => setSellAmount(tokensByPercentage(amount, ownedAmount))}
+                  onClick={() => setSellAmount(tokensByPercentage(amount, tokenBalance))}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl ${
-                    tokensByPercentage(amount, ownedAmount) === sellAmount ? "bg-gray" : "bg-dark"
+                    tokensByPercentage(amount, tokenBalance) === sellAmount ? "bg-gray" : "bg-dark"
                   }`}
                 >
                   {amount}%
