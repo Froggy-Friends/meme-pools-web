@@ -33,8 +33,8 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
-  const [buyAmount, setBuyAmount] = useState(0);
-  const [sellAmount, setSellAmount] = useState(0);
+  const [buyAmount, setBuyAmount] = useState("");
+  const [sellAmount, setSellAmount] = useState("");
   const [buyTokenName, setBuyTokenName] = useState(token.ticker);
   const [buyTokenSrc, setBuyTokenSrc] = useState(token.image);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
@@ -54,12 +54,12 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
 
     // Allow empty input
     if (inputValue === "") {
-      setBuyAmount(0);
+      setBuyAmount("");
       return;
     }
 
     if (tokenAmountRule.test(inputValue)) {
-      setBuyAmount(parseFloat(inputValue));
+      setBuyAmount(inputValue);
     }
   };
 
@@ -68,18 +68,18 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
 
     // Allow empty input
     if (inputValue === "") {
-      setSellAmount(0);
+      setSellAmount("");
       return;
     }
 
     if (tokenAmountRule.test(inputValue)) {
-      setSellAmount(parseFloat(inputValue));
+      setSellAmount(inputValue);
     }
   };
 
   const tokensByPercentage = (amount: number, totalOwned: number) => {
     const tokens = (amount / totalOwned) * 100;
-    return tokens;
+    return tokens.toString();
   };
 
   const buyTokens = async () => {
@@ -97,7 +97,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
             <button
               onClick={() => {
                 setActiveTab(TradingTab.BUY);
-                setBuyAmount(0);
+                setBuyAmount("");
               }}
               className={`w-[65px] h-[35px] rounded-3xl text-white ${
                 activeTab === TradingTab.BUY ? "bg-gray" : "bg-dark-gray"
@@ -108,7 +108,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
             <button
               onClick={() => {
                 setActiveTab(TradingTab.SELL);
-                setSellAmount(0);
+                setSellAmount("");
               }}
               className={`w-[65px] h-[35px] rounded-3xl text-white ${
                 activeTab === TradingTab.SELL ? "bg-gray" : "bg-dark-gray"
@@ -174,7 +174,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
           <div className="flex items-center pl-4 gap-2">
             {showPresets && (
               <button
-                onClick={() => (activeTab === TradingTab.BUY ? setBuyAmount(0) : setSellAmount(0))}
+                onClick={() => (activeTab === TradingTab.BUY ? setBuyAmount("") : setSellAmount(""))}
                 className="flex items-center justify-center bg-dark rounded-2xl p-2"
               >
                 <Image src="/reset.svg" alt="reset" width={10} height={10} />
@@ -185,9 +185,9 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
               PURCHASE_AMOUNTS.map(amount => (
                 <button
                   key={amount}
-                  onClick={() => setBuyAmount(amount)}
+                  onClick={() => setBuyAmount(amount.toString())}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl ${
-                    amount === buyAmount ? "bg-gray" : "bg-dark"
+                    amount.toString() === buyAmount ? "bg-gray" : "bg-dark"
                   }`}
                 >
                   {amount}
