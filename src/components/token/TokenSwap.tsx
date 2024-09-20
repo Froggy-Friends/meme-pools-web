@@ -37,6 +37,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
   const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
+  const [showPresets, setShowPresets] = useState(false);
   const buyToken = useBuyToken();
   const buyPrice = useBuyPrice();
 
@@ -114,35 +115,39 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
             <TokenInput ticker={token.ticker} tickerSrc={token.image} onChange={handleSellAmountChange} />
           )}
           <div className="flex items-center pl-4 gap-2">
-            <button
-              onClick={() => (activeTab === TradingTab.BUY ? setBuyAmount(0) : setSellAmount(0))}
-              className="flex items-center justify-center bg-dark rounded-2xl p-2"
-            >
-              <Image src="/reset.svg" alt="reset" width={10} height={10} />
-            </button>
-            {activeTab === TradingTab.BUY
-              ? PURCHASE_AMOUNTS.map(amount => (
-                  <button
-                    key={amount}
-                    onClick={() => setBuyAmount(amount)}
-                    className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl ${
-                      amount === buyAmount ? "bg-gray" : "bg-dark"
-                    }`}
-                  >
-                    {amount}
-                  </button>
-                ))
-              : SELL_AMOUNTS.map(amount => (
-                  <button
-                    key={amount}
-                    onClick={() => setSellAmount(+((amount / ownedAmount) * 100).toFixed(2))}
-                    className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl ${
-                      amount === sellAmount ? "bg-gray" : "bg-dark"
-                    }`}
-                  >
-                    {amount}%
-                  </button>
-                ))}
+            {showPresets && (
+              <button
+                onClick={() => (activeTab === TradingTab.BUY ? setBuyAmount(0) : setSellAmount(0))}
+                className="flex items-center justify-center bg-dark rounded-2xl p-2"
+              >
+                <Image src="/reset.svg" alt="reset" width={10} height={10} />
+              </button>
+            )}
+            {activeTab === TradingTab.BUY &&
+              showPresets &&
+              PURCHASE_AMOUNTS.map(amount => (
+                <button
+                  key={amount}
+                  onClick={() => setBuyAmount(amount)}
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl ${
+                    amount === buyAmount ? "bg-gray" : "bg-dark"
+                  }`}
+                >
+                  {amount}
+                </button>
+              ))}
+            {activeTab === TradingTab.SELL &&
+              SELL_AMOUNTS.map(amount => (
+                <button
+                  key={amount}
+                  onClick={() => setSellAmount(+((amount / ownedAmount) * 100).toFixed(2))}
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl ${
+                    amount === sellAmount ? "bg-gray" : "bg-dark"
+                  }`}
+                >
+                  {amount}%
+                </button>
+              ))}
           </div>
           <button
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
