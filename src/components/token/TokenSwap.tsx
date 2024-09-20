@@ -6,9 +6,10 @@ import { mainnet } from "viem/chains";
 import { useBalance } from "wagmi";
 import SlippageModal from "./SlippageModal";
 import Image from "next/image";
-import { Input } from "@nextui-org/react";
-import { ethLogo } from "@/config/chains";
 import { useChain } from "@/context/chain";
+import useBuyToken from "@/hooks/useBuyToken";
+import { parseUnits } from "viem";
+import TokenInput from "./TokenInput";
 
 enum TradingTab {
   BUY,
@@ -22,18 +23,19 @@ type TradingWidgetProps = {
   ethPrice: number;
 };
 
-const PURCHASE_AMOUNTS = [1, 5, 10, 20];
+const PURCHASE_AMOUNTS = [1, 2, 3, 4];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 
 export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPrice }: TradingWidgetProps) {
   const { chain } = useChain();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
-  const [buyToken, setBuyToken] = useState(tokenTicker);
+  const [ticker, setTicker] = useState(tokenTicker);
   const [buyAmount, setBuyAmount] = useState(0);
   const [sellAmount, setSellAmount] = useState(0);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
   const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
+  const buyToken = useBuyToken();
 
   const { data: balance, isLoading: isLoadingBalance } = useBalance({
     address: tokenAddress as `0x${string}`,
@@ -41,16 +43,25 @@ export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPri
   });
 
   const switchBuyToken = () => {
-    if (buyToken === "ETH") {
-      setBuyToken(tokenTicker);
+    if (ticker === "ETH") {
+      setTicker(tokenTicker);
       setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
     } else {
-      setBuyToken("ETH");
+      setTicker("ETH");
       setSellAmount(prevTokenAmount => (prevTokenAmount * currPrice) / ethPrice);
     }
   };
 
-  const placeTrade = () => {};
+  const buyTokens = async () => {
+    const buyAmountWei = parseUnits(buyAmount.toString(), 18);
+    console.log("buy for address: ", tokenAddress);
+    console.log("buy amount wei: ", buyAmountWei);
+
+    const bought = await buyToken(tokenAddress, buyAmountWei);
+    console.log("bought: ", bought);
+  };
+
+  const sellTokens = () => {};
 
   if (isLoadingBalance) return null;
 
@@ -89,26 +100,10 @@ export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPri
           </button>
         </div>
         <div className="flex flex-col gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[200px]">
-          <Input
-            classNames={{
-              input: "ml-8 appearance-none",
-              inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
-            }}
-            type="number"
-            radius="full"
+          <TokenInput
             placeholder="0.0"
-            onChange={e =>
-              activeTab === TradingTab.BUY
-                ? setBuyAmount(Number(e.target.value))
-                : setSellAmount(Number(e.target.value))
-            }
-            value={activeTab === TradingTab.BUY ? buyAmount.toString() : sellAmount.toString()}
-            startContent={
-              <span className="flex items-center gap-2">
-                <Image src={ethLogo} alt="Eth" width={35} height={35} />
-                <p className="uppercase">${chain.name}</p>
-              </span>
-            }
+            ticker="ETH"
+            onChange={e => (activeTab === TradingTab.BUY ? setBuyAmount(Number(e)) : setSellAmount(Number(e)))}
           />
           <div className="flex items-center pl-4 gap-2">
             <button
@@ -142,7 +137,7 @@ export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPri
                 ))}
           </div>
           <button
-            onClick={placeTrade}
+            onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
             className="flex items-center justify-center w-full h-[40px] p-4 mt-9 rounded-3xl text-lg text-black font-proximaSoftBold bg-green hover:bg-opacity-80 transition-colors"
           >
             TRADE
