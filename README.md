@@ -7,6 +7,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 Create a `.env` file in the root directory and add the following:
 
 ```bash
+NEXT_PUBLIC_ENV=
 POSTGRES_PRISMA_URL=
 POSTGRES_URL_NON_POOLING=
 MORALIS_API_KEY=
