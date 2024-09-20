@@ -10,6 +10,8 @@ import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
 import { parseUnits } from "viem";
 import TokenInput from "./TokenInput";
+import { ethLogo } from "@/config/chains";
+import { TokenWithVoteCount } from "@/types/token/types";
 
 enum TradingTab {
   BUY,
@@ -17,8 +19,7 @@ enum TradingTab {
 }
 
 type TradingWidgetProps = {
-  tokenTicker: string;
-  tokenAddress: string;
+  token: TokenWithVoteCount;
   currPrice: number;
   ethPrice: number;
 };
@@ -26,10 +27,10 @@ type TradingWidgetProps = {
 const PURCHASE_AMOUNTS = [1, 2, 3, 4];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 
-export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPrice }: TradingWidgetProps) {
+export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetProps) {
+  const { ticker, tokenAddress } = token;
   const { chain } = useChain();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
-  const [ticker, setTicker] = useState(tokenTicker);
   const [buyAmount, setBuyAmount] = useState(0);
   const [sellAmount, setSellAmount] = useState(0);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
@@ -44,12 +45,18 @@ export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPri
 
   const switchBuyToken = () => {
     if (ticker === "ETH") {
-      setTicker(tokenTicker);
       setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
     } else {
-      setTicker("ETH");
       setSellAmount(prevTokenAmount => (prevTokenAmount * currPrice) / ethPrice);
     }
+  };
+
+  const handleBuyAmountChange = (value: number | null) => {
+    setBuyAmount(value || 0);
+  };
+
+  const handleSellAmountChange = (value: number | null) => {
+    setSellAmount(value || 0);
   };
 
   const buyTokens = async () => {
@@ -100,11 +107,12 @@ export default function TokenSwap({ tokenTicker, currPrice, tokenAddress, ethPri
           </button>
         </div>
         <div className="flex flex-col gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[200px]">
-          <TokenInput
-            placeholder="0.0"
-            ticker="ETH"
-            onChange={e => (activeTab === TradingTab.BUY ? setBuyAmount(Number(e)) : setSellAmount(Number(e)))}
-          />
+          {activeTab === TradingTab.BUY && (
+            <TokenInput ticker="ETH" tickerSrc={ethLogo} onChange={handleBuyAmountChange} />
+          )}
+          {activeTab === TradingTab.SELL && (
+            <TokenInput ticker={token.ticker} tickerSrc={token.image} onChange={handleSellAmountChange} />
+          )}
           <div className="flex items-center pl-4 gap-2">
             <button
               onClick={() => (activeTab === TradingTab.BUY ? setBuyAmount(0) : setSellAmount(0))}
