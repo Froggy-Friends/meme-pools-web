@@ -12,6 +12,7 @@ import { parseUnits } from "viem";
 import TokenInput from "./TokenInput";
 import { ethLogo } from "@/config/chains";
 import { TokenWithVoteCount } from "@/types/token/types";
+import useBuyPrice from "@/hooks/useBuyPrice";
 
 enum TradingTab {
   BUY,
@@ -37,6 +38,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
   const buyToken = useBuyToken();
+  const buyPrice = useBuyPrice();
 
   const { data: balance, isLoading: isLoadingBalance } = useBalance({
     address: tokenAddress as `0x${string}`,
@@ -69,8 +71,6 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   };
 
   const sellTokens = () => {};
-
-  if (isLoadingBalance) return null;
 
   const ownedAmount = balance ? Number(balance.value) : 0;
 

@@ -43,7 +43,7 @@ export default function TokenInput({ ticker, tickerSrc, onChange }: TokenInputPr
       radius="full"
       startContent={
         <span className="flex items-center gap-2">
-          <Image src={tickerSrc} alt="ticker" width={35} height={35} />
+          <Image className="h-[35px] w-[35px] rounded-3xl" src={tickerSrc} alt="ticker" width={35} height={35} />
           <p className="uppercase">${ticker}</p>
         </span>
       }
