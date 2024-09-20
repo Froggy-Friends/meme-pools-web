@@ -3,7 +3,7 @@ import { cookieStorage, createStorage } from "wagmi";
 import { mainnet, sepolia, baseSepolia, base } from "wagmi/chains";
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
-export const env = process.env.NODE_ENV;
+export const env = process.env.NEXT_PUBLIC_ENV;
 
 if (!projectId) throw new Error("Project ID is not defined");
 
@@ -14,7 +14,7 @@ export const metadata = {
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
-export const isProd = env === "production";
+export const isProd = env === "prod";
 
 export const wagmiChains = {
   eth: isProd ? mainnet : sepolia,
