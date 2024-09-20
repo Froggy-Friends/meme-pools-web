@@ -23,7 +23,7 @@ export default function TokenInput({ ticker, placeholder, onChange }: TokenInput
     }
 
     // Regex to match numbers with up to two decimal places
-    const regex = /^\d*\.?\d{0,2}$/;
+    const regex = /^\d*\.?\d{0,10}$/;
 
     if (regex.test(inputValue)) {
       setValue(inputValue);
