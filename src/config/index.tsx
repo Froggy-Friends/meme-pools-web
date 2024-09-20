@@ -14,7 +14,13 @@ export const metadata = {
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
-const chains = env === "production" ? ([mainnet, base] as const) : ([sepolia, baseSepolia] as const);
+export const isProd = env === "production";
+
+export const wagmiChains = {
+  eth: isProd ? mainnet : sepolia,
+  base: isProd ? base : baseSepolia,
+};
+const chains = [wagmiChains.eth, wagmiChains.base] as const;
 
 export const config = defaultWagmiConfig({
   chains,
