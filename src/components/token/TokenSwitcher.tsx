@@ -16,7 +16,7 @@ export default function TokenSwitcher({ imgName, imgSrc, token, onChange }: Toke
       <DropdownTrigger>
         <span className="flex items-center gap-2">
           <Image
-            className="h-[35px] w-[35px] rounded-3xl cursor-pointer"
+            className="h-[35px] w-[35px] rounded-3xl border-green border-medium cursor-pointer"
             src={imgSrc}
             alt="ticker"
             width={35}
