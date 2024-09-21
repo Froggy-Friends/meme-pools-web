@@ -112,8 +112,8 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 setActiveTab(TradingTab.BUY);
                 setBuyAmount("");
               }}
-              className={`w-[65px] h-[35px] rounded-3xl text-white ${
-                activeTab === TradingTab.BUY ? "bg-midnight-green" : "bg-dark-gray"
+              className={`w-[65px] h-[35px] rounded-3xl font-bold ${
+                activeTab === TradingTab.BUY ? "bg-green text-black" : "bg-dark-gray text-white"
               }`}
             >
               Buy
@@ -123,8 +123,8 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 setActiveTab(TradingTab.SELL);
                 setSellAmount("");
               }}
-              className={`w-[65px] h-[35px] rounded-3xl text-white ${
-                activeTab === TradingTab.SELL ? "bg-midnight-red" : "bg-dark-gray"
+              className={`w-[65px] h-[35px] rounded-3xl font-bold text-white ${
+                activeTab === TradingTab.SELL ? "bg-red" : "bg-dark-gray"
               }`}
             >
               Sell
@@ -222,7 +222,9 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
           <button
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
             disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === ""}
-            className="flex items-center justify-center w-full h-[40px] p-4 mt-9 rounded-3xl text-lg text-black font-proximaSoftBold bg-green hover:bg-opacity-80 disabled:bg-gray transition-colors"
+            className={`flex items-center justify-center w-full h-[40px] p-4 mt-9 rounded-3xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray transition-colors ${
+              activeTab === TradingTab.BUY ? "bg-green text-black" : "bg-red text-white"
+            }`}
           >
             TRADE
           </button>

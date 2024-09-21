@@ -19,6 +19,7 @@ const config: Config = {
         blue: "#B2C6F4",
         yellow: "#F4F4B2",
         rose: "#F4B9B2",
+        red: "#DA0033",
         solana: "#9945FF",
         based: "#0052FF",
         "light-gray": "#888888",
