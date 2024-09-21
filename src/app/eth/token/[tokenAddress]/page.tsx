@@ -6,7 +6,7 @@ import BondingCurveProgress from "../../../../components/token/BondingCurveProgr
 import CommentsAndTradesContainer from "../../../../components/token/CommentsAndTradesContainer";
 import VotingProgress from "@/components/token/VotingProgress";
 import TokenInfo from "../../../../components/token/TokenInfo";
-import TokenSwap from "../../../../components/token/TokenSwap";
+import TokenSwap from "../../../../components/swap/TokenSwap";
 import { fetchTokenByAddress } from "../../../../queries/token/queries";
 import { SearchParams } from "@/lib/types";
 import { CommentAndTradesView, CommentAndTradesViews } from "@/models/comment";

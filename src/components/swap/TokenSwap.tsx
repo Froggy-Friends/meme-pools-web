@@ -2,7 +2,7 @@
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
 import { ChangeEvent, useState } from "react";
-import SlippageModal from "./SlippageModal";
+import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
@@ -10,7 +10,7 @@ import { Address, parseUnits } from "viem";
 import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
 import { Input } from "@nextui-org/react";
-import TokenSwitcher from "./TokenSwitcher";
+import TokenSwitcher from "../token/TokenSwitcher";
 import { wagmiChains } from "@/config/wagmi";
 import useEthBalance from "@/hooks/useEthBalance";
 import useTokenBalance from "@/hooks/useTokenBalance";
