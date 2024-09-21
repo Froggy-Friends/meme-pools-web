@@ -61,7 +61,7 @@ export default function SwapModal({
           </div>
         </ModalBody>
         <ModalFooter className="flex justify-center">
-          <p className="text-light-gray">Proceed in your wallet</p>
+          {isPending && <p className="text-light-gray">Confirm in your wallet</p>}
         </ModalFooter>
       </ModalContent>
     </Modal>
