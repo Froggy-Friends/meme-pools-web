@@ -104,7 +104,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
                 setBuyAmount("");
               }}
               className={`w-[65px] h-[35px] rounded-3xl text-white ${
-                activeTab === TradingTab.BUY ? "bg-gray" : "bg-dark-gray"
+                activeTab === TradingTab.BUY ? "bg-midnight-green" : "bg-dark-gray"
               }`}
             >
               Buy
@@ -115,7 +115,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
                 setSellAmount("");
               }}
               className={`w-[65px] h-[35px] rounded-3xl text-white ${
-                activeTab === TradingTab.SELL ? "bg-gray" : "bg-dark-gray"
+                activeTab === TradingTab.SELL ? "bg-midnight-red" : "bg-dark-gray"
               }`}
             >
               Sell
