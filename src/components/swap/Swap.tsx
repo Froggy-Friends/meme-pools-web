@@ -29,7 +29,7 @@ type TradingWidgetProps = {
 const PURCHASE_AMOUNTS = [1, 2, 3, 4];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 
-export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetProps) {
+export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps) {
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
