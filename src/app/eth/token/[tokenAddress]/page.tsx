@@ -6,7 +6,7 @@ import BondingCurveProgress from "../../../../components/token/BondingCurveProgr
 import CommentsAndTradesContainer from "../../../../components/token/CommentsAndTradesContainer";
 import VotingProgress from "@/components/token/VotingProgress";
 import TokenInfo from "../../../../components/token/TokenInfo";
-import TokenSwap from "../../../../components/token/TokenSwap";
+import Swap from "../../../../components/swap/Swap";
 import { fetchTokenByAddress } from "../../../../queries/token/queries";
 import { SearchParams } from "@/lib/types";
 import { CommentAndTradesView, CommentAndTradesViews } from "@/models/comment";
@@ -57,7 +57,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
         </div>
 
         <div className="flex-1 flex flex-col">
-          <TokenSwap token={token} currPrice={2} ethPrice={ethPrice} />
+          <Swap token={token} currPrice={2} ethPrice={ethPrice} />
 
           <BondingCurveProgress />
           <VotingProgress token={token} />
