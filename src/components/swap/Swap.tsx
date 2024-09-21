@@ -6,14 +6,16 @@ import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
-import { Address, parseUnits } from "viem";
+import { Address, parseUnits, formatUnits } from "viem";
 import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
-import { Input } from "@nextui-org/react";
+import { Input, useDisclosure } from "@nextui-org/react";
 import TokenSwitcher from "../token/TokenSwitcher";
 import { wagmiChains } from "@/config/wagmi";
 import useEthBalance from "@/hooks/useEthBalance";
 import useTokenBalance from "@/hooks/useTokenBalance";
+import SwapModal from "./SwapModal";
+import { ethLogo } from "@/config/chains";
 
 enum TradingTab {
   BUY,
@@ -28,12 +30,15 @@ type TradingWidgetProps = {
 
 const PURCHASE_AMOUNTS = [1, 2, 3, 4];
 const SELL_AMOUNTS = [25, 50, 75, 100];
+const rule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
 
 export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps) {
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
+  const { isOpen: isSwapModalOpen, onOpen: onSwapModalOpen, onOpenChange: onSwapModalOpenChange } = useDisclosure();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyAmount, setBuyAmount] = useState("");
+  const [buyCost, setBuyCost] = useState<bigint>(BigInt(0));
   const [buyLoading, setBuyLoading] = useState(false);
   const [sellAmount, setSellAmount] = useState("");
   const [buyTokenName, setBuyTokenName] = useState(token.ticker);
@@ -44,7 +49,6 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const [showPresets, setShowPresets] = useState(false);
   const buyToken = useBuyToken();
   const buyPrice = useBuyPrice();
-  const tokenAmountRule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const tokenBalance = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
 
@@ -59,7 +63,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       return;
     }
 
-    if (tokenAmountRule.test(inputValue)) {
+    if (rule.test(inputValue)) {
       setBuyAmount(inputValue);
     }
   };
@@ -73,7 +77,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       return;
     }
 
-    if (tokenAmountRule.test(inputValue)) {
+    if (rule.test(inputValue)) {
       setSellAmount(inputValue);
     }
   };
@@ -86,9 +90,11 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const buyTokens = async () => {
     const buyAmountWei = parseUnits(buyAmount, 18);
     const totalCost = await buyPrice(tokenAddress, buyAmountWei);
-    setBuyLoading(true);
-    const receipt = await buyToken(tokenAddress, buyAmountWei, totalCost);
-    setBuyLoading(false);
+    setBuyCost(totalCost);
+    // setBuyLoading(true);
+    // const receipt = await buyToken(tokenAddress, buyAmountWei, totalCost);
+    // setBuyLoading(false);
+    onSwapModalOpen();
   };
 
   const sellTokens = () => {};
@@ -225,6 +231,16 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
           setPriorityFee(priorityFee);
           setIsSlippageModalOpen(false);
         }}
+      />
+      <SwapModal
+        fromImageUrl={ethLogo}
+        fromAmount={formatUnits(buyCost, 18)}
+        fromTicker="ETH"
+        toImageUrl={token.image}
+        toAmount={buyAmount}
+        toTicker={token.ticker}
+        isOpen={isSwapModalOpen}
+        onOpenChange={onSwapModalOpenChange}
       />
     </>
   );
