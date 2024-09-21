@@ -35,7 +35,12 @@ const rule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal
 export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps) {
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
-  const { isOpen: isSwapModalOpen, onOpen: onSwapModalOpen, onOpenChange: onSwapModalOpenChange } = useDisclosure();
+  const {
+    isOpen: isSwapModalOpen,
+    onOpen: onSwapModalOpen,
+    onOpenChange: onSwapModalOpenChange,
+    onClose: onSwapModalClose,
+  } = useDisclosure();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyAmount, setBuyAmount] = useState("");
   const [buyCost, setBuyCost] = useState<bigint>(BigInt(0));
@@ -91,10 +96,8 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     const buyAmountWei = parseUnits(buyAmount, 18);
     const totalCost = await buyPrice(tokenAddress, buyAmountWei);
     setBuyCost(totalCost);
-    // setBuyLoading(true);
-    // const receipt = await buyToken(tokenAddress, buyAmountWei, totalCost);
-    // setBuyLoading(false);
     onSwapModalOpen();
+    const receipt = await buyToken(tokenAddress, buyAmountWei, totalCost);
   };
 
   const sellTokens = () => {};
@@ -218,7 +221,8 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
           </div>
           <button
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
-            className="flex items-center justify-center w-full h-[40px] p-4 mt-9 rounded-3xl text-lg text-black font-proximaSoftBold bg-green hover:bg-opacity-80 transition-colors"
+            disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === ""}
+            className="flex items-center justify-center w-full h-[40px] p-4 mt-9 rounded-3xl text-lg text-black font-proximaSoftBold bg-green hover:bg-opacity-80 disabled:bg-gray transition-colors"
           >
             TRADE
           </button>
