@@ -34,6 +34,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   const { chain } = useChain();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyAmount, setBuyAmount] = useState("");
+  const [buyLoading, setBuyLoading] = useState(false);
   const [sellAmount, setSellAmount] = useState("");
   const [buyTokenName, setBuyTokenName] = useState(token.ticker);
   const [buyTokenSrc, setBuyTokenSrc] = useState(token.image);
@@ -43,7 +44,7 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   const [showPresets, setShowPresets] = useState(false);
   const buyToken = useBuyToken();
   const buyPrice = useBuyPrice();
-  const tokenAmountRule = /^\d*\.?\d{0,10}$/; // Regex to match numbers with up to ten decimal places
+  const tokenAmountRule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const tokenBalance = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
 
@@ -83,8 +84,11 @@ export default function TokenSwap({ token, currPrice, ethPrice }: TradingWidgetP
   };
 
   const buyTokens = async () => {
-    const buyAmountWei = parseUnits(buyAmount.toString(), 18);
-    const bought = await buyToken(tokenAddress, buyAmountWei);
+    const buyAmountWei = parseUnits(buyAmount, 18);
+    const totalCost = await buyPrice(tokenAddress, buyAmountWei);
+    setBuyLoading(true);
+    const receipt = await buyToken(tokenAddress, buyAmountWei, totalCost);
+    setBuyLoading(false);
   };
 
   const sellTokens = () => {};
