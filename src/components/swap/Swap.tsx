@@ -142,7 +142,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
               }}
               placeholder="0.0"
-              value={buyAmount.toString()}
+              value={buyAmount}
               onChange={handleBuyAmountChange}
               type="text"
               radius="full"
@@ -166,7 +166,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
               }}
               placeholder="0.0"
-              value={sellAmount.toString()}
+              value={sellAmount}
               onChange={handleSellAmountChange}
               type="text"
               radius="full"
