@@ -16,17 +16,14 @@ type HowItWorkdsModalProps = {
   profileUser: User;
 };
 
-export default function EditProfileForm({
-  profileUser,
-}: HowItWorkdsModalProps) {
+export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) {
   const router = useRouter();
   const [userExists, setUserExists] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(false);
   const { address } = useAccount();
   const { currentUser } = useUser();
   const disabled = profileUser.id !== currentUser?.id;
-  const inputStyles =
-    "h-10 w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
+  const inputStyles = "h-10 w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -46,7 +43,7 @@ export default function EditProfileForm({
     }
   };
 
-  const debounced = useDebouncedCallback(async (value) => {
+  const debounced = useDebouncedCallback(async value => {
     const usernameExists = await fetchUserByName(value);
     if (usernameExists) {
       setUserExists(true);
@@ -61,12 +58,8 @@ export default function EditProfileForm({
         <div className="flex flex-col mx-12">
           <div className="flex items-center gap-x-3">
             <label htmlFor="username">Username</label>
-            {userExists && (
-              <p className="text-red-500">Username already exists</p>
-            )}
-            {usernameAvailable && (
-              <p className="text-green">Username available</p>
-            )}
+            {userExists && <p className="text-red">Username already exists</p>}
+            {usernameAvailable && <p className="text-green">Username available</p>}
           </div>
           <input
             type="text"
@@ -74,14 +67,10 @@ export default function EditProfileForm({
             name="username"
             minLength={1}
             maxLength={44}
-            className={cn(
-              inputStyles,
-              userExists && "ring-red-500",
-              usernameAvailable && "ring-green"
-            )}
+            className={cn(inputStyles, userExists && "ring-red", usernameAvailable && "ring-green")}
             autoComplete="off"
             defaultValue={profileUser.name}
-            onChange={async (e) => {
+            onChange={async e => {
               setUserExists(false);
               setUsernameAvailable(false);
               await debounced(e.target.value);
@@ -105,7 +94,11 @@ export default function EditProfileForm({
             type="file"
             id="profile-picture"
             name="profile-picture"
-            className={`${inputStyles} file:mt-1 file:bg-gray file:rounded-lg file:text-white file:border-0 file:px-2 file:py-1 file:hover:cursor-pointer file:hover:bg-gray/80`}
+            className={`${inputStyles} ${
+              disabled
+                ? "file:hover:cursor-not-allowed file:hover:bg-gray"
+                : "file:hover:cursor-pointer file:hover:bg-gray/80"
+            } file:mt-1 file:bg-gray file:rounded-lg file:text-white file:border-0 file:px-2 file:py-1`}
             autoComplete="off"
             disabled={disabled}
           />
