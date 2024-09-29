@@ -43,7 +43,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
     }
   };
 
-  const debounced = useDebouncedCallback(async value => {
+  const debounced = useDebouncedCallback(async (value) => {
     const usernameExists = await fetchUserByName(value);
     if (usernameExists) {
       setUserExists(true);
@@ -70,7 +70,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
             className={cn(inputStyles, userExists && "ring-red", usernameAvailable && "ring-green")}
             autoComplete="off"
             defaultValue={profileUser.name}
-            onChange={async e => {
+            onChange={async (e) => {
               setUserExists(false);
               setUsernameAvailable(false);
               await debounced(e.target.value);
