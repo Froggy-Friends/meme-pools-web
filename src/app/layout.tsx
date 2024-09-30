@@ -8,6 +8,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { Toaster } from "react-hot-toast";
 import AppWalletProvider from "@/components/AppWalletProvider";
 import { ChainProvider } from "@/components/ChainProvider";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export const metadata: Metadata = {
   title: "Frog.fun",
@@ -29,7 +30,7 @@ export default async function RootLayout({
             <AppWalletProvider>
               <ChainProvider>
                 <Toaster position="bottom-center" />
-                {children}
+                <ErrorBoundary>{children}</ErrorBoundary>
               </ChainProvider>
             </AppWalletProvider>
           </Web3ModalProvider>
