@@ -53,7 +53,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
       <div className="flex gap-x-10 w-full">
         <div className="flex-[3] flex flex-col">
           <TokenActions token={token} cachedUser={cachedUser || null} />
-          <DynamicTokenChart />
+          <DynamicTokenChart token={token} />
         </div>
 
         <div className="flex-1 flex flex-col">
