@@ -1,7 +1,7 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { Address, parseUnits, formatUnits } from "viem";
