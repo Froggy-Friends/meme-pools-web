@@ -1,7 +1,7 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { Address, parseUnits, formatUnits } from "viem";
@@ -16,8 +16,9 @@ import SwapModal from "./SwapModal";
 import { ethLogo } from "@/config/chains";
 import { useWriteContract } from "wagmi";
 import { getBuyConfig } from "@/lib/swap";
+import usePostTradeData from "@/hooks/usePostTradeData";
 
-enum TradingTab {
+export enum TradingTab {
   BUY,
   SELL,
 }
@@ -55,6 +56,7 @@ export default function Swap({ token }: TradingWidgetProps) {
   const buyPrice = useBuyPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const tokenBalance = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
+  usePostTradeData(buyHash as Address, activeTab);
 
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 

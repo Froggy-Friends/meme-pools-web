@@ -15,6 +15,22 @@ export type TokenCreated = {
   reserved: number;
 };
 
+export type TokensBought = {
+  tokenAddress: string;
+  buyer: string;
+  amount: number;
+  price: number;
+  cost: number;
+};
+
+export type TokensSold = {
+  tokenAddress: string;
+  seller: string;
+  amount: number;
+  price: number;
+  payout: number;
+};
+
 export type CommentWithLikes = {
   id: string;
   message: string;

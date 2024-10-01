@@ -16,3 +16,8 @@ export const solanaChainId = isProd ? 0 : 0;
 
 // wallet connect
 export const walletConnectProjectId = "28fb63c6591b078e4eca73e608508aec";
+
+// rpc
+export const rpcUrl = isProd
+  ? 'https://eth-mainnet.g.alchemy.com/v2/358SQJo2XqDKYfLOCmgg6blgDdMZgVAm'
+  : 'https://eth-sepolia.g.alchemy.com/v2/358SQJo2XqDKYfLOCmgg6blgDdMZgVAm';
