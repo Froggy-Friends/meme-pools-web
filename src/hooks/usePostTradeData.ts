@@ -14,6 +14,7 @@ import { addTrade } from "@/actions/token/actions";
 import { TradingTab } from "@/components/swap/Swap";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useWaitForTransactionReceipt } from "wagmi";
+import { ContractEvent } from "@/models/contractEvent";
 
 export default function usePostTradeData(
   txHash: Address,
@@ -56,7 +57,8 @@ export default function usePostTradeData(
     async (receipt: TransactionReceipt): Promise<TokensBought> => {
       const logs = await getEventLogs(receipt);
       const event = logs.find(
-        (e) => e instanceof EventLog && e.fragment.name === "TokensBought"
+        (e) =>
+          e instanceof EventLog && e.fragment.name === ContractEvent.TokenBought
       ) as EventLog;
       const [tokenAddress, buyer, amount, price, cost] = event.args;
 
@@ -74,7 +76,8 @@ export default function usePostTradeData(
   const getSellTokenDetails = useCallback(
     async (receipt: TransactionReceipt): Promise<TokensSold> => {
       const event = receipt.logs.find(
-        (e) => e instanceof EventLog && e.fragment.name === "TokensSold"
+        (e) =>
+          e instanceof EventLog && e.fragment.name === ContractEvent.TokenSold
       ) as EventLog;
 
       const [tokenAddress, seller, amount, price, payout] = event.args;
@@ -123,7 +126,11 @@ export default function usePostTradeData(
   ]);
 
   useEffect(() => {
-    if (status === "success" && txHash && !processedTxHashes.current.has(txHash)) {
+    if (
+      status === "success" &&
+      txHash &&
+      !processedTxHashes.current.has(txHash)
+    ) {
       postTradeData().then(() => {
         processedTxHashes.current.add(txHash);
       });
