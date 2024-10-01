@@ -4,7 +4,10 @@ import prisma from "@/lib/prisma";
 import { Channel } from "@/models/channel";
 import { CommentLikeStatus } from "@/models/comment";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
-import { CommentLikes, TokenVote } from "@prisma/client";
+import { fetchUser } from "@/queries/profile/queries";
+import { fetchTokenByAddress } from "@/queries/token/queries";
+import { CommentLikes, Prisma, TokenVote } from "@prisma/client";
+import { formatUnits } from "viem";
 
 export async function getVotesByTokenId(
   tokenId: string
@@ -210,5 +213,33 @@ export const removeCommentLike = async (
   pusher.trigger(Channel.CommentLikes, commentId, {
     add: null,
     remove: result,
+  });
+};
+
+export const addTrade = async (
+  tokenAddress: string,
+  userAddress: string,
+  category: string,
+  price: number,
+  amount: number,
+  nativeToken: string,
+  chain: string
+) => {
+  const token = await fetchTokenByAddress(tokenAddress);
+  const user = await fetchUser(userAddress);
+  if (!token || !user) {
+    return;
+  }
+
+  const trade = await prisma.trades.create({
+    data: {
+      tokenId: token.id,
+      userId: user.id ,
+      category,
+      price: new Prisma.Decimal(formatUnits(BigInt(price), 18)),
+      amount: Number(formatUnits(BigInt(amount), 18)),
+      nativeToken,
+      chain,
+    },
   });
 };
