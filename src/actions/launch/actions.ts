@@ -5,6 +5,8 @@ import prisma from "@/lib/prisma";
 import { getTokenInfo } from "../../lib/getTokenInfo";
 import { fetchUser } from "@/queries/profile/queries";
 import { Address } from "viem";
+import { getPusher } from "@/config/pusher";
+import { Channel } from "@/models/channel";
 
 export const launchCoin = async (
   formData: FormData,
@@ -26,8 +28,8 @@ export const launchCoin = async (
   let errorMessage = "";
 
   try {
-    user &&
-      (await prisma.token.create({
+    if (user) {
+      const token = await prisma.token.create({
         data: {
           ticker: data.ticker.toUpperCase(),
           description: data.description,
@@ -42,7 +44,11 @@ export const launchCoin = async (
           chain: chain,
           marketCap: 100,
         },
-      }));
+      });
+
+      const pusher = getPusher();
+      pusher.trigger(Channel.CreateToken, token.id, token);
+    }
   } catch (error) {
     errorMessage = (error as Error).message;
   }
