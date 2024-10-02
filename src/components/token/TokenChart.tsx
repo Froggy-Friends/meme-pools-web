@@ -50,6 +50,10 @@ export default function TokenChart({ tokenAddress }: TokenChartProps) {
           background: { type: ColorType.Solid, color: "#1b1b1b" },
           textColor: "white",
         },
+        grid: {
+          vertLines: { color: "#2B2B43" },
+          horzLines: { color: "#2B2B43" },
+        },
         timeScale: {
           timeVisible: true,
           secondsVisible: false,
