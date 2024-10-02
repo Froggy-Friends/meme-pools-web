@@ -1,5 +1,5 @@
 export enum ContractEvent {
-  TokenBought = "TokenBought",
-  TokenSold = "TokenSold",
+  TokensBought = "TokensBought",
+  TokensSold = "TokensSold",
   TokenCreated = "TokenCreated",
 }
