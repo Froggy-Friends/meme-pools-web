@@ -1,4 +1,5 @@
-import { Address, formatUnits } from "viem";
+import { Address } from "viem";
+import { formatUnits } from "ethers";
 import { frogFunAbi } from "@/abi/frogFun";
 import { contractAddress, rpcUrl } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
@@ -106,8 +107,8 @@ export default function usePostTradeData(
         const { tokenAddress, buyer, amount, price, cost } =
           await getBuyTokenDetails(receipt);
         
-        const formattedPrice = Number(formatUnits(BigInt(price), 18)) * ethPrice;
-        const formattedCost = Number(formatUnits(BigInt(cost), 18)) * ethPrice;
+        const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
+        const formattedCost = Number(formatUnits(BigInt(cost))) * ethPrice;
 
         await addTrade(
           tokenAddress,
@@ -124,8 +125,8 @@ export default function usePostTradeData(
           await getSellTokenDetails(receipt);
 
         const cost = amount * price;
-        const formattedCost = Number(formatUnits(BigInt(cost), 18)) * ethPrice;
-        const formattedPrice = Number(formatUnits(BigInt(price), 18)) * ethPrice;
+        const formattedCost = Number(formatUnits(BigInt(cost))) * ethPrice;
+        const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
 
         await addTrade(
           tokenAddress,

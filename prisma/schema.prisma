@@ -75,7 +75,7 @@ model Trades {
   category    String
   price       Decimal
   amount      Int
-  cost        Decimal  @db.Decimal(12, 4)
+  cost        Decimal  @db.Decimal(26, 18)
   nativeToken String
   chain       String
   createdAt   DateTime @default(now()) @db.Timestamptz(6)

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createChart, ColorType, IChartApi, ISeriesApi, CandlestickData } from "lightweight-charts";
 import { Address } from "viem";
 import { frogFunApi } from "@/config/env";
+import { useQuery } from "@tanstack/react-query";
 
 interface TokenChartProps {
   tokenAddress: Address;
@@ -15,28 +16,26 @@ export default function TokenChart({ tokenAddress }: TokenChartProps) {
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${frogFunApi}/tradingview/history?symbol=${tokenAddress}&resolution=5`);
-        const result = await response.json();
-        if (result.s === "ok") {
-          const chartData: CandlestickData[] = result.t.map((time: number, index: number) => ({
-            time: time,
-            open: result.o[index],
-            high: result.h[index],
-            low: result.l[index],
-            close: result.c[index],
-          }));
-          setData(chartData);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const fetchChartData = async () => {
+    const response = await fetch(`http://localhost:3001/trade/history?symbol=${tokenAddress}&resolution=5`);
+    const result = await response.json();
+    if (result.s !== "ok") throw new Error("Failed to fetch chart data");
+    return result.t.map((time: number, index: number) => ({
+      time: time,
+      open: result.o[index],
+      high: result.h[index],
+      low: result.l[index],
+      close: result.c[index],
+    }));
+  };
 
-    fetchData();
-  }, [tokenAddress]);
+  const { isLoading, error } = useQuery({
+    queryKey: ["chartData", tokenAddress],
+    queryFn: async () => {
+      const data = await fetchChartData();
+      setData(data);
+    },
+  });
 
   useEffect(() => {
     if (chartContainerRef.current && data.length > 0) {
@@ -89,5 +88,5 @@ export default function TokenChart({ tokenAddress }: TokenChartProps) {
     }
   }, [data]);
 
-  return <div ref={chartContainerRef} style={{ width: "100%", height: "420px" }} />;
+  return <div ref={chartContainerRef} style={{ width: "100%", height: "390px" }} />;
 }
