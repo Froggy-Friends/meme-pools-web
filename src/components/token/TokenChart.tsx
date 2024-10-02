@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createChart, ColorType, IChartApi, ISeriesApi, CandlestickData } from "lightweight-charts";
 import { Address } from "viem";
+import { frogFunApi } from "@/config/env";
 
 interface TokenChartProps {
   tokenAddress: Address;
@@ -17,7 +18,7 @@ export default function TokenChart({ tokenAddress }: TokenChartProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/tradingview/history?symbol=${tokenAddress}&resolution=5`);
+        const response = await fetch(`${frogFunApi}/tradingview/history?symbol=${tokenAddress}&resolution=5`);
         const result = await response.json();
         if (result.s === "ok") {
           const chartData: CandlestickData[] = result.t.map((time: number, index: number) => ({
