@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import { Address, formatUnits } from "viem";
 import { frogFunAbi } from "@/abi/frogFun";
 import { contractAddress, rpcUrl } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
@@ -15,6 +15,7 @@ import { TradingTab } from "@/components/swap/Swap";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { ContractEvent } from "@/models/contractEvent";
+import getEthPrice from "@/lib/getEthPrice";
 
 export default function usePostTradeData(
   txHash: Address,
@@ -58,7 +59,8 @@ export default function usePostTradeData(
       const logs = await getEventLogs(receipt);
       const event = logs.find(
         (e) =>
-          e instanceof EventLog && e.fragment.name === ContractEvent.TokenBought
+          e instanceof EventLog &&
+          e.fragment.name === ContractEvent.TokensBought
       ) as EventLog;
       const [tokenAddress, buyer, amount, price, cost] = event.args;
 
@@ -77,7 +79,7 @@ export default function usePostTradeData(
     async (receipt: TransactionReceipt): Promise<TokensSold> => {
       const event = receipt.logs.find(
         (e) =>
-          e instanceof EventLog && e.fragment.name === ContractEvent.TokenSold
+          e instanceof EventLog && e.fragment.name === ContractEvent.TokensSold
       ) as EventLog;
 
       const [tokenAddress, seller, amount, price, payout] = event.args;
@@ -97,20 +99,41 @@ export default function usePostTradeData(
     const receipt = await getTransactionReceipt();
     if (!receipt) return;
 
+    const ethPrice = await getEthPrice();
+
     try {
       if (activeTab === TradingTab.BUY) {
         const { tokenAddress, buyer, amount, price, cost } =
           await getBuyTokenDetails(receipt);
-        await addTrade(tokenAddress, buyer, "buy", price, amount, "eth", "eth");
+        
+        const formattedPrice = Number(formatUnits(BigInt(price), 18)) * ethPrice;
+        const formattedCost = Number(formatUnits(BigInt(cost), 18)) * ethPrice;
+
+        await addTrade(
+          tokenAddress,
+          buyer,
+          "buy",
+          formattedPrice,
+          amount,
+          formattedCost,
+          "eth",
+          "eth"
+        );
       } else {
         const { tokenAddress, seller, amount, price, payout } =
           await getSellTokenDetails(receipt);
+
+        const cost = amount * price;
+        const formattedCost = Number(formatUnits(BigInt(cost), 18)) * ethPrice;
+        const formattedPrice = Number(formatUnits(BigInt(price), 18)) * ethPrice;
+
         await addTrade(
           tokenAddress,
           seller,
           "sell",
-          price,
+          formattedPrice,
           amount,
+          formattedCost,
           "eth",
           "eth"
         );
