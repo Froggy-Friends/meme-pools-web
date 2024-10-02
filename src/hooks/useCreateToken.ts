@@ -4,6 +4,7 @@ import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { CreateTokenParams, TokenCreated } from "@/types/token/types";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
 import { toast } from "react-hot-toast";
+import { ContractEvent } from "@/models/contractEvent";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
@@ -13,7 +14,7 @@ export default function useCreateToken() {
     receipt: ContractTransactionReceipt
   ): Promise<TokenCreated> => {
     const event = receipt.logs.find(
-      (e) => e instanceof EventLog && e.fragment.name === "TokenCreated"
+      (e) => e instanceof EventLog && e.fragment.name === ContractEvent.TokenCreated
     ) as EventLog;
 
     const [tokenAddress, creator, name, symbol, reserved] = event.args;

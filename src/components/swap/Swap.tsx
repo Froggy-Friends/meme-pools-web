@@ -17,7 +17,7 @@ import useTokenBalance from "@/hooks/useTokenBalance";
 import SwapModal from "./SwapModal";
 import { ethLogo } from "@/config/chains";
 
-enum TradingTab {
+export enum TradingTab {
   BUY,
   SELL,
 }
@@ -56,6 +56,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const buyPrice = useBuyPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const tokenBalance = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
+  // usePostTradeData(buyHash as Address, activeTab);
 
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 

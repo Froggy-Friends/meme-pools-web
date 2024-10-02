@@ -73,11 +73,12 @@ model Trades {
   tokenId     String   @db.Uuid
   userId      String   @db.Uuid
   category    String
-  price       Int
+  price       Decimal
   amount      Int
+  cost        Decimal  @db.Decimal(26, 18)
   nativeToken String
   chain       String
-  createdAt   DateTime @default(now()) @db.Timetz(6)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
   Token       Token    @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
   User        User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
 }
