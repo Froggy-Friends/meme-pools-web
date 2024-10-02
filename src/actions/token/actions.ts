@@ -222,8 +222,9 @@ export const addTrade = async (
   category: string,
   price: number,
   amount: number,
+  cost: number,
   nativeToken: string,
-  chain: string
+  chain: string,
 ) => {
   const token = await fetchTokenByAddress(tokenAddress);
   const user = await fetchUser(userAddress);
@@ -236,8 +237,9 @@ export const addTrade = async (
       tokenId: token.id,
       userId: user.id ,
       category,
-      price: new Prisma.Decimal(formatUnits(BigInt(price), 18)),
+      price: new Prisma.Decimal(price),
       amount: Number(formatUnits(BigInt(amount), 18)),
+      cost: new Prisma.Decimal(cost),
       nativeToken,
       chain,
     },

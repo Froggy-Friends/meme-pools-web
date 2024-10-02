@@ -17,6 +17,7 @@ import { Chain } from "@/models/chain";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
 import TokenActions from "@/components/token/TokenActions";
+import { Address } from "viem";
 
 const DynamicTokenChart = dynamic(() => import("../../../../components/token/TokenChart"), {
   ssr: false,
@@ -38,7 +39,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
     redirect("/");
   }
 
-  const ethPrice = await getEthPrice(wethAddress);
+  const ethPrice = await getEthPrice();
   const creator = await fetchUserById(token.userId);
   const cookieStore = cookies();
   const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
@@ -53,7 +54,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
       <div className="flex gap-x-10 w-full">
         <div className="flex-[3] flex flex-col">
           <TokenActions token={token} cachedUser={cachedUser || null} />
-          <DynamicTokenChart />
+          <DynamicTokenChart tokenAddress={tokenAddress as Address} />
         </div>
 
         <div className="flex-1 flex flex-col">
