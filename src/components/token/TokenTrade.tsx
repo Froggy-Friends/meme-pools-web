@@ -1,3 +1,4 @@
+import { baseExplorerUrl, ethercanUrl, solanaExplorerUrl } from "@/config/env";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { formatAddress } from "@/lib/formatAddress";
 import { getTimeDifference } from "@/lib/getTimeDifference";
@@ -50,10 +51,10 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
         className="text-light-green hover:text-cream transition"
         href={`${
           trade.chain === Chain.Eth
-            ? `https://etherscan.io/tx/${trade.transactionHash}`
+            ? `${ethercanUrl}/tx/${trade.transactionHash}`
             : trade.chain === Chain.Solana
-            ? `https://solscan.io/tx/${trade.transactionHash}`
-            : `https://basescan.io/tx/${trade.transactionHash}`
+            ? `${solanaExplorerUrl}/tx/${trade.transactionHash}`
+            : `${baseExplorerUrl}/tx/${trade.transactionHash}`
         }`}
         target="_blank"
       >

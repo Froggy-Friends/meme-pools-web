@@ -9,7 +9,7 @@ import { fetchUser } from "@/queries/profile/queries";
 import { fetchTokenByAddress } from "@/queries/token/queries";
 import { CommentLikes, Prisma, TokenVote } from "@prisma/client";
 import { Address, formatUnits } from "viem";
-import { formatTradesData } from "@/lib/formatTradesData";
+import { formatTradeData } from "@/lib/formatTradeData";
 
 export async function getVotesByTokenId(
   tokenId: string
@@ -252,13 +252,15 @@ export const addTrade = async (
     },
   });
 
-  const formattedTrade = formatTradesData([
-    { ...trade, User: user, Token: token },
-  ]);
+  const formattedTrade = formatTradeData({
+    ...trade,
+    User: user,
+    Token: token,
+  });
 
   if (category === Trade.Buy) {
-    pusher.trigger(Channel.Buy, token.id, { trade: formattedTrade[0] });
+    pusher.trigger(Channel.Buy, token.id, { trade: formattedTrade });
   } else {
-    pusher.trigger(Channel.Sell, token.id, { trade: formattedTrade[0] });
+    pusher.trigger(Channel.Sell, token.id, { trade: formattedTrade });
   }
 };
