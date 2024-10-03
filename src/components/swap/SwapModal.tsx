@@ -2,6 +2,11 @@ import Image from "next/image";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { formatNumber } from "@/lib/format";
+import { TxStatus } from "@/types/token/types";
+import Link from "next/link";
+import { formatAddress } from "@/lib/formatAddress";
+import { ethercanUrl } from "@/config/env";
+import { BsArrowUpCircleFill } from "react-icons/bs";
 
 type SwapModalProps = {
   fromImageUrl: string;
@@ -12,6 +17,8 @@ type SwapModalProps = {
   toTicker: string;
   isOpen: boolean;
   onOpenChange: () => void;
+  txStatus: TxStatus;
+  txHash: string | null;
 };
 
 export default function SwapModal({
@@ -23,14 +30,18 @@ export default function SwapModal({
   toTicker,
   isOpen,
   onOpenChange,
+  txStatus,
+  txHash,
 }: SwapModalProps) {
   return (
     <Modal className="h-[420px] bg-dark-gray text-white p-4" isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         <ModalBody className="flex flex-col justify-center items-center gap-8">
-          <Spinner color="success" />
+          {txStatus === "idle" ? <Spinner color="success" /> : <BsArrowUpCircleFill size={45} className="text-green" />}
           <div className="text-large">
-            <span className="text-green">Confirming</span>
+            <span className="text-green">
+              {txStatus === "idle" ? "Confirming" : txStatus === "pending" ? "Submitted" : "Completed"}
+            </span>
             <span> Swap</span>
           </div>
           <div className="flex items-center gap-2">
@@ -48,7 +59,18 @@ export default function SwapModal({
           </div>
         </ModalBody>
         <ModalFooter className="flex justify-center">
-          <p className="text-light-gray">Proceed in your wallet</p>
+          <p className="text-light-gray">
+            {txHash ? (
+              <>
+                See confirmation{" "}
+                <Link href={`${ethercanUrl}/tx/${txHash}`} target="_blank">
+                  <span className="text-light-gray hover:text-cream transition">{formatAddress(txHash, 5)}</span>
+                </Link>
+              </>
+            ) : (
+              "Proceed in your wallet"
+            )}
+          </p>
         </ModalFooter>
       </ModalContent>
     </Modal>

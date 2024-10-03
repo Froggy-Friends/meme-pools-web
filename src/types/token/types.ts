@@ -102,3 +102,5 @@ export type FormattedTrade = {
   transactionHash: string;
   createdAt: Date;
 };
+
+export type TxStatus = "idle" | "pending" | "completed" | "error";
