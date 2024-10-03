@@ -66,9 +66,7 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
 };
 
 export const fetchTopVotesTokens = async () => {
-  const response = await fetch(
-    `${frogFunApi}/token/votes?page=1`
-  );
+  const response = await fetch(`${frogFunApi}/token/votes?page=1`);
 
   const tokens: TokenWithVotes[] = await response.json();
 
@@ -163,4 +161,21 @@ export const searchTokensByCa = async (contractAddress: string) => {
   });
 
   return token;
+};
+
+export const fetchTrades = async (tokenId: string) => {
+  const trades = await prisma.trades.findMany({
+    where: {
+      tokenId: tokenId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      User: true,
+      Token: true,
+    },
+  });
+
+  return trades;
 };
