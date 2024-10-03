@@ -1,10 +1,13 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
-import { Address, parseUnits, formatUnits } from "viem";
+import { useChain } from "@/context/chain";
+import useBuyToken from "@/hooks/useBuyToken";
+import { Address, parseUnits } from "viem";
+import { formatUnits } from "ethers";
 import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
 import { Input, useDisclosure } from "@nextui-org/react";
@@ -13,10 +16,11 @@ import { wagmiChains } from "@/config/wagmi";
 import useEthBalance from "@/hooks/useEthBalance";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import SwapModal from "./SwapModal";
-import { ethLogo } from "@/config/chains";
-import { useWriteContract } from "wagmi";
-import { getBuyConfig } from "@/lib/swap";
+import { ethLogo, solanaLogo } from "@/config/chains";
 import usePostTradeData from "@/hooks/usePostTradeData";
+import { useDebouncedCallback } from "use-debounce";
+import { Chain } from "@/models/chain";
+import { FaRegArrowAltCircleDown } from "react-icons/fa";
 
 export enum TradingTab {
   BUY,
@@ -33,8 +37,9 @@ const PURCHASE_AMOUNTS = [1, 2, 3, 4];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 const rule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
 
-export default function Swap({ token }: TradingWidgetProps) {
-  const { tokenAddress } = token;
+export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps) {
+  const { ticker, tokenAddress } = token;
+  const { chain } = useChain();
   const {
     isOpen: isSwapModalOpen,
     onOpen: onSwapModalOpen,
@@ -52,25 +57,29 @@ export default function Swap({ token }: TradingWidgetProps) {
   const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
   const [showPresets, setShowPresets] = useState(false);
-  const { writeContract: buy, data: buyHash, isPending: isBuyPending, isSuccess: isBuySuccess } = useWriteContract();
+  const { buyToken, txStatus, txHash } = useBuyToken(onSwapModalClose);
   const buyPrice = useBuyPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const tokenBalance = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
-  usePostTradeData(buyHash as Address, activeTab);
-
+  const { postTradeData } = usePostTradeData(activeTab, ethPrice);
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
+
+  const debouncedGetPrice = useDebouncedCallback(async (amount: string) => {
+    if (amount === "") {
+      setBuyCost(BigInt(0));
+      return;
+    }
+    const buyAmountWei = parseUnits(amount, 18);
+    const totalCost = await buyPrice(tokenAddress, buyAmountWei);
+    setBuyCost(totalCost);
+  }, 700);
 
   const handleBuyAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
-    // Allow empty input
-    if (inputValue === "") {
-      setBuyAmount("");
-      return;
-    }
-
-    if (rule.test(inputValue)) {
+    if (inputValue === "" || rule.test(inputValue)) {
       setBuyAmount(inputValue);
+      debouncedGetPrice(inputValue);
     }
   };
 
@@ -95,10 +104,9 @@ export default function Swap({ token }: TradingWidgetProps) {
 
   const buyTokens = async () => {
     const buyAmountWei = parseUnits(buyAmount, 18);
-    const totalCost = await buyPrice(tokenAddress, buyAmountWei);
-    setBuyCost(totalCost);
     onSwapModalOpen();
-    buy(getBuyConfig(tokenAddress as Address, buyAmountWei, totalCost));
+    const receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
+    postTradeData(receipt);
   };
 
   const sellTokens = () => {};
@@ -135,30 +143,49 @@ export default function Swap({ token }: TradingWidgetProps) {
             <Image src="/setting.svg" alt="slippage" height={20} width={20} />
           </button>
         </div>
-        <div className="flex flex-col justify-between gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[200px]">
+        <div className="relative flex flex-col justify-between gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[200px]">
           {activeTab === TradingTab.BUY && (
-            <Input
-              classNames={{
-                input: "ml-10 appearance-none",
-                inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
-              }}
-              placeholder="0.0"
-              value={buyAmount.toString()}
-              onChange={handleBuyAmountChange}
-              type="text"
-              radius="full"
-              startContent={
-                <TokenSwitcher
-                  imgName={buyTokenName}
-                  imgSrc={buyTokenSrc}
-                  token={token}
-                  onChange={(ticker, tickerSrc) => {
-                    setBuyTokenName(ticker);
-                    setBuyTokenSrc(tickerSrc);
-                  }}
+            <>
+              <Input
+                classNames={{
+                  input: "ml-10 appearance-none",
+                  inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
+                }}
+                placeholder="0.0"
+                value={buyAmount}
+                onChange={handleBuyAmountChange}
+                type="text"
+                radius="full"
+                autoComplete="off"
+                startContent={
+                  <TokenSwitcher
+                    imgName={buyTokenName}
+                    imgSrc={buyTokenSrc}
+                    token={token}
+                    onChange={(ticker, tickerSrc) => {
+                      setBuyTokenName(ticker);
+                      setBuyTokenSrc(tickerSrc);
+                    }}
+                  />
+                }
+              />
+              <div className="absolute left-1/2 top-[38%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
+                <FaRegArrowAltCircleDown size={24} className="text-gray" />
+              </div>
+              <div className="flex items-center gap-2 p-2 rounded-3xl bg-dark w-full">
+                <Image
+                  src={chain.name === Chain.Solana ? solanaLogo : ethLogo}
+                  alt="eth"
+                  width={35}
+                  height={35}
+                  className="ml-2"
                 />
-              }
-            />
+                <p>{chain.name === Chain.Solana ? "$SOL" : "$ETH"}</p>
+                <p className="text-white/75 text-sm ml-2">
+                  {buyCost !== BigInt(0) ? Number(formatUnits(buyCost)).toFixed(6) : "0.0"}
+                </p>
+              </div>
+            </>
           )}
           {activeTab === TradingTab.SELL && (
             <Input
@@ -167,7 +194,7 @@ export default function Swap({ token }: TradingWidgetProps) {
                 inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
               }}
               placeholder="0.0"
-              value={sellAmount.toString()}
+              value={sellAmount}
               onChange={handleSellAmountChange}
               type="text"
               radius="full"
@@ -223,7 +250,7 @@ export default function Swap({ token }: TradingWidgetProps) {
           <button
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
             disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === ""}
-            className={`flex items-center justify-center w-full h-[40px] p-4 mt-9 rounded-3xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray transition-colors ${
+            className={`flex items-center justify-center w-full h-[40px] p-4 rounded-3xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray transition-colors ${
               activeTab === TradingTab.BUY ? "bg-green text-black" : "bg-red text-white"
             }`}
           >
@@ -246,10 +273,10 @@ export default function Swap({ token }: TradingWidgetProps) {
         toImageUrl={token.image}
         toAmount={buyAmount}
         toTicker={token.ticker}
-        isPending={isBuyPending}
-        isSuccess={isBuySuccess}
         isOpen={isSwapModalOpen}
         onOpenChange={onSwapModalOpenChange}
+        txStatus={txStatus}
+        txHash={txHash}
       />
     </>
   );
