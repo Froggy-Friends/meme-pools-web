@@ -259,8 +259,24 @@ export const addTrade = async (
   });
 
   if (category === Trade.Buy) {
-    pusher.trigger(Channel.Buy, token.id, { trade: formattedTrade });
+    pusher.trigger(Channel.Buy, token.id, {
+      trade: formattedTrade,
+      feedData: {
+        user: user,
+        date: trade.createdAt,
+        value: `$${token.ticker}`,
+        amount: formattedTrade.amount,
+      },
+    });
   } else {
-    pusher.trigger(Channel.Sell, token.id, { trade: formattedTrade });
+    pusher.trigger(Channel.Sell, token.id, {
+      trade: formattedTrade,
+      feedData: {
+        user: user,
+        date: trade.createdAt,
+        value: `$${token.ticker}`,
+        amount: formattedTrade.amount,
+      },
+    });
   }
 };

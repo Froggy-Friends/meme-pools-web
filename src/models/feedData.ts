@@ -6,4 +6,5 @@ export type FeedData = {
   user: User;
   date: string;
   value: string;
+  amount?: string;
 };

@@ -47,7 +47,13 @@ export const launchCoin = async (
       });
 
       const pusher = getPusher();
-      pusher.trigger(Channel.CreateToken, token.id, token);
+      pusher.trigger(Channel.CreateToken, token.id, {
+        feedData: {
+          user: user,
+          date: token.createdAt,
+          value: `$${token.ticker}`,
+        },
+      });
     }
   } catch (error) {
     errorMessage = (error as Error).message;
