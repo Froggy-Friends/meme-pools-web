@@ -3,8 +3,9 @@ import TokenTrades from "./TokenTrades";
 import ToggleViewButton from "./ToggleViewButton";
 import { CommentAndTradesView } from "@/models/comment";
 import CommentForm from "./CommentForm";
-import { fetchComments } from "@/queries/token/queries";
+import { fetchComments, fetchTrades } from "@/queries/token/queries";
 import { User } from "@prisma/client";
+import { formatTradesData } from "@/lib/formatTradesData";
 
 type CommentsAndTradesContainerProps = {
   view: CommentAndTradesView;
@@ -20,30 +21,22 @@ export default async function CommentsAndTradesContainer({
   cachedUser,
 }: CommentsAndTradesContainerProps) {
   const comments = await fetchComments(tokenId);
+  const trades = await fetchTrades(tokenId);
+  const formattedTrades = formatTradesData(trades);
 
   return (
     <section>
-      <div className="flex flex-col w-full h-[450px] my-20 p-6 bg-dark-gray rounded-xl overflow-y-auto">
-        <div className="flex gap-x-2">
-          <ToggleViewButton
-            name="Trades"
-            tokenAddress={tokenAddress}
-            view={view}
-          />
-          <ToggleViewButton
-            name="Comments"
-            tokenAddress={tokenAddress}
-            view={view}
-          />
+      <div className="relative flex flex-col w-full h-[450px] my-20 bg-dark-gray rounded-xl overflow-hidden">
+        <div className="sticky top-0 z-10 bg-dark-gray p-6 pb-4">
+          <div className="flex gap-x-2">
+            <ToggleViewButton name="Trades" tokenAddress={tokenAddress} view={view} />
+            <ToggleViewButton name="Comments" tokenAddress={tokenAddress} view={view} />
+          </div>
         </div>
-        {view === "comments" && (
-          <TokenComments
-            comments={comments}
-            cachedUser={cachedUser || null}
-            tokenId={tokenId}
-          />
-        )}
-        {view === "trades" && <TokenTrades />}
+        <div className="flex-grow overflow-y-auto p-6 pt-0">
+          {view === "comments" && <TokenComments comments={comments} cachedUser={cachedUser || null} tokenId={tokenId} />}
+          {view === "trades" && <TokenTrades trades={formattedTrades} tokenId={tokenId} />}
+        </div>
       </div>
 
       {view === "comments" && <CommentForm tokenId={tokenId} />}

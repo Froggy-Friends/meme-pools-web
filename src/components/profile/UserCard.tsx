@@ -42,7 +42,7 @@ export default async function UserCard({
           href={`/profile/${user.name}`}
           className="hover:underline font-proximaSoftBold text-xl"
         >
-          {getUserDisplayName(user)}
+          {getUserDisplayName(user.name)}
         </Link>
 
         {view === "followers" && (

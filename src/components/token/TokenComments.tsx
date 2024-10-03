@@ -50,7 +50,7 @@ export default function TokenComments({ comments, cachedUser, tokenId }: TokenCo
   }, [queryClient, tokenComments, tokenId]);
 
   return (
-    <section className="flex flex-col mt-4">
+    <section className="flex flex-col">
       {data.map(comment => {
         return (
           <TokenComment key={comment.id} comment={comment} author={comment.user} cachedUser={cachedUser || null} />

@@ -53,7 +53,7 @@ export default function LiveFeed() {
       });
       pusher.disconnect();
     };
-  }, []);
+  }, [setFeedData]);
 
   const formatFeedData = (data: FeedData) => {
     const action = channelConfigs[data.channel];
