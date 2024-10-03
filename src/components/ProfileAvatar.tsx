@@ -49,8 +49,8 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       <DropdownMenu>
         <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
           <p className="text-lg">
-            {user && `Signed in as ${getUserDisplayName(user)}`}
-            {!user && currentUser && `Signed in as ${getUserDisplayName(currentUser)}`}
+            {user && `Signed in as ${getUserDisplayName(user.name)}`}
+            {!user && currentUser && `Signed in as ${getUserDisplayName(currentUser.name)}`}
           </p>
         </DropdownItem>
         <DropdownItem className="dark" key="Profile">
