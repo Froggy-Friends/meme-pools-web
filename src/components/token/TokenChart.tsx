@@ -17,7 +17,7 @@ export default function TokenChart({ tokenAddress }: TokenChartProps) {
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
 
   const fetchChartData = async () => {
-    const response = await fetch(`http://localhost:3001/trade/history?symbol=${tokenAddress}&resolution=5`);
+    const response = await fetch(`${frogFunApi}/trade/history?symbol=${tokenAddress}&resolution=5`);
     const result = await response.json();
     if (result.s !== "ok") throw new Error("Failed to fetch chart data");
     return result.t.map((time: number, index: number) => ({

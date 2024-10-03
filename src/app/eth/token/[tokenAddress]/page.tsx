@@ -1,4 +1,3 @@
-import { wethAddress } from "@/config/eth/token";
 import getEthPrice from "@/lib/getEthPrice";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
@@ -31,7 +30,7 @@ type TokenDetailsPageProps = {
 };
 
 export default async function TokenDetailsPage({ params, searchParams }: TokenDetailsPageProps) {
-  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.COMMENTS;
+  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.TRADES;
   const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
