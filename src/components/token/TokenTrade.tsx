@@ -40,7 +40,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
             <span className={`${trade.category === Trade.Buy ? "text-light-green" : "text-rose"}`}>
               {`${trade.category === Trade.Buy ? "Bought" : "Sold"}`}
             </span>{" "}
-            {trade.amount} <span className="text-blue">{trade.tokenTicker}</span> for $
+            {trade.amount} <span className="text-blue">${trade.tokenTicker}</span> for $
             {Number(trade.nativeCost).toFixed(8)}{" "}
             <span className="text-[#CFB2F4]">{trade.chain === Chain.Solana ? "$SOL" : "$ETH"}</span>
           </p>
