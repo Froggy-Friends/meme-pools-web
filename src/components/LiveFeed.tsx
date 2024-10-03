@@ -10,6 +10,7 @@ import Image from "next/image";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { Virtuoso } from "react-virtuoso";
 import { channelConfigs } from "@/lib/feed";
+import { getUserDisplayName } from "@/lib/getUserDisplayName";
 
 export default function LiveFeed() {
   const [feedData, setFeedData] = useImmer<FeedData[]>([]);
@@ -26,6 +27,7 @@ export default function LiveFeed() {
             user: feedData.user,
             date: feedData.date,
             value: feedData.value,
+            amount: feedData.amount || undefined,
           });
         });
       }
@@ -53,12 +55,13 @@ export default function LiveFeed() {
       });
       pusher.disconnect();
     };
-  }, []);
+  }, [setFeedData]);
 
   const formatFeedData = (data: FeedData) => {
     const action = channelConfigs[data.channel];
     const isCommentVoteChannel = data.channel === Channel.CommentLikes || data.channel === Channel.CommentDislikes;
     const isCommentChannel = data.channel === Channel.Comment || isCommentVoteChannel;
+    const isTradeChannel = data.channel === Channel.Buy || data.channel === Channel.Sell;
 
     return (
       <div className="text-xs font-proximaSoft flex items-center gap-1">
@@ -69,8 +72,9 @@ export default function LiveFeed() {
           width={16}
           className="rounded-full mr-2"
         />
-        <span>{data.user.name}</span> <span className={action.color}>{action.name}</span>
-        {isCommentVoteChannel && "comment "}
+        <span>{getUserDisplayName(data.user.name)}</span> <span className={action.color}>{action.name}</span>
+        {isCommentVoteChannel && "comment"}
+        {isTradeChannel && <span className="text-cream">{data.amount}</span>}
         <span className="text-light-green">{isCommentChannel ? `"${data.value}"` : data.value}</span>
       </div>
     );
@@ -81,7 +85,7 @@ export default function LiveFeed() {
       <div className="flex items-center justify-between w-full">
         <span>Live Feed</span>
         <span className="text-[8px] flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-green"></div> Live
+          <div className="w-2 h-2 rounded-full bg-green animate-pulse"></div> Live
         </span>
       </div>
       <div className="flex flex-col gap-2.5">

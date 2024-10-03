@@ -46,7 +46,7 @@ export default function TokenComment({ comment, author, cachedUser }: TokenComme
               href={`/profile/${author.name}`}
               className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
             >
-              {getUserDisplayName(author)}
+              {getUserDisplayName(author.name)}
             </Link>
             <p className="text-gray">{getTimeDifference(comment.createdAt)}</p>
           </div>

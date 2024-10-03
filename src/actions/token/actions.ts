@@ -3,11 +3,13 @@ import { getPusher } from "@/config/pusher";
 import prisma from "@/lib/prisma";
 import { Channel } from "@/models/channel";
 import { CommentLikeStatus } from "@/models/comment";
+import { Trade } from "@/models/trade";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
 import { fetchUser } from "@/queries/profile/queries";
 import { fetchTokenByAddress } from "@/queries/token/queries";
 import { CommentLikes, Prisma, TokenVote } from "@prisma/client";
-import { formatUnits } from "viem";
+import { Address, formatUnits } from "viem";
+import { formatTradeData } from "@/lib/formatTradeData";
 
 export async function getVotesByTokenId(
   tokenId: string
@@ -222,10 +224,13 @@ export const addTrade = async (
   category: string,
   price: number,
   amount: number,
-  cost: number,
+  nativeCost: number,
+  usdCost: number,
   nativeToken: string,
   chain: string,
+  txHash: Address
 ) => {
+  const pusher = getPusher();
   const token = await fetchTokenByAddress(tokenAddress);
   const user = await fetchUser(userAddress);
   if (!token || !user) {
@@ -235,13 +240,43 @@ export const addTrade = async (
   const trade = await prisma.trades.create({
     data: {
       tokenId: token.id,
-      userId: user.id ,
+      userId: user.id,
       category,
       price: new Prisma.Decimal(price),
       amount: Number(formatUnits(BigInt(amount), 18)),
-      cost: new Prisma.Decimal(cost),
+      nativeCost: new Prisma.Decimal(nativeCost),
+      usdCost: new Prisma.Decimal(usdCost),
       nativeToken,
       chain,
+      transactionHash: txHash,
     },
   });
+
+  const formattedTrade = formatTradeData({
+    ...trade,
+    User: user,
+    Token: token,
+  });
+
+  if (category === Trade.Buy) {
+    pusher.trigger(Channel.Buy, token.id, {
+      trade: formattedTrade,
+      feedData: {
+        user: user,
+        date: trade.createdAt,
+        value: `$${token.ticker}`,
+        amount: formattedTrade.amount,
+      },
+    });
+  } else {
+    pusher.trigger(Channel.Sell, token.id, {
+      trade: formattedTrade,
+      feedData: {
+        user: user,
+        date: trade.createdAt,
+        value: `$${token.ticker}`,
+        amount: formattedTrade.amount,
+      },
+    });
+  }
 };

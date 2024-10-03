@@ -1,4 +1,6 @@
-import { CommentLikes, Token, User } from "@prisma/client";
+import { Chain } from "@/models/chain";
+import { Trade } from "@/models/trade";
+import { CommentLikes, Token, Trades, User } from "@prisma/client";
 import { UseMutationResult } from "@tanstack/react-query";
 
 export type CreateTokenParams = {
@@ -29,6 +31,16 @@ export type TokensSold = {
   amount: number;
   price: number;
   payout: number;
+};
+
+export type TokenTradeEvent = {
+  maker: string;
+  tradeType: Trade;
+  price: number;
+  amount: number;
+  nativeCost: number;
+  usdCost: number;
+  txHash: string;
 };
 
 export type CommentWithLikes = {
@@ -75,3 +87,18 @@ export type HandleLike = UseMutationResult<
 >;
 
 export type CommentLikesWithUser = CommentLikes & { user: User };
+
+export type TradeWithUserAndToken = Trades & { User: User } & { Token: Token };
+
+export type FormattedTrade = {
+  id: string;
+  category: Trade;
+  username: string;
+  userAvatar: string | null;
+  amount: number;
+  tokenTicker: string;
+  nativeCost: number;
+  chain: Chain;
+  transactionHash: string;
+  createdAt: Date;
+};

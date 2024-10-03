@@ -108,7 +108,8 @@ export default function usePostTradeData(
           await getBuyTokenDetails(receipt);
         
         const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
-        const formattedCost = Number(formatUnits(BigInt(cost))) * ethPrice;
+        const nativeCost = Number(formatUnits(BigInt(cost)));
+        const usdCost = Number(formatUnits(BigInt(cost))) * ethPrice;
 
         await addTrade(
           tokenAddress,
@@ -116,16 +117,18 @@ export default function usePostTradeData(
           "buy",
           formattedPrice,
           amount,
-          formattedCost,
+          nativeCost,
+          usdCost,
           "eth",
-          "eth"
+          "eth",
+          txHash,
         );
       } else {
         const { tokenAddress, seller, amount, price, payout } =
           await getSellTokenDetails(receipt);
-
         const cost = amount * price;
-        const formattedCost = Number(formatUnits(BigInt(cost))) * ethPrice;
+        const nativeCost = Number(formatUnits(BigInt(cost)));
+        const usdCost = Number(formatUnits(BigInt(cost))) * ethPrice;
         const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
 
         await addTrade(
@@ -134,9 +137,11 @@ export default function usePostTradeData(
           "sell",
           formattedPrice,
           amount,
-          formattedCost,
+          nativeCost,
+          usdCost,
           "eth",
-          "eth"
+          "eth",
+          txHash,
         );
       }
     } catch (error) {
@@ -144,6 +149,7 @@ export default function usePostTradeData(
     }
   }, [
     activeTab,
+    txHash,
     getTransactionReceipt,
     getBuyTokenDetails,
     getSellTokenDetails,
