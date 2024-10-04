@@ -15,7 +15,11 @@ type TokenTradeProps = {
 
 export default function TokenTrade({ trade }: TokenTradeProps) {
   return (
-    <div className="flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1">
+    <div
+      className={`flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1 ${
+        trade.isNew ? "animate-greenPulse" : ""
+      }`}
+    >
       <div className="flex items-center gap-x-4">
         <Image
           src={trade.userAvatar || defaultProfileAvatarUrl}
