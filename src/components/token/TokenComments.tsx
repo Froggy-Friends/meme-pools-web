@@ -53,7 +53,13 @@ export default function TokenComments({ comments, cachedUser, tokenId }: TokenCo
     <section className="flex flex-col">
       {data.map(comment => {
         return (
-          <TokenComment key={comment.id} comment={comment} author={comment.user} cachedUser={cachedUser || null} isNew={comment.isNew || false}/>
+          <TokenComment
+            key={comment.id}
+            comment={comment}
+            author={comment.user}
+            cachedUser={cachedUser || null}
+            isNew={comment.isNew}
+          />
         );
       })}
     </section>

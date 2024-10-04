@@ -15,9 +15,7 @@ import Image from "next/image";
 import { cn } from "@nextui-org/react";
 import { solanaLogo, ethLogo } from "@/config/chains";
 import { useRouter } from "next/navigation";
-import { FaExternalLinkAlt } from "react-icons/fa";
-import Link from "next/link";
-import { ethercanUrl } from "@/config/env";
+import LaunchCoinToast from "./LaunchCoinToast";
 
 export type LaunchFormValues = {
   name: string;
@@ -76,20 +74,7 @@ export default function LaunchCoinForm() {
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
-        toast.custom(
-          t => (
-            <div className="bg-dark-green rounded-lg px-6 py-4 mr-10 mt-16 flex items-center gap-x-3">
-              <p>Coin launched</p>
-              <Link href={`${ethercanUrl}/tx/${tokenDetails.txHash}`} target="_blank">
-                <FaExternalLinkAlt size={16} />
-              </Link>
-            </div>
-          ),
-          {
-            position: "top-right",
-            duration: 5000,
-          }
-        );
+        <LaunchCoinToast txHash={tokenDetails.txHash} />;
       }
 
       reset();
@@ -233,38 +218,6 @@ export default function LaunchCoinForm() {
           <p className="text-dark font-proximaSoftBold">HAVE SOME FUN</p>
         </FormSubmitButton>
       </form>
-
-      <button
-        onClick={() => {
-          // toast("Coin launched", {
-          //   duration: 5000,
-          //   position: "top-right",
-          //   style: {
-          //     background: "#003018",
-          //     color: "#fff",
-          //   },
-          //   icon: <FaExternalLinkAlt size={17} />,
-          //   ariaProps: {
-          //     role: "status",
-          //     "aria-live": "polite",
-          //   },
-          // });
-          toast.custom(
-            t => (
-              <div className="bg-dark-green rounded-lg px-6 py-4 mr-10 mt-16 flex items-center gap-x-3">
-                <p>Coin launched</p>
-                <FaExternalLinkAlt size={16} />
-              </div>
-            ),
-            {
-              position: "top-right",
-              duration: 5000,
-            }
-          );
-        }}
-      >
-        TEST
-      </button>
     </section>
   );
 }

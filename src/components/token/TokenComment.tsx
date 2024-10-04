@@ -11,7 +11,6 @@ import { defaultProfileAvatarUrl } from "@/config/user";
 import { getTimeDifference } from "@/lib/getTimeDifference";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { getUserCommentInteraction } from "@/lib/getUserCommentInteraction";
-import { useEffect, useState } from "react";
 
 type TokenCommentProps = {
   comment: CommentWithLikes;
@@ -21,7 +20,6 @@ type TokenCommentProps = {
 };
 
 export default function TokenComment({ comment, author, cachedUser, isNew }: TokenCommentProps) {
-  const [animate, setAnimate] = useState(isNew);
   const { userCommentLike, userCommentDislike } = getUserCommentInteraction(comment, cachedUser!);
 
   const { likes, commentLike, handleLike, dislikes, commentDisLike, handleDislike } = useCommentLike(
