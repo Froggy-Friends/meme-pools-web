@@ -7,7 +7,7 @@ import { TradingTab } from "@/components/swap/Swap";
 import { useCallback } from "react";
 import { ContractEvent } from "@/models/contractEvent";
 
-export default function usePostTradeData(activeTab: TradingTab, ethPrice: number) {
+export default function usePostTradeData() {
   const getBuyTokenDetails = useCallback(
     async (receipt: TransactionReceipt): Promise<TokensBought> => {
       const event = receipt.logs.find(
@@ -49,7 +49,11 @@ export default function usePostTradeData(activeTab: TradingTab, ethPrice: number
   );
 
   const postTradeData = useCallback(
-    async (receipt: ContractTransactionReceipt) => {
+    async (
+      receipt: ContractTransactionReceipt,
+      activeTab: TradingTab,
+      ethPrice: number
+    ) => {
       if (!receipt) return;
 
       try {
@@ -98,7 +102,7 @@ export default function usePostTradeData(activeTab: TradingTab, ethPrice: number
         console.error(error);
       }
     },
-    [activeTab, getBuyTokenDetails, getSellTokenDetails, ethPrice]
+    [getBuyTokenDetails, getSellTokenDetails]
   );
 
   return { postTradeData };

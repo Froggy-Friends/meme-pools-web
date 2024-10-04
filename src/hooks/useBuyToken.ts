@@ -9,8 +9,8 @@ import { TxStatus } from "@/types/token/types";
 export default function useBuyToken(onSwapModalClose: () => void) {
   const signer = useEthersSigner();
   const contract = new Contract(contractAddress, frogFunAbi, signer);
-  const [txStatus, setTxStatus] = useState<TxStatus>("idle");
-  const [txHash, setTxHash] = useState<string | null>(null);
+  const [buyTxStatus, setBuyTxStatus] = useState<TxStatus>("idle");
+  const [buyTxHash, setBuyTxHash] = useState<string | null>(null);
 
   const buyToken = async (
     tokenAddress: string,
@@ -21,24 +21,24 @@ export default function useBuyToken(onSwapModalClose: () => void) {
       const tx = await contract.buyTokens(tokenAddress, amount, {
         value: totalCost,
       });
-      setTxHash(tx.hash);
-      setTxStatus("pending");
+      setBuyTxHash(tx.hash);
+      setBuyTxStatus("pending");
       const receipt = await tx.wait();
-      setTxStatus("completed");
+      setBuyTxStatus("completed");
       return receipt;
     } catch (error) {
-      setTxStatus("error");
+      setBuyTxStatus("error");
       toast.error("Buy token error");
       onSwapModalClose();
     } finally {
       // Reset status after a delay
       setTimeout(() => {
-        setTxStatus("idle");
-        setTxHash(null);
+        setBuyTxStatus("idle");
+        setBuyTxHash(null);
         onSwapModalClose();
       }, 10000);
     }
   };
 
-  return { buyToken, txStatus, txHash };
+  return { buyToken, buyTxStatus, buyTxHash };
 }
