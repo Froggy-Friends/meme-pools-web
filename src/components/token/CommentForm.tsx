@@ -5,12 +5,14 @@ import useUser from "@/hooks/useUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CommentWithLikes } from "@/types/token/types";
 import toast from "react-hot-toast";
+import { useRef } from 'react'
 
 type CommentFormProps = {
   tokenId: string;
 };
 
 export default function CommentForm({ tokenId }: CommentFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
   const { currentUser } = useUser();
   const queryClient = useQueryClient();
 
@@ -54,8 +56,10 @@ export default function CommentForm({ tokenId }: CommentFormProps) {
     <form
       action={formData => {
         addComment.mutate(formData);
+        formRef.current?.reset();
       }}
       className="w-[780px] h-72 flex flex-col mb-20 p-6 bg-dark-gray rounded-xl"
+      ref={formRef}
     >
       <textarea
         placeholder="Post a comment..."
