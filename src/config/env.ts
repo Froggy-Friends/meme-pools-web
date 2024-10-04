@@ -27,7 +27,7 @@ export const rpcUrl = isProd
   : "https://eth-sepolia.g.alchemy.com/v2/358SQJo2XqDKYfLOCmgg6blgDdMZgVAm";
 
 // explorer
-export const ethercanUrl = isProd
+export const etherscanUrl = isProd
   ? "https://etherscan.io"
   : "https://sepolia.etherscan.io";
 export const baseExplorerUrl = isProd

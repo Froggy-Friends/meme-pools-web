@@ -4,9 +4,12 @@ import { useChain } from "@/context/chain";
 import useIsMounted from "@/hooks/useIsMounted";
 import { MAX_MARKET_CAP } from "@/lib/constants";
 import { TokenWithCreator } from "@/lib/types";
-import { TokenWithVotes } from "@/types/token/types";
+import { Channel } from "@/models/channel";
+import { TokenWithVotes, TradeWithUserAndToken } from "@/types/token/types";
 import Image from "next/image";
 import Link from "next/link";
+import Pusher from "pusher-js";
+import { useEffect, useState } from "react";
 import { CiGlobe } from "react-icons/ci";
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -17,26 +20,42 @@ type TokenDisplayCardProps = {
 };
 
 export default function TokenDisplayCard({ token, layout = "vertical" }: TokenDisplayCardProps) {
+  const [newTrade, setNewTrade] = useState(false);
   const { chain } = useChain();
-
   const marketCapPercentage = ((token.marketCap / MAX_MARKET_CAP) * 100).toFixed(2);
-
   const isHorizontal = layout === "horizontal";
-
   const isMounted = useIsMounted();
+
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
+      throw new Error("Missing pusher env variables");
+    }
+
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
+
+    const channel = pusher.subscribe(Channel.Buy);
+    channel.bind(token.id, ({ trade }: { trade: TradeWithUserAndToken }) => {
+      if (trade) {
+        setNewTrade(true);
+        setTimeout(() => setNewTrade(false), 1000);
+      }
+    });
+  }, [token.id]);
 
   if (!isMounted) return null;
 
   return (
     <div
       className={`flex rounded-xl overflow-hidden bg-dark-gray ${
-        isHorizontal ? "flex-row w-[450px] min-w-[450px] h-[240px] min-h-[240px]" : "flex-col h-[320px]"
-      }`}
+        isHorizontal ? "flex-row w-[390px] min-w-[390px] h-[240px] min-h-[240px]" : "flex-col h-[320px]"
+      } ${newTrade ? "animate-greenPulse" : ""}`}
     >
       <div className="flex w-full h-full">
         <div className={`flex ${isHorizontal ? "flex-row" : "flex-col"} w-full h-full`}>
           <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
-            <div className={`${isHorizontal ? "w-[225px]" : "h-[160px] min-h-[160px]"}`}>
+            <div className={`${isHorizontal ? "w-[180px]" : "h-[160px] min-h-[160px]"}`}>
               <Image
                 src={token.image}
                 alt={token.name}

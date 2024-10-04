@@ -1,4 +1,4 @@
-import { baseExplorerUrl, ethercanUrl, solanaExplorerUrl } from "@/config/env";
+import { baseExplorerUrl, etherscanUrl, solanaExplorerUrl } from "@/config/env";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { formatAddress } from "@/lib/formatAddress";
 import { getTimeDifference } from "@/lib/getTimeDifference";
@@ -15,7 +15,11 @@ type TokenTradeProps = {
 
 export default function TokenTrade({ trade }: TokenTradeProps) {
   return (
-    <div className="flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1">
+    <div
+      className={`flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1 ${
+        trade.isNew ? "animate-greenPulse" : ""
+      }`}
+    >
       <div className="flex items-center gap-x-4">
         <Image
           src={trade.userAvatar || defaultProfileAvatarUrl}
@@ -51,7 +55,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
         className="text-light-green hover:text-cream transition"
         href={`${
           trade.chain === Chain.Eth
-            ? `${ethercanUrl}/tx/${trade.transactionHash}`
+            ? `${etherscanUrl}/tx/${trade.transactionHash}`
             : trade.chain === Chain.Solana
             ? `${solanaExplorerUrl}/tx/${trade.transactionHash}`
             : `${baseExplorerUrl}/tx/${trade.transactionHash}`

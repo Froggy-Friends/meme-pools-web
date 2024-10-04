@@ -15,6 +15,7 @@ import Image from "next/image";
 import { cn } from "@nextui-org/react";
 import { solanaLogo, ethLogo } from "@/config/chains";
 import { useRouter } from "next/navigation";
+import LaunchCoinToast from "./LaunchCoinToast";
 
 export type LaunchFormValues = {
   name: string;
@@ -73,7 +74,7 @@ export default function LaunchCoinForm() {
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
-        toast.success("Token successfully created!");
+        <LaunchCoinToast txHash={tokenDetails.txHash} />;
       }
 
       reset();

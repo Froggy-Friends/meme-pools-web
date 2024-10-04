@@ -40,6 +40,7 @@ export default function useCreateToken() {
       const tx = await contract.createToken(name, symbol, reservedAmount, {
         value: total,
       });
+      const txHash = tx.hash;
       const receipt = await tx.wait();
 
       const { creator, reserved, tokenAddress } = await getTokenDetails(
@@ -52,6 +53,7 @@ export default function useCreateToken() {
         name,
         symbol,
         reserved,
+        txHash,
       };
     } catch (error) {
       console.log(error);

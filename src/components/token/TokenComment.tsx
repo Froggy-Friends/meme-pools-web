@@ -16,9 +16,10 @@ type TokenCommentProps = {
   comment: CommentWithLikes;
   author: User;
   cachedUser: User | null;
+  isNew?: boolean;
 };
 
-export default function TokenComment({ comment, author, cachedUser }: TokenCommentProps) {
+export default function TokenComment({ comment, author, cachedUser, isNew }: TokenCommentProps) {
   const { userCommentLike, userCommentDislike } = getUserCommentInteraction(comment, cachedUser!);
 
   const { likes, commentLike, handleLike, dislikes, commentDisLike, handleDislike } = useCommentLike(
@@ -30,7 +31,11 @@ export default function TokenComment({ comment, author, cachedUser }: TokenComme
   );
 
   return (
-    <div className="flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1">
+    <div
+      className={`flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1 ${
+        isNew ? "animate-greenPulse" : ""
+      }`}
+    >
       <div className="flex items-center gap-x-4">
         <Image
           src={author.imageUrl || defaultProfileAvatarUrl}

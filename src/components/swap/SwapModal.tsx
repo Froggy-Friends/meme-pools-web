@@ -5,7 +5,7 @@ import { formatNumber } from "@/lib/format";
 import { TxStatus } from "@/types/token/types";
 import Link from "next/link";
 import { formatAddress } from "@/lib/formatAddress";
-import { ethercanUrl } from "@/config/env";
+import { etherscanUrl } from "@/config/env";
 import { BsArrowUpCircleFill } from "react-icons/bs";
 
 type SwapModalProps = {
@@ -63,7 +63,7 @@ export default function SwapModal({
             {txHash ? (
               <>
                 See confirmation{" "}
-                <Link href={`${ethercanUrl}/tx/${txHash}`} target="_blank">
+                <Link href={`${etherscanUrl}/tx/${txHash}`} target="_blank">
                   <span className="text-light-gray hover:text-cream transition">{formatAddress(txHash, 5)}</span>
                 </Link>
               </>

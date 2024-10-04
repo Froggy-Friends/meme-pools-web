@@ -34,7 +34,7 @@ export default function TokenTrades({ trades, tokenId }: TokenTradesProps) {
 
     subscribedChannels.forEach(channel => {
       channel?.bind(tokenId, ({ trade }: { trade: FormattedTrade }) => {
-        queryClient.setQueryData(["trades", tokenId], [trade, ...data]);
+        queryClient.setQueryData(["trades", tokenId], [{ ...trade, isNew: true }, ...data]);
       });
     });
 

@@ -37,9 +37,9 @@ export default function TokenComments({ comments, cachedUser, tokenId }: TokenCo
     channel.bind(tokenId, ({ comment }: { comment: CommentWithLikes }) => {
       queryClient.setQueryData(
         ["token-comments", tokenId],
-        [...tokenComments, { ...comment, commentLikeCount: 0, commentDislikeCount: 0 }]
+        [...tokenComments, { ...comment, commentLikeCount: 0, commentDislikeCount: 0, isNew: true }]
       );
-      setTokenComments(prev => [...prev, { ...comment, commentLikeCount: 0, commentDislikeCount: 0 }]);
+      setTokenComments(prev => [...prev, { ...comment, commentLikeCount: 0, commentDislikeCount: 0, isNew: true }]);
     });
 
     return () => {
@@ -53,7 +53,13 @@ export default function TokenComments({ comments, cachedUser, tokenId }: TokenCo
     <section className="flex flex-col">
       {data.map(comment => {
         return (
-          <TokenComment key={comment.id} comment={comment} author={comment.user} cachedUser={cachedUser || null} />
+          <TokenComment
+            key={comment.id}
+            comment={comment}
+            author={comment.user}
+            cachedUser={cachedUser || null}
+            isNew={comment.isNew}
+          />
         );
       })}
     </section>
