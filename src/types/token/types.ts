@@ -54,6 +54,7 @@ export type CommentWithLikes = {
   commentLikeCount: number;
   commentDislikeCount: number;
   user: User;
+  isNew?: boolean;
 };
 
 export type TokenWithVoteCount = Token & { _count: { TokenVote: number } };
@@ -101,6 +102,7 @@ export type FormattedTrade = {
   chain: Chain;
   transactionHash: string;
   createdAt: Date;
+  isNew?: boolean;
 };
 
 export type TxStatus = "idle" | "pending" | "completed" | "error";
