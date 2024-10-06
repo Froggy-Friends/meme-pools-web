@@ -46,10 +46,10 @@ export default function LogoPopover() {
             </div>
           </Link>
 
-          <Link href="/privacy" target="_blank">
+          <Link href="/privacy">
             <p className="cursor-pointer text-lg pt-6 hover:text-green">Privacy Policy</p>
           </Link>
-          <Link href="/terms" target="_blank">
+          <Link href="/terms">
             <p className="cursor-pointer text-lg pt-4 hover:text-green">Terms of Service</p>
           </Link>
 
