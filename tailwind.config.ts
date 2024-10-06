@@ -11,6 +11,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        mobile: "430px",
+        laptop: "1024px",
+        desktop: "1440px",
+      },
       colors: {
         dark: "#131313",
         gray: "#484848",
