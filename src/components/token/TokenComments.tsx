@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Channel } from "@/models/channel";
 import Pusher from "pusher-js";
+import { usePostHog } from "posthog-js/react";
 
 type TokenCommentsProps = {
   comments: CommentWithLikes[];
@@ -17,6 +18,7 @@ type TokenCommentsProps = {
 export default function TokenComments({ comments, cachedUser, tokenId }: TokenCommentsProps) {
   const queryClient = useQueryClient();
   const [tokenComments, setTokenComments] = useState(comments);
+  const posthog = usePostHog();
 
   const { data } = useQuery({
     queryKey: ["token-comments", tokenId],
@@ -40,6 +42,7 @@ export default function TokenComments({ comments, cachedUser, tokenId }: TokenCo
         [...tokenComments, { ...comment, commentLikeCount: 0, commentDislikeCount: 0, isNew: true }]
       );
       setTokenComments(prev => [...prev, { ...comment, commentLikeCount: 0, commentDislikeCount: 0, isNew: true }]);
+      posthog.capture("new_comment", { tokenId: tokenId, comment: comment });
     });
 
     return () => {
@@ -47,7 +50,7 @@ export default function TokenComments({ comments, cachedUser, tokenId }: TokenCo
       channel.unsubscribe();
       pusher.disconnect();
     };
-  }, [queryClient, tokenComments, tokenId]);
+  }, [queryClient, tokenComments, tokenId, posthog]);
 
   return (
     <section className="flex flex-col">
