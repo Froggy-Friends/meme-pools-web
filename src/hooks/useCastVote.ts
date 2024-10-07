@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Channel } from "@/models/channel";
 import Pusher from "pusher-js";
+import { usePostHog } from "posthog-js/react";
 
 type UseCastVoteContext = {
   oldVotes: TokenVoteData | undefined;
@@ -13,6 +14,7 @@ type UseCastVoteContext = {
 
 export default function useCastVote(tokenId: string, userId: string) {
   const queryClient = useQueryClient();
+  const posthog = usePostHog();
 
   useEffect(() => {
     if (
@@ -30,10 +32,14 @@ export default function useCastVote(tokenId: string, userId: string) {
 
     upvotesChannel.bind(tokenId, (newData: TokenVoteData) => {
       queryClient.setQueryData(["votes", tokenId], newData);
+
+      posthog.capture("token_upvoted", { tokenId: tokenId, vote: newData });
     });
 
     downvotesChannel.bind(tokenId, (newData: TokenVoteData) => {
       queryClient.setQueryData(["votes", tokenId], newData);
+
+      posthog.capture("token_downvoted", { tokenId: tokenId, vote: newData });
     });
 
     return () => {
@@ -45,7 +51,7 @@ export default function useCastVote(tokenId: string, userId: string) {
 
       pusher.disconnect();
     };
-  }, [queryClient, tokenId]);
+  }, [queryClient, tokenId, posthog]);
 
   const {
     data,
