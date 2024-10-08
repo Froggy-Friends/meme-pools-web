@@ -55,7 +55,7 @@ export default function TokenTrades({ trades, tokenId }: TokenTradesProps) {
   }, [queryClient, tokenId, data, posthog]);
 
   return (
-    <section className="flex flex-col mt-4">
+    <section className="flex flex-col">
       {data.map(trade => (
         <TokenTrade key={trade.id} trade={trade} />
       ))}

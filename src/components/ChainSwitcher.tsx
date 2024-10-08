@@ -27,7 +27,7 @@ export default function ChainSwitcher() {
   return (
     <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
       <DropdownTrigger>
-        <div className="hover:bg-gray transition rounded-lg p-2 cursor-pointer">
+        <div className="hover:bg-gray transition rounded-lg p-1 laptop:p-2 cursor-pointer">
           <Image
             className="transition-transform"
             src={getChainLogo(chain.name)}

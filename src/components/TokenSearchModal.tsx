@@ -1,11 +1,5 @@
 import { searchTokens, searchTokensByCa } from "@/queries/token/queries";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  Switch,
-} from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, Switch } from "@nextui-org/react";
 import { useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { MdKeyboardCommandKey } from "react-icons/md";
@@ -19,30 +13,24 @@ type TokenSearchModalProps = {
   onOpenChange: () => void;
 };
 
-export default function TokenSearchModal({
-  isOpen,
-  onOpenChange,
-}: TokenSearchModalProps) {
+export default function TokenSearchModal({ isOpen, onOpenChange }: TokenSearchModalProps) {
   const [tokens, setTokens] = useState<TokenWithVoteCount[] | null>(null);
   const [token, setToken] = useState<TokenWithVoteCount | null>(null);
   const [caSearch, setCaSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const debounced = useDebouncedCallback(
-    async (value) => {
-      setIsLoading(true);
-      if (!caSearch) {
-        const tokens = await searchTokens(value);
-        console.log(tokens);
-        setTokens(tokens);
-      } else {
-        const token = await searchTokensByCa(value);
-        setToken(token);
-      }
-      setIsLoading(false);
-    },
-    500
-  );
+  const debounced = useDebouncedCallback(async value => {
+    setIsLoading(true);
+    if (!caSearch) {
+      const tokens = await searchTokens(value);
+      console.log(tokens);
+      setTokens(tokens);
+    } else {
+      const token = await searchTokensByCa(value);
+      setToken(token);
+    }
+    setIsLoading(false);
+  }, 500);
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") {
@@ -62,11 +50,11 @@ export default function TokenSearchModal({
           setTokens(null);
         }}
         size="2xl"
-        className="bg-dark max-h-[500px] min-h-[175px] overflow-y-auto"
+        className="bg-dark max-h-[500px] min-h-[175px] overflow-y-auto mt-12 laptop:mt-0"
         placement="top"
       >
         <ModalContent>
-          {(onClose) => (
+          {onClose => (
             <>
               <ModalHeader></ModalHeader>
               <ModalBody className="flex flex-col">
@@ -78,10 +66,10 @@ export default function TokenSearchModal({
                     placeholder="search"
                     autoComplete="off"
                     autoFocus
-                    onChange={(e) => {
+                    onChange={e => {
                       handleSearch(e);
                     }}
-                    className="h-10 w-full px-12 rounded-3xl bg-dark-gray border-[0.25px] border-white/[5%]"
+                    className="h-10 w-full px-12 rounded-lg bg-dark-gray border-[0.25px] border-white/[5%] outline-none focus:ring-1 ring-white"
                   />
                   <div
                     className="absolute inset-y-0 left-0 pl-4  
@@ -90,7 +78,7 @@ export default function TokenSearchModal({
                   >
                     <FaMagnifyingGlass size={20} />
                   </div>
-                  <div className="absolute inset-y-0 right-[4.5rem] flex items-center">
+                  <div className="absolute inset-y-0 right-4 flex items-center">
                     <Switch
                       size="sm"
                       isSelected={caSearch}
@@ -101,10 +89,6 @@ export default function TokenSearchModal({
                       }}
                     ></Switch>
                     <p>CA</p>
-                  </div>
-                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center gap-x-1 pointer-events-none">
-                    <MdKeyboardCommandKey size={20} />
-                    <p>K</p>
                   </div>
                 </div>
 
@@ -119,10 +103,8 @@ export default function TokenSearchModal({
 
                 {!isLoading && !caSearch && (
                   <div className="mb-2">
-                    {tokens?.map((token) => {
-                      return (
-                        <SearchTokenDisplay key={token.id} token={token} />
-                      );
+                    {tokens?.map(token => {
+                      return <SearchTokenDisplay key={token.id} token={token} />;
                     })}
                   </div>
                 )}

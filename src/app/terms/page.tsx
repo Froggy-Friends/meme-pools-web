@@ -4,7 +4,7 @@ import { Chain } from "@/models/chain";
 
 export default function TermsPage() {
   return (
-    <main className="flex flex-col items-center min-h-[100vh] max-w-[410px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-4">
+    <main className="flex flex-col items-center min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-4">
       <Header chain={Chain.Eth} />
       <h1 className="text-5xl font-bold pb-12 laptop:pb-24">Terms of Service</h1>
 

@@ -22,17 +22,19 @@ export default function TokenSearch() {
   }, [onOpen]);
 
   return (
-    <section className="flex justify-center items-center w-[330px]">
+    <section className="flex justify-center tablet:ml-28 items-center w-[150px] tablet:w-[280px] desktop:w-[330px]">
       <button
         onClick={e => onOpen()}
         className="flex items-center justify-between h-8 w-full px-4 border-[0.25px] border-white/[5%] rounded-lg bg-dark-gray hover:bg-gray transition"
       >
         <div className="flex items-center gap-x-4">
           <FaMagnifyingGlass size={16} />
-          <p className="text-light-gray">Search token</p>
+          <p className="text-light-gray flex gap-x-1">
+            Search <span className="hidden tablet:block">token</span>
+          </p>
         </div>
 
-        <div className="flex items-center bg-dark rounded-[4px] h-6 px-2">
+        <div className="hidden laptop:flex items-center bg-dark rounded-[4px] h-6 px-2">
           <MdKeyboardCommandKey size={14} />
           <p className="font-semibold text-sm">K</p>
         </div>

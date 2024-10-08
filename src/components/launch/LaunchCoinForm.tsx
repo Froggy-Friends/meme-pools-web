@@ -16,6 +16,8 @@ import { cn } from "@nextui-org/react";
 import { solanaLogo, ethLogo } from "@/config/chains";
 import { useRouter } from "next/navigation";
 import LaunchCoinToast from "./LaunchCoinToast";
+import { GrRefresh } from "react-icons/gr";
+import { useRef } from "react";
 
 export type LaunchFormValues = {
   name: string;
@@ -35,6 +37,8 @@ export default function LaunchCoinForm() {
   const { createToken } = useCreateToken();
   const { chain } = useChain();
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
+
   const {
     register,
     handleSubmit,
@@ -42,7 +46,8 @@ export default function LaunchCoinForm() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<LaunchFormValues>();
-  const inputStyles = "h-10 w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+  const inputStyles =
+    "h-10 w-[410px] tablet:w-[350px] laptop:w-[430px] desktop:w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
 
   const onSubmit = handleSubmit(async (data: LaunchFormValues) => {
     const formData = createFormData(data);
@@ -86,14 +91,22 @@ export default function LaunchCoinForm() {
 
   return (
     <section className="mt-20">
-      <form onSubmit={onSubmit} className="flex flex-col items-center">
-        <div className="flex gap-x-10">
+      <form onSubmit={onSubmit} className="flex flex-col items-center max-w-[925px] mx-auto" ref={formRef}>
+        <button
+          onClick={() => formRef.current?.reset()}
+          className="flex items-center self-end gap-x-2 mb-5 bg-dark-gray rounded-3xl px-4 py-2 hover:bg-gray active:scale-[0.97] transition"
+        >
+          <p>Reset</p>
+          <GrRefresh size={18} />
+        </button>
+        <div className="flex flex-col tablet:flex-row gap-x-4 laptop:gap-x-10">
           <div className="flex flex-col">
-            <div className="flex gap-x-4">
+            <div className="flex gap-x-1">
               <label htmlFor="name" className="mb-1">
                 Name
               </label>
-              {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+              <span className="text-green mr-2">*</span>
+              {errors.name && <p className="text-red">{errors.name.message}</p>}
             </div>
             <input
               {...register("name", {
@@ -109,11 +122,12 @@ export default function LaunchCoinForm() {
               autoComplete="off"
             />
 
-            <div className="flex gap-x-4">
+            <div className="flex gap-x-1">
               <label htmlFor="ticker" className="mb-1">
                 Ticker
               </label>
-              {errors.ticker && <p className="text-red-500">{errors.ticker.message}</p>}
+              <span className="text-green mr-2">*</span>
+              {errors.ticker && <p className="text-red">{errors.ticker.message}</p>}
             </div>
 
             <div className="relative">
@@ -139,12 +153,19 @@ export default function LaunchCoinForm() {
               </div>
             </div>
 
-            <label htmlFor="reservedAmount" className="mb-1">
-              Reserved Supply
-            </label>
+            <div className="flex gap-x-1">
+              <label htmlFor="reservedAmount" className="mb-1">
+                Reserved Supply
+              </label>
+              <span className="text-green mr-2">*</span>
+              {errors.reservedAmount && <p className="text-red">{errors.reservedAmount.message}</p>}
+            </div>
+
             <div className="relative">
               <input
-                {...register("reservedAmount")}
+                {...register("reservedAmount", {
+                  required: "Enter reserved supply, or 0",
+                })}
                 id="reservedAmount"
                 type="number"
                 className={cn(inputStyles, "pl-[2.75rem]")}
@@ -162,25 +183,27 @@ export default function LaunchCoinForm() {
           </div>
 
           <div className="flex flex-col">
-            <div className="flex gap-x-4">
+            <div className="flex gap-x-1">
               <label htmlFor="description" className="mb-1">
                 Description
               </label>
-              {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+              <span className="text-green mr-2">*</span>
+              {errors.description && <p className="text-red">{errors.description.message}</p>}
             </div>
             <textarea
               {...register("description", {
                 required: "Token description is required",
               })}
               id="description"
-              className="h-32 w-[450px] mb-5 px-2 py-1 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
+              className="h-32 w-[410px] tablet:w-[350px] laptop:w-[430px] desktop:w-[450px] mb-5 px-2 py-1 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
             />
 
-            <div className="flex gap-x-4">
+            <div className="flex gap-x-1">
               <label htmlFor="image" className="mb-1">
                 Image
               </label>
-              {errors.image && <p className="text-red-500">{errors.image.message}</p>}
+              <span className="text-green mr-2">*</span>
+              {errors.image && <p className="text-red">{errors.image.message}</p>}
             </div>
             <input
               {...register("image", {
@@ -195,9 +218,9 @@ export default function LaunchCoinForm() {
         </div>
 
         <div className="flex flex-col mt-10">
-          <p className="mb-1 ml-5">Optional Links</p>
+          <p className="mb-1 ml-1 tablet:ml-4 laptop:ml-5">Optional Links</p>
 
-          <div className="flex w-[975px] justify-between">
+          <div className="flex w-[415px] tablet:w-[750px] laptop:w-[925px] desktop:w-[975px] justify-between">
             <LaunchCoinFormModal name="twitter" pattern="https://x.com/*" register={register} resetField={resetField} />
             <LaunchCoinFormModal name="telegram" register={register} resetField={resetField} />
             <LaunchCoinFormModal name="website" pattern="https://.*" register={register} resetField={resetField} />
@@ -213,7 +236,7 @@ export default function LaunchCoinForm() {
 
         <FormSubmitButton
           isSubmitting={isSubmitting}
-          className="h-10 w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
+          className="h-10 w-[410px] laptop:w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
         >
           <p className="text-dark font-proximaSoftBold">HAVE SOME FUN</p>
         </FormSubmitButton>

@@ -128,7 +128,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
 
   return (
     <>
-      <div className="flex flex-col rounded-lg w-[350px] mt-7">
+      <div className="flex flex-col rounded-lg w-full laptop:w-[350px] mt-7">
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
             <button
@@ -239,9 +239,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   className="ml-2"
                 />
                 <p>{chain.name === Chain.Solana ? "$SOL" : "$ETH"}</p>
-                <p className="text-white/75 text-sm ml-2">
-                  {sellCost !== 0 ? sellCost.toFixed(6) : "0.0"}
-                </p>
+                <p className="text-white/75 text-sm ml-2">{sellCost !== 0 ? sellCost.toFixed(6) : "0.0"}</p>
               </div>
             </>
           )}

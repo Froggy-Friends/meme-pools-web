@@ -64,7 +64,7 @@ export default function SwapModal({
               <>
                 See confirmation{" "}
                 <Link href={`${etherscanUrl}/tx/${txHash}`} target="_blank">
-                  <span className="text-light-gray hover:text-cream transition">{formatAddress(txHash, 5)}</span>
+                  <span className="text-light-gray hover:text-cream transition">{formatAddress(txHash)}</span>
                 </Link>
               </>
             ) : (

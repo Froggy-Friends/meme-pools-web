@@ -40,11 +40,11 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
             <p className="text-gray">{getTimeDifference(trade.createdAt)}</p>
           </div>
 
-          <p>
+          <p className="text-sm laptop:text-base overflow-y-auto">
             <span className={`${trade.category === Trade.Buy ? "text-light-green" : "text-rose"}`}>
               {`${trade.category === Trade.Buy ? "Bought" : "Sold"}`}
             </span>{" "}
-            {trade.amount} <span className="text-blue">${trade.tokenTicker}</span> for $
+            {trade.amount} <span className="text-blue">${trade.tokenTicker}</span> for{" "}
             {Number(trade.nativeCost).toFixed(8)}{" "}
             <span className="text-[#CFB2F4]">{trade.chain === Chain.Solana ? "$SOL" : "$ETH"}</span>
           </p>
@@ -62,7 +62,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
         }`}
         target="_blank"
       >
-        {formatAddress(trade.transactionHash, 5)}
+        {formatAddress(trade.transactionHash)}
       </Link>
     </div>
   );

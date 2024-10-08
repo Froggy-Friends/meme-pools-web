@@ -45,7 +45,7 @@ export default function TokenChart({ tokenAddress }: TokenChartProps) {
 
       const chart = createChart(chartContainerRef.current, {
         width: chartContainerRef.current.clientWidth,
-        height: 420,
+        height: 410,
         layout: {
           background: { type: ColorType.Solid, color: "#1b1b1b" },
           textColor: "white",

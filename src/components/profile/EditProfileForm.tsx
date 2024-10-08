@@ -23,7 +23,8 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
   const { address } = useAccount();
   const { currentUser } = useUser();
   const disabled = profileUser.id !== currentUser?.id;
-  const inputStyles = "h-10 w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
+  const inputStyles =
+    "h-10 w-[395px] tablet:w-[425px] laptop:w-[340px] desktop:w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -43,7 +44,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
     }
   };
 
-  const debounced = useDebouncedCallback(async (value) => {
+  const debounced = useDebouncedCallback(async value => {
     const usernameExists = await fetchUserByName(value);
     if (usernameExists) {
       setUserExists(true);
@@ -53,9 +54,9 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
   }, 500);
 
   return (
-    <form className="mt-4 flex flex-col" action={handleSubmit}>
-      <div className="flex">
-        <div className="flex flex-col mx-12">
+    <form className="mt-4 flex flex-col items-center laptop:items-start" action={handleSubmit}>
+      <div className="flex flex-col laptop:flex-row">
+        <div className="flex flex-col mx-0 laptop:mx-7 desktop:mx-12">
           <div className="flex items-center gap-x-3">
             <label htmlFor="username">Username</label>
             {userExists && <p className="text-red">Username already exists</p>}
@@ -70,7 +71,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
             className={cn(inputStyles, userExists && "ring-red", usernameAvailable && "ring-green")}
             autoComplete="off"
             defaultValue={profileUser.name}
-            onChange={async (e) => {
+            onChange={async e => {
               setUserExists(false);
               setUsernameAvailable(false);
               await debounced(e.target.value);
@@ -135,7 +136,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
         <FormSubmitButton
           disabled={userExists}
           className={cn(
-            "self-center flex justify-center items-center text-lg bg-green text-dark font-proximaSoftBold h-10 w-[425px] my-20 mr-6 rounded-3xl hover:bg-light-green active:scale-[0.98] transition",
+            "self-center flex justify-center items-center text-lg bg-green text-dark font-proximaSoftBold h-10 w-[410px] laptop:w-[425px] my-12 laptop:mt-20 laptop:mb-24 laptop:mr-6 rounded-3xl hover:bg-light-green active:scale-[0.98] transition",
             userExists && "hover:bg-green"
           )}
         >
