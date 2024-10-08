@@ -32,10 +32,10 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
   const following = await fetchFollowing(profileUser.id);
 
   return (
-    <main className="flex flex-col max-w-[1200px] min-h-[100vh] mx-auto">
+    <main className="flex flex-col min-h-[100vh] max-w-[410px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 laptop:px-4">
       <Header chain={Chain.Eth} />
 
-      <h2 className="text-[56px] font-semibold">{toTitleCase(view)}</h2>
+      <h2 className="text-4xl laptop:text-[56px] font-semibold">{toTitleCase(view)}</h2>
 
       <ProfileMenuToggle profileUser={profileUser} currentView={view} />
 

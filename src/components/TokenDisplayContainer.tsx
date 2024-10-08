@@ -16,7 +16,7 @@ export default function TokenDisplayContainer({ filter, page, reverse }: TokenDi
   });
   if (!tokens || tokens.length === 0) return null;
   return (
-    <section className="grid grid-cols-7 gap-3">
+    <section className="grid grid-cols-2 laptop:grid-cols-4 desktop:grid-cols-5 gap-3">
       {tokens.map(token => {
         return <TokenDisplayCard key={token.id} token={token} />;
       })}

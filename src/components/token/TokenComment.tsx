@@ -56,7 +56,7 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
             <p className="text-gray">{getTimeDifference(comment.createdAt)}</p>
           </div>
 
-          <p>{comment.message}</p>
+          <p className="overflow-y-auto">{comment.message}</p>
         </div>
       </div>
 

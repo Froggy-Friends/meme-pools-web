@@ -28,6 +28,7 @@ export default function LogoPopover() {
             width={32}
             className="hover:scale-[1.03] transition"
           />
+          <p className="hidden laptop:block text-2xl font-proximaSoftBold">FROG.FUN</p>
           <Image src="/down-arrow.svg" alt="more" width={12} height={9} />
         </div>
       </PopoverTrigger>

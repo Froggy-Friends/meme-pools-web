@@ -17,6 +17,7 @@ import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
 import TokenActions from "@/components/token/TokenActions";
 import { Address } from "viem";
+import MobileViewButtons from "@/components/token/MobileViewButtons";
 
 const DynamicTokenChart = dynamic(() => import("../../../../components/token/TokenChart"), {
   ssr: false,
@@ -45,24 +46,27 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
   const cachedUser = await fetchUser(cachedUserEvmAddress?.value);
 
   return (
-    <main className="flex flex-col max-w-[1200px] min-h-[100vh] px-4 mx-auto">
+    <main className="flex flex-col min-h-[100vh] max-w-[410px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 laptop:px-4">
       <Header chain={Chain.Eth} />
 
       <TokenInfo token={token} creator={creator} cachedUser={cachedUser || null} />
 
-      <div className="flex gap-x-10 w-full">
-        <div className="flex-[3] flex flex-col">
+      <div className="flex flex-col desktop:flex-row gap-x-10 w-full">
+        <div className="flex-[3] flex flex-col mobile-chart">
           <TokenActions token={token} cachedUser={cachedUser || null} />
           <DynamicTokenChart tokenAddress={tokenAddress as Address} />
         </div>
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col laptop:flex-row desktop:flex-col gap-x-6  mt-[55px] desktop:mt-0 mobile-trade">
           <Swap token={token} currPrice={2} ethPrice={ethPrice} />
 
-          <BondingCurveProgress />
-          <VotingProgress token={token} />
+          <div className="flex flex-col mt-12 desktop:mt-0">
+            <BondingCurveProgress ticker={token.ticker} />
+            <VotingProgress token={token} />
+          </div>
         </div>
       </div>
+
       <CommentsAndTradesContainer
         view={view}
         tokenAddress={tokenAddress}

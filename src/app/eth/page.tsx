@@ -1,7 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import LiveFeed from "@/components/LiveFeed";
-import TokenDisplayCard from "@/components/TokenDisplayCard";
 import TokenPageContent from "@/components/TokenPageContent";
 import VotingLeaderboard from "@/components/VotingLeaderboard";
 import { Chain } from "@/models/chain";
@@ -21,20 +20,15 @@ export default async function EthHomePage() {
   });
 
   return (
-    <main className="flex flex-col min-h-[100vh] mx-32 px-4">
+    <main className="flex flex-col min-h-[100vh] max-w-[410px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 laptop:px-4">
       <Header chain={Chain.Eth} />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <div className="flex flex-col gap-6 w-full">
-          <div className="flex items-center gap-4">
-            <div className="w-full h-[400px] rounded-lg bg-dark-gray p-4 flex flex-col gap-6">
+          <div className="flex flex-col laptop:flex-row items-center gap-2 desktop:gap-4">
+            <div className="w-full rounded-lg bg-dark-gray p-4 flex flex-col gap-6">
               <div className="flex items-center justify-between w-full">
-                <span className="font-proximaSoftBold uppercase">Leaderboard</span>
+                <span className="hidden laptop:block font-proximaSoftBold uppercase">Leaderboard</span>
                 <VotingLeaderboard tokens={topTokens} />
-              </div>
-              <div className="bg-dark px-2.5 py-10 flex items-center gap-2.5 overflow-x-auto overflow-y-hidden rounded-lg w-full h-[320px]">
-                {topTokens.map(token => (
-                  <TokenDisplayCard key={token.id} token={token} layout="horizontal" />
-                ))}
               </div>
             </div>
 

@@ -4,12 +4,7 @@ import useUser from "@/hooks/useUser";
 import useUserVote from "@/hooks/useUserVote";
 import useVotes from "@/hooks/useVotes";
 import { TokenVoteStatus } from "@/models/token";
-import {
-  PiArrowFatUpFill,
-  PiArrowFatDownFill,
-  PiArrowFatDownLight,
-  PiArrowFatUpLight,
-} from "react-icons/pi";
+import { PiArrowFatUpFill, PiArrowFatDownFill, PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { User } from "@prisma/client";
 
 type VoteCountProps = {
@@ -19,14 +14,8 @@ type VoteCountProps = {
 export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
   const { votes } = useVotes(tokenId);
   const { currentUser } = useUser();
-  const { castVote, isCastingVote } = useCastVote(
-    tokenId,
-    cachedUser?.id! || currentUser?.id!
-  );
-  const { userVote } = useUserVote(
-    tokenId,
-    cachedUser?.id! || currentUser?.id!
-  );
+  const { castVote, isCastingVote } = useCastVote(tokenId, cachedUser?.id! || currentUser?.id!);
+  const { userVote } = useUserVote(tokenId, cachedUser?.id! || currentUser?.id!);
   const voteStatus = userVote?.status;
 
   const handleVote = (status: TokenVoteStatus | null) => {
@@ -41,15 +30,9 @@ export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
         className="flex gap-x-1 items-center"
       >
         {voteStatus === TokenVoteStatus.UPVOTE ? (
-          <PiArrowFatUpFill
-            size={25}
-            className="text-blue hover:scale-[1.03] transition"
-          />
+          <PiArrowFatUpFill className="w-5 h-5 laptop:w-8 laptop:h-8 text-blue hover:scale-[1.03] transition" />
         ) : (
-          <PiArrowFatUpLight
-            size={25}
-            className="text-blue hover:scale-[1.03] transition"
-          />
+          <PiArrowFatUpLight className="w-5 h-5 laptop:w-8 laptop:h-8 text-blue hover:scale-[1.03] transition" />
         )}
         {votes?.upvotes ?? 0}
       </button>
@@ -59,15 +42,9 @@ export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
         className="flex gap-x-1 items-center"
       >
         {voteStatus === TokenVoteStatus.DOWNVOTE ? (
-          <PiArrowFatDownFill
-            size={25}
-            className="hover:scale-[1.03] transition"
-          />
+          <PiArrowFatDownFill size={25} className="hover:scale-[1.03] transition" />
         ) : (
-          <PiArrowFatDownLight
-            size={25}
-            className="hover:scale-[1.03] transition"
-          />
+          <PiArrowFatDownLight size={25} className="hover:scale-[1.03] transition" />
         )}
         {votes?.downvotes ?? 0}
       </button>

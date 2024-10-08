@@ -7,10 +7,7 @@ type PaginationControlsProps = {
   onPageChange: (page: number) => void;
 };
 
-export default function PaginationControls({
-  page,
-  onPageChange,
-}: PaginationControlsProps) {
+export default function PaginationControls({ page, onPageChange }: PaginationControlsProps) {
   return (
     <Pagination
       total={10}
@@ -21,7 +18,7 @@ export default function PaginationControls({
         cursor: "bg-green text-black",
       }}
       page={page}
-      className="mx-auto my-2"
+      className="mx-auto mt-2 mb-12 laptop:mb-24"
       onChange={onPageChange}
     />
   );

@@ -81,24 +81,10 @@ export default function LiveFeed() {
   };
 
   return (
-    <div className="min-w-[350px] w-[350px] h-[400px] rounded-lg bg-dark-gray p-4 flex flex-col gap-6 font-proximaSoftBold">
-      <div className="flex items-center justify-between w-full">
-        <span>Live Feed</span>
-        <span className="text-[8px] flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-green animate-pulse"></div> Live
-        </span>
-      </div>
-      <div className="flex flex-col gap-2.5">
-        <Virtuoso
-          style={{ height: "400px" }}
-          totalCount={feedData.length}
-          itemContent={index => (
-            <div key={index} className="flex items-center justify-between text-xs font-proximaSoft">
-              <div className="w-full truncate line-clamp-1 overflow-hidden">{formatFeedData(feedData[index])}</div>
-              <span className="text-[8px] block w-max shrink-0">{getTimeDifference(feedData[index].date)}</span>
-            </div>
-          )}
-        />
+    <div className="w-full laptop:min-w-[350px] laptop:w-[350px] rounded-lg bg-dark-gray p-4 flex flex-col gap-6 font-proximaSoftBold">
+      <div className="flex items-center gap-x-1 w-full">
+        <div className="w-2 h-2 rounded-full bg-green animate-pulse" />
+        <span>FEED</span>
       </div>
     </div>
   );

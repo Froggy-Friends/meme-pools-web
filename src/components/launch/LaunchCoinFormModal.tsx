@@ -1,12 +1,5 @@
 import { toTitleCase } from "@/lib/toTitleCase";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 import { UseFormRegister, UseFormResetField } from "react-hook-form";
 import { LaunchFormValues } from "./LaunchCoinForm";
 import { LaunchModalInputs } from "@/types/launch/types";
@@ -19,19 +12,14 @@ type LaunchCoinFormModalProps = {
   pattern?: string;
 };
 
-export default function LaunchCoinFormModal({
-  name,
-  pattern,
-  register,
-  resetField,
-}: LaunchCoinFormModalProps) {
+export default function LaunchCoinFormModal({ name, pattern, register, resetField }: LaunchCoinFormModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const inputStyles =
-    "h-10 w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+    "h-10 w-[340px] laptop:w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
   return (
     <>
       <button
-        className="h-20 w-40 bg-dark-gray rounded-lg m-auto text-lg hover:bg-gray transition"
+        className="h-10 laptop:h-20 w-[75px] laptop:w-40 bg-dark-gray rounded-lg m-auto text-base laptop:text-lg hover:bg-gray transition"
         onClick={onOpen}
         type="button"
       >
@@ -42,11 +30,11 @@ export default function LaunchCoinFormModal({
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="xl"
-        className="bg-dark text-white w-[700px] h-[500px] p-3"
+        className="bg-dark text-white w-[700px] h-[350px] laptop:h-[500px] p-3"
         hideCloseButton={true}
       >
         <ModalContent>
-          {(onClose) => (
+          {onClose => (
             <>
               <ModalHeader className="flex justify-between">
                 <label htmlFor={name} className="mb-1 text-xl">
@@ -67,10 +55,10 @@ export default function LaunchCoinFormModal({
                   {...register(name)}
                 />
               </ModalBody>
-              <ModalFooter className="justify-center gap-x-2 mb-2">
+              <ModalFooter className="flex-col laptop:flex-row justify-center gap-x-2 mb-2">
                 <button
                   onClick={onClose}
-                  className="bg-green h-10 w-48 rounded-3xl text-lg text-dark font-proximaSoftBold hover:bg-[#29ff93] transition"
+                  className="bg-green h-10 w-full laptop:w-48 rounded-3xl text-lg text-dark font-proximaSoftBold hover:bg-[#29ff93] transition"
                 >
                   SAVE
                 </button>
@@ -79,7 +67,7 @@ export default function LaunchCoinFormModal({
                     resetField(name);
                     onClose();
                   }}
-                  className="bg-cream/80 h-10 w-48 rounded-3xl text-lg text-dark font-proximaSoftBold hover:bg-cream transition"
+                  className="bg-cream/80 h-10 w-full laptop:w-48 rounded-3xl text-lg text-dark font-proximaSoftBold hover:bg-cream transition"
                 >
                   CANCEL
                 </button>

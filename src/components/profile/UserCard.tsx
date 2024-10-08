@@ -15,11 +15,7 @@ type UserCardProps = {
   profileUser: User;
 };
 
-export default async function UserCard({
-  user,
-  view,
-  profileUser,
-}: UserCardProps) {
+export default async function UserCard({ user, view, profileUser }: UserCardProps) {
   const cookieStore = cookies();
   const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const cachedUser = await fetchUser(cachedUserEvmAddress?.value);
@@ -29,7 +25,7 @@ export default async function UserCard({
   const followedTime = getTimeDifference(isFollowed?.followedAt);
 
   return (
-    <div className="flex items-center justify-between w-[700px] h-[70px]  px-4 bg-dark-gray rounded-lg ">
+    <div className="flex items-center justify-between w-[400px] laptop:w-[700px] h-[70px]  px-4 bg-dark-gray rounded-lg ">
       <div className="flex items-center gap-x-3">
         <Image
           src={(user && user.imageUrl) || defaultProfileAvatarUrl}
@@ -38,19 +34,12 @@ export default async function UserCard({
           width={45}
           className="rounded-full"
         />
-        <Link
-          href={`/profile/${user.name}`}
-          className="hover:underline font-proximaSoftBold text-xl"
-        >
+        <Link href={`/profile/${user.name}`} className="hover:underline font-proximaSoftBold text-lg laptop:text-xl">
           {getUserDisplayName(user.name)}
         </Link>
 
-        {view === "followers" && (
-          <p className="text-gray text-lg">Followed you {followedTime}</p>
-        )}
-        {view === "following" && (
-          <p className="text-gray text-lg">Followed {followingTime}</p>
-        )}
+        {view === "followers" && <p className="hidden laptop:block text-gray text-lg">Followed you {followedTime}</p>}
+        {view === "following" && <p className="hidden laptop:block text-gray text-lg">Followed {followingTime}</p>}
       </div>
 
       {cachedUser && cachedUser.id !== user.id && (

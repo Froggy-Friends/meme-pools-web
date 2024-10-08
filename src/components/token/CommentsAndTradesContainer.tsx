@@ -27,14 +27,16 @@ export default async function CommentsAndTradesContainer({
   return (
     <section>
       <div className="relative flex flex-col w-full h-[450px] my-20 bg-dark-gray rounded-xl overflow-hidden">
-        <div className="sticky top-0 z-10 bg-dark-gray p-6 pb-4">
+        <div className="sticky top-0 z-10 bg-dark-gray mt-2 laptop:mt-0 p-2 laptop:p-6">
           <div className="flex gap-x-2">
             <ToggleViewButton name="Trades" tokenAddress={tokenAddress} view={view} />
             <ToggleViewButton name="Comments" tokenAddress={tokenAddress} view={view} />
           </div>
         </div>
-        <div className="flex-grow overflow-y-auto p-6 pt-0">
-          {view === "comments" && <TokenComments comments={comments} cachedUser={cachedUser || null} tokenId={tokenId} />}
+        <div className="flex-grow overflow-y-auto p-2 laptop:px-6">
+          {view === "comments" && (
+            <TokenComments comments={comments} cachedUser={cachedUser || null} tokenId={tokenId} />
+          )}
           {view === "trades" && <TokenTrades trades={formattedTrades} tokenId={tokenId} />}
         </div>
       </div>

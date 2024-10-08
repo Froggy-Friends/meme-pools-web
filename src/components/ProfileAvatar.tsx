@@ -36,7 +36,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       {!isConnected && chain.name === Chain.Eth && <EvmConnectButton />}
       {!connected && chain.name === Chain.Solana && <SolConnectButton />}
       <DropdownTrigger>
-        <div className="hover:bg-gray rounded-lg p-2 cursor-pointer">
+        <div className="hover:bg-gray rounded-lg p-1 laptop:p-2 cursor-pointer">
           <Image
             className="transition-transform rounded-full"
             src={user?.imageUrl || defaultProfileAvatarUrl}
@@ -48,18 +48,18 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       </DropdownTrigger>
       <DropdownMenu>
         <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
-          <p className="text-lg">
+          <p className="text-sm laptop:text-lg">
             {user && `Signed in as ${getUserDisplayName(user.name)}`}
             {!user && currentUser && `Signed in as ${getUserDisplayName(currentUser.name)}`}
           </p>
         </DropdownItem>
         <DropdownItem className="dark" key="Profile">
           <Link href={`/profile/${user ? user.name : currentUser?.name}`}>
-            <p className="text-[17px]">Profile</p>
+            <p className="text-sm laptop:text-[17px]">Profile</p>
           </Link>
         </DropdownItem>
         <DropdownItem key="Portfolio" className="hover:cursor-default" isReadOnly>
-          <p className="text-[17px] text-white/[20%] hover:cursor-default">Portfolio</p>
+          <p className="text-sm laptop:text-[17px] text-white/[20%] hover:cursor-default">Portfolio</p>
         </DropdownItem>
         <DropdownItem
           className="dark"
@@ -74,7 +74,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
             }
           }}
         >
-          <p className="text-[17px]">Disconnect</p>
+          <p className="text-sm laptop:text-[17px]">Disconnect</p>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

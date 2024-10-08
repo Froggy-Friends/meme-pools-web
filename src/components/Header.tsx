@@ -23,11 +23,9 @@ export default async function Header({ chain }: HeaderProps) {
     <header className="flex justify-between items-center w-full h-20 mb-12 laptop:mb-24">
       <LogoPopover />
 
-      <div className="flex ml-60">
-        <TokenSearch />
-      </div>
+      <TokenSearch />
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-x-1 desktop:gap-x-2">
         <LaunchCoinButton />
         <HowItWorksButton />
         <ChainSwitcher />

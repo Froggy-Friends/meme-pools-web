@@ -8,7 +8,7 @@ export default function HowItWorksButton() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
-      <button onClick={onOpen} className="p-2 hover:bg-gray rounded-lg">
+      <button onClick={onOpen} className="p-1 laptop:p-2 hover:bg-gray rounded-lg">
         <BsQuestionCircle size={25} className="text-light-gray transition" />
       </button>
       <HowItWorksModal isOpen={isOpen} onOpenChange={onOpenChange} />

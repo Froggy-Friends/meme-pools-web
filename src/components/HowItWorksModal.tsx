@@ -1,29 +1,21 @@
 "use client";
 
 import { bondingCurveLimit, bondingCurveReward } from "@/config/token";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
 
 type HowItWorkdsModalProps = {
   isOpen: boolean;
   onOpenChange: () => void;
 };
 
-export default function HowItWorksModal({
-  isOpen,
-  onOpenChange,
-}: HowItWorkdsModalProps) {
+export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsModalProps) {
   return (
     <>
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         className="bg-dark-gray text-white p-6 max-w-[600px] overflow-hidden"
+        placement="top-center"
       >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
@@ -31,8 +23,7 @@ export default function HowItWorksModal({
           </ModalHeader>
           <ModalBody>
             <p>
-              <span className="text-green">Frog</span>.fun is making memecoins
-              fun again
+              <span className="text-green">Frog</span>.fun is making memecoins fun again
             </p>
             <p>
               Every coing launced on <span>Frog</span>.fun has:
@@ -43,10 +34,8 @@ export default function HowItWorksModal({
               <li>No team allocation</li>
             </ul>
             <p>
-              When a token reaches a{" "}
-              <span className="text-blue">{bondingCurveLimit}</span> market cap,
-              all remaining tokens are deposited into Raydium/Uniswap and you
-              are rewarded{" "}
+              When a token reaches a <span className="text-blue">{bondingCurveLimit}</span> market cap, all remaining
+              tokens are deposited into Raydium/Uniswap and you are rewarded{" "}
               <span className="text-green">{bondingCurveReward}</span>
             </p>
           </ModalBody>

@@ -21,7 +21,7 @@ export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: Pr
   const disabled = currentUser?.id !== profileUser.id;
 
   return (
-    <section className="flex">
+    <section className="flex flex-col laptop:flex-row">
       <div className="flex flex-col items-center mt-6 gap-y-5">
         <Image
           src={profileUser.imageUrl || defaultProfileAvatarUrl}

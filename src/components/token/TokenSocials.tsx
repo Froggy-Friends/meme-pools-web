@@ -14,7 +14,7 @@ type TokenSocialsParams = {
 };
 
 export default function TokenSocials({ token }: TokenSocialsParams) {
-  const linkStyles = "bg-dark-gray rounded-3xl py-[0.375rem] px-6 hover:bg-gray transition";
+  const linkStyles = "py-[0.375rem] px-1 laptop:px-2";
   const copy = useCopy();
   const post = useXPost();
 
@@ -27,20 +27,20 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
   };
 
   return (
-    <div className="flex gap-x-1 items-center mt-6">
+    <div className="flex gap-x-1 items-center mt-2 laptop:mt-4">
       <Link href={token.telegram || ""} className={linkStyles}>
-        <FaTelegram size={25} />
+        <FaTelegram className="w-5 h-5 laptop:w-8 laptop:h-8" />
       </Link>
       <Link href={token.website || ""} className={linkStyles}>
-        <FaGlobe size={25} />
+        <FaGlobe className="w-5 h-5 laptop:w-8 laptop:h-8" />
       </Link>
       <Link href={token.twitter || ""} className={linkStyles}>
-        <FaXTwitter size={23} />
+        <FaXTwitter className="w-5 h-5 laptop:w-8 laptop:h-8" />
       </Link>
       <Dropdown>
         <DropdownTrigger>
           <button className={linkStyles}>
-            <Image src="/share.svg" alt="share" width={25} height={25} />
+            <Image src="/share.svg" alt="share" width={30} height={30} />
           </button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Share options">
