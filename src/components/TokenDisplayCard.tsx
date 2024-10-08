@@ -46,7 +46,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
 
   return (
     <div
-      className={`flex flex-col rounded-xl overflow-hidden bg-dark-gray h-[320px] w-[195px] laptop:w-[220px] ${
+      className={`flex flex-col rounded-xl overflow-hidden bg-dark-gray h-[320px] w-[195px] tablet:w-[220px] ${
         newTrade ? "animate-greenPulse" : ""
       }`}
     >

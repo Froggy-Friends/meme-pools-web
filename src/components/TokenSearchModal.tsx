@@ -78,7 +78,7 @@ export default function TokenSearchModal({ isOpen, onOpenChange }: TokenSearchMo
                   >
                     <FaMagnifyingGlass size={20} />
                   </div>
-                  <div className="absolute inset-y-0 right-4 laptop:right-[4.5rem] flex items-center">
+                  <div className="absolute inset-y-0 right-4 flex items-center">
                     <Switch
                       size="sm"
                       isSelected={caSearch}
@@ -89,10 +89,6 @@ export default function TokenSearchModal({ isOpen, onOpenChange }: TokenSearchMo
                       }}
                     ></Switch>
                     <p>CA</p>
-                  </div>
-                  <div className="hidden laptop:flex absolute inset-y-0 right-0 pr-4 items-center gap-x-1 pointer-events-none">
-                    <MdKeyboardCommandKey size={20} />
-                    <p>K</p>
                   </div>
                 </div>
 

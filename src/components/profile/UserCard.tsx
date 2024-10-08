@@ -25,7 +25,7 @@ export default async function UserCard({ user, view, profileUser }: UserCardProp
   const followedTime = getTimeDifference(isFollowed?.followedAt);
 
   return (
-    <div className="flex items-center justify-between w-[400px] laptop:w-[700px] h-[70px]  px-4 bg-dark-gray rounded-lg ">
+    <div className="flex items-center justify-between w-[400px] tablet:w-full laptop:w-[700px] h-[70px] px-4 bg-dark-gray rounded-lg ">
       <div className="flex items-center gap-x-3">
         <Image
           src={(user && user.imageUrl) || defaultProfileAvatarUrl}
@@ -38,8 +38,8 @@ export default async function UserCard({ user, view, profileUser }: UserCardProp
           {getUserDisplayName(user.name)}
         </Link>
 
-        {view === "followers" && <p className="hidden laptop:block text-gray text-lg">Followed you {followedTime}</p>}
-        {view === "following" && <p className="hidden laptop:block text-gray text-lg">Followed {followingTime}</p>}
+        {view === "followers" && <p className="hidden tablet:block text-gray text-lg">Followed you {followedTime}</p>}
+        {view === "following" && <p className="hidden tablet:block text-gray text-lg">Followed {followingTime}</p>}
       </div>
 
       {cachedUser && cachedUser.id !== user.id && (

@@ -6,13 +6,13 @@ type BondingCurveProgressProps = {
 
 export default function BondingCurveProgress({ ticker }: BondingCurveProgressProps) {
   return (
-    <section className="mt-6 w-full laptop:w-[350px]">
+    <section className="mt-6 w-full tablet:w-[350px]">
       <Progress
         aria-label="Downloading..."
         size="md"
         value={5}
         classNames={{
-          base: "max-w-md",
+          base: "max-w-full",
           track: "drop-shadow-md bg-dark-gray h-4",
           indicator: "bg-light-green",
           label: "tracking-wider font-small text-light-gray",

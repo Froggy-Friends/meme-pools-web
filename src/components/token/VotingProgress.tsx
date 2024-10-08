@@ -7,7 +7,7 @@ type VotingProgressProps = {
 
 export default function VotingProgress({ token }: VotingProgressProps) {
   return (
-    <section className="hidden laptop:block mt-6 w-[350px]">
+    <section className="hidden tablet:block mt-6 w-[350px]">
       <Progress
         aria-label="Downloading..."
         size="md"

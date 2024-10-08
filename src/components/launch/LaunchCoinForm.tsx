@@ -47,7 +47,7 @@ export default function LaunchCoinForm() {
     formState: { errors, isSubmitting },
   } = useForm<LaunchFormValues>();
   const inputStyles =
-    "h-10 w-[410px] laptop:w-[430px] desktop:w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+    "h-10 w-[410px] tablet:w-[350px] laptop:w-[430px] desktop:w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
 
   const onSubmit = handleSubmit(async (data: LaunchFormValues) => {
     const formData = createFormData(data);
@@ -99,7 +99,7 @@ export default function LaunchCoinForm() {
           <p>Reset</p>
           <GrRefresh size={18} />
         </button>
-        <div className="flex flex-col laptop:flex-row gap-x-10">
+        <div className="flex flex-col tablet:flex-row gap-x-4 laptop:gap-x-10">
           <div className="flex flex-col">
             <div className="flex gap-x-1">
               <label htmlFor="name" className="mb-1">
@@ -195,7 +195,7 @@ export default function LaunchCoinForm() {
                 required: "Token description is required",
               })}
               id="description"
-              className="h-32 w-[410px] laptop:w-[430px] desktop:w-[450px] mb-5 px-2 py-1 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
+              className="h-32 w-[410px] tablet:w-[350px] laptop:w-[430px] desktop:w-[450px] mb-5 px-2 py-1 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
             />
 
             <div className="flex gap-x-1">
@@ -218,9 +218,9 @@ export default function LaunchCoinForm() {
         </div>
 
         <div className="flex flex-col mt-10">
-          <p className="mb-1 ml-1 laptop:ml-5">Optional Links</p>
+          <p className="mb-1 ml-1 tablet:ml-4 laptop:ml-5">Optional Links</p>
 
-          <div className="flex w-[415px] laptop:w-[925px] desktop:w-[975px] justify-between">
+          <div className="flex w-[415px] tablet:w-[750px] laptop:w-[925px] desktop:w-[975px] justify-between">
             <LaunchCoinFormModal name="twitter" pattern="https://x.com/*" register={register} resetField={resetField} />
             <LaunchCoinFormModal name="telegram" register={register} resetField={resetField} />
             <LaunchCoinFormModal name="website" pattern="https://.*" register={register} resetField={resetField} />

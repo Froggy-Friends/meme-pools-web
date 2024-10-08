@@ -7,7 +7,7 @@ import { BsGlobe } from "react-icons/bs";
 export default function Footer() {
   return (
     <footer className="h-[75px] laptop:h-[120px] w-full mt-auto mb-4 laptop:mb-0 flex items-center justify-between">
-      <div className="flex flex-col text-white/80 text-sm laptop:text-base">
+      <div className="flex flex-col text-white/80 text-[10px] tablet:text-sm">
         <Link href="" className="hover:text-white transition">
           Docs
         </Link>
@@ -19,20 +19,20 @@ export default function Footer() {
         </Link>
       </div>
 
-      <div className="flex flex-col justify-center items-center text-sm laptop:text-base">
+      <div className="flex flex-col justify-center items-center text-[10px] tablet:text-sm">
         <Logo height={40} width={40} />
         <p>&copy; Frog.Fun 2024</p>
       </div>
 
       <div className="flex items-center gap-3 laptop:gap-4 text-white/80">
         <Link href="https://x.com/frogdotfun">
-          <FaXTwitter className="w-6 h-6 laptop:w-8 laptop:h-8 hover:text-white hover:scale-[1.03] transition" />
+          <FaXTwitter className="w-[16px] h-[16px] hover:text-white hover:scale-[1.03] transition" />
         </Link>
         <Link href="">
-          <BsGlobe className="w-6 h-6 laptop:w-8 laptop:h-8 hover:text-white hover:scale-[1.03] transition" />
+          <BsGlobe className="w-[16px] h-[16px] hover:text-white hover:scale-[1.03] transition" />
         </Link>
         <Link href="https://t.me/Frog_HQ">
-          <FaTelegram className="w-6 h-6 laptop:w-8 laptop:h-8 hover:text-white hover:scale-[1.03] transition" />
+          <FaTelegram className="w-[16px] h-[16px] hover:text-white hover:scale-[1.03] transition" />
         </Link>
       </div>
     </footer>

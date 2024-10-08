@@ -2,6 +2,7 @@
 
 import { FaXTwitter } from "react-icons/fa6";
 import { FaTelegram, FaGlobe } from "react-icons/fa";
+import { IoMdShareAlt } from "react-icons/io";
 import { Token } from "@prisma/client";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import Link from "next/link";
@@ -29,18 +30,18 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
   return (
     <div className="flex gap-x-1 items-center mt-2 laptop:mt-4">
       <Link href={token.telegram || ""} className={linkStyles}>
-        <FaTelegram className="w-5 h-5 laptop:w-8 laptop:h-8" />
+        <FaTelegram className="w-4 h-4 tablet:w-6 tablet:h-6 laptop:w-8 laptop:h-8" />
       </Link>
       <Link href={token.website || ""} className={linkStyles}>
-        <FaGlobe className="w-5 h-5 laptop:w-8 laptop:h-8" />
+        <FaGlobe className="w-4 h-4 tablet:w-6 tablet:h-6 laptop:w-8 laptop:h-8" />
       </Link>
       <Link href={token.twitter || ""} className={linkStyles}>
-        <FaXTwitter className="w-5 h-5 laptop:w-8 laptop:h-8" />
+        <FaXTwitter className="w-4 h-4 tablet:w-6 tablet:h-6 laptop:w-8 laptop:h-8" />
       </Link>
       <Dropdown>
-        <DropdownTrigger>
-          <button className={linkStyles}>
-            <Image src="/share.svg" alt="share" width={30} height={30} />
+        <DropdownTrigger className="outline-none">
+          <button>
+            <IoMdShareAlt className="w-6 h-6 tablet:w-10 tablet:h-10 laptop:w-12 laptop:h-12" />
           </button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Share options">

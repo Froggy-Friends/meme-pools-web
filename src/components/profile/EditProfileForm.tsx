@@ -24,7 +24,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
   const { currentUser } = useUser();
   const disabled = profileUser.id !== currentUser?.id;
   const inputStyles =
-    "h-10 w-[395px] laptop:w-[340px] desktop:w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
+    "h-10 w-[395px] tablet:w-[425px] laptop:w-[340px] desktop:w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -54,7 +54,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
   }, 500);
 
   return (
-    <form className="mt-4 flex flex-col" action={handleSubmit}>
+    <form className="mt-4 flex flex-col items-center laptop:items-start" action={handleSubmit}>
       <div className="flex flex-col laptop:flex-row">
         <div className="flex flex-col mx-0 laptop:mx-7 desktop:mx-12">
           <div className="flex items-center gap-x-3">

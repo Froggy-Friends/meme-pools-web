@@ -62,7 +62,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
         }`}
         target="_blank"
       >
-        {formatAddress(trade.transactionHash, 5)}
+        {formatAddress(trade.transactionHash)}
       </Link>
     </div>
   );

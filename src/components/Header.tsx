@@ -25,7 +25,7 @@ export default async function Header({ chain }: HeaderProps) {
 
       <TokenSearch />
 
-      <div className="flex items-center gap-x-1 desktop:gap-x-2">
+      <div className="flex items-center gap-x-1 tablet:gap-x-2">
         <LaunchCoinButton />
         <HowItWorksButton />
         <ChainSwitcher />

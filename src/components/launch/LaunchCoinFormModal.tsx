@@ -15,11 +15,11 @@ type LaunchCoinFormModalProps = {
 export default function LaunchCoinFormModal({ name, pattern, register, resetField }: LaunchCoinFormModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const inputStyles =
-    "h-10 w-[340px] laptop:w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+    "h-10 w-[340px] tablet:w-[500px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
   return (
     <>
       <button
-        className="h-10 laptop:h-20 w-[75px] laptop:w-40 bg-dark-gray rounded-lg m-auto text-base laptop:text-lg hover:bg-gray transition"
+        className="h-10 tablet:h-20 w-[75px] tablet:w-32 laptop:w-40 bg-dark-gray rounded-lg m-auto text-sm tablet:text-lg hover:bg-gray transition"
         onClick={onOpen}
         type="button"
       >
@@ -30,7 +30,7 @@ export default function LaunchCoinFormModal({ name, pattern, register, resetFiel
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="xl"
-        className="bg-dark text-white w-[700px] h-[350px] laptop:h-[500px] p-3"
+        className="bg-dark text-white w-[700px] h-[350px] laptop:h-[400px] p-3"
         hideCloseButton={true}
       >
         <ModalContent>
