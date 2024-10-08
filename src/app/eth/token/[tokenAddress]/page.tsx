@@ -17,7 +17,6 @@ import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
 import TokenActions from "@/components/token/TokenActions";
 import { Address } from "viem";
-import MobileViewButtons from "@/components/token/MobileViewButtons";
 
 const DynamicTokenChart = dynamic(() => import("../../../../components/token/TokenChart"), {
   ssr: false,
