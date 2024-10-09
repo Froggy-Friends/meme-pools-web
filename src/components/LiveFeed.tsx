@@ -1,91 +1,82 @@
 "use client";
 
-import getClientPusher from "@/lib/getClientPusher";
-import { getTimeDifference } from "@/lib/getTimeDifference";
-import { Channel } from "@/models/channel";
-import { FeedData } from "@/models/feedData";
-import { useEffect } from "react";
-import { useImmer } from "use-immer";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { FormattedTrade } from "@/types/token/types";
 import { defaultProfileAvatarUrl } from "@/config/user";
-import { Virtuoso } from "react-virtuoso";
-import { channelConfigs } from "@/lib/feed";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
+import { Channel } from "@/models/channel";
+import Pusher from "pusher-js";
 
 export default function LiveFeed() {
-  const [feedData, setFeedData] = useImmer<FeedData[]>([]);
+  const [latestTrade, setLatestTrade] = useState<FormattedTrade | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+
   useEffect(() => {
-    const pusher = getClientPusher();
-    const channels = Object.values(Channel);
-    const subscribedChannels = channels.map(channelName => pusher.subscribe(channelName));
+    if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
+      throw new Error("Missing pusher env variables");
+    }
 
-    const handleEvent = (channel: Channel, _: string, feedData: FeedData) => {
-      if (feedData) {
-        setFeedData(draft => {
-          draft.unshift({
-            channel: channel,
-            user: feedData.user,
-            date: feedData.date,
-            value: feedData.value,
-            amount: feedData.amount || undefined,
-          });
-        });
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
+
+    const channel = pusher.subscribe(Channel.Buy);
+
+    channel.bind_global((eventName: string, data: { feedData: any; trade: FormattedTrade }) => {
+      const trade = data.trade as FormattedTrade;
+      if (!trade) return;
+      setIsAnimating(true);
+
+      if (!latestTrade) {
+        setLatestTrade(trade);
+      } else {
+        setTimeout(() => {
+          setLatestTrade(trade);
+        }, 350);
       }
-    };
 
-    subscribedChannels.forEach(channel => {
-      channel.bind_global(
-        (
-          eventName: string,
-          {
-            feedData,
-          }: {
-            feedData: FeedData;
-          }
-        ) => {
-          handleEvent(channel.name as Channel, eventName, feedData);
-        }
-      );
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 500);
     });
 
     return () => {
-      subscribedChannels.forEach(channel => {
-        channel.unbind_all();
-        channel.unsubscribe();
-      });
+      channel.unbind_all();
+      channel.unsubscribe();
       pusher.disconnect();
     };
-  }, [setFeedData]);
-
-  const formatFeedData = (data: FeedData) => {
-    const action = channelConfigs[data.channel];
-    const isCommentVoteChannel = data.channel === Channel.CommentLikes || data.channel === Channel.CommentDislikes;
-    const isCommentChannel = data.channel === Channel.Comment || isCommentVoteChannel;
-    const isTradeChannel = data.channel === Channel.Buy || data.channel === Channel.Sell;
-
-    return (
-      <div className="text-xs font-proximaSoft flex items-center gap-1">
-        <Image
-          src={data.user.imageUrl || defaultProfileAvatarUrl}
-          alt="user-profile-picture"
-          height={16}
-          width={16}
-          className="rounded-full mr-2"
-        />
-        <span>{getUserDisplayName(data.user.name)}</span> <span className={action.color}>{action.name}</span>
-        {isCommentVoteChannel && "comment"}
-        {isTradeChannel && <span className="text-cream">{data.amount}</span>}
-        <span className="text-light-green">{isCommentChannel ? `"${data.value}"` : data.value}</span>
-      </div>
-    );
-  };
+  }, [latestTrade]);
 
   return (
-    <div className="w-full laptop:min-w-[350px] laptop:w-[350px] rounded-lg bg-dark-gray p-4 flex flex-col gap-6 font-proximaSoftBold">
-      <div className="flex items-center gap-x-1 w-full">
+    <div className="w-full laptop:min-w-[350px] laptop:w-[350px] rounded-lg bg-dark-gray flex items-center justify-between p-4">
+      <div className="flex items-center gap-x-1">
         <div className="w-2 h-2 rounded-full bg-green animate-pulse" />
-        <span>FEED</span>
+        <span className="font-proximaSoftBold">Live</span>
       </div>
+      {latestTrade && <TradeNotification trade={latestTrade} isAnimating={isAnimating} />}
+    </div>
+  );
+}
+
+function TradeNotification({ trade, isAnimating }: { trade: FormattedTrade; isAnimating: boolean }) {
+  return (
+    <div
+      className={`text-sm font-proximaSoft flex items-center gap-1 transition-all duration-500 ease-in-out ${
+        isAnimating ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
+      }`}
+    >
+      <Image
+        src={trade.userAvatar || defaultProfileAvatarUrl}
+        alt="user-profile-picture"
+        height={16}
+        width={16}
+        className="rounded-full mr-1"
+      />
+      <span>{getUserDisplayName(trade.username)}</span>
+      <span className="text-green">bought</span>
+      <span className="text-cream">{trade.amount}</span>
+      <span className="text-light-green">${trade.tokenTicker}</span>
     </div>
   );
 }
