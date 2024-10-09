@@ -22,6 +22,10 @@ export const channelConfigs: ChannelConfig = {
     name: "disliked",
     color: "text-rose",
   },
+  [Channel.Meme]: {
+    name: "created-meme",
+    color: "text-green",
+  },
   [Channel.Upvotes]: {
     name: "upvoted",
     color: "text-light-green",
