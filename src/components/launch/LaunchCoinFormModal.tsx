@@ -15,11 +15,11 @@ type LaunchCoinFormModalProps = {
 export default function LaunchCoinFormModal({ name, pattern, register, resetField }: LaunchCoinFormModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const inputStyles =
-    "h-10 w-[340px] tablet:w-[500px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+    "h-10 max-w-[340px] tablet:min-w-[500px] tablet:w-[500px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
   return (
     <>
       <button
-        className="h-10 tablet:h-20 w-[75px] tablet:w-32 laptop:w-40 bg-dark-gray rounded-lg m-auto text-sm tablet:text-lg hover:bg-gray transition"
+        className="h-10 tablet:h-20 min-w-[70px] max-w-[75px] tablet:min-w-32 tablet:w-32 laptop:min-w-40 laptop:w-40 bg-dark-gray rounded-lg m-auto text-sm tablet:text-lg hover:bg-gray transition"
         onClick={onOpen}
         type="button"
       >
