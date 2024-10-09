@@ -24,7 +24,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
   const { currentUser } = useUser();
   const disabled = profileUser.id !== currentUser?.id;
   const inputStyles =
-    "h-10 w-[395px] tablet:w-[425px] laptop:w-[340px] desktop:w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
+    "h-10 min-w-[375px] max-w-[395px] tablet:min-w-[425px] tablet:w-[425px] laptop:min-w-[340px] laptop:w-[340px] desktop:min-w-[425px] desktop:w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -137,7 +137,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
           disabled={userExists}
           pendingText="SAVING..."
           className={cn(
-            "self-center flex justify-center items-center text-lg bg-green text-dark font-proximaSoftBold h-10 w-[410px] laptop:w-[425px] my-12 laptop:mt-20 laptop:mb-24 laptop:mr-6 rounded-3xl hover:bg-light-green active:scale-[0.98] transition",
+            "self-center flex justify-center items-center text-lg bg-green text-dark font-proximaSoftBold h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-12 laptop:mt-20 laptop:mb-24 laptop:mr-6 rounded-3xl hover:bg-light-green active:scale-[0.98] transition",
             userExists && "hover:bg-green"
           )}
         >
