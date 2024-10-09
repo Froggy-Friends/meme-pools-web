@@ -179,3 +179,16 @@ export const fetchTrades = async (tokenId: string) => {
 
   return trades;
 };
+
+export const fetchMemes = async (tokenId: string) => {
+  const memes = await prisma.meme.findMany({
+    where: {
+      tokenId: tokenId,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  return memes;
+};

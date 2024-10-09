@@ -45,6 +45,7 @@ model Token {
   user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
   TokenVote    TokenVote[]
   Trades       Trades[]
+  Meme         Meme[]
 }
 
 model User {
@@ -66,6 +67,7 @@ model User {
   token            Token[]
   TokenVote        TokenVote[]
   Trades           Trades[]
+  Meme             Meme[]
 }
 
 model Trades {
@@ -133,4 +135,16 @@ model TokenVote {
   User       User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vote_user_fk")
 
   @@unique([tokenId, userId], map: "vote_token_user_unique")
+}
+
+model Meme {
+  id        String    @id(map: "meme_pkey") @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenId   String    @db.Uuid
+  imageUrl  String
+  caption   String
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @default(now()) @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
+  token     Token     @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
 }

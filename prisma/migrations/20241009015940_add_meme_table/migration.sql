@@ -1,0 +1,18 @@
+-- CreateTable
+CREATE TABLE "Meme" (
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "tokenId" UUID NOT NULL,
+    "imageUrl" TEXT NOT NULL,
+    "caption" TEXT NOT NULL,
+    "createdAt" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "meme_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "Meme" ADD CONSTRAINT "user_id_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "Meme" ADD CONSTRAINT "token_id_fkey" FOREIGN KEY ("tokenId") REFERENCES "Token"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

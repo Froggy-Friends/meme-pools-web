@@ -236,7 +236,8 @@ export default function LaunchCoinForm() {
 
         <FormSubmitButton
           isSubmitting={isSubmitting}
-          className="h-10 min-w-[375px] max-w-[410px] laptop:w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
+          pendingText="LAUNCHING..."
+          className="h-10 w-[410px] laptop:w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
         >
           <p className="text-dark font-proximaSoftBold">HAVE SOME FUN</p>
         </FormSubmitButton>

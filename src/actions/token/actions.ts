@@ -10,6 +10,7 @@ import { fetchTokenByAddress } from "@/queries/token/queries";
 import { CommentLikes, Prisma, TokenVote } from "@prisma/client";
 import { Address, formatUnits } from "viem";
 import { formatTradeData } from "@/lib/formatTradeData";
+import { put } from "@vercel/blob";
 
 export async function getVotesByTokenId(
   tokenId: string
@@ -279,4 +280,37 @@ export const addTrade = async (
       },
     });
   }
+};
+
+export const addMeme = async (
+  tokenId: string,
+  userId: string | undefined,
+  formData: FormData
+) => {
+  const pusher = getPusher();
+
+  if (!userId) {
+    return;
+  }
+
+  const image = formData.get("image") as File;
+  const caption = formData.get("caption") as string;
+
+  const blob = await put(image.name, image, {
+    access: "public",
+  });
+
+  const meme = await prisma.meme.create({
+    data: {
+      tokenId: tokenId,
+      userId: userId,
+      imageUrl: blob.url,
+      caption: caption,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  pusher.trigger(Channel.Meme, tokenId, meme);
 };
