@@ -135,6 +135,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
       {!disabled && (
         <FormSubmitButton
           disabled={userExists}
+          pendingText="SAVING..."
           className={cn(
             "self-center flex justify-center items-center text-lg bg-green text-dark font-proximaSoftBold h-10 w-[410px] laptop:w-[425px] my-12 laptop:mt-20 laptop:mb-24 laptop:mr-6 rounded-3xl hover:bg-light-green active:scale-[0.98] transition",
             userExists && "hover:bg-green"

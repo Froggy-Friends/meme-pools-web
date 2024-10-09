@@ -2,7 +2,6 @@ import getEthPrice from "@/lib/getEthPrice";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import BondingCurveProgress from "../../../../components/token/BondingCurveProgress";
-import CommentsAndTradesContainer from "../../../../components/token/CommentsAndTradesContainer";
 import VotingProgress from "@/components/token/VotingProgress";
 import TokenInfo from "../../../../components/token/TokenInfo";
 import Swap from "../../../../components/swap/Swap";
@@ -17,6 +16,7 @@ import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
 import TokenActions from "@/components/token/TokenActions";
 import { Address } from "viem";
+import TokenInteractionContainer from "../../../../components/token/TokenInteractionContainer";
 
 const DynamicTokenChart = dynamic(() => import("../../../../components/token/TokenChart"), {
   ssr: false,
@@ -66,7 +66,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
         </div>
       </div>
 
-      <CommentsAndTradesContainer
+      <TokenInteractionContainer
         view={view}
         tokenAddress={tokenAddress}
         tokenId={token.id}
