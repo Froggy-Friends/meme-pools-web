@@ -18,7 +18,7 @@ export default function PaginationControls({ page, onPageChange }: PaginationCon
         cursor: "bg-green text-black",
       }}
       page={page}
-      className="mx-auto mt-2 mb-12 laptop:mb-24"
+      className="flex justify-center mt-2 mb-12 laptop:mb-24"
       onChange={onPageChange}
     />
   );

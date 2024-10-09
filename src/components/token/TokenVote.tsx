@@ -30,9 +30,9 @@ export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
         className="flex gap-x-1 items-center"
       >
         {voteStatus === TokenVoteStatus.UPVOTE ? (
-          <PiArrowFatUpFill className="w-5 h-5 laptop:w-8 laptop:h-8 text-blue hover:scale-[1.03] transition" />
+          <PiArrowFatUpFill className="w-5 h-5 laptop:w-7 laptop:h-7 text-blue hover:scale-[1.03] transition" />
         ) : (
-          <PiArrowFatUpLight className="w-5 h-5 laptop:w-8 laptop:h-8 text-blue hover:scale-[1.03] transition" />
+          <PiArrowFatUpLight className="w-5 h-5 laptop:w-7 laptop:h-7 text-blue hover:scale-[1.03] transition" />
         )}
         {votes?.upvotes ?? 0}
       </button>
@@ -42,9 +42,9 @@ export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
         className="flex gap-x-1 items-center"
       >
         {voteStatus === TokenVoteStatus.DOWNVOTE ? (
-          <PiArrowFatDownFill size={25} className="hover:scale-[1.03] transition" />
+          <PiArrowFatDownFill size={25} className="w-5 h-5 laptop:w-7 laptop:h-7 hover:scale-[1.03] transition" />
         ) : (
-          <PiArrowFatDownLight size={25} className="hover:scale-[1.03] transition" />
+          <PiArrowFatDownLight size={25} className="w-5 h-5 laptop:w-7 laptop:h-7 hover:scale-[1.03] transition" />
         )}
         {votes?.downvotes ?? 0}
       </button>

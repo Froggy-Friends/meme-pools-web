@@ -47,7 +47,7 @@ export default function LaunchCoinForm() {
     formState: { errors, isSubmitting },
   } = useForm<LaunchFormValues>();
   const inputStyles =
-    "h-10 w-[410px] tablet:w-[350px] laptop:w-[430px] desktop:w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+    "h-10 min-w-[375px] max-w-[410px] tablet:min-w-[350px] tablet:w-[350px] laptop:min-w-[430px] laptop:w-[430px] desktop:min-w-[450px] desktop:w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
 
   const onSubmit = handleSubmit(async (data: LaunchFormValues) => {
     const formData = createFormData(data);
@@ -195,7 +195,7 @@ export default function LaunchCoinForm() {
                 required: "Token description is required",
               })}
               id="description"
-              className="h-32 w-[410px] tablet:w-[350px] laptop:w-[430px] desktop:w-[450px] mb-5 px-2 py-1 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
+              className="h-32 min-w-[375px] max-w-[410px] tablet:min-w-[350px] tablet:w-[350px] laptop:min-w-[430px] laptop:w-[430px] desktop:min-w-[450px] desktop:w-[450px] mb-5 px-2 py-1 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
             />
 
             <div className="flex gap-x-1">
@@ -220,7 +220,7 @@ export default function LaunchCoinForm() {
         <div className="flex flex-col mt-10">
           <p className="mb-1 ml-1 tablet:ml-4 laptop:ml-5">Optional Links</p>
 
-          <div className="flex w-[415px] tablet:w-[750px] laptop:w-[925px] desktop:w-[975px] justify-between">
+          <div className="flex min-w-[375px] max-w-[415px] tablet:min-w-[750px] tablet:w-[750px] laptop:min-w-[925px] laptop:w-[925px] desktop:min-w-[975px] desktop:w-[975px] justify-between">
             <LaunchCoinFormModal name="twitter" pattern="https://x.com/*" register={register} resetField={resetField} />
             <LaunchCoinFormModal name="telegram" register={register} resetField={resetField} />
             <LaunchCoinFormModal name="website" pattern="https://.*" register={register} resetField={resetField} />
@@ -236,7 +236,7 @@ export default function LaunchCoinForm() {
 
         <FormSubmitButton
           isSubmitting={isSubmitting}
-          className="h-10 w-[410px] laptop:w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
+          className="h-10 min-w-[375px] max-w-[410px] laptop:w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
         >
           <p className="text-dark font-proximaSoftBold">HAVE SOME FUN</p>
         </FormSubmitButton>
