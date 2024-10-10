@@ -1,7 +1,11 @@
+"use client";
+
 import { User } from "@prisma/client";
 import Image from "next/image";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { TokenWithVoteCount } from "@/types/token/types";
+import { useQuery } from "@tanstack/react-query";
+import useTokenMarketcap from "@/hooks/useTokenMarketcap";
 
 type TokenInfoParams = {
   token: TokenWithVoteCount;

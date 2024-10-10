@@ -5,24 +5,35 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Channel } from "@/models/channel";
 import { FormattedTrade } from "@/types/token/types";
-import getClientPusher from "@/lib/getClientPusher";
 import { usePostHog } from "posthog-js/react";
+import useTokenMarketcap from "@/hooks/useTokenMarketcap";
+import Pusher from "pusher-js";
 
 type TokenTradesProps = {
   trades: FormattedTrade[];
   tokenId: string;
+  tokenAddress: string;
 };
 
-export default function TokenTrades({ trades, tokenId }: TokenTradesProps) {
+export default function TokenTrades({ trades, tokenId, tokenAddress }: TokenTradesProps) {
   const queryClient = useQueryClient();
   const posthog = usePostHog();
+  const { getTokenMarketcap } = useTokenMarketcap();
+
   const { data } = useQuery({
     queryKey: ["trades", tokenId],
     initialData: trades,
   });
 
   useEffect(() => {
-    const pusher = getClientPusher();
+    if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
+      throw new Error("Missing pusher env variables");
+    }
+
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
+
     const channels = Object.values(Channel);
 
     const subscribedChannels = channels.map(channelName => {
@@ -36,6 +47,7 @@ export default function TokenTrades({ trades, tokenId }: TokenTradesProps) {
     subscribedChannels.forEach(channel => {
       channel?.bind(tokenId, ({ trade }: { trade: FormattedTrade }) => {
         queryClient.setQueryData(["trades", tokenId], [{ ...trade, isNew: true }, ...data]);
+        queryClient.refetchQueries({ queryKey: ["tokenMarketcap", tokenId] });
 
         if (channel?.name === Channel.Buy) {
           posthog.capture("token_bought", { tokenId: tokenId, trade: trade });
@@ -52,7 +64,7 @@ export default function TokenTrades({ trades, tokenId }: TokenTradesProps) {
       });
       pusher.disconnect();
     };
-  }, [queryClient, tokenId, data, posthog]);
+  }, [queryClient, tokenId, data, posthog, tokenAddress, getTokenMarketcap]);
 
   return (
     <section className="flex flex-col">

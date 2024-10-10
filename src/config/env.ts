@@ -1,4 +1,5 @@
 import { Address } from "viem";
+import { base, baseSepolia, mainnet, sepolia } from "viem/chains";
 
 export const env = process.env.NEXT_PUBLIC_ENV;
 export const isProd = env === "prod";
@@ -14,6 +15,8 @@ export const contractAddress: Address = isProd
   : "0xb5DdD2Ca2E43eE59882075abeefd79a01b5cE914";
 export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = isProd ? 8453 : 84532;
+export const ethChain = isProd ? mainnet : sepolia;
+export const baseChain = isProd ? base : baseSepolia;
 
 // solana
 export const solanaChainId = isProd ? 0 : 0;
