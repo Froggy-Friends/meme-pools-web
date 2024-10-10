@@ -15,6 +15,7 @@ import { CiGlobe } from "react-icons/ci";
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Progress } from "@nextui-org/react";
+import { getMarketcapPercentage } from "@/lib/getMarketcapPercentage";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator | TokenWithVotes;
@@ -25,7 +26,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
   const { getTokenMarketcap } = useTokenMarketcap();
   const [newTrade, setNewTrade] = useState(false);
   const [marketCap, setMarketCap] = useState(token.marketCap);
-  const [marketCapPercentage, setMarketCapPercentage] = useState(((token.marketCap / MAX_MARKET_CAP) * 100).toFixed(2));
+  const [marketCapPercentage, setMarketCapPercentage] = useState(getMarketcapPercentage(token.marketCap));
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });
 
-    const buyChannel = pusher.subscribe(Channel.Buy);
+    const buyChannel = pusher.subscribe(Channel.Buy); 
     const sellChannel = pusher.subscribe(Channel.Sell);
 
     buyChannel.bind(token.id, async ({ trade }: { trade: TradeWithUserAndToken }) => {
@@ -48,13 +49,13 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
 
       const marketCap = await getTokenMarketcap(token.tokenAddress);
       setMarketCap(marketCap);
-      setMarketCapPercentage(((marketCap / MAX_MARKET_CAP) * 100).toFixed(2));
+      setMarketCapPercentage(getMarketcapPercentage(marketCap));
     });
 
     sellChannel.bind(token.id, async ({ trade }: { trade: TradeWithUserAndToken }) => {
       const marketCap = await getTokenMarketcap(token.tokenAddress);
       setMarketCap(marketCap);
-      setMarketCapPercentage(((marketCap / MAX_MARKET_CAP) * 100).toFixed(2));
+      setMarketCapPercentage(getMarketcapPercentage(marketCap));
     });
   }, [token.id, token.tokenAddress, getTokenMarketcap]);
 
