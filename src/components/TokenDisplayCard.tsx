@@ -3,7 +3,6 @@
 import { useChain } from "@/context/chain";
 import useTokenMarketcap from "@/hooks/useTokenMarketcap";
 import useIsMounted from "@/hooks/useIsMounted";
-import { MAX_MARKET_CAP } from "@/lib/constants";
 import { TokenWithCreator } from "@/lib/types";
 import { Channel } from "@/models/channel";
 import { TokenWithVotes, TradeWithUserAndToken } from "@/types/token/types";
@@ -16,6 +15,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Progress } from "@nextui-org/react";
 import { getMarketcapPercentage } from "@/lib/getMarketcapPercentage";
+import { getUserDisplayName } from "@/lib/getUserDisplayName";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator | TokenWithVotes;
@@ -38,7 +38,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });
 
-    const buyChannel = pusher.subscribe(Channel.Buy); 
+    const buyChannel = pusher.subscribe(Channel.Buy);
     const sellChannel = pusher.subscribe(Channel.Sell);
 
     buyChannel.bind(token.id, async ({ trade }: { trade: TradeWithUserAndToken }) => {
@@ -93,9 +93,9 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
             <span className="block w-max">Created by:</span>
             <Link
               href={`/profile/${token.user.name}`}
-              className="text-light-green truncate overflow-hidden block w-1/2 underline"
+              className="text-light-green overflow-hidden block w-1/2 underline hover:text-white transition"
             >
-              {token.user.name}
+              {getUserDisplayName(token.user.name)}
             </Link>
           </div>
         </div>

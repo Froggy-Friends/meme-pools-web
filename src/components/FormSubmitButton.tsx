@@ -19,7 +19,7 @@ export default function FormSubmitButton({
   pendingText,
 }: FormSubmitButtonProps) {
   const { pending } = useFormStatus();
-  const buttonClasses = cn(`${className}, ${pending || isSubmitting ? "bg-light-gray" : ""}`);
+  const buttonClasses = cn(`${className}, ${pending || isSubmitting ? "bg-light-gray hover:bg-light-gray" : ""}`);
 
   return (
     <button className={buttonClasses} disabled={disabled || pending || isSubmitting}>
