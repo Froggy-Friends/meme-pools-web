@@ -1,6 +1,6 @@
 "use server";
 
-import { put } from "@vercel/blob";
+import { put, PutBlobResult } from "@vercel/blob";
 import prisma from "@/lib/prisma";
 import { getTokenInfo } from "../../lib/getTokenInfo";
 import { fetchUser } from "@/queries/profile/queries";
@@ -13,17 +13,16 @@ export const launchCoin = async (
   address: Address,
   tokenAddress: string,
   tokenCreator: string,
-  chain: string
+  chain: string,
+  blob: PutBlobResult | null
 ) => {
   const user = await fetchUser(address);
 
   const data = getTokenInfo(formData);
 
-  const image = data.image as File;
-
-  const blob = await put(image.name, image, {
-    access: "public",
-  });
+  if (!blob) {
+    blob = await uploadImage(formData);
+  }
 
   let errorMessage = "";
 
@@ -61,3 +60,16 @@ export const launchCoin = async (
 
   return errorMessage;
 };
+
+export async function uploadImage(formData: FormData) {
+  const file = formData.get("image") as File;
+  if (!file) {
+    throw new Error("No file uploaded");
+  }
+
+  const blob = await put(file.name, file, {
+    access: "public",
+  });
+
+  return blob;
+}
