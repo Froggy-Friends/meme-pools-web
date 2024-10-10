@@ -16,7 +16,7 @@ export default function useReservePrice() {
       );
       totalCost = total;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
 
     return formatEther(totalCost);

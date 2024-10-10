@@ -25,7 +25,7 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
         <p>Created by:</p>
         {creator && (
           <Image
-            src={(creator && creator.imageUrl) || defaultProfileAvatarUrl}
+            src={creator.imageUrl || defaultProfileAvatarUrl}
             alt="creator-logo"
             height={30}
             width={30}

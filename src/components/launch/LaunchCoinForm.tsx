@@ -22,6 +22,7 @@ import { useDebouncedCallback } from "use-debounce";
 import useReservePrice from "@/hooks/useReservePrice";
 import { MdInfoOutline } from "react-icons/md";
 import { Tooltip } from "@nextui-org/react";
+import { formatNumber } from "@/lib/formatNumber";
 
 export type LaunchFormValues = {
   name: string;
@@ -100,11 +101,6 @@ export default function LaunchCoinForm() {
     }
   });
 
-  const formatNumber = (value: string) => {
-    const digits = value.replace(/\D/g, "");
-    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
   const handleReservedAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const numericValue = value.replace(/[^\d.]/g, "");
@@ -112,11 +108,7 @@ export default function LaunchCoinForm() {
 
     if (parseFloat(numericValue) <= maxReservedSupply) {
       setFormattedReservedAmount(formatted);
-      if (numericValue !== "") {
-        debouncedReservePrice(numericValue);
-      } else {
-        setReserveCost(null);
-      }
+      numericValue ? debouncedReservePrice(numericValue) : setReserveCost(null);
     }
   };
 
@@ -136,7 +128,7 @@ export default function LaunchCoinForm() {
   }, []);
 
   const debouncedReservePrice = useDebouncedCallback(async value => {
-    if (value === "") {
+    if (!value) {
       setReserveCost(null);
       return;
     }
