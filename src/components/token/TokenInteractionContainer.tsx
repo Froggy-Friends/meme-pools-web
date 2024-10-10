@@ -41,7 +41,7 @@ export default async function TokenInteractionContainer({
           {view === "comments" && (
             <TokenComments comments={comments} cachedUser={cachedUser || null} tokenId={tokenId} />
           )}
-          {view === "trades" && <TokenTrades trades={formattedTrades} tokenId={tokenId} />}
+          {view === "trades" && <TokenTrades trades={formattedTrades} tokenId={tokenId} tokenAddress={tokenAddress} />}
           {view === "memes" && <TokenMemes tokenId={tokenId} memes={memes} />}
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useChain } from "@/context/chain";
+import useTokenMarketcap from "@/hooks/useTokenMarketcap";
 import useIsMounted from "@/hooks/useIsMounted";
 import { MAX_MARKET_CAP } from "@/lib/constants";
 import { TokenWithCreator } from "@/lib/types";
@@ -13,15 +14,18 @@ import { useEffect, useState } from "react";
 import { CiGlobe } from "react-icons/ci";
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { Progress } from "@nextui-org/react";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator | TokenWithVotes;
 };
 
 export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
-  const [newTrade, setNewTrade] = useState(false);
   const { chain } = useChain();
-  const marketCapPercentage = ((token.marketCap / MAX_MARKET_CAP) * 100).toFixed(2);
+  const { getTokenMarketcap } = useTokenMarketcap();
+  const [newTrade, setNewTrade] = useState(false);
+  const [marketCap, setMarketCap] = useState(token.marketCap);
+  const [marketCapPercentage, setMarketCapPercentage] = useState(((token.marketCap / MAX_MARKET_CAP) * 100).toFixed(2));
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -33,14 +37,26 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });
 
-    const channel = pusher.subscribe(Channel.Buy);
-    channel.bind(token.id, ({ trade }: { trade: TradeWithUserAndToken }) => {
+    const buyChannel = pusher.subscribe(Channel.Buy);
+    const sellChannel = pusher.subscribe(Channel.Sell);
+
+    buyChannel.bind(token.id, async ({ trade }: { trade: TradeWithUserAndToken }) => {
       if (trade) {
         setNewTrade(true);
         setTimeout(() => setNewTrade(false), 1000);
       }
+
+      const marketCap = await getTokenMarketcap(token.tokenAddress);
+      setMarketCap(marketCap);
+      setMarketCapPercentage(((marketCap / MAX_MARKET_CAP) * 100).toFixed(2));
     });
-  }, [token.id]);
+
+    sellChannel.bind(token.id, async ({ trade }: { trade: TradeWithUserAndToken }) => {
+      const marketCap = await getTokenMarketcap(token.tokenAddress);
+      setMarketCap(marketCap);
+      setMarketCapPercentage(((marketCap / MAX_MARKET_CAP) * 100).toFixed(2));
+    });
+  }, [token.id, token.tokenAddress, getTokenMarketcap]);
 
   if (!isMounted) return null;
 
@@ -65,8 +81,10 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
         <div className="flex flex-col px-3 mt-3">
           <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
             <div className="flex items-center gap-1 laptop:gap-2.5">
-              <span>{token.name}</span>
-              <span className="bg-green rounded-[4px] text-xs text-black px-2 py-1">${token.ticker}</span>
+              <span className="text-white/75 hover:text-white transition">{token.name}</span>
+              <span className="bg-green rounded-[4px] text-xs text-black px-2 py-1 hover:bg-light-green transition">
+                ${token.ticker}
+              </span>
             </div>
           </Link>
 
@@ -81,13 +99,13 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
           </div>
         </div>
 
-        <p className="flex-grow overflow-y-auto text-light-gray px-3">{token.description}</p>
+        <p className="flex-grow overflow-y-auto text-light-gray px-3 mb-1">{token.description}</p>
 
         <div className="px-3 pb-3">
           <div className="flex items-center justify-between">
             <div className="text-light-gray text-[10px] flex items-center gap-1">
               Market Cap:
-              <span className="text-white">${token.marketCap}</span> ({marketCapPercentage}%)
+              <span className="text-white">${marketCap.toFixed(2)}</span> ({marketCapPercentage}%)
             </div>
             <div className="flex items-center gap-3">
               {token.twitter && (
@@ -107,11 +125,19 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
               )}
             </div>
           </div>
-          <progress
-            value={marketCapPercentage}
-            max={MAX_MARKET_CAP}
-            className="appearance-none [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-bar]:bg-light-gray [&::-webkit-progress-value]:bg-green [&::-moz-progress-bar]:bg-light-gray mt-2 w-full"
-          ></progress>
+          <Progress
+            aria-label="Downloading..."
+            size="md"
+            value={Number(marketCapPercentage)}
+            classNames={{
+              base: "max-w-full",
+              track: "drop-shadow-md bg-gray h-2",
+              indicator: "bg-green",
+              label: "tracking-wider font-small text-light-gray",
+              value: "text-foreground/60 text-gray",
+            }}
+            className="max-w-md mt-1"
+          />
         </div>
       </div>
     </div>

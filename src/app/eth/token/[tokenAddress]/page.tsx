@@ -60,7 +60,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
           <Swap token={token} currPrice={2} ethPrice={ethPrice} />
 
           <div className="flex flex-col tablet:flex-row laptop:flex-col gap-x-4 mt-12 desktop:mt-0">
-            <BondingCurveProgress ticker={token.ticker} />
+            <BondingCurveProgress token={token} />
             <VotingProgress token={token} />
           </div>
         </div>
