@@ -1,0 +1,28 @@
+import { frogFunAbi } from "@/abi/frogFun";
+import { contractAddress } from "@/config/env";
+import { useEthersSigner } from "@/config/eth/wagmi-ethers";
+import { formatEther, formatGwei, parseUnits } from "viem";
+import { Contract } from "ethers";
+export default function useReservePrice() {
+  const signer = useEthersSigner();
+  const contract = new Contract(contractAddress, frogFunAbi, signer);
+
+  const getReservePrice = async (amount: number) => {
+    let totalCost: bigint = BigInt(0);
+    const amountWei = parseUnits(amount.toString(), 18);
+    try {
+      const [price, cost, fee, total] = await contract.calculateReservePrice(
+        amountWei
+      );
+      totalCost = total;
+    } catch (error) {
+      console.error(error);
+    }
+
+    return formatEther(totalCost);
+  };
+
+  return {
+    getReservePrice,
+  };
+}

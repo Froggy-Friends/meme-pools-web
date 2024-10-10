@@ -4,20 +4,25 @@ import useCreateToken from "@/hooks/useCreateToken";
 import { useAccount } from "wagmi";
 import { toast } from "react-hot-toast";
 import { parseUnits } from "viem";
-import { launchCoin } from "@/actions/launch/actions";
+import { launchCoin, uploadImage } from "@/actions/launch/actions";
 import FormSubmitButton from "../FormSubmitButton";
 import LaunchCoinFormModal from "./LaunchCoinFormModal";
 import { useForm } from "react-hook-form";
 import { createFormData } from "@/lib/createFormData";
 import { useChain } from "@/context/chain";
-import { Chain } from "@/models/chain";
 import Image from "next/image";
 import { cn } from "@nextui-org/react";
-import { solanaLogo, ethLogo } from "@/config/chains";
 import { useRouter } from "next/navigation";
 import LaunchCoinToast from "./LaunchCoinToast";
 import { GrRefresh } from "react-icons/gr";
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
+import { maxReservedSupply } from "@/lib/constants";
+import { PutBlobResult } from "@vercel/blob";
+import { useDebouncedCallback } from "use-debounce";
+import useReservePrice from "@/hooks/useReservePrice";
+import { MdInfoOutline } from "react-icons/md";
+import { Tooltip } from "@nextui-org/react";
+import { formatNumber } from "@/lib/formatNumber";
 
 export type LaunchFormValues = {
   name: string;
@@ -36,8 +41,13 @@ export default function LaunchCoinForm() {
   const { address, isConnected } = useAccount();
   const { createToken } = useCreateToken();
   const { chain } = useChain();
+  const { getReservePrice } = useReservePrice();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
+  const [tokenImageBlob, setTokenImageBlob] = useState<PutBlobResult | null>(null);
+  const [reserveCost, setReserveCost] = useState<string | null>(null);
+  const [formattedReservedAmount, setFormattedReservedAmount] = useState("");
 
   const {
     register,
@@ -51,7 +61,8 @@ export default function LaunchCoinForm() {
 
   const onSubmit = handleSubmit(async (data: LaunchFormValues) => {
     const formData = createFormData(data);
-    const reservedAmount = parseUnits(data.reservedAmount, 18) || BigInt(0);
+    const numericReservedAmount = data.reservedAmount.replace(/,/g, "");
+    const reservedAmount = parseUnits(numericReservedAmount, 18) || BigInt(0);
 
     try {
       if (!address || !isConnected) {
@@ -73,13 +84,14 @@ export default function LaunchCoinForm() {
         address,
         tokenDetails.tokenAddress,
         tokenDetails.creator,
-        chain.name
+        chain.name,
+        tokenImageBlob
       );
 
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
-        <LaunchCoinToast txHash={tokenDetails.txHash} />;
+        setTxHash(tokenDetails.txHash);
       }
 
       reset();
@@ -89,16 +101,53 @@ export default function LaunchCoinForm() {
     }
   });
 
+  const handleReservedAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const numericValue = value.replace(/[^\d.]/g, "");
+    const formatted = formatNumber(numericValue);
+
+    if (parseFloat(numericValue) <= maxReservedSupply) {
+      setFormattedReservedAmount(formatted);
+      numericValue ? debouncedReservePrice(numericValue) : setReserveCost(null);
+    }
+  };
+
+  const handleImageChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        const blob = await uploadImage(formData);
+        setTokenImageBlob(blob);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+  }, []);
+
+  const debouncedReservePrice = useDebouncedCallback(async value => {
+    if (!value) {
+      setReserveCost(null);
+      return;
+    }
+
+    const reservePrice = await getReservePrice(value);
+    setReserveCost(reservePrice);
+  }, 700);
+
   return (
     <section className="mt-20">
       <form onSubmit={onSubmit} className="flex flex-col items-center max-w-[925px] mx-auto" ref={formRef}>
         <button
           onClick={() => formRef.current?.reset()}
-          className="flex items-center self-end gap-x-2 mb-5 bg-dark-gray rounded-3xl px-4 py-2 hover:bg-gray active:scale-[0.97] transition"
+          className="flex items-center gap-x-2 self-end bg-dark-gray rounded-3xl mb-4 px-4 py-2 hover:bg-gray active:scale-[0.97] transition"
         >
           <p>Reset</p>
           <GrRefresh size={18} />
         </button>
+
         <div className="flex flex-col tablet:flex-row gap-x-4 laptop:gap-x-10">
           <div className="flex flex-col">
             <div className="flex gap-x-1">
@@ -154,32 +203,22 @@ export default function LaunchCoinForm() {
             </div>
 
             <div className="flex gap-x-1">
-              <label htmlFor="reservedAmount" className="mb-1">
-                Reserved Supply
+              <label htmlFor="image" className="mb-1">
+                Image
               </label>
               <span className="text-green mr-2">*</span>
-              {errors.reservedAmount && <p className="text-red">{errors.reservedAmount.message}</p>}
+              {errors.image && <p className="text-red">{errors.image.message}</p>}
             </div>
-
-            <div className="relative">
-              <input
-                {...register("reservedAmount", {
-                  required: "Enter reserved supply, or 0",
-                })}
-                id="reservedAmount"
-                type="number"
-                className={cn(inputStyles, "pl-[2.75rem]")}
-                autoComplete="off"
-              />
-              <div
-                className="absolute inset-y-0 left-0 pl-2 pb-5  
-                    flex items-center  
-                    pointer-events-none"
-              >
-                {chain.name === Chain.Solana && <Image src={solanaLogo} alt="solana-logo" height={28} width={28} />}
-                {chain.name === Chain.Eth && <Image src={ethLogo} alt="ethereum-logo" height={28} width={28} />}
-              </div>
-            </div>
+            <input
+              {...register("image", {
+                required: "Token image is required",
+              })}
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className={`${inputStyles} file:mt-1 file:bg-gray file:rounded-lg file:text-white file:border-0 file:px-2 file:py-1 file:hover:cursor-pointer file:hover:bg-gray/80 file:active:scale-[0.97] transition`}
+            />
           </div>
 
           <div className="flex flex-col">
@@ -198,22 +237,53 @@ export default function LaunchCoinForm() {
               className="h-32 min-w-[375px] max-w-[410px] tablet:min-w-[350px] tablet:w-[350px] laptop:min-w-[430px] laptop:w-[430px] desktop:min-w-[450px] desktop:w-[450px] mb-5 px-2 py-1 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
             />
 
-            <div className="flex gap-x-1">
-              <label htmlFor="image" className="mb-1">
-                Image
+            <div className="flex gap-x-1 items-center">
+              <label htmlFor="reservedAmount" className="mb-1">
+                Reserved Supply
               </label>
-              <span className="text-green mr-2">*</span>
-              {errors.image && <p className="text-red">{errors.image.message}</p>}
+              <Tooltip placement="right" content="Max 10 million tokens can be reserved" className="mb-2">
+                <button>
+                  <MdInfoOutline size={21} className="text-light-gray mb-[0.125rem]" />
+                </button>
+              </Tooltip>
+              {errors.reservedAmount && <p className="text-red">{errors.reservedAmount.message}</p>}
             </div>
-            <input
-              {...register("image", {
-                required: "Token image is required",
-              })}
-              id="image"
-              type="file"
-              accept="image/*"
-              className={`${inputStyles} file:mt-1 file:bg-gray file:rounded-lg file:text-white file:border-0 file:px-2 file:py-1 file:hover:cursor-pointer file:hover:bg-gray/80`}
-            />
+
+            <div className="relative">
+              <input
+                {...register("reservedAmount", {
+                  validate: value => {
+                    if (!value.trim()) return true;
+                    const numericValue = parseFloat(value.replace(/,/g, ""));
+                    return numericValue <= maxReservedSupply || `Must be ${maxReservedSupply.toLocaleString()} or less`;
+                  },
+                })}
+                id="reservedAmount"
+                type="text"
+                placeholder="0.0"
+                className={cn(inputStyles, "pl-[2.75rem]")}
+                autoComplete="off"
+                value={formattedReservedAmount}
+                onChange={handleReservedAmountChange}
+              />
+              <div
+                className="absolute inset-y-0 left-0 pl-2 pb-5  
+                    flex items-center  
+                    pointer-events-none"
+              >
+                {!tokenImageBlob && <div className="w-7 h-7 rounded-full bg-dark"></div>}
+                {tokenImageBlob && (
+                  <Image src={tokenImageBlob.url} alt="token image" width={28} height={28} className="rounded-full" />
+                )}
+              </div>
+              <div
+                className="absolute inset-y-0 right-0 pr-8 pb-5  
+                flex items-center  
+                pointer-events-none"
+              >
+                {reserveCost && <p className="text-light-gray">{parseFloat(reserveCost).toFixed(6)} ETH</p>}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -237,11 +307,12 @@ export default function LaunchCoinForm() {
         <FormSubmitButton
           isSubmitting={isSubmitting}
           pendingText="LAUNCHING..."
-          className="h-10 w-[410px] laptop:w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
+          className="h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
         >
           <p className="text-dark font-proximaSoftBold">HAVE SOME FUN</p>
         </FormSubmitButton>
       </form>
+      {txHash && <LaunchCoinToast key={txHash} txHash={txHash} />}
     </section>
   );
 }

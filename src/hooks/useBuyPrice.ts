@@ -17,7 +17,7 @@ export default function useBuyPrice() {
       );
       totalCost = total;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
 
     return totalCost;

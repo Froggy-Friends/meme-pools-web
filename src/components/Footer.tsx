@@ -19,7 +19,7 @@ export default function Footer() {
         </Link>
       </div>
 
-      <div className="flex flex-col justify-center items-center text-[10px] tablet:text-sm">
+      <div className="flex flex-col justify-center items-center tablet:mr-6 text-[10px] tablet:text-sm">
         <Logo height={40} width={40} />
         <p>&copy; Frog.Fun 2024</p>
       </div>

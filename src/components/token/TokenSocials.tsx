@@ -6,7 +6,6 @@ import { IoMdShareAlt } from "react-icons/io";
 import { Token } from "@prisma/client";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import Link from "next/link";
-import Image from "next/image";
 import useCopy from "@/hooks/useClipboardCopy";
 import useXPost from "@/hooks/useXPost";
 import { etherscanUrl } from "@/config/env";
@@ -47,7 +46,7 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
         </DropdownTrigger>
         <DropdownMenu aria-label="Share options">
           <DropdownItem key="share-link" onPress={() => handleShareLink()}>
-            Cupy link
+            Copy link
           </DropdownItem>
           <DropdownItem key="share-x" onPress={() => handleShareX()}>
             Share tweet
