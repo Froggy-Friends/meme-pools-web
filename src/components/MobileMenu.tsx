@@ -35,29 +35,6 @@ export default function MobileMenu({ cachedUser }: MobileMenuProps) {
   const { connected } = useWallet();
   const solDisconnect = useWallet().disconnect;
 
-  const menuItems = [
-    {
-      name: "Profle",
-      path: `/profile/${currentUser?.name}`,
-    },
-    {
-      name: "Info",
-      path: "",
-    },
-    {
-      name: "Docs",
-      path: "/docs",
-    },
-    {
-      name: "Privacy",
-      path: "/privacy",
-    },
-    {
-      name: "Terms",
-      path: "/terms",
-    },
-  ];
-
   return (
     <section className="tablet:hidden">
       <Navbar className="bg-dark">
