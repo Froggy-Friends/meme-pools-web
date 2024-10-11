@@ -89,7 +89,7 @@ export default function MobileMenu({ cachedUser }: MobileMenuProps) {
           </NavbarMenuItem>
 
           <NavbarMenuItem key="docs" className="-ml-3">
-            <Link color="foreground" className="w-full text-2xl mt-2" href="" size="lg">
+            <Link color="foreground" className="w-full text-2xl mt-2" href="https://docs.frog.fun" size="lg" target="_blank">
               Docs
             </Link>
           </NavbarMenuItem>
