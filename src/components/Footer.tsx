@@ -8,7 +8,7 @@ export default function Footer() {
   return (
     <footer className="h-[75px] laptop:h-[120px] w-full mt-auto mb-4 laptop:mb-0 flex items-center justify-between">
       <div className="flex flex-col text-white/80 text-[10px] tablet:text-sm">
-        <Link href="" className="hover:text-white transition">
+        <Link href="https://docs.frog.fun" className="hover:text-white transition">
           Docs
         </Link>
         <Link href="/privacy" className="hover:text-white transition">

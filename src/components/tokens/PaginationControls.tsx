@@ -1,5 +1,6 @@
 "use client";
 
+import useTokenCount from "@/hooks/useTokenCount";
 import { Pagination } from "@nextui-org/react";
 
 type PaginationControlsProps = {
@@ -8,9 +9,15 @@ type PaginationControlsProps = {
 };
 
 export default function PaginationControls({ page, onPageChange }: PaginationControlsProps) {
+  const { tokenCount } = useTokenCount();
+  let totalPages = 0;
+  if (tokenCount) {
+    totalPages = Math.ceil(tokenCount / 100);
+  }
+
   return (
     <Pagination
-      total={10}
+      total={totalPages}
       initialPage={1}
       showControls={true}
       color="primary"
@@ -18,7 +25,7 @@ export default function PaginationControls({ page, onPageChange }: PaginationCon
         cursor: "bg-green text-black",
       }}
       page={page}
-      className="flex justify-center mt-2 mb-12 laptop:mb-24"
+      className="flex justify-center mt-10 mb-12 laptop:mb-24"
       onChange={onPageChange}
     />
   );

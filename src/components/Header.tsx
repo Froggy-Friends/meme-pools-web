@@ -8,6 +8,8 @@ import LogoPopover from "./LogoPopover";
 import LaunchCoinButton from "./LaunchCoinButton";
 import HowItWorksButton from "./HowItWorksButton";
 import TokenSearch from "./TokenSearch";
+import MobileMenu from "./MobileMenu";
+import { BsQuestionCircle } from "react-icons/bs";
 
 type HeaderProps = {
   chain: Chain;
@@ -25,12 +27,16 @@ export default async function Header({ chain }: HeaderProps) {
 
       <TokenSearch />
 
-      <div className="flex items-center gap-x-1 tablet:gap-x-2">
+      <div className="hidden tablet:flex items-center gap-x-1 tablet:gap-x-2">
         <LaunchCoinButton />
-        <HowItWorksButton />
+        <HowItWorksButton>
+          <BsQuestionCircle size={25} className="text-light-gray transition" />
+        </HowItWorksButton>
         <ChainSwitcher />
         <ProfileAvatar user={user!} />
       </div>
+
+      <MobileMenu cachedUser={user || null} />
     </header>
   );
 }

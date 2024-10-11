@@ -2,14 +2,17 @@
 
 import { useDisclosure } from "@nextui-org/react";
 import HowItWorksModal from "./HowItWorksModal";
-import { BsQuestionCircle } from "react-icons/bs";
 
-export default function HowItWorksButton() {
+type HowItWorksButtonProps = {
+  children: React.ReactNode;
+}
+
+export default function HowItWorksButton({ children }: HowItWorksButtonProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
       <button onClick={onOpen} className="p-1 laptop:p-2 hover:bg-gray rounded-lg">
-        <BsQuestionCircle size={25} className="text-light-gray transition" />
+        {children}
       </button>
       <HowItWorksModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </>

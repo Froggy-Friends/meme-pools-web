@@ -14,7 +14,7 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        className="bg-dark-gray text-white p-6 max-w-[600px] overflow-hidden"
+        className="bg-dark-gray text-white p-4 tablet:p-6 max-w-[600px] overflow-hidden"
         placement="top-center"
       >
         <ModalContent>
