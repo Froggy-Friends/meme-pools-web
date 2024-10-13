@@ -101,6 +101,7 @@ export type FormattedTrade = {
   amount: number;
   tokenTicker: string;
   nativeCost: number;
+  usdCost: number;
   chain: Chain;
   transactionHash: string;
   createdAt: Date;
