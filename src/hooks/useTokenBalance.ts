@@ -1,8 +1,11 @@
-import { useAccount, useReadContracts } from 'wagmi';
-import { frogFunTokenAbi } from '@/abi/frogFunToken';
-import { Address } from 'viem';
+import { useAccount, useReadContracts } from "wagmi";
+import { frogFunTokenAbi } from "@/abi/frogFunToken";
+import { Address, formatUnits } from "viem";
 
-export default function useTokenBalance(tokenAddress: Address, chainId: number) {
+export default function useTokenBalance(
+  tokenAddress: Address,
+  chainId: number
+) {
   const { address } = useAccount();
 
   const { data } = useReadContracts({
@@ -12,10 +15,12 @@ export default function useTokenBalance(tokenAddress: Address, chainId: number) 
         abi: frogFunTokenAbi,
         functionName: "balanceOf",
         chainId: chainId,
-        args: [address]
-      }
-    ]
+        args: [address],
+      },
+    ],
   });
 
-  return data && data.length ? Number(data[0].result) : 0;
+  return data && data.length
+    ? Number(formatUnits(data[0].result as bigint, 18))
+    : 0;
 }

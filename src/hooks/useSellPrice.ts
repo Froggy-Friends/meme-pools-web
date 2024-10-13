@@ -7,19 +7,21 @@ export default function useSellPrice() {
   const signer = useEthersSigner();
   const contract = new Contract(contractAddress, frogFunAbi, signer);
 
-  const getSellPrice = async (tokenAddress: string, amount: string) => {
-    let totalPrice: number = 0;
+  const getSellPrice = async (tokenAddress: string, amount: bigint) => {
+    let totalPayout: bigint = BigInt(0);
 
     try {
-      // To DO Update to use calculateSellPrce when contract is fixed
-      const price = await contract.getTokenPrice(tokenAddress);
-      const formattedPrice = formatUnits(price);
-      totalPrice = Number(formattedPrice) * Number(amount);
+      const [price, cost, fee, payout] = await contract.calculateSellPrice(
+        tokenAddress,
+        amount
+      );
+
+      totalPayout = payout;
     } catch (error) {
       console.log(error);
     }
 
-    return totalPrice;
+    return totalPayout;
   };
 
   return getSellPrice;

@@ -37,22 +37,23 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
             >
               {getUserDisplayName(trade.username)}
             </Link>
-            <p className="text-gray">{getTimeDifference(trade.createdAt)}</p>
+            <p className="text-gray text-base">{getTimeDifference(trade.createdAt)}</p>
           </div>
 
           <p className="text-sm laptop:text-base overflow-y-auto">
-            <span className={`${trade.category === Trade.Buy ? "text-light-green" : "text-rose"}`}>
-              {`${trade.category === Trade.Buy ? "Bought" : "Sold"}`}
+            <span className="text-white">
+              {`${trade.category === Trade.Buy ? "Bought" : "Sold"}`}{" "}
+              <span className={`${trade.category === Trade.Buy ? "text-green" : "text-red"}`}>
+                {`$${trade.usdCost.toFixed(2)}`}
+              </span>
             </span>{" "}
-            {trade.amount} <span className="text-blue">${trade.tokenTicker}</span> for{" "}
-            {Number(trade.nativeCost).toFixed(8)}{" "}
-            <span className="text-[#CFB2F4]">{trade.chain === Chain.Solana ? "$SOL" : "$ETH"}</span>
+            of <span className="text-blue">${trade.tokenTicker}</span>
           </p>
         </div>
       </div>
 
       <Link
-        className="text-light-green hover:text-cream transition"
+        className="text-light-green hover:text-cream transition ml-3"
         href={`${
           trade.chain === Chain.Eth
             ? `${etherscanUrl}/tx/${trade.transactionHash}`

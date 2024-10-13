@@ -12,15 +12,9 @@ export default function useSellToken(onSwapModalClose: () => void) {
   const [sellTxStatus, setSellTxStatus] = useState<TxStatus>("idle");
   const [sellTxHash, setSellTxHash] = useState<string | null>(null);
 
-  const sellToken = async (
-    tokenAddress: string,
-    amount: bigint,
-    totalCost: bigint,
-  ) => {
+  const sellToken = async (tokenAddress: string, amount: bigint) => {
     try {
-      const tx = await contract.sellTokens(tokenAddress, amount, {
-        value: totalCost,
-      });
+      const tx = await contract.sellTokens(tokenAddress, amount);
       setSellTxHash(tx.hash);
       setSellTxStatus("pending");
       const receipt = await tx.wait();
