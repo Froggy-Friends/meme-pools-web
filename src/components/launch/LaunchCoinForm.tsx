@@ -13,7 +13,6 @@ import { useChain } from "@/context/chain";
 import Image from "next/image";
 import { cn } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import LaunchCoinToast from "./LaunchCoinToast";
 import { GrRefresh } from "react-icons/gr";
 import { useCallback, useRef, useState } from "react";
 import { maxReservedSupply } from "@/lib/constants";
@@ -44,7 +43,6 @@ export default function LaunchCoinForm() {
   const { getReservePrice } = useReservePrice();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
   const [tokenImageBlob, setTokenImageBlob] = useState<PutBlobResult | null>(null);
   const [reserveCost, setReserveCost] = useState<string | null>(null);
   const [formattedReservedAmount, setFormattedReservedAmount] = useState("");
@@ -91,7 +89,7 @@ export default function LaunchCoinForm() {
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
-        setTxHash(tokenDetails.txHash);
+        toast.success("Coin launched!");
       }
 
       reset();
@@ -312,7 +310,6 @@ export default function LaunchCoinForm() {
           <p className="text-dark font-proximaSoftBold">HAVE SOME FUN</p>
         </FormSubmitButton>
       </form>
-      {txHash && <LaunchCoinToast key={txHash} txHash={txHash} />}
     </section>
   );
 }

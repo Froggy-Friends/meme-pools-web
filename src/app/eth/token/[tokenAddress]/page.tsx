@@ -2,7 +2,6 @@ import getEthPrice from "@/lib/getEthPrice";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import BondingCurveProgress from "../../../../components/token/BondingCurveProgress";
-import VotingProgress from "@/components/token/VotingProgress";
 import TokenInfo from "../../../../components/token/TokenInfo";
 import Swap from "../../../../components/swap/Swap";
 import { fetchTokenByAddress } from "../../../../queries/token/queries";
@@ -61,7 +60,6 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
 
           <div className="flex flex-col tablet:flex-row laptop:flex-col gap-x-4 mt-12 desktop:mt-0">
             <BondingCurveProgress token={token} />
-            <VotingProgress token={token} />
           </div>
         </div>
       </div>
