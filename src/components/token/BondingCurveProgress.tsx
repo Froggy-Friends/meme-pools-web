@@ -3,26 +3,25 @@
 import useTokenMarketcap from "@/hooks/useTokenMarketcap";
 import { Progress } from "@nextui-org/react";
 import { Token } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import { MAX_MARKET_CAP } from "@/lib/constants";
+import { getMarketcapPercentage } from "@/lib/getMarketcapPercentage";
+import { Channel } from "@/models/channel";
+import { useEffect } from "react";
+import Pusher from "pusher-js";
+import { TradeWithUserAndToken } from "@/types/token/types";
 
 type BondingCurveProgressProps = {
   token: Token;
 };
 
 export default function BondingCurveProgress({ token }: BondingCurveProgressProps) {
-  const { getTokenMarketcap } = useTokenMarketcap();
-  const { data } = useQuery({
-    queryKey: ["tokenMarketcap", token.id],
-    queryFn: () => getTokenMarketcap(token.tokenAddress),
-  });
+  const { tokenMarketcap } = useTokenMarketcap(token);
 
   return (
     <section className="mt-6 laptop:mt-7 desktop:mt-6 w-full tablet:w-[350px]">
       <Progress
         aria-label="Downloading..."
         size="md"
-        value={data ? (data / MAX_MARKET_CAP) * 100 : 0}
+        value={tokenMarketcap ? Number(getMarketcapPercentage(tokenMarketcap)) : 0}
         classNames={{
           base: "max-w-full",
           track: "drop-shadow-md bg-dark-gray h-4",
@@ -35,7 +34,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
         label="Bonding Curve Progress"
       />
       <p className="text-light-gray">
-        Marketcap: <span className="text-light-green">${data?.toFixed(2)}</span>
+        Marketcap: <span className="text-light-green">${tokenMarketcap?.toFixed(2)}</span>
       </p>
 
       <p className="text-cream text-sm pt-2">
