@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
 import { fetchUserCacheKey, fetchUserCacheTag } from "@/config/user";
 import { User } from "@prisma/client";
+import { TokenWithCreator } from "@/lib/types";
 
 export const fetchUser = unstable_cache(
   async (wallet: string | undefined) => {
@@ -15,7 +16,7 @@ export const fetchUser = unstable_cache(
       where: {
         OR: [
           {
-            name: wallet
+            name: wallet,
           },
           {
             solAddress: wallet,
@@ -113,4 +114,22 @@ export const fetchFollowing = async (followerId: string): Promise<User[]> => {
   });
 
   return results.map((result) => result.followingUser);
+};
+
+export const fetchCreatedTokens = async (
+  userId: string
+): Promise<TokenWithCreator[]> => {
+  const tokens = await prisma.token.findMany({
+    where: {
+      userId: userId,
+    },
+    include: {
+      user: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return tokens;
 };

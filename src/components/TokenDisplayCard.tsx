@@ -23,10 +23,8 @@ type TokenDisplayCardProps = {
 
 export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
   const { chain } = useChain();
-  const { getTokenMarketcap } = useTokenMarketcap();
+  const { tokenMarketcap } = useTokenMarketcap(token);
   const [newTrade, setNewTrade] = useState(false);
-  const [marketCap, setMarketCap] = useState(token.marketCap);
-  const [marketCapPercentage, setMarketCapPercentage] = useState(getMarketcapPercentage(token.marketCap));
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -39,25 +37,19 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
     });
 
     const buyChannel = pusher.subscribe(Channel.Buy);
-    const sellChannel = pusher.subscribe(Channel.Sell);
 
     buyChannel.bind(token.id, async ({ trade }: { trade: TradeWithUserAndToken }) => {
       if (trade) {
         setNewTrade(true);
         setTimeout(() => setNewTrade(false), 1000);
       }
-
-      const marketCap = await getTokenMarketcap(token.tokenAddress);
-      setMarketCap(marketCap);
-      setMarketCapPercentage(getMarketcapPercentage(marketCap));
     });
 
-    sellChannel.bind(token.id, async ({ trade }: { trade: TradeWithUserAndToken }) => {
-      const marketCap = await getTokenMarketcap(token.tokenAddress);
-      setMarketCap(marketCap);
-      setMarketCapPercentage(getMarketcapPercentage(marketCap));
-    });
-  }, [token.id, token.tokenAddress, getTokenMarketcap]);
+    return () => {
+      buyChannel.unbind();
+      pusher.disconnect();
+    };
+  }, [token.id, token.tokenAddress]);
 
   if (!isMounted) return null;
 
@@ -106,7 +98,8 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
           <div className="flex items-center justify-between">
             <div className="text-light-gray text-[10px] flex items-center gap-1">
               Market Cap:
-              <span className="text-white">${marketCap.toFixed(2)}</span> ({marketCapPercentage}%)
+              <span className="text-white">${tokenMarketcap?.toFixed(2)}</span> (
+              {getMarketcapPercentage(tokenMarketcap)}%)
             </div>
             <div className="flex items-center gap-3">
               {token.twitter && (
@@ -129,7 +122,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
           <Progress
             aria-label="Downloading..."
             size="md"
-            value={Number(marketCapPercentage)}
+            value={Number(getMarketcapPercentage(tokenMarketcap))}
             classNames={{
               base: "max-w-full",
               track: "drop-shadow-md bg-gray h-2",

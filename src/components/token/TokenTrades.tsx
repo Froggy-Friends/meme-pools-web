@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import { Channel } from "@/models/channel";
 import { FormattedTrade } from "@/types/token/types";
 import { usePostHog } from "posthog-js/react";
-import useTokenMarketcap from "@/hooks/useTokenMarketcap";
 import Pusher from "pusher-js";
 
 type TokenTradesProps = {
@@ -18,7 +17,6 @@ type TokenTradesProps = {
 export default function TokenTrades({ trades, tokenId, tokenAddress }: TokenTradesProps) {
   const queryClient = useQueryClient();
   const posthog = usePostHog();
-  const { getTokenMarketcap } = useTokenMarketcap();
 
   const { data } = useQuery({
     queryKey: ["trades", tokenId],
@@ -47,7 +45,6 @@ export default function TokenTrades({ trades, tokenId, tokenAddress }: TokenTrad
     subscribedChannels.forEach(channel => {
       channel?.bind(tokenId, ({ trade }: { trade: FormattedTrade }) => {
         queryClient.setQueryData(["trades", tokenId], [{ ...trade, isNew: true }, ...data]);
-        queryClient.refetchQueries({ queryKey: ["tokenMarketcap", tokenId] });
 
         if (channel?.name === Channel.Buy) {
           posthog.capture("token_bought", { tokenId: tokenId, trade: trade });
@@ -64,7 +61,7 @@ export default function TokenTrades({ trades, tokenId, tokenAddress }: TokenTrad
       });
       pusher.disconnect();
     };
-  }, [queryClient, tokenId, data, posthog, tokenAddress, getTokenMarketcap]);
+  }, [queryClient, tokenId, data, posthog, tokenAddress]);
 
   return (
     <section className="flex flex-col">
