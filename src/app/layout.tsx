@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import { config } from "@/config/wagmi";
 import Web3ModalProvider from "@/context";
 import { NextUIProvider } from "@nextui-org/react";
-import { Toaster } from "react-hot-toast";
+import ResponsiveToaster from "@/components/ResponsiveToaster";
 import AppWalletProvider from "@/components/AppWalletProvider";
 import { ChainProvider } from "@/components/ChainProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -35,7 +35,7 @@ export default async function RootLayout({
               <ChainProvider>
                 <PHProvider>
                   <PostHogPageView />
-                  <Toaster position="bottom-center" />
+                  <ResponsiveToaster />
                   <ErrorBoundary>{children}</ErrorBoundary>
                 </PHProvider>
               </ChainProvider>
