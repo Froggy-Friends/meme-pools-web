@@ -18,7 +18,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
   });
 
   return (
-    <section className="mt-6 w-full tablet:w-[350px]">
+    <section className="mt-6 laptop:mt-7 desktop:mt-6 w-full tablet:w-[350px]">
       <Progress
         aria-label="Downloading..."
         size="md"
@@ -38,7 +38,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
         Marketcap: <span className="text-light-green">${data?.toFixed(2)}</span>
       </p>
 
-      <p className="block laptop:hidden text-cream pt-4">
+      <p className="text-cream text-sm pt-2">
         When {token.ticker} reaches a market cap of $42,000, all of the liquidity from the bonding curve with be
         depositied into Uniswap and burned. Progression increases as the price goes up.
       </p>

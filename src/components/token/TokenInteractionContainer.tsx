@@ -29,7 +29,7 @@ export default async function TokenInteractionContainer({
 
   return (
     <section>
-      <div className="relative flex flex-col w-full h-[450px] my-20 bg-dark-gray rounded-xl overflow-hidden">
+      <div className="relative flex flex-col w-full h-[700px] my-20 bg-dark-gray rounded-xl overflow-hidden">
         <div className="sticky top-0 z-10 bg-dark-gray mt-2 laptop:mt-0 p-2 laptop:p-6">
           <div className="flex gap-x-2">
             <ToggleViewButton name="Trades" tokenAddress={tokenAddress} view={view} />

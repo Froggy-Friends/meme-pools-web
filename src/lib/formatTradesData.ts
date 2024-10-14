@@ -12,6 +12,7 @@ export const formatTradesData = (trades: TradeWithUserAndToken[]) => {
       amount: Number(trade.amount),
       tokenTicker: trade.Token.ticker,
       nativeCost: Number(trade.nativeCost),
+      usdCost: Number(trade.usdCost),
       chain: trade.Token.chain as Chain,
       transactionHash: trade.transactionHash,
       createdAt: trade.createdAt,

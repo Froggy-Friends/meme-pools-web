@@ -6,6 +6,7 @@ import { defaultProfileAvatarUrl } from "@/config/user";
 import { TokenWithVoteCount } from "@/types/token/types";
 import Link from "next/link";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
+import { formatTicker } from "@/lib/formatTicker";
 
 type TokenInfoParams = {
   token: TokenWithVoteCount;
@@ -18,7 +19,8 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
     <section className="flex flex-col w-full my-2 gap-y-4 pb-10">
       <div className="flex items-center gap-4">
         <Image src={token.image} alt="token-image" height={50} width={50} className="h-[50px] w-[50px] rounded-3xl" />
-        <p className="text-4xl tablet:text-6xl font-proximaSoftBold">${token.ticker}</p>
+        <p className="hidden tablet:block text-6xl font-proximaSoftBold">${token.ticker}</p>
+        <p className="tablet:hidden text-5xl font-proximaSoftBold">${formatTicker(token.ticker)}</p>
       </div>
 
       <div className="flex items-center gap-x-2">

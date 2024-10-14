@@ -2,6 +2,7 @@
 
 import { useChain } from "@/context/chain";
 import { cn } from "@nextui-org/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type ToggleViewButtonProps = {
@@ -13,15 +14,24 @@ type ToggleViewButtonProps = {
 export default function ToggleViewButton({ name, tokenAddress, view }: ToggleViewButtonProps) {
   const router = useRouter();
   const { chain } = useChain();
+  const isActive = view.toLowerCase() === name.toLowerCase();
+  const href = `/${chain.name}/token/${tokenAddress}?view=${name.toLowerCase()}`;
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    router.push(href, { scroll: false });
+  };
+
   return (
-    <button
-      onClick={() => router.push(`/${chain.name}/token/${tokenAddress}?view=${name.toLowerCase()}`)}
+    <Link
+      href={href}
+      onClick={handleClick}
       className={cn(
-        "bg-dark rounded-3xl py-[0.375rem] px-3 text-white hover:bg-gray",
-        view === name.toLowerCase() && "bg-gray"
+        "bg-dark rounded-3xl py-[0.375rem] px-3 text-white hover:bg-gray transition",
+        isActive && "bg-dark-green hover:bg-dark-green cursor-default"
       )}
     >
       {name}
-    </button>
+    </Link>
   );
 }
