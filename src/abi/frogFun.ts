@@ -46,19 +46,6 @@ export const frogFunAbi = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint64",
-        name: "version",
-        type: "uint64",
-      },
-    ],
-    name: "Initialized",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: "address",
         name: "tokenAddress",
         type: "address",
@@ -89,25 +76,6 @@ export const frogFunAbi = [
       },
     ],
     name: "LiquidityPoolCreated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
     type: "event",
   },
   {
@@ -220,45 +188,6 @@ export const frogFunAbi = [
     ],
     name: "TokensSold",
     type: "event",
-  },
-  {
-    inputs: [],
-    name: "END_PRICE",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "START_PRICE",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "WETH9",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
   },
   {
     inputs: [
@@ -468,62 +397,6 @@ export const frogFunAbi = [
     inputs: [
       {
         internalType: "address",
-        name: "_treasuryAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_weth",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_nonfungiblePositionManager",
-        type: "address",
-      },
-    ],
-    name: "initialize",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "nonfungiblePositionManager",
-    outputs: [
-      {
-        internalType: "contract INonfungiblePositionManager",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "tokenAddress",
         type: "address",
       },
@@ -534,81 +407,6 @@ export const frogFunAbi = [
       },
     ],
     name: "sellTokens",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_nonfungiblePositionManager",
-        type: "address",
-      },
-    ],
-    name: "setNonfungiblePositionManager",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_maxPercentage",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_feePercentage",
-        type: "uint256",
-      },
-    ],
-    name: "setPercentages",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_start",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_end",
-        type: "uint256",
-      },
-    ],
-    name: "setPriceRange",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_treasury",
-        type: "address",
-      },
-    ],
-    name: "setTreasury",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_weth",
-        type: "address",
-      },
-    ],
-    name: "setWeth",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -694,35 +492,5 @@ export const frogFunAbi = [
     ],
     stateMutability: "view",
     type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "treasuryAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
   },
 ];

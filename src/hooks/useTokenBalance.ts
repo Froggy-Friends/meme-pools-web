@@ -8,7 +8,7 @@ export default function useTokenBalance(
 ) {
   const { address } = useAccount();
 
-  const { data } = useReadContracts({
+  const { data, refetch } = useReadContracts({
     contracts: [
       {
         address: tokenAddress,
@@ -20,7 +20,11 @@ export default function useTokenBalance(
     ],
   });
 
-  return data && data.length
-    ? Number(formatUnits(data[0].result as bigint, 18))
-    : 0;
+  return {
+    tokenBalance:
+      data && data.length
+        ? Number(formatUnits(data[0].result as bigint, 18))
+        : 0,
+    refetchBalance: refetch,
+  };
 }

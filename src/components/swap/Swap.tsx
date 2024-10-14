@@ -66,7 +66,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const { sellToken, sellTxStatus, sellTxHash } = useSellToken(onSwapModalClose);
   const getSellPrice = useSellPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
-  const tokenBalance = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 
@@ -113,11 +113,22 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     return tokens.toString();
   };
 
+  const resetAmounts = () => {
+    if (activeTab === TradingTab.BUY) {
+      setBuyAmount("");
+      debouncedBuyCost("");
+    } else {
+      setSellAmount("");
+      debouncedSellPayout("");
+    }
+  };
+
   const buyTokens = async () => {
     const buyAmountWei = parseUnits(buyAmount, 18);
     onSwapModalOpen();
     const receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
     postTradeData(receipt, TradingTab.BUY, ethPrice);
+    refetchBalance();
   };
 
   const sellTokens = async () => {
@@ -125,6 +136,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     onSwapModalOpen();
     const receipt = await sellToken(tokenAddress, formattedSellAmount);
     postTradeData(receipt, TradingTab.SELL, ethPrice);
+    refetchBalance();
   };
 
   return (
@@ -185,7 +197,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   />
                 }
               />
-              <div className="absolute left-1/2 top-[38%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
+              <div className="absolute left-1/2 top-[32%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
                 <FaRegArrowAltCircleDown size={24} className="text-gray" />
               </div>
               <div className="flex items-center gap-2 p-2 rounded-3xl bg-dark w-full">
@@ -248,15 +260,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
           )}
           <div className="flex items-center pl-2 gap-2">
             <button
-              onClick={() => {
-                if (activeTab === TradingTab.BUY) {
-                  setBuyAmount("");
-                  debouncedBuyCost("");
-                } else {
-                  setSellAmount("");
-                  debouncedSellPayout("");
-                }
-              }}
+              onClick={() => resetAmounts()}
               className="flex items-center justify-center bg-dark rounded-2xl p-2 hover:bg-light-gray transition"
             >
               <Image src="/reset.svg" alt="reset" width={10} height={10} />
