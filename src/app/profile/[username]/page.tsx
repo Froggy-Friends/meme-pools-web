@@ -10,6 +10,7 @@ import { Chain } from "@/models/chain";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
 import { toTitleCase } from "@/lib/toTitleCase";
+import CreatedTokens from "@/components/profile/CreatedTokens";
 
 type ProfilePageProps = {
   params: {
@@ -19,7 +20,7 @@ type ProfilePageProps = {
 };
 
 export default async function ProfilePage({ params, searchParams }: ProfilePageProps) {
-  const view = (searchParams.view as string) || "profile";
+  const view = (searchParams.view as string) || "settings";
   const cookieStore = cookies();
   const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const cachedUser = await fetchUser(cachedUserEvmAddress?.value);
@@ -35,18 +36,18 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
     <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 laptop:px-4">
       <Header chain={Chain.Eth} />
 
-      <h2 className="text-4xl laptop:text-[56px] font-semibold">{toTitleCase(view)}</h2>
+      <h2 className="text-4xl laptop:text-[56px] font-semibold mb-6">{toTitleCase(view)}</h2>
 
       <ProfileMenuToggle profileUser={profileUser} currentView={view} />
 
-      {view === "profile" && (
+      {view === "settings" && (
         <ProfileInfo
           profileUser={profileUser}
           cachedUser={cachedUser || null}
           isFollowing={isFollowing?.status || "false"}
         />
       )}
-
+      {view === "created" && <CreatedTokens profileUser={profileUser} />}
       {view === "followers" && <Followers followers={followers} profileUser={profileUser} />}
       {view === "following" && <Following following={following} profileUser={profileUser} />}
 
