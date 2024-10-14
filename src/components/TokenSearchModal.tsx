@@ -50,7 +50,7 @@ export default function TokenSearchModal({ isOpen, onOpenChange }: TokenSearchMo
           setTokens(null);
         }}
         size="2xl"
-        className="bg-dark max-h-[500px] min-h-[175px] overflow-y-auto mt-12 laptop:mt-0"
+        className="bg-dark max-h-[500px] min-h-[175px] overflow-y-auto mt-12"
         placement="top"
       >
         <ModalContent>

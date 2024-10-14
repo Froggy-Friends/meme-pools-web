@@ -1,4 +1,5 @@
 import { useChain } from "@/context/chain";
+import useTokenMarketcap from "@/hooks/useTokenMarketcap";
 import { TokenWithVoteCount } from "@/types/token/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +10,7 @@ type SearchTokenDisplayProps = {
 
 export default function SearchTokenDisplay({ token }: SearchTokenDisplayProps) {
   const { chain } = useChain();
+  const { tokenMarketcap } = useTokenMarketcap(token);
 
   return (
     <Link
@@ -21,7 +23,7 @@ export default function SearchTokenDisplay({ token }: SearchTokenDisplayProps) {
       </div>
 
       <div className="flex w-1/4 justify-between items-center">
-        <p>${token.marketCap}</p>
+        <p>${tokenMarketcap?.toFixed(2)}</p>
         <p>{token._count.TokenVote}</p>
       </div>
     </Link>
