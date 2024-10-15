@@ -4,6 +4,7 @@ import { addMeme } from "@/actions/token/actions";
 import useUser from "@/hooks/useUser";
 import { useRef } from "react";
 import FormSubmitButton from "../FormSubmitButton";
+import { cn } from "@nextui-org/react";
 
 type MemeFormProps = {
   tokenId: string;
@@ -37,7 +38,13 @@ export default function MemeForm({ tokenId }: MemeFormProps) {
         />
         <FormSubmitButton
           pendingText="POSTING..."
-          className="w-full tablet:w-28 bg-green h-10 rounded-3xl py-1 px-8 text-dark font-proximaSoftBold active:scale-[0.97] hover:bg-light-green transition"
+          disabled={!currentUser}
+          className={cn(
+            "w-full tablet:w-28 bg-green h-10 rounded-3xl py-1 px-8 text-dark font-proximaSoftBold active:scale-[0.97] hover:bg-light-green transition",
+            {
+              "hover:bg-green": !currentUser,
+            }
+          )}
         >
           <p>POST</p>
         </FormSubmitButton>

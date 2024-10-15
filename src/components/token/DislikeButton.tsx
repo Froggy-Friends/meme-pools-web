@@ -4,6 +4,7 @@ import { FaThumbsDown, FaRegThumbsDown } from "react-icons/fa6";
 import { HandleDislike } from "../../types/token/types";
 import { CommentLikes } from "@prisma/client";
 import { DefinedUseQueryResult } from "@tanstack/react-query";
+import useUser from "@/hooks/useUser";
 
 type DislikeButtonProps = {
   dislikes: DefinedUseQueryResult<number, Error>;
@@ -11,17 +12,12 @@ type DislikeButtonProps = {
   handleDislike: HandleDislike;
 };
 
-export default function DislikeButton({
-  dislikes,
-  commentDisLike,
-  handleDislike,
-}: DislikeButtonProps) {
+export default function DislikeButton({ dislikes, commentDisLike, handleDislike }: DislikeButtonProps) {
+  const { currentUser } = useUser();
+
   return (
     <div className="flex gap-x-2 items-center">
-      <button
-        className="hover:scale-110 active:scale-95 transition"
-        disabled={handleDislike.isPending}
-      >
+      <button className="hover:scale-110 active:scale-95 transition" disabled={handleDislike.isPending || !currentUser}>
         {commentDisLike.data.length === 0 ? (
           <FaRegThumbsDown size={17} onClick={() => handleDislike.mutate()} />
         ) : (
