@@ -64,13 +64,14 @@ export default function usePostTradeData() {
           const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
           const nativeCost = Number(formatUnits(BigInt(cost)));
           const usdCost = Number(formatUnits(BigInt(cost))) * ethPrice;
+          const formattedAmount = Number(formatUnits(BigInt(amount), 18));
 
           await addTrade(
             tokenAddress,
             buyer,
             "buy",
             formattedPrice,
-            amount,
+            formattedAmount,
             nativeCost,
             usdCost,
             "eth",
@@ -84,13 +85,14 @@ export default function usePostTradeData() {
           const nativeCost = Number(formatUnits(BigInt(cost)));
           const usdCost = Number(formatUnits(BigInt(cost))) * ethPrice;
           const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
+          const formattedAmount = Number(formatUnits(BigInt(amount), 18));
 
           await addTrade(
             tokenAddress,
             seller,
             "sell",
             formattedPrice,
-            amount,
+            formattedAmount,
             nativeCost,
             usdCost,
             "eth",
@@ -105,5 +107,40 @@ export default function usePostTradeData() {
     [getBuyTokenDetails, getSellTokenDetails]
   );
 
-  return { postTradeData };
+  const postReserveData = useCallback(
+    async (
+      tokenAddress: string,
+      buyer: string,
+      cost: number,
+      price: number,
+      amount: number,
+      ethPrice: number,
+      txHash: Address
+    ) => {
+      const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
+      const nativeCost = cost;
+      const usdCost = cost * ethPrice;
+      const formattedAmount = Number(formatUnits(BigInt(amount), 18));
+
+      try {
+        await addTrade(
+          tokenAddress,
+          buyer,
+          "buy",
+          formattedPrice,
+          formattedAmount,
+          nativeCost,
+          usdCost,
+          "eth",
+          "eth",
+          txHash
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    []
+  );
+
+  return { postTradeData, postReserveData };
 }

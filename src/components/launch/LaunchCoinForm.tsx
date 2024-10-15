@@ -22,6 +22,8 @@ import useReservePrice from "@/hooks/useReservePrice";
 import { MdInfoOutline } from "react-icons/md";
 import { Tooltip } from "@nextui-org/react";
 import { formatNumber } from "@/lib/formatNumber";
+import usePostTradeData from "@/hooks/usePostTradeData";
+import getEthPrice from "@/lib/getEthPrice";
 
 export type LaunchFormValues = {
   name: string;
@@ -41,6 +43,7 @@ export default function LaunchCoinForm() {
   const { createToken } = useCreateToken();
   const { chain } = useChain();
   const { getReservePrice } = useReservePrice();
+  const { postReserveData } = usePostTradeData();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [tokenImageBlob, setTokenImageBlob] = useState<PutBlobResult | null>(null);
@@ -84,6 +87,19 @@ export default function LaunchCoinForm() {
         tokenDetails.creator,
         chain.name,
         tokenImageBlob
+      );
+
+      const { reservePrice, totalCost } = await getReservePrice(Number(numericReservedAmount));
+      const ethPrice = await getEthPrice();
+
+      await postReserveData(
+        tokenDetails.tokenAddress,
+        tokenDetails.creator,
+        Number(totalCost),
+        Number(reservePrice),
+        Number(reservedAmount),
+        ethPrice,
+        tokenDetails.txHash
       );
 
       if (errorMessage) {
@@ -131,8 +147,8 @@ export default function LaunchCoinForm() {
       return;
     }
 
-    const reservePrice = await getReservePrice(value);
-    setReserveCost(reservePrice);
+    const { totalCost } = await getReservePrice(value);
+    setReserveCost(totalCost);
   }, 700);
 
   return (
