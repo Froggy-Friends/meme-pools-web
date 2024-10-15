@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useUser from "./useUser";
 import { addCommentLike, removeCommentLike } from "@/actions/token/actions";
 import { CommentLikesWithUser, CommentWithLikes } from "@/types/token/types";
-import { CommentLikes, User } from "@prisma/client";
+import { CommentLikes } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { Channel } from "@/models/channel";
@@ -16,8 +16,8 @@ type CommentLikesChannelReturn = {
 
 export default function useCommentLike(
   comment: CommentWithLikes,
-  userCommentLike: CommentLikes[],
-  userCommentDislike: CommentLikes[],
+  userCommentLike: CommentLikes[] | [],
+  userCommentDislike: CommentLikes[] | [],
   dislikesCount: number,
   likesCount: number
 ) {
