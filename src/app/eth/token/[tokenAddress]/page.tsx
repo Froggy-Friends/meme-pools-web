@@ -47,7 +47,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
     <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 tablet:px-4">
       <Header chain={Chain.Eth} />
 
-      <TokenInfo token={token} creator={creator} cachedUser={cachedUser || null} />
+      <TokenInfo token={token} creator={creator} />
 
       <div className="flex flex-col desktop:flex-row gap-x-10 w-full">
         <div className="flex-[3] flex flex-col mobile-chart">
