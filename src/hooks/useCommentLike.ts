@@ -16,8 +16,8 @@ type CommentLikesChannelReturn = {
 
 export default function useCommentLike(
   comment: CommentWithLikes,
-  userCommentLike: CommentLikes[],
-  userCommentDislike: CommentLikes[],
+  userCommentLike: CommentLikes[] | [],
+  userCommentDislike: CommentLikes[] | [],
   dislikesCount: number,
   likesCount: number
 ) {

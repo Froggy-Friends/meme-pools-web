@@ -20,7 +20,7 @@ type TokenCommentProps = {
 };
 
 export default function TokenComment({ comment, author, cachedUser, isNew }: TokenCommentProps) {
-  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(comment, cachedUser!);
+  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(comment, cachedUser);
 
   const { likes, commentLike, handleLike, dislikes, commentDisLike, handleDislike } = useCommentLike(
     comment,

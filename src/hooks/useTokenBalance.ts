@@ -22,7 +22,7 @@ export default function useTokenBalance(
 
   return {
     tokenBalance:
-      data && data.length
+      address && data && data.length
         ? Number(formatUnits(data[0].result as bigint, 18))
         : 0,
     refetchBalance: refetch,
