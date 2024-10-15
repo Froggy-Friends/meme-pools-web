@@ -4,17 +4,22 @@ import { useEffect, useRef, useState } from "react";
 import { createChart, ColorType, IChartApi, ISeriesApi, CandlestickData } from "lightweight-charts";
 import { Address } from "viem";
 import { frogFunApi } from "@/config/env";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Channel } from "@/models/channel";
+import Pusher from "pusher-js";
 
 interface TokenChartProps {
   tokenAddress: Address;
+  tokenId: string;
 }
 
-export default function TokenChart({ tokenAddress }: TokenChartProps) {
+export default function TokenChart({ tokenAddress, tokenId }: TokenChartProps) {
+  const queryClient = useQueryClient();
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<CandlestickData[]>([]);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
+  const [visibleLogicalRange, setVisibleLogicalRange] = useState<{ from: number; to: number } | null>(null);
 
   const fetchChartData = async () => {
     const response = await fetch(`${frogFunApi}/trade/history?symbol=${tokenAddress}&resolution=5`);
@@ -36,6 +41,33 @@ export default function TokenChart({ tokenAddress }: TokenChartProps) {
       setData(data);
     },
   });
+
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
+      throw new Error("Missing pusher env variables");
+    }
+
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
+
+    const buyChannel = pusher.subscribe(Channel.Buy);
+    const sellChannel = pusher.subscribe(Channel.Sell);
+
+    const handleTrade = () => {
+      queryClient.invalidateQueries({ queryKey: ["chartData", tokenAddress] });
+    };
+
+    buyChannel.bind(tokenId, handleTrade);
+    sellChannel.bind(tokenId, handleTrade);
+
+    return () => {
+      buyChannel.unbind(tokenId, handleTrade);
+      sellChannel.unbind(tokenId, handleTrade);
+      pusher.unsubscribe(Channel.Buy);
+      pusher.unsubscribe(Channel.Sell);
+    };
+  }, [tokenId, queryClient]);
 
   useEffect(() => {
     if (chartContainerRef.current && data.length > 0) {
@@ -79,6 +111,16 @@ export default function TokenChart({ tokenAddress }: TokenChartProps) {
 
       candlestickSeries.setData(data);
 
+      // Set initial visible range to zoom out (adjust from/to as needed)
+      chart.timeScale().setVisibleLogicalRange({ from: data.length - 100, to: data.length });
+
+      // Save the visible range when user interacts with the chart
+      chart.timeScale().subscribeVisibleLogicalRangeChange(range => {
+        if (range) {
+          setVisibleLogicalRange({ from: range.from, to: range.to });
+        }
+      });
+
       window.addEventListener("resize", handleResize);
 
       return () => {
@@ -87,6 +129,18 @@ export default function TokenChart({ tokenAddress }: TokenChartProps) {
       };
     }
   }, [data]);
+
+  // Effect to update data without changing focus
+  useEffect(() => {
+    if (seriesRef.current && chartRef.current && data.length > 0) {
+      seriesRef.current.setData(data);
+
+      // Restore the previous visible range if it exists
+      if (visibleLogicalRange) {
+        chartRef.current.timeScale().setVisibleLogicalRange(visibleLogicalRange);
+      }
+    }
+  }, [data, visibleLogicalRange]);
 
   return <div ref={chartContainerRef} style={{ width: "100%", height: "390px" }} />;
 }
