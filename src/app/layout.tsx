@@ -11,6 +11,7 @@ import AppWalletProvider from "@/components/AppWalletProvider";
 import { ChainProvider } from "@/components/ChainProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { PHProvider } from "@/context/posthog";
+import { Analytics } from "@vercel/analytics/react";
 
 const PostHogPageView = dynamic(() => import("../components/PotHogPageView"), { ssr: false });
 
@@ -36,7 +37,10 @@ export default async function RootLayout({
                 <PHProvider>
                   <PostHogPageView />
                   <ResponsiveToaster />
-                  <ErrorBoundary>{children}</ErrorBoundary>
+                  <ErrorBoundary>
+                    {children}
+                    <Analytics />
+                  </ErrorBoundary>
                 </PHProvider>
               </ChainProvider>
             </AppWalletProvider>

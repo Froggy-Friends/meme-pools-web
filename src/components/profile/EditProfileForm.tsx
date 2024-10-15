@@ -32,9 +32,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
 
       address && (await updateUserData(formData, address));
 
-      setTimeout(() => {
-        toast.success("Profile successfully updated!");
-      }, 2000);
+      toast.success("Profile successfully updated!");
 
       if (username) {
         router.push(`/profile/${username}`);

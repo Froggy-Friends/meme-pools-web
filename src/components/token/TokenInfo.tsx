@@ -11,7 +11,6 @@ import { formatTicker } from "@/lib/formatTicker";
 type TokenInfoParams = {
   token: TokenWithVoteCount;
   creator: User | null;
-  cachedUser: User | null;
 };
 
 export default function TokenInfo({ token, creator }: TokenInfoParams) {

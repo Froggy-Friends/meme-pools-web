@@ -39,7 +39,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
         <div className="hover:bg-gray rounded-lg p-1 laptop:p-2 cursor-pointer">
           <Image
             className="transition-transform rounded-full"
-            src={user?.imageUrl || defaultProfileAvatarUrl}
+            src={user?.imageUrl || currentUser?.imageUrl || defaultProfileAvatarUrl}
             alt="profile-avatar"
             height={25}
             width={25}

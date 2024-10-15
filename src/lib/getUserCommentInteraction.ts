@@ -3,8 +3,9 @@ import { User } from "@prisma/client";
 
 export const getUserCommentInteraction = (
   comment: CommentWithLikes,
-  currentUser: User,
+  currentUser: User | null
 ) => {
+  if (!currentUser) return { userCommentLike: [], userCommentDislike: [] };
 
   const userCommentLike = comment.commentLikes.filter((commentLike) => {
     return (
@@ -18,5 +19,5 @@ export const getUserCommentInteraction = (
     );
   });
 
-  return { userCommentLike, userCommentDislike }
+  return { userCommentLike, userCommentDislike };
 };

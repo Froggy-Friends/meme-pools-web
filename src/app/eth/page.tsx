@@ -1,10 +1,8 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import LeaderBoardAndFeedContainer from "@/components/LeaderBoardAndFeedContainer";
-import LiveFeed from "@/components/LiveFeed";
 import Spotlight from "@/components/Spotlight";
 import TokenPageContent from "@/components/TokenPageContent";
-import VotingLeaderboard from "@/components/VotingLeaderboard";
 import { Chain } from "@/models/chain";
 import { TokenFilter } from "@/models/token";
 import { fetchTokens, fetchTopVotesTokens } from "@/queries/token/queries";

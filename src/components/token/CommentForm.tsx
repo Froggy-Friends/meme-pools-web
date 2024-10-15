@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CommentWithLikes } from "@/types/token/types";
 import toast from "react-hot-toast";
 import { useRef } from "react";
+import { cn } from "@nextui-org/react";
 
 type CommentFormProps = {
   tokenId: string;
@@ -67,8 +68,16 @@ export default function CommentForm({ tokenId }: CommentFormProps) {
         name="comment"
         id="comment"
       />
-      <button className="bg-green h-10 w-28 rounded-3xl mt-4 py-1 px-8 text-dark font-proximaSoftBold active:scale-[0.97] self-end hover:bg-light-green transition">
-        <p>POST</p>
+      <button
+        disabled={!currentUser}
+        className={cn(
+          "bg-green h-10 w-28 rounded-3xl mt-4 py-1 px-8 text-dark font-proximaSoftBold active:scale-[0.97] self-end hover:bg-light-green transition",
+          {
+            "hover:bg-green": !currentUser,
+          }
+        )}
+      >
+        Post
       </button>
     </form>
   );

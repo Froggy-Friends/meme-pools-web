@@ -17,7 +17,7 @@ function TokenActions({ token, cachedUser }: TokenActionsProps) {
       <div className="flex gap-6">
         <div className="flex flex-col pl-1">
           <p className="text-gray text-sm tablet:text-lg laptop:text-xl">Votes</p>
-          <TokenVote tokenId={token.id} cachedUser={cachedUser} />
+          <TokenVote tokenId={token.id} cachedUser={cachedUser || null} />
         </div>
 
         <div className="flex flex-col">
