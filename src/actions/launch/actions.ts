@@ -46,7 +46,7 @@ export const launchCoin = async (
       });
 
       const pusher = getPusher();
-      pusher.trigger(Channel.CreateToken, token.id, {
+      await pusher.trigger(Channel.CreateToken, token.id, {
         feedData: {
           user: user,
           date: token.createdAt,

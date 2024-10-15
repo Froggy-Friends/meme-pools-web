@@ -95,7 +95,8 @@ export async function updateVote(
   const voteCounts = await getVotesByTokenId(tokenId);
   const channel =
     status === TokenVoteStatus.UPVOTE ? Channel.Upvotes : Channel.Downvotes;
-  pusher.trigger(channel, tokenId, {
+
+  await pusher.trigger(channel, tokenId, {
     voteCounts,
     feedData:
       vote && vote.status !== null
@@ -128,7 +129,7 @@ export const postComment = async (
     },
   });
 
-  pusher.trigger(Channel.Comment, tokenId, {
+  await pusher.trigger(Channel.Comment, tokenId, {
     comment,
     feedData: {
       user: comment.user,
@@ -186,7 +187,7 @@ export const addCommentLike = async (
       ? Channel.CommentLikes
       : Channel.CommentDislikes;
 
-  pusher.trigger(channel, commentId, {
+  await pusher.trigger(channel, commentId, {
     add: result,
     remove: remove,
     feedData: {
@@ -213,7 +214,7 @@ export const removeCommentLike = async (
     },
   });
 
-  pusher.trigger(Channel.CommentLikes, commentId, {
+  await pusher.trigger(Channel.CommentLikes, commentId, {
     add: null,
     remove: result,
   });
@@ -260,7 +261,7 @@ export const addTrade = async (
   });
 
   if (category === Trade.Buy) {
-    pusher.trigger(Channel.Buy, token.id, {
+    await pusher.trigger(Channel.Buy, token.id, {
       trade: formattedTrade,
       feedData: {
         user: user,
@@ -270,7 +271,7 @@ export const addTrade = async (
       },
     });
   } else {
-    pusher.trigger(Channel.Sell, token.id, {
+    await pusher.trigger(Channel.Sell, token.id, {
       trade: formattedTrade,
       feedData: {
         user: user,
@@ -312,5 +313,5 @@ export const addMeme = async (
     },
   });
 
-  pusher.trigger(Channel.Meme, tokenId, meme);
+  await pusher.trigger(Channel.Meme, tokenId, meme);
 };

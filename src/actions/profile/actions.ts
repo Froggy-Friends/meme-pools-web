@@ -133,7 +133,7 @@ export const followUser = async (accountId: string, followerId: string) => {
   }
 
   const pusher = getPusher();
-  pusher.trigger(Channel.Follow, accountId, {
+  await pusher.trigger(Channel.Follow, accountId, {
     feedData: {
       user: follow.followerUser,
       date: follow.followedAt,
@@ -176,7 +176,7 @@ export const unfollowUser = async (accountId: string, followerId: string) => {
   }
 
   const pusher = getPusher();
-  pusher.trigger(Channel.Unfollow, accountId, {
+  await pusher.trigger(Channel.Unfollow, accountId, {
     feedData: {
       user: follow.followerUser,
       date: follow.unfollowedAt,
