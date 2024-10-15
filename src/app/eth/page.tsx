@@ -1,16 +1,12 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import LeaderBoardAndFeedContainer from "@/components/LeaderBoardAndFeedContainer";
 import Spotlight from "@/components/Spotlight";
 import TokenPageContent from "@/components/TokenPageContent";
 import { Chain } from "@/models/chain";
 import { TokenFilter } from "@/models/token";
 import { fetchTokens, fetchTopVotesTokens } from "@/queries/token/queries";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import dynamic from "next/dynamic";
-
-const DynamicLeaderBoardAndFeedContainer = dynamic(() => import("../../components/LeaderBoardAndFeedContainer"), {
-  ssr: false,
-});
 
 export default async function EthHomePage() {
   const queryClient = new QueryClient();
@@ -28,7 +24,7 @@ export default async function EthHomePage() {
       <Header chain={Chain.Eth} />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <div className="flex flex-col gap-6 w-full">
-          <DynamicLeaderBoardAndFeedContainer topTokens={topTokens} />
+          <LeaderBoardAndFeedContainer topTokens={topTokens} />
 
           <Spotlight />
 
