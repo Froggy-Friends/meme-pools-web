@@ -15,15 +15,11 @@ export default function LeaderBoardAndFeedContainer({ topTokens }: LeaderBoardAn
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log("payload", payload);
-  }, [payload]);
-
-  useEffect(() => {
-    if (payload !== undefined) {
+    if (!payload) {
       setIsLoading(false);
     }
   }, [payload]);
-  
+
   return (
     <div className="mb-[70px] tablet:mb-24  flex flex-col tablet:flex-row items-center gap-2 desktop:gap-4">
       {!payload && !isLoading && (
