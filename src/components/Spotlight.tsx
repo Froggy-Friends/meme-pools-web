@@ -59,54 +59,38 @@ export default function Spotlight() {
   return (
     <>
       {payload && token && (
-        <section className="relative overflow-hidden w-full h-[140px] laptop:w-[750px] tablet:h-[200px] flex flex-col p-4 laptop:p-8 bg-dark-gray rounded-xl">
+        <section className="relative overflow-hidden w-full h-[120px] laptop:w-[650px] tablet:h-[200px] flex flex-col p-4 mb-[70px] tablet:mb-24 -mt-[70px] tablet:-mt-24 tablet:p-8 bg-dark-gray rounded-xl">
           <div className="flex items-center justify-between mb-4 tablet:mb-6">
-            <h3 className="text-2xl">Spotlight</h3>
+            <h3 className="text-2xl tablet:text-4xl">Spotlight</h3>
             <div className="flex items-center gap-x-1">
               <div className="w-2 h-2 rounded-full bg-green animate-pulse" />
-              <p>Live</p>
+              <p>LIVE</p>
             </div>
           </div>
 
-          <div className="flex items-center w-full">
-            <div className="flex gap-x-2 tablet:gap-x-4">
-              <div className="self-start">
-                <Link href={`${chain.name}/token/${token.tokenAddress}`}>
-                  <Image
-                    src={token.image}
-                    alt={token.name}
-                    width={60}
-                    height={60}
-                    className="rounded-full hover:scale-[1.02] transition"
-                  />
-                </Link>
-              </div>
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-x-2 tablet:gap-x-4">
+              <Link href={`${chain.name}/token/${token.tokenAddress}`}>
+                <Image
+                  src={token.image}
+                  alt={token.name}
+                  width={60}
+                  height={60}
+                  className="rounded-full hover:scale-[1.02] transition w-10 h-10 tablet:w-16 tablet:h-16"
+                />
+              </Link>
 
-              <div className="flex flex-col w-full">
-                <Link
-                  href={`${chain.name}/token/${token.tokenAddress}`}
-                  className="hidden tablet:block tablet:text-4xl font-proximaSoftBold text-white/80 hover:text-white transition tablet:mb-2"
-                >
-                  ${token.ticker}
-                </Link>
-                <Link
-                  href={`${chain.name}/token/${token.tokenAddress}`}
-                  className="block tablet:hidden text-2xl text-white/80 hover:text-white transition"
-                >
-                  ${formatTicker(token.ticker)}
-                </Link>
-
-                <p className="hidden tablet:block text-sm text-white/90 max-w-[55%] max-h-[45px] overflow-y-hidden">
-                  {token.description}
-                </p>
-                <p className="block tablet:hidden -mt-1 text-sm text-white/90 max-w-[90%] max-h-[45px] overflow-hidden whitespace-nowrap text-ellipsis">
-                  {token.description}
-                </p>
-              </div>
+              <Link
+                href={`${chain.name}/token/${token.tokenAddress}`}
+                className="hidden tablet:block text-2xl font-proximaSoftBold text-white/80 hover:text-white transition tablet:mb-2"
+              >
+                ${token.ticker}
+              </Link>
+              <Link href={`${chain.name}/token/${token.tokenAddress}`} className="block tablet:hidden text-xl">
+                ${formatTicker(token.ticker)}
+              </Link>
             </div>
-          </div>
 
-          <div className="absolute right-4 tablet:right-8 bottom-[28px] tablet:bottom-[50px]">
             {latestTrade && (
               <LiveFeedTradeNotification trade={latestTrade} isAnimating={isAnimating} spotlight={true} />
             )}

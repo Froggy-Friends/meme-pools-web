@@ -16,15 +16,14 @@ export function LiveFeedTradeNotification({ trade, isAnimating, spotlight = fals
         isAnimating ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
     >
-      {!spotlight && (
-        <Image
-          src={trade.userAvatar || defaultProfileAvatarUrl}
-          alt="user-profile-picture"
-          height={16}
-          width={16}
-          className="rounded-full mr-1"
-        />
-      )}
+      <Image
+        src={trade.userAvatar || defaultProfileAvatarUrl}
+        alt="user-profile-picture"
+        height={16}
+        width={16}
+        className="rounded-full mr-1"
+      />
+
       {!spotlight && <span>{getUserDisplayName(trade.username)}</span>}
       {!spotlight && <span className="text-green">bought</span>}
       {!spotlight && <span className="text-cream">{trade.amount}</span>}
