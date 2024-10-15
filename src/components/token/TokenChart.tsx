@@ -67,7 +67,7 @@ export default function TokenChart({ tokenAddress, tokenId }: TokenChartProps) {
       pusher.unsubscribe(Channel.Buy);
       pusher.unsubscribe(Channel.Sell);
     };
-  }, [tokenId, queryClient]);
+  }, [tokenId, queryClient, tokenAddress]);
 
   useEffect(() => {
     if (chartContainerRef.current && data.length > 0) {
