@@ -75,8 +75,8 @@ model Trades {
   tokenId         String   @db.Uuid
   userId          String   @db.Uuid
   category        String
-  price           Decimal
-  amount          Int
+  price           Decimal  @db.Decimal(26, 18)
+  amount          Decimal  @db.Decimal(26, 18)
   nativeCost      Decimal  @db.Decimal(26, 18)
   usdCost         Decimal  @db.Decimal(26, 18)
   nativeToken     String

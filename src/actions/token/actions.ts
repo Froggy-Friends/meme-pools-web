@@ -244,7 +244,7 @@ export const addTrade = async (
       userId: user.id,
       category,
       price: new Prisma.Decimal(price),
-      amount: Number(formatUnits(BigInt(amount), 18)),
+      amount: new Prisma.Decimal(amount),
       nativeCost: new Prisma.Decimal(nativeCost),
       usdCost: new Prisma.Decimal(usdCost),
       nativeToken,
