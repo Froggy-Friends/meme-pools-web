@@ -44,6 +44,16 @@ export const fetchTokenCount = async () => {
   return tokenCount;
 };
 
+export const fetchTokenById = async (tokenId: string) => {
+  const token = await prisma.token.findUnique({
+    where: {
+      id: tokenId,
+    },
+  });
+
+  return token;
+};
+
 export const fetchTokenByAddress = async (tokenAddress: string) => {
   const token = await prisma.token.findFirst({
     where: {
