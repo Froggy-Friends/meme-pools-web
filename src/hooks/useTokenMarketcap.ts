@@ -3,10 +3,10 @@ import { contractAddress, ethChain, rpcUrl } from "@/config/env";
 import getEthPrice from "@/lib/getEthPrice";
 import { Token } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { createPublicClient, formatUnits, http } from "viem";
-import Pusher from "pusher-js";
 import { Channel } from "@/models/channel";
+import usePusher from "./usePusher";
 
 export default function useTokenMarketcap(token: Token) {
   const queryClient = useQueryClient();
@@ -31,35 +31,11 @@ export default function useTokenMarketcap(token: Token) {
     queryFn: () => getTokenMarketcap(),
   });
 
-  useEffect(() => {
-    if (
-      !process.env.NEXT_PUBLIC_PUSHER_CLUSTER ||
-      !process.env.NEXT_PUBLIC_PUSHER_KEY
-    ) {
-      throw new Error("Missing pusher env variables");
-    }
+  const handleTrade = () => {
+    queryClient.invalidateQueries({ queryKey: ["tokenMarketcap", token.id] });
+  };
 
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-    });
-
-    const buyChannel = pusher.subscribe(Channel.Buy);
-    const sellChannel = pusher.subscribe(Channel.Sell);
-
-    const handleTrade = () => {
-      queryClient.invalidateQueries({ queryKey: ["tokenMarketcap", token.id] });
-    };
-
-    buyChannel.bind(token.id, handleTrade);
-    sellChannel.bind(token.id, handleTrade);
-
-    return () => {
-      buyChannel.unbind(token.id, handleTrade);
-      sellChannel.unbind(token.id, handleTrade);
-      pusher.unsubscribe(Channel.Buy);
-      pusher.unsubscribe(Channel.Sell);
-    };
-  }, [token.id, queryClient]);
+  usePusher(token.id, handleTrade, [Channel.Buy, Channel.Sell]);
 
   return {
     tokenMarketcap,

@@ -8,14 +8,14 @@ import { Channel } from "@/models/channel";
 import { TokenWithVotes, TradeWithUserAndToken } from "@/types/token/types";
 import Image from "next/image";
 import Link from "next/link";
-import Pusher from "pusher-js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CiGlobe } from "react-icons/ci";
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Progress } from "@nextui-org/react";
 import { getMarketcapPercentage } from "@/lib/getMarketcapPercentage";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
+import usePusher from "@/hooks/usePusher";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator | TokenWithVotes;
@@ -27,29 +27,14 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
   const [newTrade, setNewTrade] = useState(false);
   const isMounted = useIsMounted();
 
-  useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
-      throw new Error("Missing pusher env variables");
+  const handleTrade = ({ trade }: { trade: TradeWithUserAndToken }) => {
+    if (trade) {
+      setNewTrade(true);
+      setTimeout(() => setNewTrade(false), 1000);
     }
+  };
 
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-    });
-
-    const buyChannel = pusher.subscribe(Channel.Buy);
-
-    buyChannel.bind(token.id, async ({ trade }: { trade: TradeWithUserAndToken }) => {
-      if (trade) {
-        setNewTrade(true);
-        setTimeout(() => setNewTrade(false), 1000);
-      }
-    });
-
-    return () => {
-      buyChannel.unbind();
-      pusher.disconnect();
-    };
-  }, [token.id, token.tokenAddress]);
+  usePusher(token.id, handleTrade, [Channel.Buy, Channel.Sell]);
 
   if (!isMounted) return null;
 
