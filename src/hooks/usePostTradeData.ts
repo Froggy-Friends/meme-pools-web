@@ -61,9 +61,9 @@ export default function usePostTradeData() {
           const { tokenAddress, buyer, amount, price, cost } =
             await getBuyTokenDetails(receipt);
 
-          const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
-          const nativeCost = Number(formatUnits(BigInt(cost)));
-          const usdCost = Number(formatUnits(BigInt(cost))) * ethPrice;
+          const formattedPrice = Number(formatUnits(BigInt(price), 18)) * ethPrice;
+          const nativeCost = Number(formatUnits(BigInt(cost), 18));
+          const usdCost = Number(formatUnits(BigInt(cost), 18)) * ethPrice;
           const formattedAmount = Number(formatUnits(BigInt(amount), 18));
 
           await addTrade(
@@ -78,14 +78,14 @@ export default function usePostTradeData() {
             "eth",
             receipt.hash as Address
           );
-        } else {
+        } else if (activeTab === TradingTab.SELL) {
           const { tokenAddress, seller, amount, price, payout } =
             await getSellTokenDetails(receipt);
-          const cost = amount * price;
-          const nativeCost = Number(formatUnits(BigInt(cost)));
-          const usdCost = Number(formatUnits(BigInt(cost))) * ethPrice;
-          const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
+        
+          const formattedPrice = Number(formatUnits(BigInt(price), 18)) * ethPrice;
           const formattedAmount = Number(formatUnits(BigInt(amount), 18));
+          const nativePayout = Number(formatUnits(BigInt(payout), 18));
+          const usdPayout = nativePayout * ethPrice;
 
           await addTrade(
             tokenAddress,
@@ -93,8 +93,8 @@ export default function usePostTradeData() {
             "sell",
             formattedPrice,
             formattedAmount,
-            nativeCost,
-            usdCost,
+            nativePayout,
+            usdPayout,
             "eth",
             "eth",
             receipt.hash as Address
@@ -117,7 +117,7 @@ export default function usePostTradeData() {
       ethPrice: number,
       txHash: Address
     ) => {
-      const formattedPrice = Number(formatUnits(BigInt(price))) * ethPrice;
+      const formattedPrice = Number(formatUnits(BigInt(price), 18)) * ethPrice;
       const nativeCost = cost;
       const usdCost = cost * ethPrice;
       const formattedAmount = Number(formatUnits(BigInt(amount), 18));

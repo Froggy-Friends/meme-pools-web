@@ -25,6 +25,9 @@ import useSellToken from "@/hooks/useSellToken";
 import useSellPrice from "@/hooks/useSellPrice";
 import { formatTicker } from "@/lib/formatTicker";
 import useAllowance from "@/hooks/useAllowance";
+import useApproveToken from "@/hooks/useApproveToken";
+import { formatNumber } from "@/lib/format";
+import { useAccount } from "wagmi";
 
 export enum TradingTab {
   BUY,
@@ -44,6 +47,7 @@ const rule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal
 export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps) {
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
+  const { isConnected } = useAccount();
   const {
     isOpen: isSwapModalOpen,
     onOpen: onSwapModalOpen,
@@ -70,6 +74,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { isApproved } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
+  const { approveToken } = useApproveToken(tokenAddress);
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 
   const debouncedBuyCost = useDebouncedCallback(async (amount: string) => {
@@ -129,16 +134,19 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     const buyAmountWei = parseUnits(buyAmount, 18);
     onSwapModalOpen();
     const receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
-    postTradeData(receipt, TradingTab.BUY, ethPrice);
-    refetchBalance();
+    await postTradeData(receipt, TradingTab.BUY, ethPrice);
+    await refetchBalance();
+    if (!isApproved) {
+      await approveToken();
+    }
   };
 
   const sellTokens = async () => {
     const formattedSellAmount = parseUnits(sellAmount, 18);
     onSwapModalOpen();
     const receipt = await sellToken(tokenAddress, formattedSellAmount);
-    postTradeData(receipt, TradingTab.SELL, ethPrice);
-    refetchBalance();
+    await postTradeData(receipt, TradingTab.SELL, ethPrice);
+    await refetchBalance();
   };
 
   return (
@@ -276,6 +284,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 <button
                   key={amount}
                   onClick={() => setBuyAmount(amount.toString())}
+                  disabled={!isConnected}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl ${
                     amount.toString() === buyAmount ? "bg-gray" : "bg-dark"
                   }`}
@@ -287,6 +296,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
               SELL_AMOUNTS.map(amount => (
                 <button
                   key={amount}
+                  disabled={!isConnected}
                   onClick={() => {
                     setSellAmount(tokensByPercentage(amount, tokenBalance));
                     debouncedSellPayout(tokensByPercentage(amount, tokenBalance));
@@ -303,7 +313,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
           </div>
           <button
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
-            disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === ""}
+            disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === "" || !isConnected}
             className={`flex items-center justify-center w-full h-[40px] p-4 rounded-3xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
               activeTab === TradingTab.BUY
                 ? "bg-green text-black hover:bg-light-green"
@@ -324,10 +334,14 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       />
       <SwapModal
         fromImageUrl={activeTab === TradingTab.BUY ? ethLogo : token.image}
-        fromAmount={activeTab === TradingTab.BUY ? formatUnits(buyCost, 18) : sellAmount}
+        fromAmount={
+          activeTab === TradingTab.BUY ? Number(formatUnits(buyCost, 18)).toFixed(6) : formatNumber(Number(sellAmount))
+        }
         fromTicker={activeTab === TradingTab.BUY ? "ETH" : token.ticker}
         toImageUrl={activeTab === TradingTab.SELL ? ethLogo : token.image}
-        toAmount={activeTab === TradingTab.BUY ? buyAmount : sellPayout.toString()}
+        toAmount={
+          activeTab === TradingTab.BUY ? formatNumber(Number(buyAmount)) : Number(formatUnits(sellPayout)).toFixed(6)
+        }
         toTicker={activeTab === TradingTab.BUY ? token.ticker : "ETH"}
         isOpen={isSwapModalOpen}
         onOpenChange={onSwapModalOpenChange}
