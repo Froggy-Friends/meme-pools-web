@@ -1,9 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { put, PutBlobResult } from "@vercel/blob";
-import { defaultProfileAvatarUrl, fetchUserCacheTag } from "@/config/user";
+import { defaultProfileAvatarUrl } from "@/config/user";
 import { UserParams } from "@/app/profile/[username]/types";
 import { fetchFollow, fetchUser } from "@/queries/profile/queries";
 import { cookies } from "next/headers";
@@ -25,23 +25,23 @@ export const createUser = async ({
     return;
   }
 
-  if (!name) {
-    name = wallet;
-  }
-
   imageUrl = defaultProfileAvatarUrl;
 
-  await prisma.user.create({
-    data: {
-      name: name!,
-      solAddress: !wallet.includes("0x") ? wallet : null,
-      ethAddress: wallet.includes("0x") ? wallet : null,
-      imageUrl: imageUrl,
-      email: email,
-    },
-  });
+  try {
+    const user = await prisma.user.create({
+      data: {
+        name: name || wallet,
+        solAddress: !wallet.includes("0x") ? wallet : null,
+        ethAddress: wallet.includes("0x") ? wallet : null,
+        imageUrl: imageUrl,
+        email: email,
+      },
+    });
 
-  revalidateTag(fetchUserCacheTag);
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export async function updateUserData(formData: FormData, address: Address) {
@@ -87,7 +87,7 @@ export async function updateUserData(formData: FormData, address: Address) {
       },
     });
 
-    revalidateTag(fetchUserCacheTag);
+    revalidatePath("/profile");
   } else {
     return;
   }
