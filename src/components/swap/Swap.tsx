@@ -24,6 +24,7 @@ import { FaRegArrowAltCircleDown } from "react-icons/fa";
 import useSellToken from "@/hooks/useSellToken";
 import useSellPrice from "@/hooks/useSellPrice";
 import { formatTicker } from "@/lib/formatTicker";
+import useAllowance from "@/hooks/useAllowance";
 
 export enum TradingTab {
   BUY,
@@ -67,6 +68,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const getSellPrice = useSellPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { allowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 
@@ -150,7 +152,9 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 setBuyAmount("");
               }}
               className={`w-[65px] h-[35px] rounded-3xl font-bold ${
-                activeTab === TradingTab.BUY ? "bg-green text-black" : "bg-dark-gray text-white hover:bg-gray transition"
+                activeTab === TradingTab.BUY
+                  ? "bg-green text-black"
+                  : "bg-dark-gray text-white hover:bg-gray transition"
               }`}
             >
               Buy
