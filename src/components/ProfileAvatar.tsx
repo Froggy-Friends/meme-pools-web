@@ -39,7 +39,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
         <div className="hover:bg-gray rounded-lg p-1 laptop:p-2 cursor-pointer">
           <Image
             className="transition-transform rounded-full"
-            src={user?.imageUrl || currentUser?.imageUrl || defaultProfileAvatarUrl}
+            src={user?.imageUrl || defaultProfileAvatarUrl}
             alt="profile-avatar"
             height={25}
             width={25}
@@ -48,18 +48,18 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
       </DropdownTrigger>
       <DropdownMenu>
         <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
-          <p className="text-sm tablet:text-lg">
+          <p className="text-sm tablet:text-base">
             {user && `Signed in as ${getUserDisplayName(user.name)}`}
             {!user && currentUser && `Signed in as ${getUserDisplayName(currentUser.name)}`}
           </p>
         </DropdownItem>
         <DropdownItem className="dark" key="Profile">
           <Link href={`/profile/${user ? user.name : currentUser?.name}`}>
-            <p className="text-sm tablet:text-[17px]">Profile</p>
+            <p className="text-sm tablet:text-base">Profile</p>
           </Link>
         </DropdownItem>
         <DropdownItem key="Portfolio" className="hover:cursor-default" isReadOnly>
-          <p className="text-sm tablet:text-[17px] text-white/[20%] hover:cursor-default">Portfolio</p>
+          <p className="text-sm tablet:text-base text-white/[20%] hover:cursor-default">Portfolio</p>
         </DropdownItem>
         <DropdownItem
           className="dark"
@@ -74,7 +74,7 @@ export default function ProfileAvatar({ user }: ProfileAvatarProps) {
             }
           }}
         >
-          <p className="text-sm tablet:text-[17px]">Disconnect</p>
+          <p className="text-sm tablet:text-base">Disconnect</p>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
