@@ -68,7 +68,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const getSellPrice = useSellPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
-  const { allowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { isApproved } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 

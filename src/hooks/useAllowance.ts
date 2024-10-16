@@ -26,6 +26,6 @@ export default function useAllowance(
     data && data.length ? Number(formatUnits(data[0].result as bigint, 18)) : 0;
 
   return {
-    allowance: formattedAllowance === maxTotalSupply ? true : false,
+    isApproved: formattedAllowance === maxTotalSupply ? true : false,
   };
 }
