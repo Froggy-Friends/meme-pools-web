@@ -8,18 +8,15 @@ export default function Footer() {
   return (
     <footer className="h-[75px] laptop:h-[120px] w-full mt-auto mb-4 laptop:mb-0 flex items-center justify-between">
       <div className="flex flex-col text-white/80 text-[10px] tablet:text-sm">
-        <Link href="https://docs.frog.fun" className="hover:text-white transition">
+        <Link href="https://docs.frog.fun" className="hover:text-white transition" target="_blank">
           Docs
         </Link>
-        <Link href="/privacy" className="hover:text-white transition">
-          Privacy Policy
-        </Link>
-        <Link href="/terms" className="hover:text-white transition">
-          Terms of Service
+        <Link href="https://docs.frog.fun/terms" className="hover:text-white transition" target="_blank">
+          Terms
         </Link>
       </div>
 
-      <div className="flex flex-col justify-center items-center tablet:mr-5 text-[10px] tablet:text-sm">
+      <div className="flex flex-col justify-center items-center ml-[42px] text-[10px] tablet:text-sm">
         <Logo height={40} width={40} />
         <p>&copy; Frog.Fun 2024</p>
       </div>

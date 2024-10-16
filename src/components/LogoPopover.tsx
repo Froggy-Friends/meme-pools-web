@@ -47,11 +47,11 @@ export default function LogoPopover() {
             </div>
           </Link>
 
-          <Link href="/privacy">
-            <p className="cursor-pointer text-lg pt-6 hover:text-green">Privacy Policy</p>
+          <Link href="https://docs.frog.fun" target="_blank">
+            <p className="cursor-pointer text-lg pt-4 hover:text-green transition">Docs</p>
           </Link>
-          <Link href="/terms">
-            <p className="cursor-pointer text-lg pt-4 hover:text-green">Terms of Service</p>
+          <Link href="https://docs.frog.fun/terms" target="_blank">
+            <p className="cursor-pointer text-lg hover:text-green transition">Terms</p>
           </Link>
 
           <HeaderSocialLinks />
