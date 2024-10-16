@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && git submodule init"
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.3",
