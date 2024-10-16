@@ -15,7 +15,7 @@ export default function LeaderBoardAndFeedContainer({ topTokens }: LeaderBoardAn
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!payload) {
+    if (payload) {
       setIsLoading(false);
     }
   }, [payload]);
