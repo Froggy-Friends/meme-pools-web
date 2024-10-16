@@ -29,6 +29,12 @@ Ask a developer on the team for the values to these environment variables.
 npm install
 ```
 
+### Install Trading Chart Submodule
+
+```bash
+git submodule init
+```
+
 ### Generate Prisma DB Definitions
 
 The npm install script triggers the 'postinstall' script in package.json to generate prisma db definitions.
