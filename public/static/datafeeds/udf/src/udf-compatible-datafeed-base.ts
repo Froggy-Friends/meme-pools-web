@@ -1,6 +1,6 @@
 import {
 	DatafeedConfiguration,
-	DatafeedErrorCallback,
+	ErrorCallback,
 	GetMarksCallback,
 	HistoryCallback,
 	IDatafeedChartApi,
@@ -42,8 +42,10 @@ import { SymbolsStorage } from './symbols-storage';
 import { IRequester } from './irequester';
 
 export interface UdfCompatibleConfiguration extends DatafeedConfiguration {
+	// tslint:disable:tv-variable-name
 	supports_search?: boolean;
 	supports_group_request?: boolean;
+	// tslint:enable:tv-variable-name
 }
 
 export interface ResolveSymbolResponse extends LibrarySymbolInfo {
@@ -101,7 +103,7 @@ function extractField<T, TField extends keyof T>(data: T, field: TField, arrayIn
 
 /**
  * This class implements interaction with UDF-compatible datafeed.
- * See [UDF protocol reference](@docs/connecting_data/UDF.md)
+ * See [UDF protocol reference](@docs/connecting_data/UDF)
  */
 export class UDFCompatibleDatafeedBase implements IExternalDatafeed, IDatafeedQuotesApi, IDatafeedChartApi {
 	protected _configuration: UdfCompatibleConfiguration = defaultConfiguration();
@@ -298,7 +300,7 @@ export class UDFCompatibleDatafeedBase implements IExternalDatafeed, IDatafeedQu
 		}
 	}
 
-	public resolveSymbol(symbolName: string, onResolve: ResolveCallback, onError: DatafeedErrorCallback, extension?: SymbolResolveExtension): void {
+	public resolveSymbol(symbolName: string, onResolve: ResolveCallback, onError: ErrorCallback, extension?: SymbolResolveExtension): void {
 		logMessage('Resolve requested');
 
 		const currencyCode = extension && extension.currencyCode;
@@ -372,7 +374,7 @@ export class UDFCompatibleDatafeedBase implements IExternalDatafeed, IDatafeedQu
 		}
 	}
 
-	public getBars(symbolInfo: LibrarySymbolInfo, resolution: ResolutionString, periodParams: PeriodParamsWithOptionalCountback, onResult: HistoryCallback, onError: DatafeedErrorCallback): void {
+	public getBars(symbolInfo: LibrarySymbolInfo, resolution: ResolutionString, periodParams: PeriodParamsWithOptionalCountback, onResult: HistoryCallback, onError: ErrorCallback): void {
 		this._historyProvider.getBars(symbolInfo, resolution, periodParams)
 			.then((result: GetBarsResult) => {
 				onResult(result.bars, result.meta);

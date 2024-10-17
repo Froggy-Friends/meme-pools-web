@@ -9,7 +9,7 @@ function extractField(data, field, arrayIndex) {
 }
 /**
  * This class implements interaction with UDF-compatible datafeed.
- * See [UDF protocol reference](@docs/connecting_data/UDF.md)
+ * See [UDF protocol reference](@docs/connecting_data/UDF)
  */
 export class UDFCompatibleDatafeedBase {
     constructor(datafeedURL, quotesProvider, requester, updateFrequency = 10 * 1000, limitedServerResponse) {
