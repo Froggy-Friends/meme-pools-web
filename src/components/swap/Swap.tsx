@@ -146,6 +146,9 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const sellTokens = async () => {
     const formattedSellAmount = parseUnits(sellAmount, 18);
     onSwapModalOpen();
+    if (!isApproved) {
+      await approveToken();
+    }
     const receipt = await sellToken(tokenAddress, formattedSellAmount);
     await postTradeData(receipt, TradingTab.SELL, ethPrice);
     await refetchBalance();
