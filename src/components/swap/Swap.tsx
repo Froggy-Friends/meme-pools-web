@@ -134,6 +134,8 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     const buyAmountWei = parseUnits(buyAmount, 18);
     onSwapModalOpen();
     const receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
+    setBuyAmount("");
+    setBuyCost(BigInt(0));
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
     await refetchBalance();
     if (!isApproved) {

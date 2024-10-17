@@ -15,7 +15,7 @@ export default function SearchTokenDisplay({ token }: SearchTokenDisplayProps) {
   return (
     <Link
       href={`/${chain.name}/token/${token.tokenAddress}`}
-      className="flex justify-between items-center h-12 w-full px-4 rounded-md hover:bg-midnight-green"
+      className="flex justify-between items-center h-12 w-full px-4 rounded-md hover:bg-midnight-green transition"
     >
       <div className="flex gap-x-2 items-center">
         <Image src={token.image} alt="token-image" height={40} width={40} className="rounded-md" />
