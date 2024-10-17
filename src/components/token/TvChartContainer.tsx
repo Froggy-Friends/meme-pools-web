@@ -15,7 +15,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
       symbol: props.symbol,
       // BEWARE: no trailing slash is expected in feed URL
       datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(`http://localhost:3001/trade`, undefined, {
-        maxResponseLength: 1000,
+        maxResponseLength: 5000,
         expectedOrder: "latestFirst",
         supports_search: true,
         supports_group_request: true,
@@ -24,8 +24,8 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
       container: chartContainerRef.current,
       library_path: props.library_path,
       locale: props.locale as LanguageCode,
-      disabled_features: ["use_localstorage_for_settings",],
-      enabled_features: ["study_templates",],
+      disabled_features: ["use_localstorage_for_settings"],
+      enabled_features: ["study_templates"],
       charts_storage_url: props.charts_storage_url,
       charts_storage_api_version: props.charts_storage_api_version,
       client_id: props.client_id,
@@ -40,6 +40,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 
     tvWidget.onChartReady(() => {
       tvWidget.headerReady().then(() => {
+        
         tvWidget.applyOverrides({
           "mainSeriesProperties.minTick": "1000000000,1,false",
         });

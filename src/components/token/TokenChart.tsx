@@ -150,10 +150,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import Script from "next/script";
 
-import {
-  ChartingLibraryWidgetOptions,
-  ResolutionString,
-} from "../../../public/static/charting_library/charting_library";
+import { ChartingLibraryWidgetOptions, ResolutionString } from "../../../public/static/charting_library";
 import { Token } from "@prisma/client";
 
 const TVChartContainer = dynamic(() => import("./TvChartContainer").then(mod => mod.TVChartContainer), {
@@ -177,6 +174,7 @@ export default function TokenChart({ token }: TokenChartProps) {
     user_id: "0",
     fullscreen: false,
     autosize: true,
+    timeframe: { from: (token.createdAt.getTime() + 60000) / 1000, to: Date.now() / 1000 },
   };
 
   return (
