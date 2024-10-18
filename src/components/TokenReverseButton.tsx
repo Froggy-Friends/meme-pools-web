@@ -11,7 +11,7 @@ export default function TokenReverseButton({
 }: TokenReverseButtonProps) {
   return (
     <button
-      className="px-3 h-8 bg-dark-gray border border-gray rounded-[4px] flex items-center justify-center"
+      className="px-3 h-8 bg-dark-gray border border-gray rounded-[4px] flex items-center justify-center hover:bg-gray transition"
       onClick={toggleReverse}
     >
       {reverse ? <FaChevronDown size={16} /> : <FaChevronUp size={16} />}
