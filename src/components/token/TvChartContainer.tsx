@@ -33,14 +33,12 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
       fullscreen: props.fullscreen,
       autosize: props.autosize,
       theme: "dark",
-      debug: true,
     };
 
     const tvWidget = new widget(widgetOptions);
 
     tvWidget.onChartReady(() => {
       tvWidget.headerReady().then(() => {
-        
         tvWidget.applyOverrides({
           "mainSeriesProperties.minTick": "1000000000,1,false",
         });
