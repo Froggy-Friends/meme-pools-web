@@ -14,7 +14,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: props.symbol,
       // BEWARE: no trailing slash is expected in feed URL
-      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(`http://localhost:3001/trade`, undefined, {
+      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(`${frogFunApi}/trade`, undefined, {
         maxResponseLength: 5000,
         expectedOrder: "latestFirst",
         supports_search: true,
