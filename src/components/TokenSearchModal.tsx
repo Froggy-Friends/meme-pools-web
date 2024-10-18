@@ -23,7 +23,6 @@ export default function TokenSearchModal({ isOpen, onOpenChange }: TokenSearchMo
     setIsLoading(true);
     if (!caSearch) {
       const tokens = await searchTokens(value);
-      console.log(tokens);
       setTokens(tokens);
     } else {
       const token = await searchTokensByCa(value);
