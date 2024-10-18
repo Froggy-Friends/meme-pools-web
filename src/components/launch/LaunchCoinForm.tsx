@@ -89,18 +89,20 @@ export default function LaunchCoinForm() {
         tokenImageBlob
       );
 
-      const { reservePrice, totalCost } = await getReservePrice(Number(numericReservedAmount));
-      const ethPrice = await getEthPrice();
+      if (reservedAmount !== BigInt(0)) {
+        const { reservePrice, totalCost } = await getReservePrice(Number(numericReservedAmount));
+        const ethPrice = await getEthPrice();
 
-      await postReserveData(
-        tokenDetails.tokenAddress,
-        tokenDetails.creator,
-        Number(totalCost),
-        Number(reservePrice),
-        Number(reservedAmount),
-        ethPrice,
-        tokenDetails.txHash
-      );
+        await postReserveData(
+          tokenDetails.tokenAddress,
+          tokenDetails.creator,
+          Number(totalCost),
+          Number(reservePrice),
+          Number(reservedAmount),
+          ethPrice,
+          tokenDetails.txHash
+        );
+      }
 
       if (errorMessage) {
         throw new Error(errorMessage);
