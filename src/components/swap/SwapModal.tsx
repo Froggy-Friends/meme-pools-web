@@ -47,13 +47,13 @@ export default function SwapModal({
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
               <Image className="w-[18px] h-[18px] rounded-3xl" src={fromImageUrl} alt="eth" width={18} height={18} />
-              <p>{fromAmount.includes(".") ? parseFloat(fromAmount).toFixed(5) : fromAmount}</p>
+              <p>{fromAmount}</p>
               <p>{fromTicker}</p>
             </div>
             <IoMdArrowRoundForward />
             <div className="flex items-center gap-1">
               <Image className="w-[18px] h-[18px] rounded-3xl" src={toImageUrl} alt="eth" width={18} height={18} />
-              <p>{formatNumber(Number(toAmount))}</p>
+              <p>{toAmount}</p>
               <p>{toTicker}</p>
             </div>
           </div>

@@ -7,6 +7,7 @@ import { User } from "@prisma/client";
 import { FaXTwitter } from "react-icons/fa6";
 import useUser from "@/hooks/useUser";
 import { defaultProfileAvatarUrl } from "@/config/user";
+import { getUserDisplayName } from "@/lib/getUserDisplayName";
 
 type ProfileInfoParams = {
   profileUser: User;
@@ -30,7 +31,7 @@ export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: Pr
       />
 
       <div className="flex flex-col items-center ml-6 -mt-1">
-        <p className="text-[48px] font-semibold">{profileUser.name}</p>
+        <p className="text-[48px] font-semibold">{getUserDisplayName(profileUser.name)}</p>
         {isConnected && cachedUser && cachedUser.name !== profileUser.name && (
           <FollowButton
             isFollowing={isFollowing}

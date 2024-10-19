@@ -1,38 +1,32 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { unstable_cache } from "next/cache";
-import { fetchUserCacheKey, fetchUserCacheTag } from "@/config/user";
 import { User } from "@prisma/client";
 import { TokenWithCreator } from "@/lib/types";
 
-export const fetchUser = unstable_cache(
-  async (wallet: string | undefined) => {
-    if (!wallet) {
-      return;
-    }
+export const fetchUser = async (wallet: string | undefined) => {
+  if (!wallet) {
+    return;
+  }
 
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          {
-            name: wallet,
-          },
-          {
-            solAddress: wallet,
-          },
-          {
-            ethAddress: wallet,
-          },
-        ],
-      },
-    });
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        {
+          name: wallet,
+        },
+        {
+          solAddress: wallet,
+        },
+        {
+          ethAddress: wallet,
+        },
+      ],
+    },
+  });
 
-    return user;
-  },
-  [fetchUserCacheKey],
-  { tags: [fetchUserCacheTag] }
-);
+  return user;
+};
 
 export const fetchUserById = async (id: string) => {
   const user = await prisma.user.findFirst({

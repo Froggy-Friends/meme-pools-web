@@ -20,13 +20,14 @@ export default function useUser() {
     if (user) {
       setCurrentUser(user);
       await setUserCookies(user);
-    } else if ((!user && address) || publicKey?.toString()) {
+    } else if (!user && (address || publicKey?.toString())) {
       const wallet = address || publicKey?.toString();
-      await createUser({
+
+      const user = await createUser({
         wallet: wallet,
-        name: wallet
+        name: wallet,
       });
-      const user = await fetchUser(address || publicKey?.toString());
+      
       setCurrentUser(user);
       user && (await setUserCookies(user));
     }

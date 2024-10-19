@@ -21,7 +21,7 @@ export default function TokenRefreshButton({
 
   return (
     <button
-      className="px-3 h-8 bg-dark-gray border border-gray rounded-[4px] flex items-center justify-center"
+      className="px-3 h-8 bg-dark-gray border border-gray rounded-[4px] flex items-center justify-center hover:bg-gray transition"
       onClick={() => refetch()}
     >
       <MdRefresh size={16} />
