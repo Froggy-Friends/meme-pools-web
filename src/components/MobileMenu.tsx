@@ -1,6 +1,5 @@
 "use client";
 
-import useUser from "@/hooks/useUser";
 import { NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Navbar } from "@nextui-org/react";
 import { useState } from "react";
 import LaunchCoinButton from "./LaunchCoinButton";
@@ -20,11 +19,11 @@ import SolConnectButton from "./solana/SolConnectButton";
 
 type MobileMenuProps = {
   cachedUser: User | null;
+  currentUser: User | null;
 };
 
-export default function MobileMenu({ cachedUser }: MobileMenuProps) {
+export default function MobileMenu({ cachedUser, currentUser }: MobileMenuProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { currentUser } = useUser();
   const { chain } = useChain();
 
   //evm hooks
@@ -89,7 +88,13 @@ export default function MobileMenu({ cachedUser }: MobileMenuProps) {
           </NavbarMenuItem>
 
           <NavbarMenuItem key="docs" className="-ml-3">
-            <Link color="foreground" className="w-full text-2xl mt-2" href="https://docs.frog.fun" size="lg" target="_blank">
+            <Link
+              color="foreground"
+              className="w-full text-2xl mt-2"
+              href="https://docs.frog.fun"
+              size="lg"
+              target="_blank"
+            >
               Docs
             </Link>
           </NavbarMenuItem>
