@@ -50,7 +50,7 @@ model Token {
 
 model User {
   id               String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
-  name             String         @unique(map: "unique_username")
+  name             String         @unique(map: "User_name_key")
   imageUrl         String?
   email            String?
   createdAt        DateTime       @default(now()) @db.Timestamptz(6)
@@ -76,7 +76,7 @@ model Trades {
   userId          String   @db.Uuid
   category        String
   price           Decimal  @db.Decimal(26, 18)
-  amount          Decimal  @db.Decimal(26, 18)
+  amount          Decimal  @db.Decimal(28, 18)
   nativeCost      Decimal  @db.Decimal(26, 18)
   usdCost         Decimal  @db.Decimal(26, 18)
   nativeToken     String
