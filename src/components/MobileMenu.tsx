@@ -1,16 +1,12 @@
 "use client";
 
-import { NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Navbar } from "@nextui-org/react";
-import { useState } from "react";
+import { NavbarMenu, NavbarMenuItem, Link } from "@nextui-org/react";
 import LaunchCoinButton from "./LaunchCoinButton";
 import Image from "next/image";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { User } from "@prisma/client";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
-import { useAccount, useDisconnect } from "wagmi";
 import { Chain } from "@/models/chain";
-import { useChain } from "@/context/chain";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { setUserCookies } from "@/actions/profile/actions";
 import ChainSwitcher from "./ChainSwitcher";
 import HowItWorksButton from "./HowItWorksButton";
@@ -20,19 +16,22 @@ import SolConnectButton from "./solana/SolConnectButton";
 type MobileMenuProps = {
   cachedUser: User | null;
   currentUser: User | null;
+  isConnected: boolean;
+  connected: boolean;
+  chain: Chain;
+  disconnect: () => void;
+  solDisconnect: () => void;
 };
 
-export default function MobileMenu({ cachedUser, currentUser }: MobileMenuProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { chain } = useChain();
-
-  //evm hooks
-  const { isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
-
-  // sol hooks
-  const { connected } = useWallet();
-  const solDisconnect = useWallet().disconnect;
+export default function MobileMenu({
+  cachedUser,
+  currentUser,
+  isConnected,
+  connected,
+  chain,
+  disconnect,
+  solDisconnect,
+}: MobileMenuProps) {
 
   return (
     <section className="tablet:hidden">
@@ -53,10 +52,10 @@ export default function MobileMenu({ cachedUser, currentUser }: MobileMenuProps)
                   <button
                     className="bg-dark-gray rounded-lg py-[0.1rem] w-24 text-sm"
                     onClick={async () => {
-                      if (chain.name === Chain.Eth) {
+                      if (chain === Chain.Eth) {
                         disconnect();
                         await setUserCookies(null, Chain.Eth);
-                      } else if (chain.name === Chain.Solana) {
+                      } else if (chain === Chain.Solana) {
                         solDisconnect();
                         await setUserCookies(null, Chain.Solana);
                       }
@@ -67,8 +66,8 @@ export default function MobileMenu({ cachedUser, currentUser }: MobileMenuProps)
                 </div>
               </div>
             )}
-            {!isConnected && (chain.name === Chain.Eth || chain.name === Chain.Base) && <EvmConnectButton />}
-            {!connected && chain.name === Chain.Solana && <SolConnectButton />}
+            {!isConnected && (chain === Chain.Eth || chain === Chain.Base) && <EvmConnectButton />}
+            {!connected && chain === Chain.Solana && <SolConnectButton />}
             <ChainSwitcher height={40} width={40} />
           </div>
         </NavbarMenuItem>

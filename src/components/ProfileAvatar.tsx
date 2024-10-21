@@ -1,14 +1,11 @@
 "use client";
 
-import { useAccount, useDisconnect } from "wagmi";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import EvmConnectButton from "./eth/EvmConnectButton";
-import { useWallet } from "@solana/wallet-adapter-react";
 import SolConnectButton from "./solana/SolConnectButton";
 import { Chain } from "@/models/chain";
 import { User } from "@prisma/client";
 import Image from "next/image";
-import { useChain } from "@/context/chain";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { setUserCookies } from "@/actions/profile/actions";
@@ -17,24 +14,27 @@ import Link from "next/link";
 type ProfileAvatarProps = {
   cachedUser: User | null;
   currentUser: User | null;
+  isConnected: boolean;
+  connected: boolean;
+  chain: Chain;
+  disconnect: () => void;
+  solDisconnect: () => void;
 };
 
-export default function ProfileAvatar({ cachedUser, currentUser }: ProfileAvatarProps) {
-  const { chain } = useChain();
-
-  // evm hooks
-  const { isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
-
-  // sol hooks
-  const { connected } = useWallet();
-  const solDisconnect = useWallet().disconnect;
-
+export default function ProfileAvatar({
+  cachedUser,
+  currentUser,
+  isConnected,
+  connected,
+  chain,
+  disconnect,
+  solDisconnect,
+}: ProfileAvatarProps) {
   return (
     <section className="hidden tablet:block">
       <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
-        {!isConnected && chain.name === Chain.Eth && <EvmConnectButton />}
-        {!connected && chain.name === Chain.Solana && <SolConnectButton />}
+        {!isConnected && chain === Chain.Eth && <EvmConnectButton />}
+        {!connected && chain === Chain.Solana && <SolConnectButton />}
         <DropdownTrigger>
           <div className="hover:bg-gray rounded-lg p-1 laptop:p-2 cursor-pointer">
             <Image
@@ -65,10 +65,10 @@ export default function ProfileAvatar({ cachedUser, currentUser }: ProfileAvatar
             className="dark"
             key="Disconnect"
             onPress={async () => {
-              if (chain.name === Chain.Eth) {
+              if (chain === Chain.Eth) {
                 disconnect();
                 await setUserCookies(null, Chain.Eth);
-              } else if (chain.name === Chain.Solana) {
+              } else if (chain === Chain.Solana) {
                 solDisconnect();
                 await setUserCookies(null, Chain.Solana);
               }
