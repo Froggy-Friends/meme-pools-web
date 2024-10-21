@@ -1,14 +1,10 @@
-import ProfileAvatar from "./ProfileAvatar";
 import { cookies } from "next/headers";
 import { fetchUser } from "@/queries/profile/queries";
 import { Chain } from "@/models/chain";
-import ChainSwitcher from "./ChainSwitcher";
 import { Cookie } from "@/models/cookie";
 import LogoPopover from "./LogoPopover";
-import LaunchCoinButton from "./LaunchCoinButton";
-import HowItWorksButton from "./HowItWorksButton";
 import TokenSearch from "./TokenSearch";
-import { BsQuestionCircle } from "react-icons/bs";
+import Navbar from "./Navbar";
 
 type HeaderProps = {
   chain: Chain;
@@ -26,16 +22,7 @@ export default async function Header({ chain }: HeaderProps) {
 
       <TokenSearch />
 
-      <div className="flex items-center gap-x-1 tablet:gap-x-2">
-        <div className="hidden tablet:flex items-center gap-x-1 tablet:gap-x-2">
-          <LaunchCoinButton />
-          <HowItWorksButton>
-            <BsQuestionCircle size={25} className="text-light-gray transition" />
-          </HowItWorksButton>
-          <ChainSwitcher />
-        </div>
-        <ProfileAvatar cachedUser={user || null} />
-      </div>
+      <Navbar cachedUser={user || null} />
     </header>
   );
 }
