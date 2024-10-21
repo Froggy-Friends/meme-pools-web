@@ -4,7 +4,9 @@ import { Chain } from "@/models/chain";
 import { Cookie } from "@/models/cookie";
 import LogoPopover from "./LogoPopover";
 import TokenSearch from "./TokenSearch";
-import Navbar from "./Navbar";
+import { Navbar, NavbarBrand, NavbarContent, NavbarMenuToggle } from "@nextui-org/react";
+import NavbarIcons from "./NavbarIcons";
+import ProfileAndMenuContainer from "./ProfileAndMenuContainer";
 
 type HeaderProps = {
   chain: Chain;
@@ -17,12 +19,26 @@ export default async function Header({ chain }: HeaderProps) {
   const user = await fetchUser(chain === Chain.Eth ? userEvmAddress?.value : userSolAddress?.value);
 
   return (
-    <header className="flex justify-between items-center w-full h-20 mb-12 laptop:mb-24">
-      <LogoPopover />
+    <Navbar
+      className="bg-dark flex justify-between items-center w-full h-20 mb-12 laptop:mb-24"
+      maxWidth="full"
+      classNames={{ wrapper: "px-0" }}
+    >
+      <NavbarBrand>
+        <LogoPopover />
+      </NavbarBrand>
 
-      <TokenSearch />
+      <NavbarContent justify="center">
+        <TokenSearch />
+      </NavbarContent>
 
-      <Navbar cachedUser={user || null} />
-    </header>
+      <NavbarContent justify="end">
+        <div className="flex items-center gap-x-1 tablet:gap-x-2">
+          <NavbarIcons />
+          <ProfileAndMenuContainer cachedUser={user || null} />
+        </div>
+      </NavbarContent>
+      <NavbarMenuToggle className="bg-dark tablet:hidden" />
+    </Navbar>
   );
 }

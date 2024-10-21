@@ -31,51 +31,53 @@ export default function ProfileAvatar({ cachedUser, currentUser }: ProfileAvatar
   const solDisconnect = useWallet().disconnect;
 
   return (
-    <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
-      {!isConnected && chain.name === Chain.Eth && <EvmConnectButton />}
-      {!connected && chain.name === Chain.Solana && <SolConnectButton />}
-      <DropdownTrigger>
-        <div className="hover:bg-gray rounded-lg p-1 laptop:p-2 cursor-pointer">
-          <Image
-            className="transition-transform rounded-full"
-            src={cachedUser?.imageUrl || defaultProfileAvatarUrl}
-            alt="profile-avatar"
-            height={25}
-            width={25}
-          />
-        </div>
-      </DropdownTrigger>
-      <DropdownMenu>
-        <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
-          <p className="text-sm tablet:text-base">
-            {cachedUser && `Signed in as ${getUserDisplayName(cachedUser.name)}`}
-            {!cachedUser && currentUser && `Signed in as ${getUserDisplayName(currentUser.name)}`}
-          </p>
-        </DropdownItem>
-        <DropdownItem className="dark" key="Profile">
-          <Link href={`/profile/${cachedUser ? cachedUser.name : currentUser?.name}`}>
-            <p className="text-sm tablet:text-base">Profile</p>
-          </Link>
-        </DropdownItem>
-        <DropdownItem key="Portfolio" className="hover:cursor-default" isReadOnly>
-          <p className="text-sm tablet:text-base text-white/[20%] hover:cursor-default">Portfolio</p>
-        </DropdownItem>
-        <DropdownItem
-          className="dark"
-          key="Disconnect"
-          onPress={async () => {
-            if (chain.name === Chain.Eth) {
-              disconnect();
-              await setUserCookies(null, Chain.Eth);
-            } else if (chain.name === Chain.Solana) {
-              solDisconnect();
-              await setUserCookies(null, Chain.Solana);
-            }
-          }}
-        >
-          <p className="text-sm tablet:text-base">Disconnect</p>
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+    <section className="hidden tablet:block">
+      <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
+        {!isConnected && chain.name === Chain.Eth && <EvmConnectButton />}
+        {!connected && chain.name === Chain.Solana && <SolConnectButton />}
+        <DropdownTrigger>
+          <div className="hover:bg-gray rounded-lg p-1 laptop:p-2 cursor-pointer">
+            <Image
+              className="transition-transform rounded-full"
+              src={cachedUser?.imageUrl || defaultProfileAvatarUrl}
+              alt="profile-avatar"
+              height={25}
+              width={25}
+            />
+          </div>
+        </DropdownTrigger>
+        <DropdownMenu>
+          <DropdownItem key="Account" isReadOnly className="hover:cursor-default">
+            <p className="text-sm tablet:text-base">
+              {cachedUser && `Signed in as ${getUserDisplayName(cachedUser.name)}`}
+              {!cachedUser && currentUser && `Signed in as ${getUserDisplayName(currentUser.name)}`}
+            </p>
+          </DropdownItem>
+          <DropdownItem className="dark" key="Profile">
+            <Link href={`/profile/${cachedUser ? cachedUser.name : currentUser?.name}`}>
+              <p className="text-sm tablet:text-base">Profile</p>
+            </Link>
+          </DropdownItem>
+          <DropdownItem key="Portfolio" className="hover:cursor-default" isReadOnly>
+            <p className="text-sm tablet:text-base text-white/[20%] hover:cursor-default">Portfolio</p>
+          </DropdownItem>
+          <DropdownItem
+            className="dark"
+            key="Disconnect"
+            onPress={async () => {
+              if (chain.name === Chain.Eth) {
+                disconnect();
+                await setUserCookies(null, Chain.Eth);
+              } else if (chain.name === Chain.Solana) {
+                solDisconnect();
+                await setUserCookies(null, Chain.Solana);
+              }
+            }}
+          >
+            <p className="text-sm tablet:text-base">Disconnect</p>
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </section>
   );
 }
