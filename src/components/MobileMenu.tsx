@@ -1,7 +1,7 @@
 "use client";
 
 import { NavbarMenu, NavbarMenuItem, Link } from "@nextui-org/react";
-import LaunchCoinButton from "./LaunchCoinButton";
+import CreateCoinButton from "./CreateCoinButton";
 import Image from "next/image";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { User } from "@prisma/client";
@@ -32,7 +32,6 @@ export default function MobileMenu({
   disconnect,
   solDisconnect,
 }: MobileMenuProps) {
-
   return (
     <section className="tablet:hidden">
       <NavbarMenu className="bg-dark mt-6 min-w-[100vw] max-w-full left-0 right-0">
@@ -108,8 +107,8 @@ export default function MobileMenu({
           </Link>
         </NavbarMenuItem>
 
-        <NavbarMenuItem key="launch-coin-button" className="mt-6 -mx-3">
-          <LaunchCoinButton />
+        <NavbarMenuItem key="create-coin-button" className="mt-6 -mx-3">
+          <CreateCoinButton />
         </NavbarMenuItem>
       </NavbarMenu>
     </section>

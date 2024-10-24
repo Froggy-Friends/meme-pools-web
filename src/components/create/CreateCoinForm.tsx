@@ -4,9 +4,9 @@ import useCreateToken from "@/hooks/useCreateToken";
 import { useAccount } from "wagmi";
 import { toast } from "react-hot-toast";
 import { parseUnits } from "viem";
-import { launchCoin, uploadImage } from "@/actions/launch/actions";
+import { createCoin, uploadImage } from "@/actions/create/actions";
 import FormSubmitButton from "../FormSubmitButton";
-import LaunchCoinFormModal from "./LaunchCoinFormModal";
+import CreateCoinFormModal from "./CreateCoinFormModal";
 import { useForm } from "react-hook-form";
 import { createFormData } from "@/lib/createFormData";
 import { useChain } from "@/context/chain";
@@ -25,7 +25,7 @@ import { formatNumber } from "@/lib/formatNumber";
 import usePostTradeData from "@/hooks/usePostTradeData";
 import getEthPrice from "@/lib/getEthPrice";
 
-export type LaunchFormValues = {
+export type CreateFormValues = {
   name: string;
   ticker: string;
   reservedAmount: string;
@@ -38,7 +38,7 @@ export type LaunchFormValues = {
   other?: string;
 };
 
-export default function LaunchCoinForm() {
+export default function CreateCoinForm() {
   const { address, isConnected } = useAccount();
   const { createToken } = useCreateToken();
   const { chain } = useChain();
@@ -56,11 +56,11 @@ export default function LaunchCoinForm() {
     resetField,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<LaunchFormValues>();
+  } = useForm<CreateFormValues>();
   const inputStyles =
     "h-10 min-w-[375px] max-w-[410px] tablet:min-w-[350px] tablet:w-[350px] laptop:min-w-[430px] laptop:w-[430px] desktop:min-w-[450px] desktop:w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
 
-  const onSubmit = handleSubmit(async (data: LaunchFormValues) => {
+  const onSubmit = handleSubmit(async (data: CreateFormValues) => {
     const formData = createFormData(data);
     const numericReservedAmount = data.reservedAmount.replace(/,/g, "");
     const reservedAmount = parseUnits(numericReservedAmount, 18) || BigInt(0);
@@ -80,7 +80,7 @@ export default function LaunchCoinForm() {
         return;
       }
 
-      const errorMessage = await launchCoin(
+      const errorMessage = await createCoin(
         formData,
         address,
         tokenDetails.tokenAddress,
@@ -307,16 +307,16 @@ export default function LaunchCoinForm() {
           <p className="mb-1 ml-1 tablet:ml-4 laptop:ml-5">Optional Links</p>
 
           <div className="flex min-w-[375px] max-w-[415px] tablet:min-w-[750px] tablet:w-[750px] laptop:min-w-[925px] laptop:w-[925px] desktop:min-w-[975px] desktop:w-[975px] justify-between">
-            <LaunchCoinFormModal name="twitter" pattern="https://x.com/*" register={register} resetField={resetField} />
-            <LaunchCoinFormModal name="telegram" register={register} resetField={resetField} />
-            <LaunchCoinFormModal name="website" pattern="https://.*" register={register} resetField={resetField} />
-            <LaunchCoinFormModal
+            <CreateCoinFormModal name="twitter" pattern="https://x.com/*" register={register} resetField={resetField} />
+            <CreateCoinFormModal name="telegram" register={register} resetField={resetField} />
+            <CreateCoinFormModal name="website" pattern="https://.*" register={register} resetField={resetField} />
+            <CreateCoinFormModal
               name="discord"
               pattern="https://discord.gg/*"
               register={register}
               resetField={resetField}
             />
-            <LaunchCoinFormModal name="other" pattern="https://.*" register={register} resetField={resetField} />
+            <CreateCoinFormModal name="other" pattern="https://.*" register={register} resetField={resetField} />
           </div>
         </div>
 

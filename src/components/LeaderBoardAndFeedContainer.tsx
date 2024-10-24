@@ -3,7 +3,7 @@
 import { Token } from "@prisma/client";
 import LiveFeed from "./LiveFeed";
 import VotingLeaderboard from "./VotingLeaderboard";
-import { useFeatureFlagPayload } from "posthog-js/react";
+import { useFeatureFlagPayload, useFeatureFlagEnabled } from "posthog-js/react";
 import { useState, useEffect } from "react";
 
 type LeaderBoardAndFeedContainerProps = {
@@ -12,13 +12,14 @@ type LeaderBoardAndFeedContainerProps = {
 
 export default function LeaderBoardAndFeedContainer({ topTokens }: LeaderBoardAndFeedContainerProps) {
   const payload = useFeatureFlagPayload("spotlight");
+  const isSpotlightEnabled = useFeatureFlagEnabled("spotlight");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (payload) {
+    if (payload || !isSpotlightEnabled) {
       setIsLoading(false);
     }
-  }, [payload]);
+  }, [payload, isSpotlightEnabled]);
 
   return (
     <div className="mb-[70px] tablet:mb-24  flex flex-col tablet:flex-row items-center gap-2 desktop:gap-4">

@@ -1,18 +1,18 @@
 import { toTitleCase } from "@/lib/toTitleCase";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 import { UseFormRegister, UseFormResetField } from "react-hook-form";
-import { LaunchFormValues } from "./LaunchCoinForm";
-import { LaunchModalInputs } from "@/types/launch/types";
+import { CreateFormValues } from "./CreateCoinForm";
+import { CreateModalInputs } from "@/types/create/types";
 import { IoMdCloseCircle } from "react-icons/io";
 
-type LaunchCoinFormModalProps = {
-  name: LaunchModalInputs;
-  register: UseFormRegister<LaunchFormValues>;
-  resetField: UseFormResetField<LaunchFormValues>;
+type CreateCoinFormModalProps = {
+  name: CreateModalInputs;
+  register: UseFormRegister<CreateFormValues>;
+  resetField: UseFormResetField<CreateFormValues>;
   pattern?: string;
 };
 
-export default function LaunchCoinFormModal({ name, pattern, register, resetField }: LaunchCoinFormModalProps) {
+export default function CreateCoinFormModal({ name, pattern, register, resetField }: CreateCoinFormModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const inputStyles =
     "h-10 max-w-[340px] tablet:min-w-[500px] tablet:w-[500px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";

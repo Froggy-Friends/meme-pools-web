@@ -12,7 +12,7 @@ export const frogFunApi = isProd
 // evm
 export const contractAddress: Address = isProd
   ? "0x0"
-  : "0xb5DdD2Ca2E43eE59882075abeefd79a01b5cE914";
+  : "0x8317301D9Bb8B681D3Ac07ca2Ea71C0621799098";
 export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = isProd ? 8453 : 84532;
 export const ethChain = isProd ? mainnet : sepolia;

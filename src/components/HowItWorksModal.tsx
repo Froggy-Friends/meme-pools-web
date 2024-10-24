@@ -2,6 +2,7 @@
 
 import { bondingCurveLimit, bondingCurveReward } from "@/config/token";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 type HowItWorkdsModalProps = {
   isOpen: boolean;
@@ -9,6 +10,8 @@ type HowItWorkdsModalProps = {
 };
 
 export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsModalProps) {
+  const router = useRouter();
+
   return (
     <>
       <Modal
@@ -40,8 +43,11 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
             </p>
           </ModalBody>
           <ModalFooter className="flex justify-center">
-            <button className="bg-green rounded-3xl h-12 w-[400px] mt-20 text-dark-gray text-xl font-proximaSoftBold hover:bg-green/80 active:scale-[0.98] transition">
-              LAUNCH TOKEN
+            <button
+              onClick={() => router.push("/create")}
+              className="bg-green rounded-3xl h-10 w-[400px] mt-20 text-dark-gray text-xl font-proximaSoftBold hover:bg-green/80 active:scale-[0.98] transition"
+            >
+              CREATE TOKEN
             </button>
           </ModalFooter>
         </ModalContent>
