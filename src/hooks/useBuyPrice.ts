@@ -2,7 +2,7 @@ import { frogFunAbi } from "@/abi/frogFun";
 import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { Contract, parseEther } from "ethers";
-import { formatUnits } from "viem";
+import * as Sentry from "@sentry/react";
 
 export default function useBuyPrice() {
   const signer = useEthersSigner();
@@ -19,6 +19,7 @@ export default function useBuyPrice() {
       totalCost = total;
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
     }
 
     return totalCost;
@@ -36,6 +37,7 @@ export default function useBuyPrice() {
       totalTokens = tokens;
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
     }
 
     return totalTokens;

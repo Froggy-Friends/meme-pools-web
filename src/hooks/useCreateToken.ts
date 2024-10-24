@@ -5,6 +5,7 @@ import { CreateTokenParams, TokenCreated } from "@/types/token/types";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
 import { toast } from "react-hot-toast";
 import { ContractEvent } from "@/models/contractEvent";
+import * as Sentry from "@sentry/react";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
@@ -57,6 +58,7 @@ export default function useCreateToken() {
       };
     } catch (error) {
       console.error(error);
+      Sentry.captureException(error);
       toast.error("Launch token failed");
     }
   };

@@ -40,7 +40,7 @@ type TradingWidgetProps = {
   ethPrice: number;
 };
 
-const PURCHASE_AMOUNTS = [0.01, 0.1, 0.25, 0.5, 1];
+const PURCHASE_AMOUNTS = [0.25, 0.5, 0.75, 1];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 const rule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
 
