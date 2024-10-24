@@ -56,7 +56,7 @@ export default function useCreateToken() {
         txHash,
       };
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Launch token failed");
     }
   };

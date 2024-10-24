@@ -1,13 +1,13 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
-import { Address, parseUnits } from "viem";
-import { formatUnits } from "ethers";
+import { Address, parseEther, parseUnits } from "viem";
+import { ContractTransactionReceipt, formatUnits } from "ethers";
 import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
 import { Input, useDisclosure } from "@nextui-org/react";
@@ -40,7 +40,7 @@ type TradingWidgetProps = {
   ethPrice: number;
 };
 
-const PURCHASE_AMOUNTS = [1, 2, 3, 4];
+const PURCHASE_AMOUNTS = [0.01, 0.1, 0.25, 0.5, 1];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 const rule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
 
@@ -56,18 +56,19 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   } = useDisclosure();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyAmount, setBuyAmount] = useState("");
+  const [buyTokensReceived, setBuyTokensReceived] = useState("");
   const [buyCost, setBuyCost] = useState<bigint>(BigInt(0));
   const [buyLoading, setBuyLoading] = useState(false);
   const [sellAmount, setSellAmount] = useState("");
   const [sellPayout, setSellPayout] = useState<bigint>(BigInt(0));
-  const [buyTokenName, setBuyTokenName] = useState(token.ticker);
-  const [buyTokenSrc, setBuyTokenSrc] = useState(token.image);
+  const [buyTokenName, setBuyTokenName] = useState("ETH");
+  const [buyTokenSrc, setBuyTokenSrc] = useState(ethLogo);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
   const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
   const [showPresets, setShowPresets] = useState(false);
   const { buyToken, buyTxStatus, buyTxHash } = useBuyToken(onSwapModalClose);
-  const buyPrice = useBuyPrice();
+  const { buyPriceTokens, buyPriceEth } = useBuyPrice();
   const { sellToken, sellTxStatus, sellTxHash } = useSellToken(onSwapModalClose);
   const getSellPrice = useSellPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
@@ -82,9 +83,15 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       setBuyCost(BigInt(0));
       return;
     }
-    const buyAmountWei = parseUnits(amount, 18);
-    const totalCost = await buyPrice(tokenAddress, buyAmountWei);
-    setBuyCost(totalCost);
+
+    if (buyTokenName === "ETH") {
+      const totalTokens = await buyPriceEth(tokenAddress, amount);
+      setBuyTokensReceived(formatUnits(totalTokens, 18));
+    } else {
+      const buyAmountWei = parseUnits(amount, 18);
+      const totalCost = await buyPriceTokens(tokenAddress, buyAmountWei);
+      setBuyCost(totalCost);
+    }
   }, 700);
 
   const debouncedSellPayout = useDebouncedCallback(async (amount: string) => {
@@ -102,6 +109,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
 
     if (inputValue === "" || rule.test(inputValue)) {
       setBuyAmount(inputValue);
+      setBuyTokensReceived("");
       debouncedBuyCost(inputValue);
     }
   };
@@ -131,9 +139,17 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   };
 
   const buyTokens = async () => {
-    const buyAmountWei = parseUnits(buyAmount, 18);
-    onSwapModalOpen();
-    const receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
+    let receipt: ContractTransactionReceipt;
+
+    if (buyTokenName === "ETH") {
+      const buyAmountWei = parseUnits(buyTokensReceived, 18);
+      onSwapModalOpen();
+      receipt = await buyToken(tokenAddress, buyAmountWei, parseEther(buyAmount));
+    } else {
+      const buyAmountWei = parseUnits(buyAmount, 18);
+      onSwapModalOpen();
+      receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
+    }
     setBuyAmount("");
     setBuyCost(BigInt(0));
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
@@ -208,7 +224,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 autoComplete="off"
                 startContent={
                   <TokenSwitcher
-                    imgName={formatTicker(buyTokenName)}
+                    imgName={buyTokenName}
                     imgSrc={buyTokenSrc}
                     token={token}
                     onChange={(ticker, tickerSrc) => {
@@ -223,16 +239,39 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
               </div>
               <div className="flex items-center gap-2 p-2 rounded-3xl bg-dark w-full">
                 <Image
-                  src={chain.name === Chain.Solana ? solanaLogo : ethLogo}
+                  src={
+                    (chain.name === Chain.Solana && buyTokenName === "SOL") ||
+                    (chain.name === Chain.Eth && buyTokenName === "ETH")
+                      ? token.image
+                      : chain.name === Chain.Solana
+                      ? solanaLogo
+                      : ethLogo
+                  }
                   alt="eth"
                   width={35}
                   height={35}
-                  className="ml-2"
+                  className="ml-2 rounded-full"
                 />
-                <p>{chain.name === Chain.Solana ? "$SOL" : "$ETH"}</p>
-                <p className="text-light-gray text-sm ml-2">
-                  {buyCost !== BigInt(0) ? Number(formatUnits(buyCost)).toFixed(6) : "0.0"}
+                <p>
+                  {(chain.name === Chain.Solana && buyTokenName === "SOL") ||
+                  (chain.name === Chain.Eth && buyTokenName === "ETH")
+                    ? `$${formatTicker(token.ticker)}`
+                    : chain.name === Chain.Solana
+                    ? "$SOL"
+                    : "$ETH"}
                 </p>
+                {buyTokenName !== "ETH" && (
+                  <p className="text-light-gray text-sm ml-2">
+                    {buyCost !== BigInt(0) ? Number(formatUnits(buyCost)).toFixed(6) : "0.0"}
+                  </p>
+                )}
+                {buyTokenName === "ETH" && (
+                  <p className="text-light-gray text-sm ml-2">
+                    {buyTokenName === "ETH" && buyTokensReceived !== "" && buyAmount !== ""
+                      ? formatNumber(Math.round(Number(buyTokensReceived)))
+                      : "0.0"}
+                  </p>
+                )}
               </div>
             </>
           )}
@@ -250,15 +289,10 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 radius="full"
                 autoComplete="off"
                 startContent={
-                  <TokenSwitcher
-                    imgName={formatTicker(token.ticker)}
-                    imgSrc={token.image}
-                    token={token}
-                    onChange={(ticker, tickerSrc) => {
-                      setBuyTokenName(ticker);
-                      setBuyTokenSrc(tickerSrc);
-                    }}
-                  />
+                  <div className="flex items-center gap-2">
+                    <Image src={token.image} alt={token.name} height={35} width={35} className="rounded-full" />
+                    <p className="uppercase">${formatTicker(token.ticker)}</p>
+                  </div>
                 }
               />
               <div className="absolute left-1/2 top-[32%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
@@ -288,14 +322,19 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
             </button>
 
             {activeTab === TradingTab.BUY &&
-              showPresets &&
+              buyTokenName === "ETH" &&
               PURCHASE_AMOUNTS.map(amount => (
                 <button
                   key={amount}
-                  onClick={() => setBuyAmount(amount.toString())}
+                  onClick={() => {
+                    setBuyAmount(amount.toString());
+                    debouncedBuyCost(amount.toString());
+                  }}
                   disabled={!isConnected}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl ${
-                    amount.toString() === buyAmount ? "bg-gray" : "bg-dark"
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl transition ${
+                    amount.toString() === buyAmount
+                      ? "bg-gray hover:bg-gray cursor-default"
+                      : "bg-dark hover:bg-light-gray"
                   }`}
                 >
                   {amount}
@@ -344,12 +383,20 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       <SwapModal
         fromImageUrl={activeTab === TradingTab.BUY ? ethLogo : token.image}
         fromAmount={
-          activeTab === TradingTab.BUY ? Number(formatUnits(buyCost, 18)).toFixed(6) : formatNumber(Number(sellAmount))
+          activeTab === TradingTab.BUY && buyTokenName === "ETH"
+            ? buyAmount
+            : activeTab === TradingTab.BUY
+            ? Number(formatUnits(buyCost, 18)).toFixed(6)
+            : formatNumber(Number(sellAmount))
         }
         fromTicker={activeTab === TradingTab.BUY ? "ETH" : token.ticker}
         toImageUrl={activeTab === TradingTab.SELL ? ethLogo : token.image}
         toAmount={
-          activeTab === TradingTab.BUY ? formatNumber(Number(buyAmount)) : Number(formatUnits(sellPayout)).toFixed(6)
+          activeTab === TradingTab.BUY && buyTokenName === "ETH"
+            ? formatNumber(Number(buyTokensReceived))
+            : activeTab === TradingTab.BUY
+            ? formatNumber(Number(buyAmount))
+            : Number(formatUnits(sellPayout)).toFixed(6)
         }
         toTicker={activeTab === TradingTab.BUY ? token.ticker : "ETH"}
         isOpen={isSwapModalOpen}

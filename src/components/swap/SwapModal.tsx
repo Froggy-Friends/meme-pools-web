@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
 import { IoMdArrowRoundForward } from "react-icons/io";
-import { formatNumber } from "@/lib/format";
 import { TxStatus } from "@/types/token/types";
 import Link from "next/link";
 import { formatAddress } from "@/lib/formatAddress";

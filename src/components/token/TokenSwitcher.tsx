@@ -25,17 +25,17 @@ export default function TokenSwitcher({ imgName, imgSrc, token, onChange }: Toke
           <p className="uppercase">${imgName}</p>
         </span>
       </DropdownTrigger>
-      <DropdownMenu disabledKeys={["ChainTicker"]}>
-        <DropdownItem key="Ticker" onPress={() => onChange(token.ticker, token.image)}>
-          <div className="flex items-center gap-x-3">
-            <Image className="w-[25px] h-[25px] rounded-3xl" src={token.image} alt="ticker" height={25} width={25} />
-            <p className="text-[17px]">{token.ticker}</p>
-          </div>
-        </DropdownItem>
+      <DropdownMenu>
         <DropdownItem key="ChainTicker" onPress={() => onChange("ETH", ethLogo)}>
           <div className="flex items-center gap-x-3">
             <Image className="w-[25px] h-[25px] rounded-3xl" src={ethLogo} alt="chain-logo" height={25} width={25} />
             <p className="text-[17px]">ETH</p>
+          </div>
+        </DropdownItem>
+        <DropdownItem key="Ticker" onPress={() => onChange(token.ticker, token.image)}>
+          <div className="flex items-center gap-x-3">
+            <Image className="w-[25px] h-[25px] rounded-3xl" src={token.image} alt="ticker" height={25} width={25} />
+            <p className="text-[17px]">{token.ticker}</p>
           </div>
         </DropdownItem>
       </DropdownMenu>
