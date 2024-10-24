@@ -72,7 +72,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const getSellPrice = useSellPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
-  const { isApproved } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { isApproved, refetchAllowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
   const { approveToken } = useApproveToken(tokenAddress);
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
@@ -138,6 +138,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     setBuyCost(BigInt(0));
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
     await refetchBalance();
+    await refetchAllowance();
     if (!isApproved) {
       await approveToken();
     }
@@ -150,8 +151,11 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       await approveToken();
     }
     const receipt = await sellToken(tokenAddress, formattedSellAmount);
+    setSellAmount("");
+    setSellPayout(BigInt(0));
     await postTradeData(receipt, TradingTab.SELL, ethPrice);
     await refetchBalance();
+    await refetchAllowance();
   };
 
   return (
