@@ -57,7 +57,6 @@ export default function useCreateToken() {
         txHash,
       };
     } catch (error) {
-      console.error(error);
       Sentry.captureException(error);
       toast.error("Launch token failed");
     }

@@ -18,7 +18,6 @@ export default function useBuyPrice() {
       );
       totalCost = total;
     } catch (error) {
-      console.error(error);
       Sentry.captureException(error);
     }
 
@@ -36,7 +35,6 @@ export default function useBuyPrice() {
    
       totalTokens = tokens;
     } catch (error) {
-      console.error(error);
       Sentry.captureException(error);
     }
 
