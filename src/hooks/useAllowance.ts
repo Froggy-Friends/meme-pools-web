@@ -11,7 +11,7 @@ export default function useAllowance(tokenAddress: Address, chainId: number) {
   const { tokenBalance } = useTokenBalance(tokenAddress, chainId);
   const [isApproved, setIsApproved] = useState(false);
 
-  const { data } = useReadContracts({
+  const { data, refetch: refetchAllowance } = useReadContracts({
     contracts: [
       {
         address: tokenAddress,
@@ -39,5 +39,6 @@ export default function useAllowance(tokenAddress: Address, chainId: number) {
   return {
     allowance: formattedAllowance,
     isApproved,
+    refetchAllowance,
   };
 }
