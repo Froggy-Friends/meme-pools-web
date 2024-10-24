@@ -8,7 +8,7 @@ import { Address } from "viem";
 import { getPusher } from "@/config/pusher";
 import { Channel } from "@/models/channel";
 
-export const launchCoin = async (
+export const createCoin = async (
   formData: FormData,
   address: Address,
   tokenAddress: string,
