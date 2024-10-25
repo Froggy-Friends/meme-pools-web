@@ -1,7 +1,7 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
@@ -28,6 +28,8 @@ import useAllowance from "@/hooks/useAllowance";
 import useApproveToken from "@/hooks/useApproveToken";
 import { formatNumber } from "@/lib/format";
 import { useAccount } from "wagmi";
+import toast from "react-hot-toast";
+import useTokenInfo from "@/hooks/useTokenInfo";
 
 export enum TradingTab {
   BUY,
@@ -40,7 +42,8 @@ type TradingWidgetProps = {
   ethPrice: number;
 };
 
-const PURCHASE_AMOUNTS = [0.25, 0.5, 0.75, 1];
+const PURCHASE_AMOUNTS_ETH = [0.25, 0.5, 0.75, 1];
+const PURCHASE_AMOUNTS_TOKENS = [1, 2.5, 5, 10];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 const rule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
 
@@ -73,6 +76,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const getSellPrice = useSellPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
   const { isApproved, refetchAllowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
   const { approveToken } = useApproveToken(tokenAddress);
@@ -150,11 +154,13 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       onSwapModalOpen();
       receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
     }
+    toast.success("Tokens bought");
     setBuyAmount("");
     setBuyCost(BigInt(0));
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
     await refetchBalance();
     await refetchAllowance();
+    await refetchTokenInfo();
     if (!isApproved) {
       await approveToken();
     }
@@ -172,6 +178,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     await postTradeData(receipt, TradingTab.SELL, ethPrice);
     await refetchBalance();
     await refetchAllowance();
+    await refetchTokenInfo();
   };
 
   return (
@@ -323,12 +330,31 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
 
             {activeTab === TradingTab.BUY &&
               buyTokenName === "ETH" &&
-              PURCHASE_AMOUNTS.map(amount => (
+              PURCHASE_AMOUNTS_ETH.map(amount => (
                 <button
                   key={amount}
                   onClick={() => {
                     setBuyAmount(amount.toString());
                     debouncedBuyCost(amount.toString());
+                  }}
+                  disabled={!isConnected}
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl transition ${
+                    amount.toString() === buyAmount
+                      ? "bg-gray hover:bg-gray cursor-default"
+                      : "bg-dark hover:bg-light-gray"
+                  }`}
+                >
+                  {amount}
+                </button>
+              ))}
+            {activeTab === TradingTab.BUY &&
+              buyTokenName !== "ETH" &&
+              PURCHASE_AMOUNTS_TOKENS.map(amount => (
+                <button
+                  key={amount}
+                  onClick={() => {
+                    tokenInfo && setBuyAmount(tokensByPercentage(amount, Number(formatUnits(tokenInfo[3], 18))));
+                    tokenInfo && debouncedBuyCost(tokensByPercentage(amount, Number(formatUnits(tokenInfo[3], 18))));
                   }}
                   disabled={!isConnected}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl transition ${
