@@ -109,3 +109,17 @@ export type FormattedTrade = {
 };
 
 export type TxStatus = "idle" | "pending" | "completed" | "error";
+
+export type TokenInfo = {
+  tokenAddress: string | undefined;
+  creator: string | undefined;
+  totalSupply: bigint | undefined;
+  availableSupply: bigint | undefined;
+  marketcap: bigint | undefined;
+  tokensSold: bigint | undefined;
+  balance: bigint | undefined;
+  price: bigint | undefined;
+  name: string | undefined;
+  symbol: string | undefined;
+  liquidityPoolSeeded: boolean | undefined;
+};

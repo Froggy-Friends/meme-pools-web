@@ -353,8 +353,10 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 <button
                   key={amount}
                   onClick={() => {
-                    tokenInfo && setBuyAmount(tokensByPercentage(amount, Number(formatUnits(tokenInfo[3], 18))));
-                    tokenInfo && debouncedBuyCost(tokensByPercentage(amount, Number(formatUnits(tokenInfo[3], 18))));
+                    tokenInfo.availableSupply &&
+                      setBuyAmount(tokensByPercentage(amount, Number(formatUnits(tokenInfo.availableSupply, 18))));
+                    tokenInfo.availableSupply &&
+                      debouncedBuyCost(tokensByPercentage(amount, Number(formatUnits(tokenInfo.availableSupply, 18))));
                   }}
                   disabled={!isConnected}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl transition ${
