@@ -29,7 +29,7 @@ export default function useAllowance(tokenAddress: Address, chainId: number) {
       : 0;
 
   useEffect(() => {
-    if (formattedAllowance >= tokenBalance) {
+    if (formattedAllowance >= tokenBalance && formattedAllowance > 0) {
       setIsApproved(true);
     } else {
       setIsApproved(false);

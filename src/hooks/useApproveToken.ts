@@ -2,20 +2,36 @@ import { frogFunTokenAbi } from "@/abi/frogFunToken";
 import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { maxTotalSupply } from "@/lib/constants";
+import { TxStatus } from "@/types/token/types";
 import { Contract } from "ethers";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { parseUnits } from "viem";
 
-export default function useApproveToken(tokenAddress: string) {
+export default function useApproveToken(tokenAddress: string, onSwapModalClose: () => void) {
   const signer = useEthersSigner();
   const contract = new Contract(tokenAddress, frogFunTokenAbi, signer);
+  const [approveTxStatus, setApproveTxStatus] = useState<TxStatus>("idle");
+  const [approveTxHash, setApproveTxHash] = useState<string | null>(null);
 
   const approveToken = async () => {
-    const tx = await contract.approve(
-      contractAddress,
-      parseUnits(maxTotalSupply.toString(), 18)
-    );
-    await tx.wait();
+    setApproveTxStatus("idle");
+
+    try {
+      setApproveTxStatus("pending");
+      const tx = await contract.approve(
+        contractAddress,
+        parseUnits(maxTotalSupply.toString(), 18)
+      );
+      setApproveTxHash(tx.hash);
+      await tx.wait();
+      setApproveTxStatus("completed");
+    } catch (error) {
+      setApproveTxStatus("error");
+      toast.error("Approve token error");
+      onSwapModalClose();
+    }
   };
 
-  return { approveToken };
+  return { approveToken, approveTxStatus, approveTxHash };
 }
