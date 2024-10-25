@@ -162,9 +162,6 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       onSwapModalOpen();
       receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
     }
-    toast.success("Tokens bought");
-    setBuyAmount("");
-    setBuyCost(BigInt(0));
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
     await refetchBalance();
     await refetchAllowance();
