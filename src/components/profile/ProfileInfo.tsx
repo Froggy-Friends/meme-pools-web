@@ -37,7 +37,7 @@ export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: Pr
             isFollowing={isFollowing}
             cachedUser={cachedUser}
             user={profileUser}
-            className="py-1 w-32 -mt-2"
+            className="py-1 w-32 -mt-1"
           />
         )}
       </div>
