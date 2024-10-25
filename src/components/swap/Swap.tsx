@@ -1,7 +1,7 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
@@ -79,7 +79,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
   const { isApproved, refetchAllowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
-  const { approveToken } = useApproveToken(tokenAddress);
+  const { approveToken, approveTxStatus, approveTxHash } = useApproveToken(tokenAddress, onSwapModalClose);
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 
   const debouncedBuyCost = useDebouncedCallback(async (amount: string) => {
@@ -142,6 +142,14 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     }
   };
 
+  const handleSwapModalClose = () => {
+    onSwapModalClose();
+    setBuyAmount("");
+    setSellAmount("");
+    setBuyCost(BigInt(0));
+    setSellPayout(BigInt(0));
+  };
+
   const buyTokens = async () => {
     let receipt: ContractTransactionReceipt;
 
@@ -154,9 +162,6 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       onSwapModalOpen();
       receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
     }
-    toast.success("Tokens bought");
-    setBuyAmount("");
-    setBuyCost(BigInt(0));
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
     await refetchBalance();
     await refetchAllowance();
@@ -173,8 +178,6 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
       await approveToken();
     }
     const receipt = await sellToken(tokenAddress, formattedSellAmount);
-    setSellAmount("");
-    setSellPayout(BigInt(0));
     await postTradeData(receipt, TradingTab.SELL, ethPrice);
     await refetchBalance();
     await refetchAllowance();
@@ -290,7 +293,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
                 }}
                 placeholder="0.0"
-                value={sellAmount}
+                value={Number(sellAmount).toFixed(2)}
                 onChange={handleSellAmountChange}
                 type="text"
                 radius="full"
@@ -367,7 +370,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                       : "bg-dark hover:bg-light-gray"
                   }`}
                 >
-                  {amount}
+                  {amount}%
                 </button>
               ))}
             {activeTab === TradingTab.SELL &&
@@ -433,6 +436,11 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
         onOpenChange={onSwapModalOpenChange}
         txStatus={activeTab === TradingTab.BUY ? buyTxStatus : sellTxStatus}
         txHash={activeTab === TradingTab.BUY ? buyTxHash : sellTxHash}
+        approveTxHash={approveTxHash}
+        isApproved={isApproved}
+        approveTxStatus={approveTxStatus}
+        handleSwapModalClose={handleSwapModalClose}
+        activeTab={activeTab}
       />
     </>
   );

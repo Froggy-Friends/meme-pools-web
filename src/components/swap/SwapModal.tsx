@@ -1,11 +1,13 @@
 import Image from "next/image";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
+import { CircularProgress, Modal, ModalBody, ModalContent, ModalFooter } from "@nextui-org/react";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { TxStatus } from "@/types/token/types";
 import Link from "next/link";
 import { formatAddress } from "@/lib/formatAddress";
 import { etherscanUrl } from "@/config/env";
-import { BsArrowUpCircleFill } from "react-icons/bs";
+import { FaCheckCircle } from "react-icons/fa";
+import { formatTicker } from "@/lib/formatTicker";
+import { TradingTab } from "./Swap";
 
 type SwapModalProps = {
   fromImageUrl: string;
@@ -18,6 +20,11 @@ type SwapModalProps = {
   onOpenChange: () => void;
   txStatus: TxStatus;
   txHash: string | null;
+  approveTxHash: string | null;
+  isApproved: boolean;
+  approveTxStatus: TxStatus;
+  handleSwapModalClose: () => void;
+  activeTab: TradingTab;
 };
 
 export default function SwapModal({
@@ -31,39 +38,103 @@ export default function SwapModal({
   onOpenChange,
   txStatus,
   txHash,
+  approveTxHash,
+  isApproved,
+  approveTxStatus,
+  handleSwapModalClose,
+  activeTab,
 }: SwapModalProps) {
   return (
-    <Modal className="h-[420px] bg-dark-gray text-white p-4" isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      className="h-[420px] bg-dark-gray text-white p-4"
+      isOpen={isOpen}
+      onOpenChange={open => {
+        onOpenChange();
+        if (!open) {
+          handleSwapModalClose();
+        }
+      }}
+    >
       <ModalContent>
         <ModalBody className="flex flex-col justify-center items-center gap-8">
-          {txStatus === "idle" ? <Spinner color="success" /> : <BsArrowUpCircleFill size={45} className="text-green" />}
-          <div className="text-large">
-            <span className="text-green">
-              {txStatus === "idle" ? "Confirming" : txStatus === "pending" ? "Submitted" : "Completed"}
-            </span>
-            <span> Swap</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <Image className="w-[18px] h-[18px] rounded-3xl" src={fromImageUrl} alt="eth" width={18} height={18} />
-              <p>{fromAmount}</p>
-              <p>{fromTicker}</p>
+          <div className="flex gap-x-8 items-center">
+            <div className="flex flex-col items-center gap-y-8">
+              {txStatus === "idle" || txStatus === "pending" || approveTxStatus === "pending" ? (
+                <CircularProgress
+                  classNames={{
+                    svg: "w-24 h-24 drop-shadow-md",
+                    indicator: "stroke-green",
+                    track: "stroke-dark-gray",
+                    value: "text-3xl font-semibold text-white",
+                  }}
+                  strokeWidth={2}
+                />
+              ) : (
+                <FaCheckCircle size={100} className="text-green" />
+              )}
+              <div className="text-large flex items-center gap-x-1">
+                {activeTab === TradingTab.BUY && (
+                  <span className="text-green">
+                    {txStatus === "completed" && approveTxStatus !== "completed" && !isApproved ? "Approval" : "Buy"}
+                  </span>
+                )}
+                {activeTab === TradingTab.SELL && (
+                  <span className="text-green">
+                    {txStatus === "completed" && approveTxStatus !== "completed" && !isApproved ? "Approval" : "Sell"}
+                  </span>
+                )}
+                <span>
+                  {txStatus === "idle" || txStatus === "pending" || approveTxStatus === "pending"
+                    ? "Pending"
+                    : "Complete"}
+                </span>
+              </div>
             </div>
-            <IoMdArrowRoundForward />
-            <div className="flex items-center gap-1">
-              <Image className="w-[18px] h-[18px] rounded-3xl" src={toImageUrl} alt="eth" width={18} height={18} />
-              <p>{toAmount}</p>
-              <p>{toTicker}</p>
-            </div>
           </div>
+          {approveTxStatus !== "pending" && approveTxStatus !== "completed" && (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <Image className="w-[18px] h-[18px] rounded-3xl" src={fromImageUrl} alt="eth" width={18} height={18} />
+                <p>{fromAmount}</p>
+                <p>${formatTicker(fromTicker)}</p>
+              </div>
+              <IoMdArrowRoundForward />
+              <div className="flex items-center gap-1">
+                <Image className="w-[18px] h-[18px] rounded-3xl" src={toImageUrl} alt="eth" width={18} height={18} />
+                <p>{toAmount}</p>
+                <p>${formatTicker(toTicker)}</p>
+              </div>
+            </div>
+          )}
+          {approveTxStatus !== "idle" && approveTxStatus !== "error" && txStatus !== "pending" && (
+            <div className="flex flex-col gap-y-2 items-start">
+              <div className="flex gap-x-2 items-center justify-between">
+                <FaCheckCircle size={25} className="text-green" />
+                <p>
+                  {toAmount} ${formatTicker(toTicker)} Buy Complete
+                </p>
+              </div>
+              {approveTxStatus === "completed" && (
+                <div className="flex gap-x-2 justify-between">
+                  <FaCheckCircle size={25} className="text-green" />
+                  <p>Approval Complete</p>
+                </div>
+              )}
+            </div>
+          )}
         </ModalBody>
         <ModalFooter className="flex justify-center">
           <p className="text-light-gray">
-            {txHash ? (
+            {(txHash || approveTxHash) && approveTxStatus !== "pending" ? (
               <>
                 See confirmation{" "}
-                <Link href={`${etherscanUrl}/tx/${txHash}`} target="_blank">
-                  <span className="text-light-gray hover:text-cream transition">{formatAddress(txHash)}</span>
+                <Link
+                  href={`${etherscanUrl}/tx/${approveTxStatus === "completed" ? approveTxHash : txHash}`}
+                  target="_blank"
+                >
+                  <span className="text-light-gray hover:text-cream transition">
+                    {formatAddress(approveTxStatus === "completed" ? approveTxHash : txHash)}
+                  </span>
                 </Link>
               </>
             ) : (

@@ -17,6 +17,9 @@ export default function useBuyToken(onSwapModalClose: () => void) {
     amount: bigint,
     totalCost: bigint
   ) => {
+    setBuyTxStatus("idle");
+    setBuyTxHash(null);
+
     try {
       const tx = await contract.buyTokens(tokenAddress, amount, {
         value: totalCost,
@@ -30,14 +33,7 @@ export default function useBuyToken(onSwapModalClose: () => void) {
       setBuyTxStatus("error");
       toast.error("Buy token error");
       onSwapModalClose();
-    } finally {
-      // Reset status after a delay
-      setTimeout(() => {
-        setBuyTxStatus("idle");
-        setBuyTxHash(null);
-        onSwapModalClose();
-      }, 10000);
-    }
+    } 
   };
 
   return { buyToken, buyTxStatus, buyTxHash };
