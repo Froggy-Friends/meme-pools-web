@@ -250,7 +250,7 @@ export default function CreateCoinForm() {
                 required: "Token description is required",
               })}
               id="description"
-              className="h-32 min-w-[375px] max-w-[410px] tablet:min-w-[350px] tablet:w-[350px] laptop:min-w-[430px] laptop:w-[430px] desktop:min-w-[450px] desktop:w-[450px] mb-5 px-2 py-1 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
+              className="h-32 min-w-[375px] max-w-[410px] tablet:min-w-[350px] tablet:w-[350px] laptop:min-w-[430px] laptop:w-[430px] desktop:min-w-[450px] desktop:w-[450px] mb-5 px-2 py-2 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
             />
 
             <div className="flex gap-x-1 items-center">
