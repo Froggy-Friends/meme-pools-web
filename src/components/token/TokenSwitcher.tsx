@@ -1,4 +1,5 @@
 import { ethLogo } from "@/config/chains";
+import { formatTicker } from "@/lib/formatTicker";
 import { TokenWithVoteCount } from "@/types/token/types";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import Image from "next/image";
@@ -35,7 +36,7 @@ export default function TokenSwitcher({ imgName, imgSrc, token, onChange }: Toke
         <DropdownItem key="Ticker" onPress={() => onChange(token.ticker, token.image)}>
           <div className="flex items-center gap-x-3">
             <Image className="w-[25px] h-[25px] rounded-3xl" src={token.image} alt="ticker" height={25} width={25} />
-            <p className="text-[17px]">{token.ticker}</p>
+            <p className="text-[17px]">{formatTicker(token.ticker)}</p>
           </div>
         </DropdownItem>
       </DropdownMenu>

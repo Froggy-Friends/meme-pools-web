@@ -370,7 +370,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                       : "bg-dark hover:bg-light-gray"
                   }`}
                 >
-                  {amount}
+                  {amount}%
                 </button>
               ))}
             {activeTab === TradingTab.SELL &&
