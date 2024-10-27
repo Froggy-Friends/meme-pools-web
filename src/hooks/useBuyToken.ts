@@ -1,4 +1,4 @@
-import { frogFunAbi } from "@/abi/frogFun";
+import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { Contract } from "ethers";
@@ -8,7 +8,7 @@ import { TxStatus } from "@/types/token/types";
 
 export default function useBuyToken(onSwapModalClose: () => void) {
   const signer = useEthersSigner();
-  const contract = new Contract(contractAddress, frogFunAbi, signer);
+  const contract = new Contract(contractAddress, memepoolsAbi, signer);
   const [buyTxStatus, setBuyTxStatus] = useState<TxStatus>("idle");
   const [buyTxHash, setBuyTxHash] = useState<string | null>(null);
 
@@ -33,7 +33,7 @@ export default function useBuyToken(onSwapModalClose: () => void) {
       setBuyTxStatus("error");
       toast.error("Buy token error");
       onSwapModalClose();
-    } 
+    }
   };
 
   return { buyToken, buyTxStatus, buyTxHash };

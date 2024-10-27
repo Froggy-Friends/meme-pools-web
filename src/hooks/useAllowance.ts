@@ -1,4 +1,4 @@
-import { frogFunTokenAbi } from "@/abi/frogFunToken";
+import { memepoolsTokenAbi } from "@/abi/memepoolsToken";
 import { Address, formatUnits } from "viem";
 import { useAccount, useReadContracts } from "wagmi";
 import { contractAddress } from "@/config/env";
@@ -15,7 +15,7 @@ export default function useAllowance(tokenAddress: Address, chainId: number) {
     contracts: [
       {
         address: tokenAddress,
-        abi: frogFunTokenAbi,
+        abi: memepoolsTokenAbi,
         functionName: "allowance",
         chainId: chainId,
         args: [address, contractAddress],

@@ -1,6 +1,6 @@
 "use server";
 
-import { frogFunApi } from "@/config/env";
+import { memepoolsApi } from "@/config/env";
 import prisma from "@/lib/prisma";
 import { TokenWithCreator } from "@/lib/types";
 import { TokenFilter, TokenVoteStatus } from "@/models/token";
@@ -31,7 +31,7 @@ export const fetchTokens = async (
   page: number
 ): Promise<TokenWithCreator[]> => {
   const response = await fetch(
-    `${frogFunApi}/token/${tokenFilter}?page=${page}`
+    `${memepoolsApi}/token/${tokenFilter}?page=${page}`
   );
   const tokens = await response.json();
 
@@ -76,7 +76,7 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
 };
 
 export const fetchTopVotesTokens = async () => {
-  const response = await fetch(`${frogFunApi}/token/votes?page=1`);
+  const response = await fetch(`${memepoolsApi}/token/votes?page=1`);
 
   const tokens: TokenWithVotes[] = await response.json();
 

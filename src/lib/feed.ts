@@ -4,7 +4,7 @@ import { ChannelConfig } from "@/types/feed";
 export const channelConfigs: ChannelConfig = {
   [Channel.Follow]: {
     name: "followed",
-    color: "text-green",
+    color: "text-primary",
   },
   [Channel.Unfollow]: {
     name: "unfollowed",
@@ -12,11 +12,11 @@ export const channelConfigs: ChannelConfig = {
   },
   [Channel.Comment]: {
     name: "commented",
-    color: "text-green",
+    color: "text-primary",
   },
   [Channel.CommentLikes]: {
     name: "liked",
-    color: "text-green",
+    color: "text-primary",
   },
   [Channel.CommentDislikes]: {
     name: "disliked",
@@ -24,11 +24,11 @@ export const channelConfigs: ChannelConfig = {
   },
   [Channel.Meme]: {
     name: "created-meme",
-    color: "text-green",
+    color: "text-primary",
   },
   [Channel.Upvotes]: {
     name: "upvoted",
-    color: "text-light-green",
+    color: "text-light-primary",
   },
   [Channel.Downvotes]: {
     name: "downvoted",
@@ -36,11 +36,11 @@ export const channelConfigs: ChannelConfig = {
   },
   [Channel.CreateToken]: {
     name: "created",
-    color: "text-green",
+    color: "text-primary",
   },
   [Channel.Buy]: {
     name: "bought",
-    color: "text-green",
+    color: "text-primary",
   },
   [Channel.Sell]: {
     name: "sold",

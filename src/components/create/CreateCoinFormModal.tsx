@@ -58,7 +58,7 @@ export default function CreateCoinFormModal({ name, pattern, register, resetFiel
               <ModalFooter className="flex-col laptop:flex-row justify-center gap-x-2 mb-2">
                 <button
                   onClick={onClose}
-                  className="bg-green h-10 w-full laptop:w-48 rounded-3xl text-lg text-dark font-proximaSoftBold hover:bg-[#29ff93] transition"
+                  className="bg-primary h-10 w-full laptop:w-48 rounded-3xl text-lg text-dark font-proximaSoftBold hover:bg-[#29ff93] transition"
                 >
                   SAVE
                 </button>

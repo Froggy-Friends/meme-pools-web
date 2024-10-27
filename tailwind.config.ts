@@ -20,7 +20,7 @@ const config: Config = {
       colors: {
         dark: "#131313",
         gray: "#484848",
-        green: "#00DA6C",
+        primary: "#63aff5",
         cream: "#EBEBEB",
         blue: "#B2C6F4",
         yellow: "#F4F4B2",
@@ -29,11 +29,10 @@ const config: Config = {
         solana: "#9945FF",
         based: "#0052FF",
         "light-gray": "#888888",
-        "light-green": "#B2F4D3",
+        "light-primary": "#85c3f8",
         "dark-gray": "#1B1B1B",
-        "dark-green": "#003018",
+        "dark-primary": "#2f5a8c",
         "dark-red": "#600000",
-        "midnight-green": "#1B281F",
         "midnight-red": "#3D0C0C",
       },
       fontFamily: {

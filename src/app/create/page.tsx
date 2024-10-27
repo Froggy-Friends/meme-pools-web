@@ -14,7 +14,7 @@ export default function CreateCoin() {
           <h1 className="text-3xl tablet:text-4xl laptop:text-5xl">
             Create on{" "}
             <span className="font-proximaSoftBold">
-              <span className="text-green">FROG</span>.FUN
+              <span>Memepools</span>
             </span>
           </h1>
         </div>

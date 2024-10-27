@@ -1,4 +1,4 @@
-import { frogFunAbi } from "@/abi/frogFun";
+import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { Contract } from "ethers";
@@ -8,7 +8,7 @@ import { TxStatus } from "@/types/token/types";
 
 export default function useSellToken(onSwapModalClose: () => void) {
   const signer = useEthersSigner();
-  const contract = new Contract(contractAddress, frogFunAbi, signer);
+  const contract = new Contract(contractAddress, memepoolsAbi, signer);
   const [sellTxStatus, setSellTxStatus] = useState<TxStatus>("idle");
   const [sellTxHash, setSellTxHash] = useState<string | null>(null);
 

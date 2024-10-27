@@ -1,4 +1,4 @@
-import { frogFunAbi } from "@/abi/frogFun";
+import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress, ethChain, rpcUrl } from "@/config/env";
 import getEthPrice from "@/lib/getEthPrice";
 import { Token } from "@prisma/client";
@@ -19,7 +19,7 @@ export default function useTokenMarketcap(token: Token) {
     const ethPrice = await getEthPrice();
     const marketcap = await publicClient.readContract({
       address: contractAddress,
-      abi: frogFunAbi,
+      abi: memepoolsAbi,
       functionName: "getTokenMarketcap",
       args: [token.tokenAddress],
     });

@@ -12,24 +12,17 @@ type ProfileMenuButtonProps = {
   className?: string;
 };
 
-export default function ProfileMenuButton({
-  view,
-  profileUser,
-  currentView,
-  className,
-}: ProfileMenuButtonProps) {
+export default function ProfileMenuButton({ view, profileUser, currentView, className }: ProfileMenuButtonProps) {
   const router = useRouter();
 
   return (
     <button
       className={cn(
         "bg-dark-gray border-[0.25px] border-white/[5%] rounded-3xl py-1 px-4 text-lg hover:bg-gray transition",
-        view === toTitleCase(currentView) && "bg-green text-dark font-proximaSoftBold hover:bg-green cursor-default",
+        view === toTitleCase(currentView) && "bg-primary text-dark font-proximaSoftBold hover:bg-green cursor-default",
         className
       )}
-      onClick={() =>
-        router.push(`/profile/${profileUser.name}?view=${view.toLowerCase()}`)
-      }
+      onClick={() => router.push(`/profile/${profileUser.name}?view=${view.toLowerCase()}`)}
       disabled={view === "Portfolio" || view === "Achievements"}
     >
       {view}

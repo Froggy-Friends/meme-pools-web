@@ -56,7 +56,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
   return (
     <div
       className={`flex flex-col rounded-xl overflow-hidden bg-dark-gray h-[320px] min-w-[175px] max-w-[195px] tablet:w-[220px] tablet:min-w-[220px] ${
-        newTrade ? "animate-greenPulse" : ""
+        newTrade ? "animate-primaryPulse" : ""
       }`}
     >
       <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
@@ -75,7 +75,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
           <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
             <div className="flex items-center gap-1 laptop:gap-2.5">
               <span className="text-white/75 hover:text-white transition">{token.name}</span>
-              <span className="bg-green rounded-[4px] text-xs text-black px-2 py-1 hover:bg-light-green transition">
+              <span className="bg-primary rounded-[4px] text-xs text-black px-2 py-1 hover:bg-light-primary transition">
                 ${token.ticker}
               </span>
             </div>
@@ -85,7 +85,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
             <span className="block w-max">Created by:</span>
             <Link
               href={`/profile/${token.user.name}`}
-              className="text-light-green overflow-hidden block w-1/2 underline hover:text-white transition"
+              className="text-light-primary overflow-hidden block w-1/2 underline hover:text-white transition"
             >
               {getUserDisplayName(token.user.name)}
             </Link>
@@ -126,7 +126,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
             classNames={{
               base: "max-w-full",
               track: "drop-shadow-md bg-gray h-2",
-              indicator: "bg-green",
+              indicator: "bg-primary",
               label: "tracking-wider font-small text-light-gray",
               value: "text-foreground/60 text-gray",
             }}

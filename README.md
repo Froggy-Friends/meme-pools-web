@@ -80,7 +80,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Prisma DB Migrations
 
-Frog-fun-web is the source of truth for db schema updates.
+Memepools-web is the source of truth for db schema updates.
 Changes are made through prisma db migrations (db changes).
 
 Migration steps:

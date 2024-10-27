@@ -25,12 +25,8 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
             <p className="text-xl">How It Works</p>
           </ModalHeader>
           <ModalBody>
-            <p>
-              <span className="text-green">Frog</span>.fun is making memecoins fun again
-            </p>
-            <p>
-              Every coing launced on <span>Frog</span>.fun has:
-            </p>
+            <p>Memepools is making memecoins fun again</p>
+            <p>Every coing launced on Memepools has:</p>
             <ul className="list-disc pl-4">
               <li>Fair launch</li>
               <li>No presale</li>
@@ -39,13 +35,13 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
             <p>
               When a token reaches a <span className="text-blue">{bondingCurveLimit}</span> market cap, all remaining
               tokens are deposited into Raydium/Uniswap and you are rewarded{" "}
-              <span className="text-green">{bondingCurveReward}</span>
+              <span className="text-primary">{bondingCurveReward}</span>
             </p>
           </ModalBody>
           <ModalFooter className="flex justify-center">
             <button
               onClick={() => router.push("/create")}
-              className="bg-green rounded-3xl h-10 w-[400px] mt-20 text-dark-gray text-xl font-proximaSoftBold hover:bg-green/80 active:scale-[0.98] transition"
+              className="bg-primary rounded-3xl h-10 w-[400px] mt-20 text-dark-gray text-xl font-proximaSoftBold hover:bg-primary/80 active:scale-[0.98] transition"
             >
               CREATE TOKEN
             </button>

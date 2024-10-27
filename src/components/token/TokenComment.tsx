@@ -33,7 +33,7 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
   return (
     <div
       className={`flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1 ${
-        isNew ? "animate-greenPulse" : ""
+        isNew ? "animate-primaryPulse" : ""
       }`}
     >
       <div className="flex items-center gap-x-4">

@@ -63,7 +63,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
             <div className="flex items-center gap-x-3">
               <label htmlFor="username">Username</label>
               {userExists && <p className="text-red">Username already exists</p>}
-              {usernameAvailable && <p className="text-green">Username available</p>}
+              {usernameAvailable && <p className="text-primary">Username available</p>}
             </div>
             <input
               type="text"
@@ -71,7 +71,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
               name="username"
               minLength={1}
               maxLength={44}
-              className={cn(inputStyles, userExists && "ring-red", usernameAvailable && "ring-green")}
+              className={cn(inputStyles, userExists && "ring-red", usernameAvailable && "ring-primary")}
               autoComplete="off"
               defaultValue={profileUser.name}
               onChange={async e => {
@@ -140,8 +140,8 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
             disabled={userExists}
             pendingText="SAVING..."
             className={cn(
-              "self-center flex justify-center items-center text-lg bg-green text-dark font-proximaSoftBold h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-12 laptop:mt-20 laptop:mb-24 laptop:mr-6 rounded-3xl hover:bg-light-green active:scale-[0.98] transition",
-              userExists && "hover:bg-green"
+              "self-center flex justify-center items-center text-lg bg-primary text-dark font-proximaSoftBold h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-12 laptop:mt-20 laptop:mb-24 laptop:mr-6 rounded-3xl hover:bg-light-primary active:scale-[0.98] transition",
+              userExists && "hover:bg-primary"
             )}
           >
             SAVE PROFILE

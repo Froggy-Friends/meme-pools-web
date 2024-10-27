@@ -12,7 +12,7 @@ type TokenMemeProps = {
 
 export default function TokenMeme({ meme, isNew }: TokenMemeProps) {
   return (
-    <div className={`flex flex-col rounded-lg bg-dark p-4 mb-2 ${isNew ? "animate-greenPulse" : ""}`}>
+    <div className={`flex flex-col rounded-lg bg-dark p-4 mb-2 ${isNew ? "animate-primaryPulse" : ""}`}>
       <div className="flex items-center justify-between w-full max-h-[200px] mb-1">
         <div className="flex items-center gap-x-4">
           <Image

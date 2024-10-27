@@ -22,24 +22,20 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
         <p className="tablet:hidden text-5xl font-proximaSoftBold">${formatTicker(token.ticker)}</p>
       </div>
 
-      <div className="flex items-center gap-x-2">
-        <p>Created by:</p>
+      <div className="flex items-center gap-x-2 pl-3">
         {creator && (
-          <Image
-            src={creator.imageUrl || defaultProfileAvatarUrl}
-            alt="creator-logo"
-            height={30}
-            width={30}
-            className="rounded-full"
-          />
-        )}
-        {creator && (
-          <Link href={`/profile/${creator.name}`} className="text-light-green hover:text-cream transition">
-            {getUserDisplayName(creator.name)}
+          <Link href={`/profile/${creator.name}`} className="text-light-primary hover:text-cream transition">
+            <Image
+              src={creator.imageUrl || defaultProfileAvatarUrl}
+              alt="creator-logo"
+              height={30}
+              width={30}
+              className="rounded-full"
+            />
           </Link>
         )}
+        <p className="pl-4">{token.description}</p>
       </div>
-      <p>{token.description}</p>
     </section>
   );
 }

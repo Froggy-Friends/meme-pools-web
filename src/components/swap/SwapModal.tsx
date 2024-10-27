@@ -63,23 +63,23 @@ export default function SwapModal({
                 <CircularProgress
                   classNames={{
                     svg: "w-24 h-24 drop-shadow-md",
-                    indicator: "stroke-green",
+                    indicator: "stroke-primary",
                     track: "stroke-dark-gray",
                     value: "text-3xl font-semibold text-white",
                   }}
                   strokeWidth={2}
                 />
               ) : (
-                <FaCheckCircle size={100} className="text-green" />
+                <FaCheckCircle size={100} className="text-primary" />
               )}
               <div className="text-large flex items-center gap-x-1">
                 {activeTab === TradingTab.BUY && (
-                  <span className="text-green">
+                  <span className="text-primary">
                     {txStatus === "completed" && approveTxStatus !== "completed" && !isApproved ? "Approval" : "Buy"}
                   </span>
                 )}
                 {activeTab === TradingTab.SELL && (
-                  <span className="text-green">
+                  <span className="text-primary">
                     {txStatus === "completed" && approveTxStatus !== "completed" && !isApproved ? "Approval" : "Sell"}
                   </span>
                 )}
@@ -109,14 +109,14 @@ export default function SwapModal({
           {approveTxStatus !== "idle" && approveTxStatus !== "error" && txStatus !== "pending" && (
             <div className="flex flex-col gap-y-2 items-start">
               <div className="flex gap-x-2 items-center justify-between">
-                <FaCheckCircle size={25} className="text-green" />
+                <FaCheckCircle size={25} className="text-primary" />
                 <p>
                   {toAmount} ${formatTicker(toTicker)} Buy Complete
                 </p>
               </div>
               {approveTxStatus === "completed" && (
                 <div className="flex gap-x-2 justify-between">
-                  <FaCheckCircle size={25} className="text-green" />
+                  <FaCheckCircle size={25} className="text-primary" />
                   <p>Approval Complete</p>
                 </div>
               )}

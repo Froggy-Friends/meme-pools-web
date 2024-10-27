@@ -5,9 +5,9 @@ export const env = process.env.NEXT_PUBLIC_ENV;
 export const isProd = env === "prod";
 
 // api
-export const frogFunApi = isProd
-  ? "https://api.frog.fun"
-  : "https://dev.api.frog.fun";
+export const memepoolsApi = isProd
+  ? "https://api.memepools.com"
+  : "https://dev.api.memepools.com";
 
 // evm
 export const contractAddress: Address = isProd

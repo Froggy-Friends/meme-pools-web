@@ -1,4 +1,4 @@
-import { frogFunAbi } from "@/abi/frogFun";
+import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { CreateTokenParams, TokenCreated } from "@/types/token/types";
@@ -9,13 +9,14 @@ import * as Sentry from "@sentry/react";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
-  const contract = new Contract(contractAddress, frogFunAbi, signer);
+  const contract = new Contract(contractAddress, memepoolsAbi, signer);
 
   const getTokenDetails = async (
     receipt: ContractTransactionReceipt
   ): Promise<TokenCreated> => {
     const event = receipt.logs.find(
-      (e) => e instanceof EventLog && e.fragment.name === ContractEvent.TokenCreated
+      (e) =>
+        e instanceof EventLog && e.fragment.name === ContractEvent.TokenCreated
     ) as EventLog;
 
     const [tokenAddress, creator, name, symbol, reserved] = event.args;

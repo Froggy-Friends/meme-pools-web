@@ -87,7 +87,7 @@ export default function MobileMenu({
           <Link
             color="foreground"
             className="w-full text-2xl mt-2"
-            href="https://docs.frog.fun"
+            href="https://docs.memepools.com"
             size="lg"
             target="_blank"
           >

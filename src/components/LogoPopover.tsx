@@ -2,7 +2,7 @@
 
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
 import HeaderSocialLinks from "./HeaderSocialLinks";
-import frogFunLogo from "../../public/frog-fun-logo.svg";
+import memepoolsLogo from "../../public/memepools.svg";
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
@@ -21,14 +21,8 @@ export default function LogoPopover() {
     >
       <PopoverTrigger className="cursor-pointer">
         <div className="flex items-center gap-x-1" onMouseEnter={() => setIsOpen(true)}>
-          <Image
-            src={frogFunLogo}
-            alt="Frog Fun Logo"
-            height={23}
-            width={32}
-            className="hover:scale-[1.03] transition"
-          />
-          <p className="hidden laptop:block text-2xl font-proximaSoftBold">FROG.FUN</p>
+          <Image src={memepoolsLogo} alt="Memepools" height={45} width={45} className="hover:scale-[1.03] transition" />
+          <p className="hidden laptop:block text-2xl font-proximaSoftBold">Memepools</p>
           <Image src="/down-arrow.svg" alt="more" width={12} height={9} />
         </div>
       </PopoverTrigger>
@@ -36,22 +30,20 @@ export default function LogoPopover() {
         <div className="flex flex-col">
           <Link className="flex gap-2 text-2xl font-bold cursor-pointer" href="/">
             <Image
-              src={frogFunLogo}
-              alt="Frog Fun Logo"
+              src={memepoolsLogo}
+              alt="Memepools"
               height={23}
               width={32}
               className="hover:scale-[1.03] transition"
             />
-            <div>
-              <span className="text-green">FROG</span>.FUN
-            </div>
+            <div>Memepools</div>
           </Link>
 
-          <Link href="https://docs.frog.fun" target="_blank">
-            <p className="cursor-pointer text-lg pt-4 hover:text-green transition">Docs</p>
+          <Link href="https://docs.memepools.com" target="_blank">
+            <p className="cursor-pointer text-lg pt-4 hover:text-primary transition">Docs</p>
           </Link>
-          <Link href="https://docs.frog.fun/terms" target="_blank">
-            <p className="cursor-pointer text-lg hover:text-green transition">Terms</p>
+          <Link href="https://docs.memepools.com/terms" target="_blank">
+            <p className="cursor-pointer text-lg hover:text-primary transition">Terms</p>
           </Link>
 
           <HeaderSocialLinks />
