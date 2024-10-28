@@ -53,19 +53,19 @@ const config: Config = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.3" },
         },
-        greenPulse: {
+        primaryPulse: {
           "0%, 100%": {
             backgroundColor: "#131313",
           },
           "50%": {
-            backgroundColor: "#003018",
+            backgroundColor: "#63aff5",
           },
         },
       },
       animation: {
         fadeInSlideUp: "fadeInSlideUp 0.7s",
         pulseStrong: "pulseStrong 1.5s infinite",
-        greenPulse: "greenPulse 1s ease-in-out",
+        primaryPulse: "primaryPulse 1s ease-in-out",
       },
     },
   },
