@@ -57,7 +57,7 @@ export default function FollowButton({ isFollowing, cachedUser, user, className 
         "text-xl rounded-3xl py-2 w-36 text-dark font-allumiBold active:scale-[0.98] transition",
         data && data !== FollowStatus.FOLLOW && "bg-cream/85  hover:bg-cream",
         data === FollowStatus.FOLLOW &&
-          "bg-dark text-white font-allumi border-[0.25px] border-white/[5%] hover:bg-red/[4%] hover:text-red hover:border-red transition",
+          "bg-dark text-white font-cresta border-[0.25px] border-white/[5%] hover:bg-red/[4%] hover:text-red hover:border-red transition",
         className
       )}
       disabled={handleClick.isPending}

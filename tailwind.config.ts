@@ -34,7 +34,7 @@ const config: Config = {
         "dark-primary": "#2f5a8c",
       },
       fontFamily: {
-        allumi: ["Allumi"],
+        cresta: ["Cresta"],
         allumiBold: ["AllumiBold"],
       },
       backgroundImage: {
