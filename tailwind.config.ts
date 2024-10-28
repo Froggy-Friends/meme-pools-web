@@ -18,7 +18,7 @@ const config: Config = {
         desktop: "1440px",
       },
       colors: {
-        dark: "#131313",
+        dark: "#161616",
         gray: "#484848",
         primary: "#63aff5",
         cream: "#EBEBEB",
