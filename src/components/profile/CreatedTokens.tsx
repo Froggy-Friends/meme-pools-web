@@ -18,11 +18,11 @@ export default async function CreatedTokens({ profileUser, cachedUser }: Created
           <Link href="/create" className="text-primary hover:text-light-primary transition">
             Create
           </Link>{" "}
-          your first token
+          your first coin
         </p>
       )}
       {!createdTokens.length && cachedUser && cachedUser.id !== profileUser.id && (
-        <p className="ml-1 -mt-8">No tokens created</p>
+        <p className="ml-1 -mt-8">No coins created</p>
       )}
       {createdTokens.map(token => {
         return <TokenDisplayCard key={token.id} token={token} />;
