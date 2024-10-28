@@ -63,6 +63,8 @@ export type TokenWithVotes = Token & { user: User } & {
   voteCount: { upVotes: number; downVotes: number };
 };
 
+export type TokenSearchResult = Token & { voteCount: number };
+
 export type HandleDislike = UseMutationResult<
   void,
   Error,

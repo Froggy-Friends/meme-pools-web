@@ -2,10 +2,9 @@ import { searchTokens, searchTokensByCa } from "@/queries/token/queries";
 import { Modal, ModalContent, ModalHeader, ModalBody, Switch } from "@nextui-org/react";
 import { useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import { MdKeyboardCommandKey } from "react-icons/md";
 import SearchTokenDisplay from "./SearchTokenDisplay";
 import SearchSkeleton from "./SearchSkeleton";
-import { TokenWithVoteCount } from "@/types/token/types";
+import { TokenSearchResult } from "@/types/token/types";
 import { useDebouncedCallback } from "use-debounce";
 
 type TokenSearchModalProps = {
@@ -14,8 +13,8 @@ type TokenSearchModalProps = {
 };
 
 export default function TokenSearchModal({ isOpen, onOpenChange }: TokenSearchModalProps) {
-  const [tokens, setTokens] = useState<TokenWithVoteCount[] | null>(null);
-  const [token, setToken] = useState<TokenWithVoteCount | null>(null);
+  const [tokens, setTokens] = useState<TokenSearchResult[] | null>(null);
+  const [token, setToken] = useState<TokenSearchResult | null>(null);
   const [caSearch, setCaSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
