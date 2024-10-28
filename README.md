@@ -17,6 +17,7 @@ PUSHER_SECRET=
 BLOB_READ_WRITE_TOKEN=
 NEXT_PUBLIC_POSTHOG_KEY=
 NEXT_PUBLIC_POSTHOG_HOST=
+SENTRY_AUTH_TOKEN=
 ```
 
 Ask a developer on the team for the values to these environment variables.
