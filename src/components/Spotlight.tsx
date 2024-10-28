@@ -82,7 +82,7 @@ export default function Spotlight() {
 
               <Link
                 href={`${chain.name}/token/${token.tokenAddress}`}
-                className="hidden tablet:block text-2xl font-quatroBold text-white/80 hover:text-white transition tablet:mb-2"
+                className="hidden tablet:block text-2xl font-proximaSoftBold text-white/80 hover:text-white transition tablet:mb-2"
               >
                 ${token.ticker}
               </Link>

@@ -34,8 +34,8 @@ const config: Config = {
         "dark-primary": "#2f5a8c",
       },
       fontFamily: {
-        quatro: ["Quatro"],
-        quatroBold: ["QuatroBold"],
+        proximaSoft: ["ProximaSoft"],
+        proximaSoftBold: ["ProximaSoftBold"],
         allumiBold: ["AllumiBold"],
       },
       backgroundImage: {

@@ -7,13 +7,13 @@ html {
 }
 
 @font-face {
-  font-family: "Quatro";
-  src: url("../../public/fonts/Quatro-Regular.otf");
+  font-family: "ProximaSoft";
+  src: url("../../public/fonts/ProximaSoft-Regular.woff2");
 }
 
 @font-face {
-  font-family: "QuatroBold";
-  src: url("../../public/fonts/Quatro-Bold.otf");
+  font-family: "ProximaSoftBold";
+  src: url("../../public/fonts/ProximaSoft-Bold.woff2");
 }
 
 @font-face {
