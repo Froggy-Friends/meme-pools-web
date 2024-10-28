@@ -8,14 +8,16 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Channel } from "@/models/channel";
 import Pusher from "pusher-js";
 import { usePostHog } from "posthog-js/react";
+import Link from "next/link";
 
 type TokenCommentsProps = {
   comments: CommentWithLikes[];
   cachedUser: User | null;
   tokenId: string;
+  tokenTicker: string;
 };
 
-export default function TokenComments({ comments, cachedUser, tokenId }: TokenCommentsProps) {
+export default function TokenComments({ comments, cachedUser, tokenId, tokenTicker }: TokenCommentsProps) {
   const queryClient = useQueryClient();
   const [tokenComments, setTokenComments] = useState(comments);
   const posthog = usePostHog();
@@ -54,6 +56,15 @@ export default function TokenComments({ comments, cachedUser, tokenId }: TokenCo
 
   return (
     <section className="flex flex-col">
+      {!data.length && (
+        <p className="ml-1">
+          Be the first to{" "}
+          <Link href="#post-comment" className="text-primary hover:text-light-primary transition">
+            comment
+          </Link>{" "}
+          on ${tokenTicker}
+        </p>
+      )}
       {data.map(comment => {
         return (
           <TokenComment

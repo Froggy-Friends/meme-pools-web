@@ -186,7 +186,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
 
   return (
     <>
-      <div className="flex flex-col rounded-lg w-full laptop:w-[350px] mt-7">
+      <div className="flex flex-col rounded-lg w-full laptop:w-[350px] mt-7" id="swap">
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
             <button
@@ -196,7 +196,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
               }}
               className={`w-[65px] h-[35px] rounded-3xl font-bold ${
                 activeTab === TradingTab.BUY
-                  ? "bg-primary text-black"
+                  ? "bg-green text-black"
                   : "bg-dark-gray text-white hover:bg-gray transition"
               }`}
             >

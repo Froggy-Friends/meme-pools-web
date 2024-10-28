@@ -7,14 +7,16 @@ import { Channel } from "@/models/channel";
 import { FormattedTrade } from "@/types/token/types";
 import { usePostHog } from "posthog-js/react";
 import Pusher from "pusher-js";
+import Link from "next/link";
 
 type TokenTradesProps = {
   trades: FormattedTrade[];
   tokenId: string;
   tokenAddress: string;
+  tokenTicker: string;
 };
 
-export default function TokenTrades({ trades, tokenId, tokenAddress }: TokenTradesProps) {
+export default function TokenTrades({ trades, tokenId, tokenAddress, tokenTicker }: TokenTradesProps) {
   const queryClient = useQueryClient();
   const posthog = usePostHog();
 
@@ -65,6 +67,15 @@ export default function TokenTrades({ trades, tokenId, tokenAddress }: TokenTrad
 
   return (
     <section className="flex flex-col">
+      {!data.length && (
+        <p className="ml-1">
+          Be the first to{" "}
+          <Link href="#swap" className="text-primary hover:text-light-primary transition">
+            buy
+          </Link>{" "}
+          ${tokenTicker}
+        </p>
+      )}
       {data.map(trade => (
         <TokenTrade key={trade.id} trade={trade} />
       ))}

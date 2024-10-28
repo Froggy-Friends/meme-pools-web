@@ -22,6 +22,7 @@ export default function MemeForm({ tokenId }: MemeFormProps) {
       }}
       className="w-full desktop:w-[780px] flex flex-col mb-12 laptop:mb-24 p-3 laptop:p-6 bg-dark-gray rounded-xl"
       ref={formRef}
+      id="post-meme"
     >
       <textarea
         placeholder="Post a meme..."

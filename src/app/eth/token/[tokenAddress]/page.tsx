@@ -68,6 +68,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
         view={view}
         tokenAddress={tokenAddress}
         tokenId={token.id}
+        tokenTicker={token.ticker}
         cachedUser={cachedUser || null}
       />
       <Footer />

@@ -30,7 +30,7 @@ export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: Pr
         className="rounded-full"
       />
 
-      <div className="flex flex-col items-center ml-6 -mt-1">
+      <div className="flex flex-col ml-6 -mt-1" id="follow-button">
         <p className="text-[48px] font-semibold">{getUserDisplayName(profileUser.name)}</p>
         {isConnected && cachedUser && cachedUser.name !== profileUser.name && (
           <FollowButton

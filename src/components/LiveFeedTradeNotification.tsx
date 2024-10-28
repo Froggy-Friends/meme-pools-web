@@ -1,5 +1,4 @@
 import { defaultProfileAvatarUrl } from "@/config/user";
-import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { FormattedTrade } from "@/types/token/types";
 import Image from "next/image";
 
@@ -23,9 +22,9 @@ export function LiveFeedTradeNotification({ trade, isAnimating, spotlight = fals
         width={16}
         className="rounded-full mr-1"
       />
-      {spotlight && <span className="text-primary">${trade.usdCost.toFixed(2)}</span>}
+      <span className="text-green">${trade.usdCost.toFixed(2)}</span>
       {!spotlight && <span className="text-light-primary">${trade.tokenTicker}</span>}
-      {spotlight && <span>Buy</span>}
+      <span>Buy</span>
     </div>
   );
 }
