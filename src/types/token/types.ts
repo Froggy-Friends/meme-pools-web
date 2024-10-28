@@ -93,7 +93,7 @@ export type CommentLikesWithUser = CommentLikes & { user: User };
 
 export type TradeWithUserAndToken = Trades & { User: User } & { Token: Token };
 
-export type MemeWithUser = Meme & { user: User }
+export type MemeWithUser = Meme & { user: User };
 
 export type FormattedTrade = {
   id: string;
@@ -115,10 +115,10 @@ export type TxStatus = "idle" | "pending" | "completed" | "error";
 export type TokenInfo = {
   tokenAddress: string;
   creator: string;
-  totalSupply: bigint;
-  availableSupply: bigint;
-  marketcap: bigint;
-  tokensSold: bigint;
+  totalSupply: number;
+  availableSupply: number;
+  marketcap: number;
+  tokensSold: number;
   balance: bigint;
   price: bigint;
   name: string;

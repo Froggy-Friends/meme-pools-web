@@ -358,10 +358,10 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   onClick={() => {
                     tokenInfo &&
                       tokenInfo.availableSupply &&
-                      setBuyAmount(tokensByPercentage(amount, Number(formatUnits(tokenInfo.availableSupply, 18))));
+                      setBuyAmount(tokensByPercentage(amount, tokenInfo.availableSupply));
                     tokenInfo &&
                       tokenInfo.availableSupply &&
-                      debouncedBuyCost(tokensByPercentage(amount, Number(formatUnits(tokenInfo.availableSupply, 18))));
+                      debouncedBuyCost(tokensByPercentage(amount, tokenInfo.availableSupply));
                   }}
                   disabled={!isConnected}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl transition ${

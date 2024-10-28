@@ -1,7 +1,6 @@
 "use client";
 
 import { useChain } from "@/context/chain";
-import useTokenMarketcap from "@/hooks/useTokenMarketcap";
 import useIsMounted from "@/hooks/useIsMounted";
 import { TokenWithCreator } from "@/lib/types";
 import { Channel } from "@/models/channel";
@@ -14,8 +13,9 @@ import { CiGlobe } from "react-icons/ci";
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Progress } from "@nextui-org/react";
-import { getMarketcapPercentage } from "@/lib/getMarketcapPercentage";
+import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
+import useTokenInfo from "@/hooks/useTokenInfo";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator | TokenWithVotes;
@@ -23,7 +23,7 @@ type TokenDisplayCardProps = {
 
 export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
   const { chain } = useChain();
-  const { tokenMarketcap } = useTokenMarketcap(token);
+  const { tokenInfo } = useTokenInfo(token);
   const [newTrade, setNewTrade] = useState(false);
   const isMounted = useIsMounted();
 
@@ -98,8 +98,8 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
           <div className="flex items-center justify-between">
             <div className="text-light-gray text-[10px] flex items-center gap-1">
               Market Cap:
-              <span className="text-white">${tokenMarketcap?.toFixed(2)}</span> (
-              {getMarketcapPercentage(tokenMarketcap)}%)
+              <span className="text-white">${tokenInfo?.marketcap?.toFixed(2)}</span> (
+              {getBondingCurvePercentage(tokenInfo?.tokensSold)}%)
             </div>
             <div className="flex items-center gap-3">
               {token.twitter && (
@@ -122,7 +122,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
           <Progress
             aria-label="Downloading..."
             size="md"
-            value={Number(getMarketcapPercentage(tokenMarketcap))}
+            value={getBondingCurvePercentage(tokenInfo?.tokensSold)}
             classNames={{
               base: "max-w-full",
               track: "drop-shadow-md bg-gray h-2",
