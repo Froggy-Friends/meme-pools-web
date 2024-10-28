@@ -36,8 +36,8 @@ const config: Config = {
         "midnight-red": "#3D0C0C",
       },
       fontFamily: {
-        proximaSoft: ["ProximaSoft"],
-        proximaSoftBold: ["ProximaSoftBold"],
+        allumi: ["Allumi"],
+        allumiBold: ["AllumiBold"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

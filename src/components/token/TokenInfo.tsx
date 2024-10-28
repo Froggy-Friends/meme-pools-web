@@ -18,8 +18,8 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
     <section className="flex flex-col w-full my-2 gap-y-4 pb-10">
       <div className="flex items-center gap-4">
         <Image src={token.image} alt="token-image" height={50} width={50} className="h-[50px] w-[50px] rounded-3xl" />
-        <p className="hidden tablet:block text-6xl font-proximaSoftBold">${token.ticker}</p>
-        <p className="tablet:hidden text-5xl font-proximaSoftBold">${formatTicker(token.ticker)}</p>
+        <p className="hidden tablet:block text-6xl font-allumiBold">${token.ticker}</p>
+        <p className="tablet:hidden text-5xl font-allumiBold">${formatTicker(token.ticker)}</p>
       </div>
 
       <div className="flex items-center gap-x-2 pl-3">

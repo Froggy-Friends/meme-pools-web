@@ -18,7 +18,7 @@ export default function VotingLeaderboard({ tokens }: { tokens: Token[] }) {
 
           <span className="hidden laptop:block text-sm">{index === 0 ? "1st" : index === 1 ? "2nd" : "3rd"}</span>
 
-          <span className="text-xs rounded-[4px] bg-primary text-black px-2 py-1 font-proximaSoftBold">
+          <span className="text-xs rounded-[4px] bg-primary text-black px-2 py-1 font-allumiBold">
             $ {token.ticker}
           </span>
         </div>

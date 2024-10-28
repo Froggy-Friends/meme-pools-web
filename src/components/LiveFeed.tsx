@@ -50,7 +50,7 @@ export default function LiveFeed() {
     <div className="w-full laptop:min-w-[350px] laptop:w-[350px] rounded-lg bg-dark-gray flex items-center justify-between p-4">
       <div className="flex items-center gap-x-1">
         <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-        <span className="font-proximaSoftBold">LIVE</span>
+        <span className="font-allumiBold">LIVE</span>
       </div>
       {latestTrade && <LiveFeedTradeNotification trade={latestTrade} isAnimating={isAnimating} />}
     </div>

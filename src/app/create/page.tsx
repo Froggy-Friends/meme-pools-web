@@ -13,7 +13,7 @@ export default function CreateCoin() {
         <div className="flex items-center mt-4 gap-x-4">
           <h1 className="text-3xl tablet:text-4xl laptop:text-5xl">
             Create on{" "}
-            <span className="font-proximaSoftBold">
+            <span className="font-allumiBold">
               <span>Memepools</span>
             </span>
           </h1>
