@@ -43,7 +43,7 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
               onClick={() => router.push("/create")}
               className="bg-primary rounded-3xl h-10 w-[400px] mt-20 text-dark-gray text-xl font-proximaSoftBold hover:bg-primary/80 active:scale-[0.98] transition"
             >
-              CREATE TOKEN
+              CREATE COIN
             </button>
           </ModalFooter>
         </ModalContent>
