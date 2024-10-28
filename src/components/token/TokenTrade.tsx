@@ -33,7 +33,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
           <div className="flex gap-x-4">
             <Link
               href={`/profile/${trade.username}`}
-              className="font-allumiBold text-white/80 hover:text-white hover:underline transition"
+              className="font-quatroBold text-white/80 hover:text-white hover:underline transition"
             >
               {getUserDisplayName(trade.username)}
             </Link>

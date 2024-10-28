@@ -49,7 +49,7 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
           <div className="flex gap-x-4">
             <Link
               href={`/profile/${author.name}`}
-              className="font-allumiBold text-white/80 hover:text-white hover:underline transition"
+              className="font-quatroBold text-white/80 hover:text-white hover:underline transition"
             >
               {getUserDisplayName(author.name)}
             </Link>
