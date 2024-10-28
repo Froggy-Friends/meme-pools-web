@@ -26,7 +26,7 @@ export default function LeaderBoardAndFeedContainer({ topTokens }: LeaderBoardAn
       {!payload && !isLoading && (
         <div className="w-full rounded-lg bg-dark-gray p-4 flex flex-col gap-6">
           <div className="flex items-center justify-between w-full">
-            <span className="hidden laptop:block font-allumiBold uppercase">Leaderboard</span>
+            <span className="hidden laptop:block font-proximaSoftBold uppercase">Leaderboard</span>
             <VotingLeaderboard tokens={topTokens} />
           </div>
         </div>

@@ -28,13 +28,15 @@ const config: Config = {
         red: "#e63946",
         solana: "#9945FF",
         based: "#0052FF",
+        green: "#63f58b",
         "light-gray": "#888888",
         "light-primary": "#85c3f8",
         "dark-gray": "#1B1B1B",
         "dark-primary": "#2f5a8c",
       },
       fontFamily: {
-        allumi: ["Allumi"],
+        proximaSoft: ["ProximaSoft"],
+        proximaSoftBold: ["ProximaSoftBold"],
         allumiBold: ["AllumiBold"],
       },
       backgroundImage: {

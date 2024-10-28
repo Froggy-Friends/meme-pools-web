@@ -33,7 +33,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
           <div className="flex gap-x-4">
             <Link
               href={`/profile/${trade.username}`}
-              className="font-allumiBold text-white/80 hover:text-white hover:underline transition"
+              className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
             >
               {getUserDisplayName(trade.username)}
             </Link>
@@ -43,7 +43,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
           <p className="text-sm laptop:text-base overflow-y-auto">
             <span className="text-white">
               {`${trade.category === Trade.Buy ? "Bought" : "Sold"}`}{" "}
-              <span className={`${trade.category === Trade.Buy ? "text-primary" : "text-red"}`}>
+              <span className={`${trade.category === Trade.Buy ? "text-green" : "text-red"}`}>
                 {`$${trade.usdCost.toFixed(2)}`}
               </span>
             </span>{" "}

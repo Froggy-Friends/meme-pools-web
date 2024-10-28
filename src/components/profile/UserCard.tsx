@@ -36,7 +36,7 @@ export default async function UserCard({ user, view, profileUser }: UserCardProp
         />
         <Link
           href={`/profile/${user.name}`}
-          className="text-white/80 font-allumiBold text-lg laptop:text-xl hover:text-white transition"
+          className="text-white/80 font-proximaSoftBold text-lg laptop:text-xl hover:text-white transition"
         >
           {getUserDisplayName(user.name)}
         </Link>

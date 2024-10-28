@@ -40,7 +40,7 @@ export const channelConfigs: ChannelConfig = {
   },
   [Channel.Buy]: {
     name: "bought",
-    color: "text-primary",
+    color: "text-green",
   },
   [Channel.Sell]: {
     name: "sold",

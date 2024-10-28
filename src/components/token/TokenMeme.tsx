@@ -27,7 +27,7 @@ export default function TokenMeme({ meme, isNew }: TokenMemeProps) {
             <div className="flex gap-x-4">
               <Link
                 href={`/profile/${meme.user.name}`}
-                className="font-allumiBold text-white/80 hover:text-white hover:underline transition"
+                className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
               >
                 {getUserDisplayName(meme.user.name)}
               </Link>
