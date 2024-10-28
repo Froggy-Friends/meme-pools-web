@@ -25,7 +25,7 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
             <p className="text-xl">How It Works</p>
           </ModalHeader>
           <ModalBody>
-            <p>Memepools is making memecoins fun again</p>
+            <p>Memepools is making memecoins fun again.</p>
             <p>Every coing launched on Memepools has:</p>
             <ul className="list-disc pl-4">
               <li>Fair launch</li>
@@ -33,9 +33,9 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
               <li>No team allocation</li>
             </ul>
             <p>
-              When a token reaches a <span className="text-blue">{bondingCurveLimit}</span> market cap, all remaining
+              When a token reaches a <span className="text-green">{bondingCurveLimit}</span> market cap, all remaining
               tokens are deposited into Raydium/Uniswap and you are rewarded{" "}
-              <span className="text-primary">{bondingCurveReward}</span>
+              <span className="text-green">{bondingCurveReward}.</span>
             </p>
           </ModalBody>
           <ModalFooter className="flex justify-center">
