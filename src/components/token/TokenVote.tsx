@@ -22,8 +22,19 @@ export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
     castVote(voteStatus === status ? null : status);
   };
 
+  const voteCount = () => {
+    if (votes?.upvotes && votes?.downvotes) {
+      return votes?.upvotes - votes?.downvotes;
+    } else if (votes?.upvotes && !votes?.downvotes) {
+      return votes?.upvotes;
+    } else if (!votes?.upvotes && votes?.downvotes) {
+      return 0 - votes?.downvotes;
+    }
+    return 0;
+  };
+
   return (
-    <div className="flex gap-2 w-20">
+    <div className="flex gap-1">
       <button
         onClick={() => handleVote(TokenVoteStatus.UPVOTE)}
         disabled={isCastingVote}
@@ -34,7 +45,7 @@ export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
         ) : (
           <PiArrowFatUpLight className="w-5 h-5 laptop:w-7 laptop:h-7 text-blue hover:scale-[1.03] transition" />
         )}
-        {votes?.upvotes ?? 0}
+        {voteCount()}
       </button>
       <button
         onClick={() => handleVote(TokenVoteStatus.DOWNVOTE)}
@@ -46,7 +57,6 @@ export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
         ) : (
           <PiArrowFatDownLight size={25} className="w-5 h-5 laptop:w-7 laptop:h-7 hover:scale-[1.03] transition" />
         )}
-        {votes?.downvotes ?? 0}
       </button>
     </div>
   );

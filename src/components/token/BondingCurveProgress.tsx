@@ -4,10 +4,6 @@ import useTokenMarketcap from "@/hooks/useTokenMarketcap";
 import { Progress } from "@nextui-org/react";
 import { Token } from "@prisma/client";
 import { getMarketcapPercentage } from "@/lib/getMarketcapPercentage";
-import { Channel } from "@/models/channel";
-import { useEffect } from "react";
-import Pusher from "pusher-js";
-import { TradeWithUserAndToken } from "@/types/token/types";
 
 type BondingCurveProgressProps = {
   token: Token;
