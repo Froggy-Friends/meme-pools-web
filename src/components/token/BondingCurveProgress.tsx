@@ -1,23 +1,23 @@
 "use client";
 
-import useTokenMarketcap from "@/hooks/useTokenMarketcap";
 import { Progress } from "@nextui-org/react";
 import { Token } from "@prisma/client";
-import { getMarketcapPercentage } from "@/lib/getMarketcapPercentage";
+import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
+import useTokenInfo from "@/hooks/useTokenInfo";
 
 type BondingCurveProgressProps = {
   token: Token;
 };
 
 export default function BondingCurveProgress({ token }: BondingCurveProgressProps) {
-  const { tokenMarketcap } = useTokenMarketcap(token);
+  const { tokenInfo } = useTokenInfo(token);
 
   return (
     <section className="mt-6 laptop:mt-7 desktop:mt-6 w-full tablet:w-[350px]">
       <Progress
         aria-label="Downloading..."
         size="md"
-        value={tokenMarketcap ? Number(getMarketcapPercentage(tokenMarketcap)) : 0}
+        value={tokenInfo?.tokensSold ? getBondingCurvePercentage(tokenInfo.tokensSold) : 0}
         classNames={{
           base: "max-w-full",
           track: "drop-shadow-md bg-dark-gray h-4",
@@ -30,7 +30,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
         label="Bonding Curve Progress"
       />
       <p className="text-light-gray">
-        Marketcap: <span className="text-light-primary">${tokenMarketcap?.toFixed(2)}</span>
+        Marketcap: <span className="text-light-primary">${tokenInfo?.marketcap?.toFixed(2)}</span>
       </p>
 
       <p className="text-cream text-sm pt-2">
