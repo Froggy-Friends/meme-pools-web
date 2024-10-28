@@ -325,7 +325,7 @@ export default function CreateCoinForm() {
           pendingText="LAUNCHING..."
           className="h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-20 bg-primary rounded-3xl flex items-center justify-center hover:bg-light-primary active:scale-[0.97] transition"
         >
-          <p className="text-dark font-allumiBold">HAVE SOME FUN</p>
+          <p className="text-dark font-allumiBold">CREATE MEMECOIN</p>
         </FormSubmitButton>
       </form>
     </section>

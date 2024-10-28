@@ -7,7 +7,7 @@ export const isProd = env === "prod";
 // api
 export const memepoolsApi = isProd
   ? "https://api.memepools.com"
-  : "https://dev.api.memepools.com";
+  : "https://beta.api.memepools.com";
 
 // evm
 export const contractAddress: Address = isProd

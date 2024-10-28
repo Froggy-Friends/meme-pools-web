@@ -8,10 +8,10 @@ html {
 
 @font-face {
   font-family: "Allumi";
-  src: url("../../public/fonts/Allumi.woff2");
+  src: url("../../public/fonts/AllumiStd-Regular.otf");
 }
 
 @font-face {
   font-family: "AllumiBold";
-  src: url("../../public/fonts/AllumiBold.woff2");
+  src: url("../../public/fonts/AllumiStd-Bold.otf");
 }
