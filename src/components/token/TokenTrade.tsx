@@ -43,7 +43,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
           <p className="text-sm laptop:text-base overflow-y-auto">
             <span className="text-white">
               {`${trade.category === Trade.Buy ? "Bought" : "Sold"}`}{" "}
-              <span className={`${trade.category === Trade.Buy ? "text-primary" : "text-red"}`}>
+              <span className={`${trade.category === Trade.Buy ? "text-green" : "text-red"}`}>
                 {`$${trade.usdCost.toFixed(2)}`}
               </span>
             </span>{" "}
