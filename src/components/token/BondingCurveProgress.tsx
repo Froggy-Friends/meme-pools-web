@@ -21,7 +21,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
         classNames={{
           base: "max-w-full",
           track: "drop-shadow-md bg-dark-gray h-4",
-          indicator: "bg-light-green",
+          indicator: "bg-light-primary",
           label: "tracking-wider font-small text-light-gray",
           value: "text-foreground/60 text-gray",
         }}
@@ -30,7 +30,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
         label="Bonding Curve Progress"
       />
       <p className="text-light-gray">
-        Marketcap: <span className="text-light-green">${tokenMarketcap?.toFixed(2)}</span>
+        Marketcap: <span className="text-light-primary">${tokenMarketcap?.toFixed(2)}</span>
       </p>
 
       <p className="text-cream text-sm pt-2">

@@ -4,9 +4,10 @@ import { mainnet, sepolia, baseSepolia, base } from "wagmi/chains";
 import { isProd, walletConnectProjectId } from "./env";
 
 export const metadata = {
-  name: "Frog.fun",
-  description: "Launch a tradeable coin instantly in one click on https://frog.fun/",
-  url: "https://frog.fun/",
+  name: "Memepools",
+  description:
+    "Launch a tradeable coin instantly in one click on memepools.com",
+  url: "https://memepools.com",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 

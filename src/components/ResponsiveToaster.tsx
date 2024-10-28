@@ -24,14 +24,14 @@ const ResponsiveToaster = () => {
         success: {
           icon: null,
           style: {
-            backgroundColor: "#003018",
-            color: "#fff",
+            backgroundColor: "#63aff5",
+            color: "#000",
           },
         },
         error: {
           style: {
-            backgroundColor: "#DA0033",
-            color: "#fff",
+            backgroundColor: "#e63946",
+            color: "#000",
           },
           icon: null,
         },

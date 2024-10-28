@@ -12,7 +12,7 @@ type LiveFeedTradeNotificationProps = {
 export function LiveFeedTradeNotification({ trade, isAnimating, spotlight = false }: LiveFeedTradeNotificationProps) {
   return (
     <div
-      className={`text-sm font-proximaSoft flex items-center gap-1 transition-all duration-500 ease-in-out ${
+      className={`text-sm font-allumi flex items-center gap-1 transition-all duration-500 ease-in-out ${
         isAnimating ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
     >
@@ -23,8 +23,8 @@ export function LiveFeedTradeNotification({ trade, isAnimating, spotlight = fals
         width={16}
         className="rounded-full mr-1"
       />
-      {spotlight && <span className="text-green">${trade.usdCost.toFixed(2)}</span>}
-      {!spotlight && <span className="text-light-green">${trade.tokenTicker}</span>}
+      {spotlight && <span className="text-primary">${trade.usdCost.toFixed(2)}</span>}
+      {!spotlight && <span className="text-light-primary">${trade.tokenTicker}</span>}
       {spotlight && <span>Buy</span>}
     </div>
   );

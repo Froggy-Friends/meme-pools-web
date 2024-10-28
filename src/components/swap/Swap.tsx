@@ -196,7 +196,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
               }}
               className={`w-[65px] h-[35px] rounded-3xl font-bold ${
                 activeTab === TradingTab.BUY
-                  ? "bg-green text-black"
+                  ? "bg-primary text-black"
                   : "bg-dark-gray text-white hover:bg-gray transition"
               }`}
             >
@@ -395,9 +395,9 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
           <button
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
             disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === "" || !isConnected}
-            className={`flex items-center justify-center w-full h-[40px] p-4 rounded-3xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
+            className={`flex items-center justify-center w-full h-[40px] p-4 rounded-3xl text-lg font-allumiBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
               activeTab === TradingTab.BUY
-                ? "bg-green text-black hover:bg-light-green"
+                ? "bg-primary text-black hover:bg-light-primary"
                 : "bg-red text-white hover:bg-rose"
             }`}
           >

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import frogFunLogo from "../../public/frog-fun-logo.svg";
+import memepoolsLogo from "../../public/memepools.svg";
 
 type LogoProps = {
   height?: number;
@@ -7,5 +7,5 @@ type LogoProps = {
 };
 
 export default function Logo({ height = 70, width = 70 }: LogoProps) {
-  return <Image src={frogFunLogo} alt="Frog Fun Logo" height={height} width={width} />;
+  return <Image src={memepoolsLogo} alt="Memepools" height={height} width={width} />;
 }

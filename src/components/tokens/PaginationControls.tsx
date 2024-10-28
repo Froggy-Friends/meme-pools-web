@@ -22,7 +22,7 @@ export default function PaginationControls({ page, onPageChange }: PaginationCon
       showControls={true}
       color="primary"
       classNames={{
-        cursor: "bg-green text-black",
+        cursor: "bg-primary text-black",
       }}
       page={page}
       className="flex justify-center mt-10 mb-12 laptop:mb-24"

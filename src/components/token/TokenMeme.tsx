@@ -12,7 +12,7 @@ type TokenMemeProps = {
 
 export default function TokenMeme({ meme, isNew }: TokenMemeProps) {
   return (
-    <div className={`flex flex-col rounded-lg bg-dark p-4 mb-2 ${isNew ? "animate-greenPulse" : ""}`}>
+    <div className={`flex flex-col rounded-lg bg-dark p-4 mb-2 ${isNew ? "animate-primaryPulse" : ""}`}>
       <div className="flex items-center justify-between w-full max-h-[200px] mb-1">
         <div className="flex items-center gap-x-4">
           <Image
@@ -27,7 +27,7 @@ export default function TokenMeme({ meme, isNew }: TokenMemeProps) {
             <div className="flex gap-x-4">
               <Link
                 href={`/profile/${meme.user.name}`}
-                className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
+                className="font-allumiBold text-white/80 hover:text-white hover:underline transition"
               >
                 {getUserDisplayName(meme.user.name)}
               </Link>

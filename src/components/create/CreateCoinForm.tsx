@@ -170,7 +170,7 @@ export default function CreateCoinForm() {
               <label htmlFor="name" className="mb-1">
                 Name
               </label>
-              <span className="text-green mr-2">*</span>
+              <span className="text-primary mr-2">*</span>
               {errors.name && <p className="text-red">{errors.name.message}</p>}
             </div>
             <input
@@ -191,7 +191,7 @@ export default function CreateCoinForm() {
               <label htmlFor="ticker" className="mb-1">
                 Ticker
               </label>
-              <span className="text-green mr-2">*</span>
+              <span className="text-primary mr-2">*</span>
               {errors.ticker && <p className="text-red">{errors.ticker.message}</p>}
             </div>
 
@@ -222,7 +222,7 @@ export default function CreateCoinForm() {
               <label htmlFor="image" className="mb-1">
                 Image
               </label>
-              <span className="text-green mr-2">*</span>
+              <span className="text-primary mr-2">*</span>
               {errors.image && <p className="text-red">{errors.image.message}</p>}
             </div>
             <input
@@ -242,7 +242,7 @@ export default function CreateCoinForm() {
               <label htmlFor="description" className="mb-1">
                 Description
               </label>
-              <span className="text-green mr-2">*</span>
+              <span className="text-primary mr-2">*</span>
               {errors.description && <p className="text-red">{errors.description.message}</p>}
             </div>
             <textarea
@@ -323,9 +323,9 @@ export default function CreateCoinForm() {
         <FormSubmitButton
           isSubmitting={isSubmitting}
           pendingText="LAUNCHING..."
-          className="h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-20 bg-green rounded-3xl flex items-center justify-center hover:bg-light-green active:scale-[0.97] transition"
+          className="h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-20 bg-primary rounded-3xl flex items-center justify-center hover:bg-light-primary active:scale-[0.97] transition"
         >
-          <p className="text-dark font-proximaSoftBold">HAVE SOME FUN</p>
+          <p className="text-dark font-allumiBold">CREATE MEMECOIN</p>
         </FormSubmitButton>
       </form>
     </section>

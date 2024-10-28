@@ -16,8 +16,8 @@ import { Analytics } from "@vercel/analytics/react";
 const PostHogPageView = dynamic(() => import("../components/PotHogPageView"), { ssr: false });
 
 export const metadata: Metadata = {
-  title: "Frog.fun",
-  description: "Launch a tradeable coin instantly in one click on http://frog.fun/",
+  title: "Memepools",
+  description: "Launch a tradeable coin instantly in one click on memepools.com",
 };
 
 export default async function RootLayout({
@@ -29,7 +29,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="font-proximaSoft overflow-y-scroll bg-dark text-white dark">
+      <body className="font-allumi overflow-y-scroll bg-dark text-white dark">
         <NextUIProvider>
           <Web3ModalProvider initialState={initialState}>
             <AppWalletProvider>

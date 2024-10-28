@@ -1,11 +1,11 @@
-import { frogFunAbi } from "@/abi/frogFun";
+import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { formatEther, formatGwei, parseUnits } from "viem";
 import { Contract } from "ethers";
 export default function useReservePrice() {
   const signer = useEthersSigner();
-  const contract = new Contract(contractAddress, frogFunAbi, signer);
+  const contract = new Contract(contractAddress, memepoolsAbi, signer);
 
   const getReservePrice = async (amount: number) => {
     let totalCost: bigint = BigInt(0);

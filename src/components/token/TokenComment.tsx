@@ -33,7 +33,7 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
   return (
     <div
       className={`flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1 ${
-        isNew ? "animate-greenPulse" : ""
+        isNew ? "animate-primaryPulse" : ""
       }`}
     >
       <div className="flex items-center gap-x-4">
@@ -49,7 +49,7 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
           <div className="flex gap-x-4">
             <Link
               href={`/profile/${author.name}`}
-              className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
+              className="font-allumiBold text-white/80 hover:text-white hover:underline transition"
             >
               {getUserDisplayName(author.name)}
             </Link>

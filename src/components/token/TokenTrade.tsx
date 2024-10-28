@@ -17,7 +17,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
   return (
     <div
       className={`flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1 ${
-        trade.isNew ? "animate-greenPulse" : ""
+        trade.isNew ? "animate-primaryPulse" : ""
       }`}
     >
       <div className="flex items-center gap-x-4">
@@ -33,7 +33,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
           <div className="flex gap-x-4">
             <Link
               href={`/profile/${trade.username}`}
-              className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
+              className="font-allumiBold text-white/80 hover:text-white hover:underline transition"
             >
               {getUserDisplayName(trade.username)}
             </Link>
@@ -43,7 +43,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
           <p className="text-sm laptop:text-base overflow-y-auto">
             <span className="text-white">
               {`${trade.category === Trade.Buy ? "Bought" : "Sold"}`}{" "}
-              <span className={`${trade.category === Trade.Buy ? "text-green" : "text-red"}`}>
+              <span className={`${trade.category === Trade.Buy ? "text-primary" : "text-red"}`}>
                 {`$${trade.usdCost.toFixed(2)}`}
               </span>
             </span>{" "}
@@ -53,7 +53,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
       </div>
 
       <Link
-        className="text-light-green hover:text-cream transition ml-3"
+        className="text-light-primary hover:text-cream transition ml-3"
         href={`${
           trade.chain === Chain.Eth
             ? `${etherscanUrl}/tx/${trade.transactionHash}`

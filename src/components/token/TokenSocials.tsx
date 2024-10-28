@@ -24,7 +24,7 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
   };
 
   const handleShareX = () => {
-    post(`Ape $${token.ticker} with me on @frogdotfun ${window.location.href}`);
+    post(`Ape $${token.ticker} with me on @memepoolsx ${window.location.href}`);
   };
 
   return (

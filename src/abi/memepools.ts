@@ -1,4 +1,4 @@
-export const frogFunAbi = [
+export const memepoolsAbi = [
   {
     inputs: [],
     stateMutability: "nonpayable",

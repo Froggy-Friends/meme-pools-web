@@ -1,4 +1,4 @@
-import { frogFunAbi } from "@/abi/frogFun";
+import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress, ethChain, rpcUrl } from "@/config/env";
 import { Token } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
@@ -15,7 +15,7 @@ export default function useTokenInfo(token: Token) {
   const getTokenInfo = useCallback(async () => {
     const tokenInfo = (await publicClient.readContract({
       address: contractAddress,
-      abi: frogFunAbi,
+      abi: memepoolsAbi,
       functionName: "tokenInfos",
       args: [token.tokenAddress],
     })) as any[];

@@ -1,5 +1,5 @@
 import { useAccount, useReadContracts } from "wagmi";
-import { frogFunTokenAbi } from "@/abi/frogFunToken";
+import { memepoolsTokenAbi } from "@/abi/memepoolsToken";
 import { Address, formatUnits } from "viem";
 
 export default function useTokenBalance(
@@ -12,7 +12,7 @@ export default function useTokenBalance(
     contracts: [
       {
         address: tokenAddress,
-        abi: frogFunTokenAbi,
+        abi: memepoolsTokenAbi,
         functionName: "balanceOf",
         chainId: chainId,
         args: [address],

@@ -1,4 +1,4 @@
-import { frogFunTokenAbi } from "@/abi/frogFunToken";
+import { memepoolsTokenAbi } from "@/abi/memepoolsToken";
 import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { maxTotalSupply } from "@/lib/constants";
@@ -8,9 +8,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { parseUnits } from "viem";
 
-export default function useApproveToken(tokenAddress: string, onSwapModalClose: () => void) {
+export default function useApproveToken(
+  tokenAddress: string,
+  onSwapModalClose: () => void
+) {
   const signer = useEthersSigner();
-  const contract = new Contract(tokenAddress, frogFunTokenAbi, signer);
+  const contract = new Contract(tokenAddress, memepoolsTokenAbi, signer);
   const [approveTxStatus, setApproveTxStatus] = useState<TxStatus>("idle");
   const [approveTxHash, setApproveTxHash] = useState<string | null>(null);
 

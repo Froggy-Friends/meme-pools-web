@@ -63,7 +63,7 @@ export default function Spotlight() {
           <div className="flex items-center justify-between mb-4 tablet:mb-6">
             <h3 className="text-2xl tablet:text-4xl">Spotlight</h3>
             <div className="flex items-center gap-x-1">
-              <div className="w-2 h-2 rounded-full bg-green animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               <p>LIVE</p>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default function Spotlight() {
 
               <Link
                 href={`${chain.name}/token/${token.tokenAddress}`}
-                className="hidden tablet:block text-2xl font-proximaSoftBold text-white/80 hover:text-white transition tablet:mb-2"
+                className="hidden tablet:block text-2xl font-allumiBold text-white/80 hover:text-white transition tablet:mb-2"
               >
                 ${token.ticker}
               </Link>
