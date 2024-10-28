@@ -1,10 +1,11 @@
 "use server";
 
+import { getVotesByTokenId } from "@/actions/token/actions";
 import { memepoolsApi } from "@/config/env";
 import prisma from "@/lib/prisma";
 import { TokenWithCreator } from "@/lib/types";
 import { TokenFilter, TokenVoteStatus } from "@/models/token";
-import { TokenWithVotes } from "@/types/token/types";
+import { TokenSearchResult, TokenWithVotes } from "@/types/token/types";
 
 export const checkTokenNameExists = async (name: string) => {
   const exists = !!(await prisma.token.findFirst({
@@ -137,40 +138,35 @@ export const searchTokens = async (search: string) => {
       _relevance: {
         fields: ["name", "ticker"],
         search: search,
-        sort: "asc",
-      },
-    },
-    include: {
-      _count: {
-        select: {
-          TokenVote: {
-            where: {
-              status: "upvote",
-            },
-          },
-        },
+        sort: "desc",
       },
     },
   });
 
-  return tokens;
+  return Promise.all(tokens.map(async token => {
+    const voteCounts = await getVotesByTokenId(token.id);
+    return {
+      ...token,
+      voteCount: voteCounts.upvotes - voteCounts.downvotes,
+    };
+  }));
 };
 
-export const searchTokensByCa = async (contractAddress: string) => {
+export const searchTokensByCa = async (contractAddress: string): Promise<TokenSearchResult | null> => {
   const token = await prisma.token.findFirst({
     where: {
       tokenAddress: contractAddress,
     },
-    include: {
-      _count: {
-        select: {
-          TokenVote: true,
-        },
-      },
-    },
   });
 
-  return token;
+  if (!token) return null;
+
+  const voteCounts = await getVotesByTokenId(token.id);
+
+  return {
+    ...token,
+    voteCount: voteCounts.upvotes - voteCounts.downvotes,
+  };
 };
 
 export const fetchTrades = async (tokenId: string) => {
