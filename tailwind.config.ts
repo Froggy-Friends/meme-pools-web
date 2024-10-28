@@ -58,7 +58,7 @@ const config: Config = {
             backgroundColor: "#131313",
           },
           "50%": {
-            backgroundColor: "#63aff5",
+            backgroundColor: "#2f5a8c",
           },
         },
       },

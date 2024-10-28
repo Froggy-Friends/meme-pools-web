@@ -7,13 +7,15 @@ import { Channel } from "@/models/channel";
 import TokenMeme from "./TokenMeme";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePostHog } from "posthog-js/react";
+import Link from "next/link";
 
 type TokenMemesProps = {
   tokenId: string;
   memes: MemeWithUser[];
+  tokenTicker: string;
 };
 
-export default function TokenMemes({ tokenId, memes }: TokenMemesProps) {
+export default function TokenMemes({ tokenId, memes, tokenTicker }: TokenMemesProps) {
   const queryClient = useQueryClient();
   const posthog = usePostHog();
 
@@ -47,6 +49,15 @@ export default function TokenMemes({ tokenId, memes }: TokenMemesProps) {
 
   return (
     <section className="flex flex-col">
+      {!data.length && (
+        <p className="ml-1">
+          Be the first to{" "}
+          <Link href="#post-meme" className="text-primary hover:text-light-primary transition">
+            post
+          </Link>{" "}
+          a ${tokenTicker} meme
+        </p>
+      )}
       {data.map(meme => {
         return <TokenMeme key={meme.id} meme={meme} />;
       })}

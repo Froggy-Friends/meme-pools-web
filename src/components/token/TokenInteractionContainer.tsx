@@ -13,6 +13,7 @@ type TokenInteractionContainerProps = {
   view: CommentAndTradesView;
   tokenAddress: string;
   tokenId: string;
+  tokenTicker: string;
   cachedUser: User | null;
 };
 
@@ -20,6 +21,7 @@ export default async function TokenInteractionContainer({
   view,
   tokenAddress,
   tokenId,
+  tokenTicker,
   cachedUser,
 }: TokenInteractionContainerProps) {
   const comments = await fetchComments(tokenId);
@@ -39,10 +41,22 @@ export default async function TokenInteractionContainer({
         </div>
         <div className="flex-grow overflow-y-auto p-2 laptop:px-6">
           {view === "comments" && (
-            <TokenComments comments={comments} cachedUser={cachedUser || null} tokenId={tokenId} />
+            <TokenComments
+              comments={comments}
+              cachedUser={cachedUser || null}
+              tokenId={tokenId}
+              tokenTicker={tokenTicker}
+            />
           )}
-          {view === "trades" && <TokenTrades trades={formattedTrades} tokenId={tokenId} tokenAddress={tokenAddress} />}
-          {view === "memes" && <TokenMemes tokenId={tokenId} memes={memes} />}
+          {view === "trades" && (
+            <TokenTrades
+              trades={formattedTrades}
+              tokenId={tokenId}
+              tokenAddress={tokenAddress}
+              tokenTicker={tokenTicker}
+            />
+          )}
+          {view === "memes" && <TokenMemes tokenId={tokenId} memes={memes} tokenTicker={tokenTicker} />}
         </div>
       </div>
 

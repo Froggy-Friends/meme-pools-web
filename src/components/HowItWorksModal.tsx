@@ -26,7 +26,7 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
           </ModalHeader>
           <ModalBody>
             <p>Memepools is making memecoins fun again</p>
-            <p>Every coing launched on Memepools has:</p>
+            <p>Every coin launched on Memepools has:</p>
             <ul className="list-disc pl-4">
               <li>Fair launch</li>
               <li>No presale</li>

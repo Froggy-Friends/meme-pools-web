@@ -61,6 +61,7 @@ export default function CommentForm({ tokenId }: CommentFormProps) {
       }}
       className="w-full desktop:w-[780px] h-72 flex flex-col mb-12 laptop:mb-24 p-3 laptop:p-6 bg-dark-gray rounded-xl"
       ref={formRef}
+      id="post-comment"
     >
       <textarea
         placeholder="Post a comment..."
