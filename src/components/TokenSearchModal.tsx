@@ -10,9 +10,10 @@ import { useDebouncedCallback } from "use-debounce";
 type TokenSearchModalProps = {
   isOpen: boolean;
   onOpenChange: () => void;
+  onClose: () => void;
 };
 
-export default function TokenSearchModal({ isOpen, onOpenChange }: TokenSearchModalProps) {
+export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: TokenSearchModalProps) {
   const [tokens, setTokens] = useState<TokenSearchResult[] | null>(null);
   const [token, setToken] = useState<TokenSearchResult | null>(null);
   const [caSearch, setCaSearch] = useState(false);
@@ -80,7 +81,7 @@ export default function TokenSearchModal({ isOpen, onOpenChange }: TokenSearchMo
                     <Switch
                       size="sm"
                       isSelected={caSearch}
-                      color="success"
+                      color="primary"
                       onValueChange={() => setCaSearch(!caSearch)}
                       classNames={{
                         wrapper: ["bg-white/50"],
@@ -102,14 +103,14 @@ export default function TokenSearchModal({ isOpen, onOpenChange }: TokenSearchMo
                 {!isLoading && !caSearch && (
                   <div className="mb-2">
                     {tokens?.map(token => {
-                      return <SearchTokenDisplay key={token.id} token={token} />;
+                      return <SearchTokenDisplay key={token.id} token={token} onClose={onClose} />;
                     })}
                   </div>
                 )}
 
                 {!isLoading && caSearch && token && (
                   <div className="mb-2">
-                    <SearchTokenDisplay token={token} />
+                    <SearchTokenDisplay token={token} onClose={onClose} />
                   </div>
                 )}
 

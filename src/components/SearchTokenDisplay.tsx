@@ -6,9 +6,10 @@ import Link from "next/link";
 
 type SearchTokenDisplayProps = {
   token: TokenSearchResult;
+  onClose: () => void;
 };
 
-export default function SearchTokenDisplay({ token }: SearchTokenDisplayProps) {
+export default function SearchTokenDisplay({ token, onClose }: SearchTokenDisplayProps) {
   const { chain } = useChain();
   const { tokenInfo } = useTokenInfo(token);
 
@@ -16,6 +17,7 @@ export default function SearchTokenDisplay({ token }: SearchTokenDisplayProps) {
     <Link
       href={`/${chain.name}/token/${token.tokenAddress}`}
       className="flex justify-between items-center h-12 w-full px-4 rounded-md hover:bg-dark-primary transition"
+      onClick={onClose}
     >
       <div className="flex gap-x-2 items-center">
         <Image src={token.image} alt="token-image" height={40} width={40} className="rounded-md" />
