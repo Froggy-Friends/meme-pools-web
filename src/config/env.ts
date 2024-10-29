@@ -12,7 +12,7 @@ export const memepoolsApi = isProd
 // evm
 export const contractAddress: Address = isProd
   ? "0x0"
-  : "0x8317301D9Bb8B681D3Ac07ca2Ea71C0621799098";
+  : "0xAbb58eed276eDBFD5a2A1E47Be2F8556039ce90D";
 export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = isProd ? 8453 : 84532;
 export const ethChain = isProd ? mainnet : sepolia;
