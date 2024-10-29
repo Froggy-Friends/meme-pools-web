@@ -31,13 +31,13 @@ export default function useCastVote(tokenId: string, userId: string) {
     const downvotesChannel = pusher.subscribe(Channel.Downvotes);
 
     upvotesChannel.bind(tokenId, (newData: TokenVoteData) => {
-      queryClient.setQueryData(["votes", tokenId], newData);
+      queryClient.invalidateQueries({ queryKey: ["votes", tokenId] });
 
       posthog.capture("token_upvoted", { tokenId: tokenId, vote: newData });
     });
 
     downvotesChannel.bind(tokenId, (newData: TokenVoteData) => {
-      queryClient.setQueryData(["votes", tokenId], newData);
+      queryClient.invalidateQueries({ queryKey: ["votes", tokenId] });
 
       posthog.capture("token_downvoted", { tokenId: tokenId, vote: newData });
     });
