@@ -123,5 +123,6 @@ export type TokenInfo = {
   price: bigint;
   name: string;
   symbol: string;
+  readyForLp: boolean;
   liquidityPoolSeeded: boolean;
 };

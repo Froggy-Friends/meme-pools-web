@@ -36,7 +36,8 @@ export default function useTokenInfo(token: Token) {
       price: tokenInfo[7],
       name: tokenInfo[8],
       symbol: tokenInfo[9],
-      liquidityPoolSeeded: tokenInfo[10],
+      readyForLp: tokenInfo[10],
+      liquidityPoolSeeded: tokenInfo[11],
     };
 
     return result;
