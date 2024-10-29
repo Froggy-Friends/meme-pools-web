@@ -19,6 +19,7 @@ export default function useApproveToken(
 
   const approveToken = async () => {
     setApproveTxStatus("idle");
+    setApproveTxHash(null);
 
     try {
       setApproveTxStatus("pending");
@@ -36,5 +37,11 @@ export default function useApproveToken(
     }
   };
 
-  return { approveToken, approveTxStatus, approveTxHash };
+  return {
+    approveToken,
+    approveTxStatus,
+    setApproveTxStatus,
+    approveTxHash,
+    setApproveTxHash,
+  };
 }

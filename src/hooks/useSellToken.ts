@@ -13,6 +13,9 @@ export default function useSellToken(onSwapModalClose: () => void) {
   const [sellTxHash, setSellTxHash] = useState<string | null>(null);
 
   const sellToken = async (tokenAddress: string, amount: bigint) => {
+    setSellTxStatus("idle");
+    setSellTxHash(null);
+
     try {
       const tx = await contract.sellTokens(tokenAddress, amount);
       setSellTxHash(tx.hash);
@@ -25,14 +28,8 @@ export default function useSellToken(onSwapModalClose: () => void) {
       toast.error("Sell token error");
       console.log(error);
       onSwapModalClose();
-    } finally {
-      setTimeout(() => {
-        setSellTxStatus("idle");
-        setSellTxHash(null);
-        onSwapModalClose();
-      }, 10000);
     }
   };
 
-  return { sellToken, sellTxStatus, sellTxHash };
+  return { sellToken, sellTxStatus, sellTxHash, setSellTxHash };
 }
