@@ -31,6 +31,7 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
     <div className="flex gap-x-1 items-center mt-2 laptop:mt-4">
       <Link
         href={token.telegram || ""}
+        target="_blank"
         className={`${linkStyles} ${
           token.telegram ? "cursor-pointer hover:text-white hover:scale-[1.02]" : "cursor-default"
         } transition-all`}
@@ -39,6 +40,7 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
       </Link>
       <Link
         href={token.website || ""}
+        target="_blank"
         className={`${linkStyles} ${
           token.website ? "cursor-pointer hover:text-white hover:scale-[1.02]" : "cursor-default"
         } transition-all`}
@@ -47,6 +49,7 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
       </Link>
       <Link
         href={token.twitter || ""}
+        target="_blank"
         className={`${linkStyles} ${
           token.twitter ? "cursor-pointer hover:text-white hover:scale-[1.02]" : "cursor-default"
         } transition-all`}
