@@ -28,7 +28,6 @@ import useAllowance from "@/hooks/useAllowance";
 import useApproveToken from "@/hooks/useApproveToken";
 import { formatNumber } from "@/lib/format";
 import { useAccount } from "wagmi";
-import toast from "react-hot-toast";
 import useTokenInfo from "@/hooks/useTokenInfo";
 
 export enum TradingTab {
@@ -45,7 +44,7 @@ type TradingWidgetProps = {
 const PURCHASE_AMOUNTS_ETH = [0.25, 0.5, 0.75, 1];
 const PURCHASE_AMOUNTS_TOKENS = [1, 2.5, 5, 10];
 const SELL_AMOUNTS = [25, 50, 75, 100];
-const rule = /^\d*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
+const rule = /^[\d,]*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
 
 export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps) {
   const { ticker, tokenAddress } = token;
@@ -70,16 +69,19 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
   const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
   const [showPresets, setShowPresets] = useState(false);
-  const { buyToken, buyTxStatus, buyTxHash } = useBuyToken(onSwapModalClose);
+  const { buyToken, buyTxStatus, buyTxHash, setBuyTxHash } = useBuyToken(onSwapModalClose);
   const { buyPriceTokens, buyPriceEth } = useBuyPrice();
-  const { sellToken, sellTxStatus, sellTxHash } = useSellToken(onSwapModalClose);
+  const { sellToken, sellTxStatus, sellTxHash, setSellTxHash } = useSellToken(onSwapModalClose);
   const getSellPrice = useSellPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
   const { isApproved, refetchAllowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
-  const { approveToken, approveTxStatus, approveTxHash } = useApproveToken(tokenAddress, onSwapModalClose);
+  const { approveToken, approveTxStatus, setApproveTxStatus, approveTxHash, setApproveTxHash } = useApproveToken(
+    tokenAddress,
+    onSwapModalClose
+  );
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 
   const debouncedBuyCost = useDebouncedCallback(async (amount: string) => {
@@ -119,7 +121,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   };
 
   const handleSellAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+    const inputValue = e.target.value.replace(/,/g, "");
 
     if (inputValue === "" || rule.test(inputValue)) {
       setSellAmount(inputValue);
@@ -148,6 +150,10 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     setSellAmount("");
     setBuyCost(BigInt(0));
     setSellPayout(BigInt(0));
+    setApproveTxStatus("idle");
+    setApproveTxHash(null);
+    setBuyTxHash(null);
+    setSellTxHash(null);
   };
 
   const buyTokens = async () => {
@@ -293,7 +299,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
                 }}
                 placeholder="0.0"
-                value={sellAmount}
+                value={sellAmount ? formatNumber(Math.round(Number(sellAmount))) : ""}
                 onChange={handleSellAmountChange}
                 type="text"
                 radius="full"
@@ -420,7 +426,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
             ? buyAmount
             : activeTab === TradingTab.BUY
             ? Number(formatUnits(buyCost, 18)).toFixed(6)
-            : formatNumber(Number(sellAmount))
+            : formatNumber(Math.round(Number(sellAmount)))
         }
         fromTicker={activeTab === TradingTab.BUY ? "ETH" : token.ticker}
         toImageUrl={activeTab === TradingTab.SELL ? ethLogo : token.image}
