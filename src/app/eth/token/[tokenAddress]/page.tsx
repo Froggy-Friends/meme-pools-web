@@ -14,8 +14,8 @@ import { Chain } from "@/models/chain";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
 import TokenActions from "@/components/token/TokenActions";
-import { Address } from "viem";
 import TokenInteractionContainer from "../../../../components/token/TokenInteractionContainer";
+import LiquidityPoolBanner from "@/components/token/LiquidityPoolBanner";
 
 const DynamicTokenChart = dynamic(() => import("../../../../components/token/TokenChart"), {
   ssr: false,
@@ -46,6 +46,8 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
   return (
     <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 tablet:px-4">
       <Header chain={Chain.Eth} />
+
+      <LiquidityPoolBanner token={token} />
 
       <TokenInfo token={token} creator={creator} />
 
