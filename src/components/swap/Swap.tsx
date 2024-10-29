@@ -397,7 +397,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
             disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === "" || !isConnected}
             className={`flex items-center justify-center w-full h-[40px] p-4 rounded-3xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
               activeTab === TradingTab.BUY
-                ? "bg-primary text-black hover:bg-light-primary"
+                ? "bg-green text-black hover:bg-green/70"
                 : "bg-red text-white hover:bg-rose"
             }`}
           >
