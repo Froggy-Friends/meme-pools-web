@@ -59,7 +59,10 @@ export default function SwapModal({
         <ModalBody className="flex flex-col justify-center items-center gap-8">
           <div className="flex gap-x-8 items-center">
             <div className="flex flex-col items-center gap-y-8">
-              {txStatus === "idle" || txStatus === "pending" || approveTxStatus === "pending" ? (
+              {txStatus === "idle" ||
+              txStatus === "pending" ||
+              approveTxStatus === "pending" ||
+              (approveTxStatus === "idle" && !isApproved) ? (
                 <CircularProgress
                   classNames={{
                     svg: "w-24 h-24 drop-shadow-md",
@@ -84,7 +87,10 @@ export default function SwapModal({
                   </span>
                 )}
                 <span>
-                  {txStatus === "idle" || txStatus === "pending" || approveTxStatus === "pending"
+                  {txStatus === "idle" ||
+                  txStatus === "pending" ||
+                  approveTxStatus === "pending" ||
+                  (approveTxStatus === "idle" && !isApproved)
                     ? "Pending"
                     : "Complete"}
                 </span>
@@ -106,35 +112,40 @@ export default function SwapModal({
               </div>
             </div>
           )}
-          {approveTxStatus !== "idle" && approveTxStatus !== "error" && txStatus !== "pending" && (
-            <div className="flex flex-col gap-y-2 items-start">
-              <div className="flex gap-x-2 items-center justify-between">
-                <FaCheckCircle size={25} className="text-primary" />
-                <p>
-                  {toAmount} ${formatTicker(toTicker)} Buy Complete
-                </p>
-              </div>
-              {approveTxStatus === "completed" && (
-                <div className="flex gap-x-2 justify-between">
+          {approveTxStatus !== "idle" &&
+            approveTxStatus !== "error" &&
+            txStatus !== "pending" &&
+            txStatus !== "idle" && (
+              <div className="flex flex-col gap-y-2 items-start">
+                <div className="flex gap-x-2 items-center justify-between">
                   <FaCheckCircle size={25} className="text-primary" />
-                  <p>Approval Complete</p>
+                  <p>
+                    {toAmount} ${formatTicker(toTicker)} {activeTab === TradingTab.BUY ? "Buy" : "Sell"} Complete
+                  </p>
                 </div>
-              )}
-            </div>
-          )}
+                {approveTxStatus === "completed" && (
+                  <div className="flex gap-x-2 justify-between">
+                    <FaCheckCircle size={25} className="text-primary" />
+                    <p>Approval Complete</p>
+                  </div>
+                )}
+              </div>
+            )}
         </ModalBody>
         <ModalFooter className="flex justify-center">
           <p className="text-light-gray">
-            {(txHash || approveTxHash) && approveTxStatus !== "pending" ? (
+            {txHash && approveTxStatus !== "pending" && approveTxStatus !== "completed" ? (
               <>
                 See confirmation{" "}
-                <Link
-                  href={`${etherscanUrl}/tx/${approveTxStatus === "completed" ? approveTxHash : txHash}`}
-                  target="_blank"
-                >
-                  <span className="text-light-gray hover:text-cream transition">
-                    {formatAddress(approveTxStatus === "completed" ? approveTxHash : txHash)}
-                  </span>
+                <Link href={`${etherscanUrl}/tx/${txHash}`} target="_blank">
+                  <span className="text-light-gray hover:text-cream transition">{formatAddress(txHash)}</span>
+                </Link>
+              </>
+            ) : approveTxHash ? (
+              <>
+                See confirmation{" "}
+                <Link href={`${etherscanUrl}/tx/${approveTxHash}`} target="_blank">
+                  <span className="text-light-gray hover:text-cream transition">{formatAddress(approveTxHash)}</span>
                 </Link>
               </>
             ) : (
