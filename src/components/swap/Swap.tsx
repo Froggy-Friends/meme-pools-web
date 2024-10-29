@@ -293,7 +293,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
                 }}
                 placeholder="0.0"
-                value={Number(sellAmount).toFixed(2)}
+                value={sellAmount}
                 onChange={handleSellAmountChange}
                 type="text"
                 radius="full"
@@ -358,10 +358,10 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   onClick={() => {
                     tokenInfo &&
                       tokenInfo.availableSupply &&
-                      setBuyAmount(tokensByPercentage(amount, Number(formatUnits(tokenInfo.availableSupply, 18))));
+                      setBuyAmount(tokensByPercentage(amount, tokenInfo.availableSupply));
                     tokenInfo &&
                       tokenInfo.availableSupply &&
-                      debouncedBuyCost(tokensByPercentage(amount, Number(formatUnits(tokenInfo.availableSupply, 18))));
+                      debouncedBuyCost(tokensByPercentage(amount, tokenInfo.availableSupply));
                   }}
                   disabled={!isConnected}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl transition ${
@@ -397,7 +397,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
             disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === "" || !isConnected}
             className={`flex items-center justify-center w-full h-[40px] p-4 rounded-3xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
               activeTab === TradingTab.BUY
-                ? "bg-primary text-black hover:bg-light-primary"
+                ? "bg-green text-black hover:bg-[#c2f5d0]"
                 : "bg-red text-white hover:bg-rose"
             }`}
           >

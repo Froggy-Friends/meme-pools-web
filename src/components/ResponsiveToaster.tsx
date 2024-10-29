@@ -31,7 +31,8 @@ const ResponsiveToaster = () => {
         error: {
           style: {
             backgroundColor: "#e63946",
-            color: "#000",
+            color: "#fff",
+            fontWeight: "bold",
           },
           icon: null,
         },

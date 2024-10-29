@@ -77,7 +77,9 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
 };
 
 export const fetchTopVotesTokens = async () => {
-  const response = await fetch(`${memepoolsApi}/token/votes?page=1`);
+  const response = await fetch(`${memepoolsApi}/token/votes?page=1`, {
+    cache: "no-store",
+  });
 
   const tokens: TokenWithVotes[] = await response.json();
 
