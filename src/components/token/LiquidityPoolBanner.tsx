@@ -12,11 +12,11 @@ export default function LiquidityPoolBanner({ token }: LiquidityPoolBannerProps)
 
   return (
     <>
-      {/* {tokenInfo?.readyForLp && ( */}
+      {tokenInfo?.readyForLp && (
         <section className="w-full h-12 tablet:h-20 mb-8 tablet:mb-12 flex items-center justify-center bg-primary rounded-lg tablet:text-3xl">
           <p className="text-black">All coins sold, liquidity pool coming soon!</p>
         </section>
-      {/* )} */}
+      )}
     </>
   );
 }
