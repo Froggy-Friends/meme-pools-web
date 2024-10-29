@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import CreateCoinForm from "@/components/create/CreateCoinForm";
 import Footer from "@/components/Footer";
 import { Chain } from "@/models/chain";
-import Image from "next/image";
 
 export default function CreateCoin() {
   return (
@@ -11,7 +10,7 @@ export default function CreateCoin() {
 
       <div className="flex justify-center items-center w-full">
         <div className="flex items-center mt-4 gap-x-4">
-          <h1 className="text-3xl tablet:text-4xl laptop:text-5xl">
+          <h1 className="text-[28px] tablet:text-4xl laptop:text-5xl">
             Create a coin on{" "}
             <span className="font-allumiBold text-primary">
               <span>Memepools</span>
