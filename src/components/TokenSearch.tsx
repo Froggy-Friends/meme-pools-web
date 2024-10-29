@@ -7,7 +7,7 @@ import { MdKeyboardCommandKey } from "react-icons/md";
 import { useEffect } from "react";
 
 export default function TokenSearch() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   useEffect(() => {
     const down = (e: any) => {
@@ -39,7 +39,7 @@ export default function TokenSearch() {
           <p className="font-semibold text-sm">K</p>
         </div>
       </button>
-      <TokenSearchModal isOpen={isOpen} onOpenChange={onOpenChange} />
+      <TokenSearchModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} />
     </section>
   );
 }

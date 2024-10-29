@@ -6,12 +6,14 @@ import useVotes from "@/hooks/useVotes";
 import { TokenVoteStatus } from "@/models/token";
 import { PiArrowFatUpFill, PiArrowFatDownFill, PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { User } from "@prisma/client";
+import { useAccount } from "wagmi";
 
 type VoteCountProps = {
   tokenId: string;
   cachedUser: User | null;
 };
 export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
+  const { isConnected } = useAccount();
   const { votes } = useVotes(tokenId);
   const { currentUser } = useUser();
   const { castVote, isCastingVote } = useCastVote(tokenId, cachedUser?.id! || currentUser?.id!);
@@ -37,19 +39,19 @@ export default function TokenVote({ tokenId, cachedUser }: VoteCountProps) {
     <div className="flex gap-1">
       <button
         onClick={() => handleVote(TokenVoteStatus.UPVOTE)}
-        disabled={isCastingVote}
+        disabled={isCastingVote || !isConnected}
         className="flex gap-x-1 items-center"
       >
         {voteStatus === TokenVoteStatus.UPVOTE ? (
-          <PiArrowFatUpFill className="w-5 h-5 laptop:w-7 laptop:h-7 text-blue hover:scale-[1.03] transition" />
+          <PiArrowFatUpFill className="w-5 h-5 laptop:w-7 laptop:h-7 text-primary hover:scale-[1.03] transition" />
         ) : (
-          <PiArrowFatUpLight className="w-5 h-5 laptop:w-7 laptop:h-7 text-blue hover:scale-[1.03] transition" />
+          <PiArrowFatUpLight className="w-5 h-5 laptop:w-7 laptop:h-7 text-primary hover:scale-[1.03] transition" />
         )}
         {voteCount()}
       </button>
       <button
         onClick={() => handleVote(TokenVoteStatus.DOWNVOTE)}
-        disabled={isCastingVote}
+        disabled={isCastingVote || !isConnected}
         className="flex gap-x-1 items-center"
       >
         {voteStatus === TokenVoteStatus.DOWNVOTE ? (

@@ -36,5 +36,5 @@ export default function useBuyToken(onSwapModalClose: () => void) {
     }
   };
 
-  return { buyToken, buyTxStatus, buyTxHash };
+  return { buyToken, buyTxStatus, buyTxHash, setBuyTxHash };
 }

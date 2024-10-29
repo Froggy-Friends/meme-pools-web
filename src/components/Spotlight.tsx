@@ -1,6 +1,5 @@
 "use client";
 
-import useToken from "@/hooks/useToken";
 import { Channel } from "@/models/channel";
 import { FormattedTrade } from "@/types/token/types";
 import Image from "next/image";
@@ -12,10 +11,11 @@ import { LiveFeedTradeNotification } from "./LiveFeedTradeNotification";
 import { formatTicker } from "@/lib/formatTicker";
 import { useChain } from "@/context/chain";
 import Link from "next/link";
+import useTokenByAddress from "@/hooks/useTokenByAddress";
 
 export default function Spotlight() {
   const payload = useFeatureFlagPayload("spotlight");
-  const { token } = useToken(payload as string);
+  const { token } = useTokenByAddress(payload as string);
   const { chain } = useChain();
   const [latestTrade, setLatestTrade] = useState<FormattedTrade | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -47,6 +47,14 @@ export default function Spotlight() {
       setTimeout(() => {
         setIsAnimating(false);
       }, 500);
+
+      setTimeout(() => {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setLatestTrade(null);
+          setIsAnimating(false);
+        }, 350);
+      }, 5000);
     });
 
     return () => {
