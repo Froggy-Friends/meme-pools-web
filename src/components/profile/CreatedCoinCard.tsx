@@ -3,7 +3,7 @@
 import { useChain } from "@/context/chain";
 import useLaunchCoin from "@/hooks/useLaunchCoin";
 import useTokenInfo from "@/hooks/useTokenInfo";
-import { formatNumber } from "@/lib/format";
+import { formatMarketcap } from "@/lib/formatMarketcap";
 import { formatTicker } from "@/lib/formatTicker";
 import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import { cn, Link, Progress } from "@nextui-org/react";
@@ -28,12 +28,12 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
           <Image src={token.image} alt={token.name} width={50} height={50} className="rounded-full" />
           <div>
             <Link
-              href={`${chain.name}/token/${token.tokenAddress}`}
-              className="text-xl text-white hover:underline transition"
+              href={`/${chain.name}/token/${token.tokenAddress}`}
+              className="text-xl text-white hover:text-light-primary transition"
             >
               ${formatTicker(token.ticker)}
             </Link>
-            <p className="text-sm text-white/75">${formatNumber(Math.round(tokenInfo?.marketcap || 0))} MC</p>
+            <p className="text-sm text-white/75">${formatMarketcap(tokenInfo?.marketcap || 0)} MC</p>
           </div>
         </div>
 

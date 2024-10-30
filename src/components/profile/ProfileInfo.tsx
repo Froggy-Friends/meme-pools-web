@@ -8,7 +8,7 @@ import useUser from "@/hooks/useUser";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { Address } from "viem";
-import useRewardTier from "@/hooks/useRewardTier";
+import useCreatorRewards from "@/hooks/useCreatorRewards";
 
 type ProfileInfoParams = {
   profileUser: User;
@@ -17,7 +17,7 @@ type ProfileInfoParams = {
 };
 
 export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: ProfileInfoParams) {
-  const rewardTier = useRewardTier(profileUser.ethAddress as Address);
+  const { rewardAmount } = useCreatorRewards(profileUser.ethAddress as Address);
   const { isConnected } = useAccount();
   const { currentUser } = useUser();
   const disabled = currentUser?.id !== profileUser.id;
@@ -36,7 +36,7 @@ export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: Pr
         <div className="flex items-center gap-x-5">
           <p className="text-[48px] font-semibold">{getUserDisplayName(profileUser.name)}</p>
           <p className="text-black font-bold bg-green rounded-3xl px-2 py-1 text-xs hidden tablet:block">
-            {rewardTier === "tier one" ? "$500" : rewardTier === "tier two" ? "$1000" : "$1500"} Rewards
+            ${rewardAmount} Rewards
           </p>
         </div>
         <div className="flex gap-x-4 items-center">
@@ -49,7 +49,7 @@ export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: Pr
             />
           )}
           <p className="text-black font-bold bg-green rounded-3xl px-2 py-1 text-xs tablet:hidden">
-            {rewardTier === "tier one" ? "$500" : rewardTier === "tier two" ? "$1000" : "$1500"} Rewards
+            ${rewardAmount} Rewards
           </p>
         </div>
       </div>
