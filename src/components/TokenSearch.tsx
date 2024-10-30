@@ -25,7 +25,7 @@ export default function TokenSearch() {
     <section className="flex items-center ml-12 tablet:ml-0 w-[200px] tablet:w-[280px] desktop:w-[330px]">
       <button
         onClick={e => onOpen()}
-        className="flex items-center justify-between h-8 w-full px-4 border-[0.25px] border-white/[5%] rounded-lg bg-dark-gray hover:bg-gray transition"
+        className="flex items-center justify-between h-8 w-full px-4 border-[0.25px] border-white/[5%] rounded-xl bg-dark-gray hover:bg-gray transition"
       >
         <div className="flex items-center gap-x-4">
           <FaMagnifyingGlass size={16} />

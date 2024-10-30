@@ -140,7 +140,7 @@ export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) 
             disabled={userExists}
             pendingText="SAVING..."
             className={cn(
-              "self-center flex justify-center items-center text-lg bg-primary text-dark font-proximaSoftBold h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-12 laptop:mt-20 laptop:mb-24 laptop:mr-6 rounded-3xl hover:bg-light-primary active:scale-[0.98] transition",
+              "self-center flex justify-center items-center text-lg bg-primary text-dark font-proximaSoftBold h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-12 laptop:mt-20 laptop:mb-24 laptop:mr-6 rounded-xl hover:bg-light-primary active:scale-[0.98] transition",
               userExists && "hover:bg-primary"
             )}
           >

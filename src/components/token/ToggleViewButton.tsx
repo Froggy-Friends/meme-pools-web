@@ -27,7 +27,7 @@ export default function ToggleViewButton({ name, tokenAddress, view }: ToggleVie
       href={href}
       onClick={handleClick}
       className={cn(
-        "bg-dark rounded-3xl py-[0.375rem] px-3 text-white hover:bg-gray transition",
+        "bg-dark rounded-xl py-[0.375rem] px-3 text-white hover:bg-gray transition",
         isActive && "bg-dark-primary hover:bg-dark-primary cursor-default"
       )}
     >
