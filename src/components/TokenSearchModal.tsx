@@ -16,27 +16,34 @@ type TokenSearchModalProps = {
 export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: TokenSearchModalProps) {
   const [tokens, setTokens] = useState<TokenSearchResult[] | null>(null);
   const [token, setToken] = useState<TokenSearchResult | null>(null);
-  const [caSearch, setCaSearch] = useState(false);
+  const [caSearch, setCaSearch] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [noResults, setNoResults] = useState(false);
 
   const debounced = useDebouncedCallback(async value => {
+    if (value === "") {
+      setTokens(null);
+      setToken(null);
+      setNoResults(false);
+      return;
+    }
+
     setIsLoading(true);
+    setNoResults(false);
     if (!caSearch) {
       const tokens = await searchTokens(value);
       setTokens(tokens);
+      if (tokens.length === 0) setNoResults(true);
     } else {
       const token = await searchTokensByCa(value);
       setToken(token);
+      if (!token) setNoResults(true);
     }
     setIsLoading(false);
   }, 500);
 
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === "") {
-      setTokens(null);
-      return;
-    }
-    await debounced(e.target.value);
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    debounced(e.target.value);
   };
 
   return (
@@ -47,10 +54,15 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
           onOpenChange();
           setToken(null);
           setTokens(null);
+          setNoResults(false);
+          setCaSearch(true);
         }}
         size="2xl"
         className="bg-dark max-h-[500px] min-h-[175px] overflow-y-auto mt-12"
         placement="top"
+        classNames={{
+          body: ["p-2 tablet:p-6"],
+        }}
       >
         <ModalContent>
           {onClose => (
@@ -62,7 +74,7 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
                     type="text"
                     name="search"
                     id="search"
-                    placeholder="search"
+                    placeholder={caSearch ? "What's the CA?" : "What's the ticker?"}
                     autoComplete="off"
                     autoFocus
                     onChange={e => {
@@ -91,16 +103,17 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center h-12 px-4">
+                <div className="flex justify-between items-center h-12 px-2">
                   <p>Token</p>
 
-                  <div className="flex w-1/4 justify-between">
-                    <p>MC</p>
-                    <p>Votes</p>
+                  <div className="flex max-w-[65%] tablet:w-1/2 justify-between">
+                    <p className="w-24 text-right">Date</p>
+                    <p className="w-24 text-right">Time</p>
+                    <p className="w-16 text-right">MC</p>
                   </div>
                 </div>
 
-                {!isLoading && !caSearch && (
+                {!isLoading && !caSearch && tokens && (
                   <div className="mb-2">
                     {tokens?.map(token => {
                       return <SearchTokenDisplay key={token.id} token={token} onClose={onClose} />;
@@ -112,6 +125,10 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
                   <div className="mb-2">
                     <SearchTokenDisplay token={token} onClose={onClose} />
                   </div>
+                )}
+
+                {noResults && !isLoading && (
+                  <p className={`mb-2 ml-2 ${!caSearch && "-mt-5"}`}>No search results match, try another search</p>
                 )}
 
                 {isLoading && <SearchSkeleton caSearch={caSearch} />}

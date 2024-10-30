@@ -14,8 +14,9 @@ import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Progress } from "@nextui-org/react";
 import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
-import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import useTokenInfo from "@/hooks/useTokenInfo";
+import { formatMarketcap } from "@/lib/formatMarketcap";
+import { defaultProfileAvatarUrl } from "@/config/user";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator | TokenWithVotes;
@@ -74,32 +75,33 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
         <div className="flex flex-col px-3 mt-3">
           <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
             <div className="flex items-center gap-1 laptop:gap-2.5">
-              <span className="text-white/75 hover:text-white transition">{token.name}</span>
+              <span className="text-white/75 hover:text-white transition truncate max-w-[100px] tablet:max-w-[130px]">{token.name}</span>
               <span className="bg-primary rounded-[4px] text-xs font-bold text-black px-2 py-1 hover:bg-light-primary transition">
                 ${token.ticker}
               </span>
             </div>
           </Link>
+        </div>
 
-          <div className="flex items-center overflow-hidden gap-1 text-xs my-2">
-            <span className="block w-max">Created by:</span>
-            <Link
-              href={`/profile/${token.user.name}`}
-              className="text-light-primary overflow-hidden block w-1/2 underline hover:text-white transition"
-            >
-              {getUserDisplayName(token.user.name)}
-            </Link>
+        <div className="px-3 mt-2">
+          <div className="flex flex-start gap-2">
+            <Image
+              src={token.user.imageUrl || defaultProfileAvatarUrl}
+              alt="token-image"
+              height={25}
+              width={25}
+              className="rounded-full shrink-0 self-start" 
+            />
+            <p className="text-light-gray text-sm break-words">{token.description}</p>
           </div>
         </div>
 
-        <p className="flex-grow overflow-y-auto text-light-gray px-3 mb-1">{token.description}</p>
-
-        <div className="px-3 pb-3">
+        <div className="px-3 pb-3 mt-auto">
           <div className="flex items-center justify-between">
-            <div className="text-light-gray text-[11px] flex items-center gap-1">
-              MC:
-              <span className="text-white">${tokenInfo?.marketcap?.toFixed(2)}</span> (
-              {getBondingCurvePercentage(tokenInfo?.tokensSold)}%)
+            <div className="text-light-gray text-sm flex items-center gap-1">
+              MC
+              <span className="text-white">${formatMarketcap(tokenInfo?.marketcap || 0)}</span> (
+              {Math.round(getBondingCurvePercentage(tokenInfo?.tokensSold))}%)
             </div>
             <div className="flex items-center gap-3">
               {token.twitter && (
