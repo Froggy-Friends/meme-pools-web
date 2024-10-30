@@ -42,7 +42,7 @@ export default function CreatorRewards() {
           >
             Frogs
           </Link>{" "}
-          to earn silver and gold tier rewards.
+          to earn exclusive silver and gold tier rewards.
         </p>
       </div>
 
