@@ -18,6 +18,11 @@ const PostHogPageView = dynamic(() => import("../components/PotHogPageView"), { 
 export const metadata: Metadata = {
   title: "Memepools",
   description: "Launch a tradeable coin instantly in one click on memepools.com",
+  icons: {
+    icon: [
+      { url: "/memepools.png", type: "image/png", sizes: "32x32" },
+    ],
+  },
 };
 
 export default async function RootLayout({
