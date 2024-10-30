@@ -41,6 +41,7 @@ const config: Config = {
         proximaSoft: ["ProximaSoft"],
         proximaSoftBold: ["ProximaSoftBold"],
         allumiBold: ["AllumiBold"],
+        proximaNova: ["ProximaNova"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

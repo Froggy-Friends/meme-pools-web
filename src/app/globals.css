@@ -20,3 +20,8 @@ html {
   font-family: "AllumiBold";
   src: url("../../public/fonts/AllumiStd-Bold.otf");
 }
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../../public/fonts/ProximaNova-Regular.otf");
+}
