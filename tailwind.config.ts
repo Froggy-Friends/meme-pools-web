@@ -29,10 +29,13 @@ const config: Config = {
         solana: "#9945FF",
         based: "#0052FF",
         green: "#63f58b",
+        gold: "#FFD700",
+        bronze: "#CD7F32",
         "light-gray": "#888888",
         "light-primary": "#85c3f8",
         "dark-gray": "#1B1B1B",
         "dark-primary": "#2f5a8c",
+        "light-green": "#c2f5d0",
       },
       fontFamily: {
         proximaSoft: ["ProximaSoft"],
