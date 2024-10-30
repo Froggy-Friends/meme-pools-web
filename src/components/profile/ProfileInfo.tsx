@@ -4,10 +4,11 @@ import Image from "next/image";
 import { useAccount } from "wagmi";
 import FollowButton from "./FollowButton";
 import { User } from "@prisma/client";
-import { FaXTwitter } from "react-icons/fa6";
 import useUser from "@/hooks/useUser";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
+import { Address } from "viem";
+import useRewardTier from "@/hooks/useRewardTier";
 
 type ProfileInfoParams = {
   profileUser: User;
@@ -16,6 +17,7 @@ type ProfileInfoParams = {
 };
 
 export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: ProfileInfoParams) {
+  const rewardTier = useRewardTier(profileUser.ethAddress as Address);
   const { isConnected } = useAccount();
   const { currentUser } = useUser();
   const disabled = currentUser?.id !== profileUser.id;
@@ -31,15 +33,25 @@ export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: Pr
       />
 
       <div className="flex flex-col ml-6 -mt-1" id="follow-button">
-        <p className="text-[48px] font-semibold">{getUserDisplayName(profileUser.name)}</p>
-        {isConnected && cachedUser && cachedUser.name !== profileUser.name && (
-          <FollowButton
-            isFollowing={isFollowing}
-            cachedUser={cachedUser}
-            user={profileUser}
-            className="py-1 w-32 -mt-1"
-          />
-        )}
+        <div className="flex items-center gap-x-5">
+          <p className="text-[48px] font-semibold">{getUserDisplayName(profileUser.name)}</p>
+          <p className="text-black font-bold bg-green rounded-3xl px-2 py-1 text-xs hidden tablet:block">
+            {rewardTier === "tier one" ? "$500" : rewardTier === "tier two" ? "$1000" : "$1500"} Rewards
+          </p>
+        </div>
+        <div className="flex gap-x-4 items-center">
+          {isConnected && cachedUser && cachedUser.name !== profileUser.name && (
+            <FollowButton
+              isFollowing={isFollowing}
+              cachedUser={cachedUser}
+              user={profileUser}
+              className="py-1 w-32 -mt-1"
+            />
+          )}
+          <p className="text-black font-bold bg-green rounded-3xl px-2 py-1 text-xs tablet:hidden">
+            {rewardTier === "tier one" ? "$500" : rewardTier === "tier two" ? "$1000" : "$1500"} Rewards
+          </p>
+        </div>
       </div>
     </section>
   );

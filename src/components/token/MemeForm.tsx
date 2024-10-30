@@ -41,7 +41,7 @@ export default function MemeForm({ tokenId }: MemeFormProps) {
           pendingText="POSTING..."
           disabled={!currentUser}
           className={cn(
-            "w-full tablet:w-28 bg-primary h-10 rounded-3xl py-1 px-8 text-dark font-proximaSoftBold active:scale-[0.97] hover:bg-light-primary transition-all",
+            "w-full tablet:w-28 bg-primary h-10 rounded-xl py-1 px-8 text-dark font-proximaSoftBold active:scale-[0.97] hover:bg-light-primary transition-all",
             {
               "hover:bg-primary": !currentUser,
             }

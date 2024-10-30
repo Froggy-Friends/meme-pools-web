@@ -41,7 +41,7 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
           <ModalFooter className="flex justify-center">
             <button
               onClick={() => router.push("/create")}
-              className="bg-primary rounded-3xl h-10 w-[400px] mt-20 text-dark-gray text-xl font-proximaSoftBold hover:bg-primary/80 active:scale-[0.98] transition"
+              className="bg-primary rounded-xl h-10 w-[400px] mt-20 text-dark-gray text-xl font-proximaNovaBold hover:bg-primary/80 active:scale-[0.98] transition"
             >
               CREATE COIN
             </button>

@@ -58,7 +58,7 @@ export default function CreateCoinFormModal({ name, pattern, register, resetFiel
               <ModalFooter className="flex-col laptop:flex-row justify-center gap-x-2 mb-2">
                 <button
                   onClick={onClose}
-                  className="bg-primary h-10 w-full laptop:w-48 rounded-3xl text-lg text-dark font-proximaSoftBold hover:bg-[#29ff93] transition"
+                  className="bg-primary h-10 w-full laptop:w-48 rounded-xl text-lg text-dark font-proximaSoftBold hover:bg-light-primary transition"
                 >
                   SAVE
                 </button>
@@ -67,7 +67,7 @@ export default function CreateCoinFormModal({ name, pattern, register, resetFiel
                     resetField(name);
                     onClose();
                   }}
-                  className="bg-cream/80 h-10 w-full laptop:w-48 rounded-3xl text-lg text-dark font-proximaSoftBold hover:bg-cream transition"
+                  className="bg-cream/80 h-10 w-full laptop:w-48 rounded-xl text-lg text-dark font-proximaSoftBold hover:bg-cream transition"
                 >
                   CANCEL
                 </button>

@@ -200,7 +200,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 setActiveTab(TradingTab.BUY);
                 setBuyAmount("");
               }}
-              className={`w-[65px] h-[35px] rounded-3xl font-bold ${
+              className={`w-[65px] h-[35px] rounded-xl font-proximaNovaBold ${
                 activeTab === TradingTab.BUY
                   ? "bg-green text-black"
                   : "bg-dark-gray text-white hover:bg-gray transition"
@@ -213,7 +213,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 setActiveTab(TradingTab.SELL);
                 setSellAmount("");
               }}
-              className={`w-[65px] h-[35px] rounded-3xl font-bold text-white ${
+              className={`w-[65px] h-[35px] rounded-xl font-proximaNovaBold text-white ${
                 activeTab === TradingTab.SELL ? "bg-red" : "bg-dark-gray hover:bg-gray transition"
               }`}
             >
@@ -347,7 +347,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                     debouncedBuyCost(amount.toString());
                   }}
                   disabled={!isConnected}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl transition ${
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-xl transition ${
                     amount.toString() === buyAmount
                       ? "bg-gray hover:bg-gray cursor-default"
                       : "bg-dark hover:bg-light-gray"
@@ -370,7 +370,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                       debouncedBuyCost(tokensByPercentage(amount, tokenInfo.availableSupply));
                   }}
                   disabled={!isConnected}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl transition ${
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-xl transition ${
                     amount.toString() === buyAmount
                       ? "bg-gray hover:bg-gray cursor-default"
                       : "bg-dark hover:bg-light-gray"
@@ -388,7 +388,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                     setSellAmount(tokensByPercentage(amount, tokenBalance));
                     debouncedSellPayout(tokensByPercentage(amount, tokenBalance));
                   }}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-2xl transition ${
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-xl transition ${
                     tokensByPercentage(amount, tokenBalance) === sellAmount
                       ? "bg-gray hover:bg-gray cursor-default"
                       : "bg-dark hover:bg-light-gray"
@@ -401,9 +401,9 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
           <button
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
             disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === "" || !isConnected}
-            className={`flex items-center justify-center w-full h-[40px] p-4 rounded-3xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
+            className={`flex items-center justify-center w-full h-[40px] p-4 rounded-xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
               activeTab === TradingTab.BUY
-                ? "bg-green text-black hover:bg-[#c2f5d0]"
+                ? "bg-green text-black hover:bg-light-green"
                 : "bg-red text-white hover:bg-rose"
             }`}
           >
