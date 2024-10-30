@@ -75,7 +75,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
           <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
             <div className="flex items-center gap-1 laptop:gap-2.5">
               <span className="text-white/75 hover:text-white transition">{token.name}</span>
-              <span className="bg-primary rounded-[4px] text-xs text-black px-2 py-1 hover:bg-light-primary transition">
+              <span className="bg-primary rounded-[4px] text-xs font-bold text-black px-2 py-1 hover:bg-light-primary transition">
                 ${token.ticker}
               </span>
             </div>
@@ -96,8 +96,8 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
 
         <div className="px-3 pb-3">
           <div className="flex items-center justify-between">
-            <div className="text-light-gray text-[10px] flex items-center gap-1">
-              Market Cap:
+            <div className="text-light-gray text-[11px] flex items-center gap-1">
+              MC:
               <span className="text-white">${tokenInfo?.marketcap?.toFixed(2)}</span> (
               {getBondingCurvePercentage(tokenInfo?.tokensSold)}%)
             </div>

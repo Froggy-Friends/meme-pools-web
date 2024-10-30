@@ -200,7 +200,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 setActiveTab(TradingTab.BUY);
                 setBuyAmount("");
               }}
-              className={`w-[65px] h-[35px] rounded-xl font-bold ${
+              className={`w-[65px] h-[35px] rounded-xl font-proximaNovaBold ${
                 activeTab === TradingTab.BUY
                   ? "bg-green text-black"
                   : "bg-dark-gray text-white hover:bg-gray transition"
@@ -213,7 +213,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 setActiveTab(TradingTab.SELL);
                 setSellAmount("");
               }}
-              className={`w-[65px] h-[35px] rounded-xl font-bold text-white ${
+              className={`w-[65px] h-[35px] rounded-xl font-proximaNovaBold text-white ${
                 activeTab === TradingTab.SELL ? "bg-red" : "bg-dark-gray hover:bg-gray transition"
               }`}
             >

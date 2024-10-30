@@ -38,10 +38,9 @@ const config: Config = {
         "light-green": "#c2f5d0",
       },
       fontFamily: {
-        proximaSoft: ["ProximaSoft"],
-        proximaSoftBold: ["ProximaSoftBold"],
         allumiBold: ["AllumiBold"],
         proximaNova: ["ProximaNova"],
+        proximaNovaBold: ["ProximaNovaBold"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

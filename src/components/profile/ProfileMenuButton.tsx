@@ -20,7 +20,7 @@ export default function ProfileMenuButton({ view, profileUser, currentView, clas
       className={cn(
         "bg-dark-gray border-[0.25px] border-white/[5%] rounded-xl py-1 px-4 text-lg hover:bg-gray transition",
         view === toTitleCase(currentView) &&
-          "bg-primary text-dark font-proximaSoftBold hover:bg-primary cursor-default",
+          "bg-primary text-dark font-proximaNovaBold hover:bg-primary cursor-default",
         className
       )}
       onClick={() => router.push(`/profile/${profileUser.name}?view=${view.toLowerCase()}`)}
