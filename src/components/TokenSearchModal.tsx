@@ -113,7 +113,7 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
                   </div>
                 </div>
 
-                {!isLoading && !caSearch && (
+                {!isLoading && !caSearch && tokens && (
                   <div className="mb-2">
                     {tokens?.map(token => {
                       return <SearchTokenDisplay key={token.id} token={token} onClose={onClose} />;
@@ -128,7 +128,7 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
                 )}
 
                 {noResults && !isLoading && (
-                  <p className={`mb-2 ml-4 ${!caSearch && "-mt-5"}`}>No search results match, try another search</p>
+                  <p className={`mb-2 ml-2 ${!caSearch && "-mt-5"}`}>No search results match, try another search</p>
                 )}
 
                 {isLoading && <SearchSkeleton caSearch={caSearch} />}
