@@ -74,7 +74,7 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
                     type="text"
                     name="search"
                     id="search"
-                    placeholder="search"
+                    placeholder={caSearch ? "What's the CA?" : "What's the ticker?"}
                     autoComplete="off"
                     autoFocus
                     onChange={e => {
