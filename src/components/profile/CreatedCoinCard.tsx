@@ -57,7 +57,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
           classNames={{
             base: "w-full",
             track: "drop-shadow-md bg-gray h-2",
-            indicator: "bg-green",
+            indicator: "bg-primary",
             label: "tracking-wider font-small text-light-gray text-center",
             value: "text-foreground/60 text-gray text-center",
           }}
