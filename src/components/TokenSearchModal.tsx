@@ -106,8 +106,8 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
                 <div className="flex justify-between items-center h-12 px-2">
                   <p>Token</p>
 
-                  <div className="flex w-[55%] tablet:w-1/2 justify-between">
-                    <p className="w-20 text-right">Date</p>
+                  <div className="flex max-w-[65%] tablet:w-1/2 justify-between">
+                    <p className="w-24 text-right">Date</p>
                     <p className="w-24 text-right">Time</p>
                     <p className="w-16 text-right">MC</p>
                   </div>

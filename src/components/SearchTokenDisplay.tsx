@@ -14,7 +14,7 @@ type SearchTokenDisplayProps = {
 export default function SearchTokenDisplay({ token, onClose }: SearchTokenDisplayProps) {
   const { chain } = useChain();
   const { tokenInfo } = useTokenInfo(token);
-  const formattedDate = dayjs(token.createdAt).format("DD/MM/YY");
+  const formattedDate = dayjs(token.createdAt).format("MMM D, YY");
   const formattedTime = dayjs(token.createdAt).format("hh:mm:ss A");
 
   return (
@@ -25,11 +25,13 @@ export default function SearchTokenDisplay({ token, onClose }: SearchTokenDispla
     >
       <div className="flex gap-x-2 items-center">
         <Image src={token.image} alt="token-image" height={40} width={40} className="rounded-md" />
-        <p className="text-light-primary truncate max-w-[100px] tablet:max-w-[150px]">${token.ticker}</p>
+        <p className="text-light-primary text-sm tablet:text-base truncate max-w-[100px] tablet:max-w-[150px]">
+          ${token.ticker}
+        </p>
       </div>
 
-      <div className="flex w-[55%] tablet:w-1/2 justify-between items-center">
-        <p className="w-20 text-right text-sm tablet:text-base">{formattedDate}</p>
+      <div className="flex max-w-[65%] tablet:w-1/2 justify-between items-center">
+        <p className="w-24 text-right text-sm tablet:text-base">{formattedDate}</p>
         <p className="w-24 text-right text-sm tablet:text-base">{formattedTime}</p>
         <p className="w-16 text-right text-sm tablet:text-base">${formatMarketcap(tokenInfo?.marketcap || 0)}</p>
       </div>
