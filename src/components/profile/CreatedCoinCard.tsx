@@ -1,11 +1,12 @@
 "use client";
 
+import { useChain } from "@/context/chain";
 import useLaunchCoin from "@/hooks/useLaunchCoin";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { formatNumber } from "@/lib/format";
 import { formatTicker } from "@/lib/formatTicker";
 import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
-import { cn, Progress } from "@nextui-org/react";
+import { cn, Link, Progress } from "@nextui-org/react";
 import { Token } from "@prisma/client";
 import Image from "next/image";
 
@@ -17,6 +18,7 @@ type CreatedCoinCardProps = {
 export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps) {
   const { tokenInfo } = useTokenInfo(token);
   const { launchCoin } = useLaunchCoin();
+  const { chain } = useChain();
   const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold);
 
   return (
@@ -25,7 +27,12 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
         <div className="flex gap-x-4 mr-4">
           <Image src={token.image} alt={token.name} width={50} height={50} className="rounded-full" />
           <div>
-            <p className="text-xl">${formatTicker(token.ticker)}</p>
+            <Link
+              href={`${chain.name}/token/${token.tokenAddress}`}
+              className="text-xl text-white hover:underline transition"
+            >
+              ${formatTicker(token.ticker)}
+            </Link>
             <p className="text-sm text-white/75">${formatNumber(Math.round(tokenInfo?.marketcap || 0))} MC</p>
           </div>
         </div>
