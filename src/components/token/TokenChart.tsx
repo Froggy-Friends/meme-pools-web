@@ -36,6 +36,7 @@ export default function TokenChart({ token }: TokenChartProps) {
     <>
       <Head>
         <title>TradingView Charting Library and Next.js</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </Head>
       <Script
         src="/static/datafeeds/udf/dist/bundle.js"
