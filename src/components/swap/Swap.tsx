@@ -1,7 +1,7 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
@@ -21,6 +21,7 @@ import usePostTradeData from "@/hooks/usePostTradeData";
 import { useDebouncedCallback } from "use-debounce";
 import { Chain } from "@/models/chain";
 import { FaRegArrowAltCircleDown } from "react-icons/fa";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import useSellToken from "@/hooks/useSellToken";
 import useSellPrice from "@/hooks/useSellPrice";
 import { formatTicker } from "@/lib/formatTicker";
@@ -82,6 +83,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     tokenAddress,
     onSwapModalClose
   );
+  const [isTokenSwitcherOpen, setIsTokenSwitcherOpen] = useState(false);
   // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
 
   const debouncedBuyCost = useDebouncedCallback(async (amount: string) => {
@@ -224,7 +226,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
             <Image src="/setting.svg" alt="slippage" height={20} width={20} />
           </button>
         </div>
-        <div className="relative flex flex-col justify-between gap-2 p-4 mt-4 rounded-3xl bg-dark-gray w-full h-[240px]">
+        <div className="relative flex flex-col justify-between gap-2 py-4 px-5 mt-4 rounded-3xl bg-dark-gray w-full h-[240px]">
           {activeTab === TradingTab.BUY && (
             <>
               <Input
@@ -243,6 +245,8 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                     imgName={buyTokenName}
                     imgSrc={buyTokenSrc}
                     token={token}
+                    isOpen={isTokenSwitcherOpen}
+                    setIsOpen={setIsTokenSwitcherOpen}
                     onChange={(ticker, tickerSrc) => {
                       setBuyTokenName(ticker);
                       setBuyTokenSrc(tickerSrc);
@@ -250,6 +254,14 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   />
                 }
               />
+              <div className="absolute top-11 left-[1.125rem] transform -translate-y-1/2">
+                <MdOutlineKeyboardArrowDown
+                  size={20}
+                  className={`text-light-gray transition-transform duration-200 ${
+                    isTokenSwitcherOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </div>
               <div className="absolute left-1/2 top-[32%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
                 <FaRegArrowAltCircleDown size={24} className="text-gray" />
               </div>
@@ -314,6 +326,14 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
               <div className="absolute left-1/2 top-[32%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
                 <FaRegArrowAltCircleDown size={24} className="text-gray" />
               </div>
+              {isConnected && (
+                <div className="absolute top-[15%] right-9">
+                  <div className="flex flex-col items-end">
+                    <p className="text-light-gray text-xs">{formatNumber(Math.round(Number(tokenBalance)))}</p>
+                    <p className="text-light-gray text-xs -mt-1">Bal</p>
+                  </div>
+                </div>
+              )}
               <div className="flex items-center gap-2 p-2 rounded-3xl bg-dark w-full">
                 <Image
                   src={chain.name === Chain.Solana ? solanaLogo : ethLogo}
