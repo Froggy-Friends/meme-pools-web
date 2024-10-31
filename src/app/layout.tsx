@@ -16,12 +16,10 @@ import { Analytics } from "@vercel/analytics/react";
 const PostHogPageView = dynamic(() => import("../components/PotHogPageView"), { ssr: false });
 
 export const metadata: Metadata = {
-  title: "Memepools",
-  description: "Launch a tradeable coin instantly in one click on memepools.com",
+  title: "Meme Pools",
+  description: "Create an instantly tradeable coin on memepools.com",
   icons: {
-    icon: [
-      { url: "/memepools.png", type: "image/png", sizes: "32x32" },
-    ],
+    icon: [{ url: "/memepools.png", type: "image/png", sizes: "32x32" }],
   },
 };
 

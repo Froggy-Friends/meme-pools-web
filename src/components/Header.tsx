@@ -8,6 +8,7 @@ import NavbarIcons from "./NavbarIcons";
 import ProfileAndMenuContainer from "./ProfileAndMenuContainer";
 import Logo from "./Logo";
 import { FaXTwitter } from "react-icons/fa6";
+import { SiGitbook } from "react-icons/si";
 
 type HeaderProps = {
   chain: Chain;
@@ -26,14 +27,21 @@ export default async function Header({ chain }: HeaderProps) {
       classNames={{ wrapper: "px-0" }}
     >
       <NavbarBrand>
-        <Logo height={70} width={70} />
-        <p className="hidden laptop:block text-2xl font-allumiBold">Meme Pools</p>
+        <Logo height={48} width={48} />
+        <p className="hidden laptop:block text-2xl font-allumiBold pl-1">Meme Pools</p>
         <Link
           href="https://x.com/memepoolsx"
           target="_blank"
           className="text-white hidden tablet:block mt-[0.1rem] laptop:mt-1 tablet:ml-4 laptop:ml-6"
         >
-          <FaXTwitter className="w-4 h-4 tablet:w-6 tablet:h-6 text-white hover:text-primary hover:scale-[1.03] transition" />
+          <FaXTwitter className="w-3 h-3 tablet:w-5 tablet:h-5 text-white hover:text-primary hover:scale-[1.03] transition" />
+        </Link>
+        <Link
+          href="https://docs.memepools.com"
+          target="_blank"
+          className="text-white hidden tablet:block mt-[0.1rem] laptop:mt-1 tablet:ml-3 laptop:ml-5"
+        >
+          <SiGitbook className="w-3 h-3 tablet:w-5 tablet:h-5 text-white hover:text-primary hover:scale-[1.03] transition" />
         </Link>
       </NavbarBrand>
 

@@ -5,6 +5,7 @@ import { Token } from "@prisma/client";
 import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import useMarketcapGoal from "@/hooks/useMarketcapGoal";
+import Link from "next/link";
 
 type BondingCurveProgressProps = {
   token: Token;
@@ -29,16 +30,15 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
         }}
         showValueLabel={true}
         className="max-w-md pb-2"
-        label="Bonding Curve Progress"
+        label="Launch Progress"
       />
       <p className="text-light-gray">
         Marketcap: <span className="text-light-primary">${tokenInfo?.marketcap?.toFixed(2)}</span>
       </p>
 
       <p className="text-cream text-sm pt-2">
-        When ${token.ticker} reaches a market cap of <span className="text-green">${marketcapGoal}</span>, all of the
-        liquidity from the bonding curve with be depositied into Uniswap and burned. Progression increases as the price
-        goes up.
+        The creator can launch ${token.ticker} and enable trading on dexes once it reaches a market cap of{" "}
+        <span className="text-green">${marketcapGoal}</span>.
       </p>
     </section>
   );
