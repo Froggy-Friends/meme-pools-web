@@ -5,6 +5,7 @@ import { Token } from "@prisma/client";
 import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import useMarketcapGoal from "@/hooks/useMarketcapGoal";
+import Link from "next/link";
 
 type BondingCurveProgressProps = {
   token: Token;
@@ -29,16 +30,23 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
         }}
         showValueLabel={true}
         className="max-w-md pb-2"
-        label="Bonding Curve Progress"
+        label="Launch Progress"
       />
       <p className="text-light-gray">
         Marketcap: <span className="text-light-primary">${tokenInfo?.marketcap?.toFixed(2)}</span>
       </p>
 
       <p className="text-cream text-sm pt-2">
-        When ${token.ticker} reaches a market cap of <span className="text-green">${marketcapGoal}</span>, all of the
-        liquidity from the bonding curve with be depositied into Uniswap and burned. Progression increases as the price
-        goes up.
+        When ${token.ticker} reaches a market cap of <span className="text-green">${marketcapGoal}</span>, launch it on
+        your profile to collect your reward. All users start with bronze rewards. Own{" "}
+        <Link
+          href="https://magiceden.us/collections/ethereum/0x7ad05c1b87e93be306a9eadf80ea60d7648f1b6f"
+          className="text-[#61A14C] hover:text-green transition"
+          target="_blank"
+        >
+          Frogs
+        </Link>{" "}
+        to earn exclusive silver and gold tier rewards.
       </p>
     </section>
   );

@@ -21,8 +21,14 @@ export default function LogoPopover() {
     >
       <PopoverTrigger className="cursor-pointer">
         <div className="flex items-center gap-x-1" onMouseEnter={() => setIsOpen(true)}>
-          <Image src={memepoolsLogo} alt="Memepools" height={45} width={45} className="hover:scale-[1.03] transition" />
-          <p className="hidden laptop:block text-2xl font-allumiBold">Memepools</p>
+          <Image
+            src={memepoolsLogo}
+            alt="Meme Pools"
+            height={45}
+            width={45}
+            className="hover:scale-[1.03] transition"
+          />
+          <p className="hidden laptop:block text-2xl font-allumiBold">Meme Pools</p>
           <Image src="/down-arrow.svg" alt="more" width={12} height={9} />
         </div>
       </PopoverTrigger>
@@ -31,12 +37,12 @@ export default function LogoPopover() {
           <Link className="flex gap-2 text-2xl font-bold cursor-pointer" href="/">
             <Image
               src={memepoolsLogo}
-              alt="Memepools"
+              alt="Meme Pools"
               height={23}
               width={32}
               className="hover:scale-[1.03] transition"
             />
-            <div>Memepools</div>
+            <div>Meme Pools</div>
           </Link>
 
           <Link href="https://docs.memepools.com" target="_blank">
