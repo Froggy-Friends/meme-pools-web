@@ -15,7 +15,7 @@ const config: Config = {
         mobile: "430px",
         tablet: "768px",
         laptop: "1024px",
-        desktop: "1440px",
+        desktop: "1280px",
       },
       colors: {
         dark: "#161616",

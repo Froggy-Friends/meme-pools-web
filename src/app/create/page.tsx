@@ -14,7 +14,7 @@ export default function CreateCoin() {
           <h1 className="text-[24px] tablet:text-4xl laptop:text-5xl">
             Create your coin on{" "}
             <span className="font-allumiBold text-primary">
-              <span>Memepools</span>
+              <span>Meme Pools</span>
             </span>
           </h1>
         </div>
