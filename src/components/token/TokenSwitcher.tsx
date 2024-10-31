@@ -8,12 +8,14 @@ type TokenSwitcherProps = {
   imgName: string;
   imgSrc: string;
   token: TokenWithVoteCount;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
   onChange: (ticker: string, tickerSrc: string) => void;
 };
 
-export default function TokenSwitcher({ imgName, imgSrc, token, onChange }: TokenSwitcherProps) {
+export default function TokenSwitcher({ imgName, imgSrc, token, isOpen, setIsOpen, onChange }: TokenSwitcherProps) {
   return (
-    <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray">
+    <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" isOpen={isOpen} onOpenChange={setIsOpen}>
       <DropdownTrigger>
         <span className="flex items-center gap-2">
           <Image
