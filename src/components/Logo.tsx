@@ -14,7 +14,7 @@ export default function Logo({ height = 70, width = 70 }: LogoProps) {
   const { chain } = useChain();
 
   return (
-    <Link href={`/${chain.name}`} className="hover:scale-[1.02] transition">
+    <Link href={`/${chain.name}`} className="hover:scale-[1.02] transition -ml-2">
       <Image src={memepoolsLogo} alt="Memepools" height={height} width={width} />
     </Link>
   );
