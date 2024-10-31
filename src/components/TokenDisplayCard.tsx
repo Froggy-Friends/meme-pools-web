@@ -86,14 +86,14 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
         </div>
 
         <div className="px-3 mt-2">
-          <div className="flex flex-start items-center gap-2">
+          <div className="flex flex-start gap-2">
             <Link href={`/profile/${token.user.name}`} className="text-light-primary hover:text-cream transition">
               <Image
                 src={token.user.imageUrl || defaultProfileAvatarUrl}
                 alt="token-image"
                 height={25}
                 width={25}
-                className="rounded-full shrink-0 self-start"
+                className="rounded-full shrink-0 min-w-[25px] min-h-[25px] self-start"
               />
             </Link>
             <p className="text-light-gray text-sm break-words">{token.description}</p>
