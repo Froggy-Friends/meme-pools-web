@@ -53,7 +53,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
   return (
     <>
       <header></header>
-      <div ref={chartContainerRef} className="h-[435px] bg-dark-gray" />
+      <div ref={chartContainerRef} className="h-[420px] bg-dark-gray" />
     </>
   );
 };

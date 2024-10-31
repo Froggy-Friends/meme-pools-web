@@ -15,7 +15,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
   const marketcapGoal = useMarketcapGoal();
 
   return (
-    <section className="mt-6 laptop:mt-7 desktop:mt-4 w-full tablet:w-[350px]">
+    <section className="mt-6 laptop:mt-7 desktop:mt-4 w-full tablet:w-[430px]">
       <Progress
         aria-label="Downloading..."
         size="md"
