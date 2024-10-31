@@ -65,6 +65,11 @@ export default function useTokenInfo(token: Token) {
 
     const handleTrade = () => {
       queryClient.invalidateQueries({ queryKey: ["tokenInfo", token.id] });
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["maxBuyPrice", token.id, tokenInfo?.availableSupply],
+        });
+      }, 1500);
     };
 
     buyChannel.bind(token.id, handleTrade);
