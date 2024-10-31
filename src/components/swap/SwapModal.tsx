@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { CircularProgress, Modal, ModalBody, ModalContent, ModalFooter } from "@nextui-org/react";
-import { IoMdArrowRoundForward } from "react-icons/io";
+import { IoMdArrowRoundForward, IoMdArrowRoundDown } from "react-icons/io";
 import { TxStatus } from "@/types/token/types";
 import Link from "next/link";
 import { formatAddress } from "@/lib/formatAddress";
@@ -98,17 +98,26 @@ export default function SwapModal({
             </div>
           </div>
           {approveTxStatus !== "pending" && approveTxStatus !== "completed" && (
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1">
-                <Image className="w-[18px] h-[18px] rounded-3xl" src={fromImageUrl} alt="eth" width={18} height={18} />
-                <p>{fromAmount}</p>
-                <p>${formatTicker(fromTicker)}</p>
-              </div>
-              <IoMdArrowRoundForward />
-              <div className="flex items-center gap-1">
-                <Image className="w-[18px] h-[18px] rounded-3xl" src={toImageUrl} alt="eth" width={18} height={18} />
-                <p>{toAmount}</p>
-                <p>${formatTicker(toTicker)}</p>
+            <div className="flex flex-col gap-y-2 items-start">
+              <div className="flex flex-col items-center gap-4 tablet:flex-row tablet:gap-2">
+                <div className="flex items-center gap-1">
+                  <Image
+                    className="w-[18px] h-[18px] rounded-3xl"
+                    src={fromImageUrl}
+                    alt="eth"
+                    width={18}
+                    height={18}
+                  />
+                  <p>{fromAmount}</p>
+                  <p>${formatTicker(fromTicker)}</p>
+                </div>
+                <IoMdArrowRoundDown className="text-xl tablet:hidden" />
+                <IoMdArrowRoundForward className="hidden tablet:block" />
+                <div className="flex items-center gap-1">
+                  <Image className="w-[18px] h-[18px] rounded-3xl" src={toImageUrl} alt="eth" width={18} height={18} />
+                  <p>{toAmount}</p>
+                  <p>${formatTicker(toTicker)}</p>
+                </div>
               </div>
             </div>
           )}
