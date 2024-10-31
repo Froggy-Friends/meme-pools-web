@@ -37,16 +37,8 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
       </p>
 
       <p className="text-cream text-sm pt-2">
-        When ${token.ticker} reaches a market cap of <span className="text-green">${marketcapGoal}</span>, launch it on
-        your profile to collect your reward. All users start with bronze rewards. Own{" "}
-        <Link
-          href="https://magiceden.us/collections/ethereum/0x7ad05c1b87e93be306a9eadf80ea60d7648f1b6f"
-          className="text-[#61A14C] hover:text-green transition"
-          target="_blank"
-        >
-          Frogs
-        </Link>{" "}
-        to earn exclusive silver and gold tier rewards.
+        The creator can launch ${token.ticker} and enable trading on dexes once it reaches a market cap of{" "}
+        <span className="text-green">${marketcapGoal}</span>.
       </p>
     </section>
   );
