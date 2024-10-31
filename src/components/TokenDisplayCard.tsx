@@ -75,9 +75,11 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
         <div className="flex flex-col px-3 mt-3">
           <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
             <div className="flex items-center gap-1 laptop:gap-2.5">
-              <span className="text-white/75 hover:text-white transition truncate max-w-[100px] tablet:max-w-[130px]">{token.name}</span>
               <span className="bg-primary rounded-[4px] text-xs font-bold text-black px-2 py-1 hover:bg-light-primary transition">
                 ${token.ticker}
+              </span>
+              <span className="text-white/75 hover:text-white transition truncate max-w-[100px] tablet:max-w-[130px]">
+                {token.name}
               </span>
             </div>
           </Link>
@@ -85,23 +87,25 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
 
         <div className="px-3 mt-2">
           <div className="flex flex-start gap-2">
-            <Image
-              src={token.user.imageUrl || defaultProfileAvatarUrl}
-              alt="token-image"
-              height={25}
-              width={25}
-              className="rounded-full shrink-0 self-start" 
-            />
+            <Link href={`/profile/${token.user.name}`} className="text-light-primary hover:text-cream transition">
+              <Image
+                src={token.user.imageUrl || defaultProfileAvatarUrl}
+                alt="token-image"
+                height={25}
+                width={25}
+                className="rounded-full shrink-0 min-w-[25px] min-h-[25px] self-start"
+              />
+            </Link>
             <p className="text-light-gray text-sm break-words">{token.description}</p>
           </div>
         </div>
 
         <div className="px-3 pb-3 mt-auto">
           <div className="flex items-center justify-between">
-            <div className="text-light-gray text-sm flex items-center gap-1">
+            <div className="text-white text-sm flex items-center gap-1">
               MC
-              <span className="text-white">${formatMarketcap(tokenInfo?.marketcap || 0)}</span> (
-              {Math.round(getBondingCurvePercentage(tokenInfo?.tokensSold))}%)
+              <span>${formatMarketcap(tokenInfo?.marketcap || 0)}</span>
+              <span className="text-light-gray">({Math.round(getBondingCurvePercentage(tokenInfo?.tokensSold))}%)</span>
             </div>
             <div className="flex items-center gap-3">
               {token.twitter && (
