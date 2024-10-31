@@ -15,7 +15,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
   const marketcapGoal = useMarketcapGoal();
 
   return (
-    <section className="mt-6 laptop:mt-7 desktop:mt-6 w-full tablet:w-[350px]">
+    <section className="mt-6 laptop:mt-7 desktop:mt-4 w-full tablet:w-[350px]">
       <Progress
         aria-label="Downloading..."
         size="md"
@@ -36,8 +36,9 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
       </p>
 
       <p className="text-cream text-sm pt-2">
-        When {token.ticker} reaches a market cap of ${marketcapGoal}, all of the liquidity from the bonding curve with
-        be depositied into Uniswap and burned. Progression increases as the price goes up.
+        When ${token.ticker} reaches a market cap of <span className="text-green">${marketcapGoal}</span>, all of the
+        liquidity from the bonding curve with be depositied into Uniswap and burned. Progression increases as the price
+        goes up.
       </p>
     </section>
   );

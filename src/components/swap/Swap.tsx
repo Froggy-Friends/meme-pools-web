@@ -6,7 +6,7 @@ import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
-import { Address, parseEther, parseUnits } from "viem";
+import { Address, formatEther, parseEther, parseUnits } from "viem";
 import { ContractTransactionReceipt, formatUnits } from "ethers";
 import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
@@ -22,6 +22,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { Chain } from "@/models/chain";
 import { FaRegArrowAltCircleDown } from "react-icons/fa";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { FaWallet } from "react-icons/fa";
 import useSellToken from "@/hooks/useSellToken";
 import useSellPrice from "@/hooks/useSellPrice";
 import { formatTicker } from "@/lib/formatTicker";
@@ -30,6 +31,7 @@ import useApproveToken from "@/hooks/useApproveToken";
 import { formatNumber } from "@/lib/format";
 import { useAccount } from "wagmi";
 import useTokenInfo from "@/hooks/useTokenInfo";
+import { formatBalance } from "@/lib/formatBalance";
 
 export enum TradingTab {
   BUY,
@@ -113,7 +115,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   }, 700);
 
   const handleBuyAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+    const inputValue = e.target.value.replace(/,/g, "");
 
     if (inputValue === "" || rule.test(inputValue)) {
       setBuyAmount(inputValue);
@@ -226,19 +228,25 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
             <Image src="/setting.svg" alt="slippage" height={20} width={20} />
           </button>
         </div>
-        <div className="relative flex flex-col justify-between gap-2 py-4 px-5 mt-4 rounded-3xl bg-dark-gray w-full h-[240px]">
+        <div className="relative flex flex-col justify-between gap-2 py-4 px-5 mt-4 rounded-3xl bg-dark-gray w-full min-h-[240px]">
           {activeTab === TradingTab.BUY && (
             <>
               <Input
                 classNames={{
-                  input: "ml-10 appearance-none",
-                  inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
+                  input: "ml-12 appearance-none",
+                  inputWrapper: ["h-[70px] px-4 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
                 }}
                 placeholder="0.0"
-                value={buyAmount}
+                value={
+                  buyAmount && buyTokenName !== "ETH"
+                    ? formatNumber(Math.round(Number(buyAmount)))
+                    : buyAmount && buyTokenName === "ETH"
+                    ? buyAmount
+                    : ""
+                }
                 onChange={handleBuyAmountChange}
                 type="text"
-                radius="full"
+                radius="lg"
                 autoComplete="off"
                 startContent={
                   <TokenSwitcher
@@ -251,10 +259,13 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                       setBuyTokenName(ticker);
                       setBuyTokenSrc(tickerSrc);
                     }}
+                    balance={
+                      buyTokenName === "ETH" ? Number(formatEther(ethBalance?.value || BigInt(0))) : tokenBalance
+                    }
                   />
                 }
               />
-              <div className="absolute top-11 left-[1.125rem] transform -translate-y-1/2">
+              <div className="absolute top-[3.25rem] left-[1.125rem] transform -translate-y-1/2">
                 <MdOutlineKeyboardArrowDown
                   size={20}
                   className={`text-light-gray transition-transform duration-200 ${
@@ -262,10 +273,10 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   }`}
                 />
               </div>
-              <div className="absolute left-1/2 top-[32%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
+              <div className="absolute left-1/2 top-[35%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
                 <FaRegArrowAltCircleDown size={24} className="text-gray" />
               </div>
-              <div className="flex items-center gap-2 p-2 rounded-3xl bg-dark w-full">
+              <div className="h-[70px] flex items-center gap-2 p-2 rounded-xl bg-dark w-full">
                 <Image
                   src={
                     (chain.name === Chain.Solana && buyTokenName === "SOL") ||
@@ -289,12 +300,12 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                     : "$ETH"}
                 </p>
                 {buyTokenName !== "ETH" && (
-                  <p className="text-light-gray text-sm ml-2">
+                  <p className="text-light-gray text-sm ml-4">
                     {buyCost !== BigInt(0) ? Number(formatUnits(buyCost)).toFixed(6) : "0.0"}
                   </p>
                 )}
                 {buyTokenName === "ETH" && (
-                  <p className="text-light-gray text-sm ml-2">
+                  <p className="text-light-gray text-sm ml-4">
                     {buyTokenName === "ETH" && buyTokensReceived !== "" && buyAmount !== ""
                       ? formatNumber(Math.round(Number(buyTokensReceived)))
                       : "0.0"}
@@ -307,34 +318,36 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
             <>
               <Input
                 classNames={{
-                  input: "ml-10 appearance-none",
-                  inputWrapper: ["h-[55px] bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
+                  input: "ml-[3.25rem] appearance-none",
+                  inputWrapper: ["h-[70px] px-4 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
                 }}
                 placeholder="0.0"
                 value={sellAmount ? formatNumber(Math.round(Number(sellAmount))) : ""}
                 onChange={handleSellAmountChange}
                 type="text"
-                radius="full"
+                radius="lg"
                 autoComplete="off"
                 startContent={
                   <div className="flex items-center gap-2">
                     <Image src={token.image} alt={token.name} height={35} width={35} className="rounded-full" />
-                    <p className="uppercase">${formatTicker(token.ticker)}</p>
+                    <p className="uppercase mb-3">${formatTicker(token.ticker)}</p>
                   </div>
                 }
               />
-              <div className="absolute left-1/2 top-[32%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
+              <div className="absolute left-1/2 top-[35%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
                 <FaRegArrowAltCircleDown size={24} className="text-gray" />
               </div>
-              {isConnected && (
-                <div className="absolute top-[15%] right-9">
-                  <div className="flex flex-col items-end">
-                    <p className="text-light-gray text-xs">{formatNumber(Math.round(Number(tokenBalance)))}</p>
-                    <p className="text-light-gray text-xs -mt-1">Bal</p>
-                  </div>
+
+              <div className="absolute top-[20.5%] left-[4.9rem]">
+                <div className="flex items-center gap-x-1">
+                  <p className="text-light-gray text-xs">
+                    <FaWallet size={12} />
+                  </p>
+                  <p className="text-light-gray text-xs">{formatBalance(Math.round(Number(tokenBalance || 0)))}</p>
                 </div>
-              )}
-              <div className="flex items-center gap-2 p-2 rounded-3xl bg-dark w-full">
+              </div>
+
+              <div className="h-[70px] flex items-center gap-2 p-2 rounded-xl bg-dark w-full">
                 <Image
                   src={chain.name === Chain.Solana ? solanaLogo : ethLogo}
                   alt="eth"
@@ -343,7 +356,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   className="ml-2"
                 />
                 <p>{chain.name === Chain.Solana ? "$SOL" : "$ETH"}</p>
-                <p className="text-light-gray text-sm ml-2">
+                <p className="text-light-gray text-sm ml-4">
                   {sellPayout !== BigInt(0) ? Number(formatUnits(sellPayout)).toFixed(6) : "0.0"}
                 </p>
               </div>
@@ -367,7 +380,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                     debouncedBuyCost(amount.toString());
                   }}
                   disabled={!isConnected}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-xl transition ${
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
                     amount.toString() === buyAmount
                       ? "bg-gray hover:bg-gray cursor-default"
                       : "bg-dark hover:bg-light-gray"
@@ -384,13 +397,17 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   onClick={() => {
                     tokenInfo &&
                       tokenInfo.availableSupply &&
-                      setBuyAmount(tokensByPercentage(amount, tokenInfo.availableSupply));
+                      setBuyAmount(
+                        Math.round(Number(tokensByPercentage(amount, tokenInfo.availableSupply))).toString()
+                      );
                     tokenInfo &&
                       tokenInfo.availableSupply &&
-                      debouncedBuyCost(tokensByPercentage(amount, tokenInfo.availableSupply));
+                      debouncedBuyCost(
+                        Math.round(Number(tokensByPercentage(amount, tokenInfo.availableSupply))).toString()
+                      );
                   }}
                   disabled={!isConnected}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-xl transition ${
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
                     amount.toString() === buyAmount
                       ? "bg-gray hover:bg-gray cursor-default"
                       : "bg-dark hover:bg-light-gray"
@@ -408,7 +425,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                     setSellAmount(tokensByPercentage(amount, tokenBalance));
                     debouncedSellPayout(tokensByPercentage(amount, tokenBalance));
                   }}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-xl transition ${
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
                     tokensByPercentage(amount, tokenBalance) === sellAmount
                       ? "bg-gray hover:bg-gray cursor-default"
                       : "bg-dark hover:bg-light-gray"
