@@ -16,7 +16,7 @@ export default function CreatorRewards() {
   return (
     <section className="flex flex-col items-center laptop:flex-row justify-between gap-y-6 laptop:gap-y-0 bg-dark-gray rounded-xl px-4 laptop:px-6 py-7 laptop:w-full desktop:w-[950px] desktop:mx-auto mt-20 text-center laptop:text-left">
       <div className="flex flex-col items-center laptop:items-start gap-y-4 laptop:gap-y-0">
-        <h3 className="text-2xl">Meme Pool Rewards</h3>
+        <h3 className="text-2xl pb-2">Creator Rewards</h3>
         <p className="laptop:hidden tablet:max-w-[94%]">
           Once your coin hits a <span className="text-green">${marketcapGoal}</span> market cap, launch it on your
           profile to collect your reward. All users start with bronze rewards. Own{" "}
