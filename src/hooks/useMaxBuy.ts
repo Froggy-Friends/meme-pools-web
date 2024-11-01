@@ -9,14 +9,28 @@ export default function useMaxBuy(token: Token) {
   const { buyPriceTokens } = useBuyPrice();
 
   const { data: maxBuyPrice } = useQuery({
-    queryKey: ["maxBuyPrice", token.id, tokenInfo?.availableSupply],
-    enabled: !!tokenInfo?.availableSupply,
+    queryKey: ["maxBuyPrice", token.id],
+    enabled: !!tokenInfo?.availableSupply && tokenInfo.availableSupply > 0,
+    staleTime: 0,
+    retry: false,
     queryFn: async () => {
-      const price = await buyPriceTokens(
-        token.tokenAddress,
-        parseUnits(tokenInfo?.availableSupply?.toString() || "0", 18)
-      );
-      return Number(formatEther(price)).toFixed(2);
+      try {
+        if (!tokenInfo?.availableSupply) return "0.0";
+
+        const availableSupply = tokenInfo.availableSupply.toString();
+        const totalCost = await buyPriceTokens(
+          token.tokenAddress,
+          parseUnits(availableSupply, 18)
+        );
+
+        const formattedCost = formatEther(totalCost);
+        return Number(formattedCost) > 0
+          ? Number(formattedCost).toFixed(2)
+          : "0.0";
+      } catch (err) {
+        console.error("Error calculating max buy price:", err);
+        return "0.0";
+      }
     },
   });
 

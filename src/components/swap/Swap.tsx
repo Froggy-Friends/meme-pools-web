@@ -1,7 +1,7 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
@@ -87,6 +87,11 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     onSwapModalClose
   );
   const { maxBuyPrice } = useMaxBuy(token);
+
+  useEffect(() => {
+    console.log("tokenInfo", tokenInfo);
+    console.log("maxBuyPrice", maxBuyPrice);
+  }, [maxBuyPrice, tokenInfo]);
 
   const debouncedBuyCost = useDebouncedCallback(async (amount: string) => {
     if (amount === "") {
@@ -234,7 +239,9 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
               <Input
                 classNames={{
                   input: "text-right appearance-none",
-                  inputWrapper: ["h-[70px] pl-7 pr-24 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
+                  inputWrapper: [
+                    "h-[70px] pl-7 pr-20 tablet:pr-24 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark",
+                  ],
                 }}
                 placeholder="0.0"
                 value={
@@ -268,30 +275,30 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   </div>
                 }
               />
-              {maxBuyPrice && (
-                <div className="flex flex-col items-end absolute top-[3.4rem] right-[2.2rem] transform -translate-y-1/2">
-                  <button
-                    onClick={() => {
-                      setBuyAmount(
-                        buyTokenName === "ETH" ? maxBuyPrice : tokenInfo?.availableSupply?.toString() || "0"
-                      );
-                      if (buyTokenName !== "ETH") {
-                        debouncedBuyCost(tokenInfo?.availableSupply?.toString() || "0");
-                      } else {
-                        setBuyTokensReceived(tokenInfo?.availableSupply?.toString() || "0");
-                      }
-                    }}
-                    className="text-black bg-primary rounded-3xl px-2 text-xs hover:bg-light-primary transition"
-                  >
-                    MAX
-                  </button>
-                  <p className="text-light-gray text-xs whitespace-nowrap">
-                    {buyTokenName === "ETH"
-                      ? `${maxBuyPrice} ETH`
-                      : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
-                  </p>
-                </div>
-              )}
+              <div className="flex flex-col items-end absolute top-[3.4rem] right-[2.2rem] transform -translate-y-1/2">
+                <button
+                  disabled={!isConnected}
+                  onClick={() => {
+                    setBuyAmount(
+                      buyTokenName === "ETH" ? maxBuyPrice || "0" : tokenInfo?.availableSupply?.toString() || "0"
+                    );
+                    if (buyTokenName !== "ETH") {
+                      debouncedBuyCost(tokenInfo?.availableSupply?.toString() || "0");
+                    } else {
+                      setBuyTokensReceived(tokenInfo?.availableSupply?.toString() || "0");
+                    }
+                  }}
+                  className="text-black bg-primary rounded-3xl px-2 text-xs hover:bg-light-primary transition"
+                >
+                  MAX
+                </button>
+                <p className="text-light-gray text-xs whitespace-nowrap">
+                  {buyTokenName === "ETH"
+                    ? `${maxBuyPrice || 0.0} ETH`
+                    : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
+                </p>
+              </div>
+
               <div className="absolute top-[3.25rem] left-[1.5rem] transform -translate-y-1/2">
                 <MdOutlineKeyboardArrowDown size={22} className="text-light-gray" />
               </div>
@@ -324,12 +331,12 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                   </p>
                 </div>
                 {buyTokenName !== "ETH" && (
-                  <p className="text-light-gray text-sm mr-[4.25rem]">
+                  <p className="text-light-gray text-sm mr-[3.25rem] tablet:mr-[4.25rem]">
                     {buyCost !== BigInt(0) ? Number(formatUnits(buyCost)).toFixed(6) : "0.0"}
                   </p>
                 )}
                 {buyTokenName === "ETH" && (
-                  <p className="text-light-gray text-sm mr-[4.25rem]">
+                  <p className="text-light-gray text-sm mr-[3.25rem] tablet:mr-[4.25rem]">
                     {buyTokenName === "ETH" && buyTokensReceived !== "" && buyAmount !== ""
                       ? formatNumber(Math.round(Number(buyTokensReceived)))
                       : "0.0"}

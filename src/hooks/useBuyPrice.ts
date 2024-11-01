@@ -1,12 +1,12 @@
 import { memepoolsAbi } from "@/abi/memepools";
-import { contractAddress } from "@/config/env";
-import { useEthersSigner } from "@/config/eth/wagmi-ethers";
+import { contractAddress, rpcUrl } from "@/config/env";
 import { Contract, parseEther } from "ethers";
 import * as Sentry from "@sentry/react";
+import { ethers } from "ethers";
 
 export default function useBuyPrice() {
-  const signer = useEthersSigner();
-  const contract = new Contract(contractAddress, memepoolsAbi, signer);
+  const provider = new ethers.JsonRpcProvider(rpcUrl);
+  const contract = new Contract(contractAddress, memepoolsAbi, provider);
 
   const buyPriceTokens = async (tokenAddress: string, amount: bigint) => {
     let totalCost: bigint = BigInt(0);
