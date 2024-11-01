@@ -5,6 +5,11 @@ export async function POST(
   request: Request,
   { params }: { params: { task: string } }
 ) {
+  if (
+    request.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return NextResponse.json({ success: false }, { status: 401 });
+  }
   try {
     await fetch(`${memepoolsApi}/tasks/${params.task}`, {
       method: "POST",
