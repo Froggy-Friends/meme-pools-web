@@ -96,7 +96,9 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
                 className="rounded-full shrink-0 min-w-[25px] min-h-[25px] self-start"
               />
             </Link>
-            <p className="text-light-gray text-sm break-words">{token.description}</p>
+            <p className="text-light-gray text-sm break-words line-clamp-3">
+              {token.description}
+            </p>
           </div>
         </div>
 
