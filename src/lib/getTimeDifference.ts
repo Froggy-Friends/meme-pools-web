@@ -8,5 +8,6 @@ export const getTimeDifference = (date: Date | string | null | undefined) => {
     return;
   }
   const toDate = dayjs(date);
-  return dayjs(toDate).fromNow();
+  const relativeTime = dayjs(toDate).fromNow();
+  return relativeTime === "a few seconds ago" ? "seconds ago" : relativeTime;
 };

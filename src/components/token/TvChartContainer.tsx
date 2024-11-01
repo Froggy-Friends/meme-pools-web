@@ -24,8 +24,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
       container: chartContainerRef.current,
       library_path: props.library_path,
       locale: props.locale as LanguageCode,
-      disabled_features: ["use_localstorage_for_settings"],
-      enabled_features: ["study_templates"],
+      disabled_features: ["use_localstorage_for_settings", "study_templates"],
       charts_storage_url: props.charts_storage_url,
       charts_storage_api_version: props.charts_storage_api_version,
       client_id: props.client_id,
@@ -53,7 +52,11 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
   return (
     <>
       <header></header>
-      <div ref={chartContainerRef} className="h-[435px] bg-dark-gray" />
+      <div 
+        id="tv_chart_container"
+        ref={chartContainerRef} 
+        className="h-[420px] w-full bg-dark-gray" 
+      />
     </>
   );
 };

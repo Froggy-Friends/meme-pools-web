@@ -20,7 +20,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
         trade.isNew ? "animate-primaryPulse" : ""
       }`}
     >
-      <div className="flex items-center gap-x-4">
+      <div className="flex items-center gap-x-3 tablet:gap-x-4">
         <Image
           src={trade.userAvatar || defaultProfileAvatarUrl}
           alt="user-profile-picture"
@@ -30,14 +30,14 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
         />
 
         <div className="flex flex-col">
-          <div className="flex gap-x-4">
+          <div className="flex gap-x-2 tablet:gap-x-4">
             <Link
               href={`/profile/${trade.username}`}
               className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
             >
               {getUserDisplayName(trade.username)}
             </Link>
-            <p className="text-gray text-base">{getTimeDifference(trade.createdAt)}</p>
+            <p className="text-xs mt-1 tablet:mt-0 text-gray tablet:text-base">{getTimeDifference(trade.createdAt)}</p>
           </div>
 
           <p className="text-sm laptop:text-base overflow-y-auto">
@@ -53,7 +53,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
       </div>
 
       <Link
-        className="text-light-primary hover:text-cream transition ml-3"
+        className="text-sm tablet:text-base text-light-primary hover:text-cream transition ml-3"
         href={`${
           trade.chain === Chain.Eth
             ? `${etherscanUrl}/tx/${trade.transactionHash}`

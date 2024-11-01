@@ -1,7 +1,7 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
@@ -32,6 +32,7 @@ import { formatNumber } from "@/lib/format";
 import { useAccount } from "wagmi";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { formatBalance } from "@/lib/formatBalance";
+import useMaxBuy from "@/hooks/useMaxBuy";
 
 export enum TradingTab {
   BUY,
@@ -44,8 +45,8 @@ type TradingWidgetProps = {
   ethPrice: number;
 };
 
-const PURCHASE_AMOUNTS_ETH = [0.25, 0.5, 0.75, 1];
-const PURCHASE_AMOUNTS_TOKENS = [1, 2.5, 5, 10];
+const PURCHASE_AMOUNTS_ETH = [0.01, 0.025, 0.05, 0.1];
+const PURCHASE_AMOUNTS_TOKENS = [0.25, 0.5, 1, 2];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 const rule = /^[\d,]*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
 
@@ -85,8 +86,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     tokenAddress,
     onSwapModalClose
   );
-  const [isTokenSwitcherOpen, setIsTokenSwitcherOpen] = useState(false);
-  // setBuyAmount(prevEthAmount => (prevEthAmount * ethPrice) / currPrice);
+  const { maxBuyPrice } = useMaxBuy(token);
 
   const debouncedBuyCost = useDebouncedCallback(async (amount: string) => {
     if (amount === "") {
@@ -196,7 +196,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
 
   return (
     <>
-      <div className="flex flex-col rounded-lg w-full laptop:w-[350px] mt-7" id="swap">
+      <div className="flex flex-col rounded-lg w-full laptop:w-[430px] mt-7" id="swap">
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-2">
             <button
@@ -233,8 +233,10 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
             <>
               <Input
                 classNames={{
-                  input: "ml-12 appearance-none",
-                  inputWrapper: ["h-[70px] px-4 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
+                  input: "text-right appearance-none",
+                  inputWrapper: [
+                    "h-[70px] pl-7 pr-20 tablet:pr-24 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark",
+                  ],
                 }}
                 placeholder="0.0"
                 value={
@@ -249,63 +251,87 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 radius="lg"
                 autoComplete="off"
                 startContent={
-                  <TokenSwitcher
-                    imgName={buyTokenName}
-                    imgSrc={buyTokenSrc}
-                    token={token}
-                    isOpen={isTokenSwitcherOpen}
-                    setIsOpen={setIsTokenSwitcherOpen}
-                    onChange={(ticker, tickerSrc) => {
-                      setBuyTokenName(ticker);
-                      setBuyTokenSrc(tickerSrc);
-                    }}
-                    balance={
-                      buyTokenName === "ETH" ? Number(formatEther(ethBalance?.value || BigInt(0))) : tokenBalance
-                    }
-                  />
+                  <div className="relative flex items-center gap-2">
+                    <TokenSwitcher
+                      imgName={buyTokenName}
+                      imgSrc={buyTokenSrc}
+                      token={token}
+                      onChange={(ticker, tickerSrc) => {
+                        setBuyTokenName(ticker);
+                        setBuyTokenSrc(tickerSrc);
+                        setBuyAmount("");
+                        setBuyTokensReceived("");
+                        setBuyCost(BigInt(0));
+                      }}
+                      balance={
+                        buyTokenName === "ETH" ? Number(formatEther(ethBalance?.value || BigInt(0))) : tokenBalance
+                      }
+                    />
+                  </div>
                 }
               />
-              <div className="absolute top-[3.25rem] left-[1.125rem] transform -translate-y-1/2">
-                <MdOutlineKeyboardArrowDown
-                  size={20}
-                  className={`text-light-gray transition-transform duration-200 ${
-                    isTokenSwitcherOpen ? "rotate-180" : ""
-                  }`}
-                />
+              <div className="flex flex-col items-end absolute top-[3.4rem] right-[2.2rem] transform -translate-y-1/2">
+                <button
+                  disabled={!isConnected}
+                  onClick={() => {
+                    setBuyAmount(
+                      buyTokenName === "ETH" ? maxBuyPrice || "0" : tokenInfo?.availableSupply?.toString() || "0"
+                    );
+                    if (buyTokenName !== "ETH") {
+                      debouncedBuyCost(tokenInfo?.availableSupply?.toString() || "0");
+                    } else {
+                      setBuyTokensReceived(tokenInfo?.availableSupply?.toString() || "0");
+                    }
+                  }}
+                  className="text-black bg-primary rounded-3xl px-2 text-xs hover:bg-light-primary transition"
+                >
+                  MAX
+                </button>
+                <p className="text-light-gray text-xs whitespace-nowrap">
+                  {buyTokenName === "ETH"
+                    ? `${maxBuyPrice || 0.0} ETH`
+                    : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
+                </p>
+              </div>
+
+              <div className="absolute top-[3.25rem] left-[1.5rem] transform -translate-y-1/2">
+                <MdOutlineKeyboardArrowDown size={22} className="text-light-gray" />
               </div>
               <div className="absolute left-1/2 top-[35%] transform -translate-x-1/2 -translate-y-1/2 bg-dark rounded-full">
                 <FaRegArrowAltCircleDown size={24} className="text-gray" />
               </div>
-              <div className="h-[70px] flex items-center gap-2 p-2 rounded-xl bg-dark w-full">
-                <Image
-                  src={
-                    (chain.name === Chain.Solana && buyTokenName === "SOL") ||
+              <div className="h-[70px] flex items-center justify-between py-2 px-7 rounded-xl bg-dark w-full">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={
+                      (chain.name === Chain.Solana && buyTokenName === "SOL") ||
+                      (chain.name === Chain.Eth && buyTokenName === "ETH")
+                        ? token.image
+                        : chain.name === Chain.Solana
+                        ? solanaLogo
+                        : ethLogo
+                    }
+                    alt="eth"
+                    width={35}
+                    height={35}
+                    className="rounded-full"
+                  />
+                  <p>
+                    {(chain.name === Chain.Solana && buyTokenName === "SOL") ||
                     (chain.name === Chain.Eth && buyTokenName === "ETH")
-                      ? token.image
+                      ? `$${formatTicker(token.ticker)}`
                       : chain.name === Chain.Solana
-                      ? solanaLogo
-                      : ethLogo
-                  }
-                  alt="eth"
-                  width={35}
-                  height={35}
-                  className="ml-2 rounded-full"
-                />
-                <p>
-                  {(chain.name === Chain.Solana && buyTokenName === "SOL") ||
-                  (chain.name === Chain.Eth && buyTokenName === "ETH")
-                    ? `$${formatTicker(token.ticker)}`
-                    : chain.name === Chain.Solana
-                    ? "$SOL"
-                    : "$ETH"}
-                </p>
+                      ? "$SOL"
+                      : "$ETH"}
+                  </p>
+                </div>
                 {buyTokenName !== "ETH" && (
-                  <p className="text-light-gray text-sm ml-4">
+                  <p className="text-light-gray text-sm mr-[3.25rem] tablet:mr-[4.25rem]">
                     {buyCost !== BigInt(0) ? Number(formatUnits(buyCost)).toFixed(6) : "0.0"}
                   </p>
                 )}
                 {buyTokenName === "ETH" && (
-                  <p className="text-light-gray text-sm ml-4">
+                  <p className="text-light-gray text-sm mr-[3.25rem] tablet:mr-[4.25rem]">
                     {buyTokenName === "ETH" && buyTokensReceived !== "" && buyAmount !== ""
                       ? formatNumber(Math.round(Number(buyTokensReceived)))
                       : "0.0"}
@@ -318,8 +344,8 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
             <>
               <Input
                 classNames={{
-                  input: "ml-[3.25rem] appearance-none",
-                  inputWrapper: ["h-[70px] px-4 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
+                  input: "text-right appearance-none",
+                  inputWrapper: ["h-[70px] px-7 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
                 }}
                 placeholder="0.0"
                 value={sellAmount ? formatNumber(Math.round(Number(sellAmount))) : ""}
@@ -338,7 +364,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 <FaRegArrowAltCircleDown size={24} className="text-gray" />
               </div>
 
-              <div className="absolute top-[20.5%] left-[4.9rem]">
+              <div className="absolute top-[20.5%] left-[5.7rem]">
                 <div className="flex items-center gap-x-1">
                   <p className="text-light-gray text-xs">
                     <FaWallet size={12} />
@@ -347,16 +373,18 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
                 </div>
               </div>
 
-              <div className="h-[70px] flex items-center gap-2 p-2 rounded-xl bg-dark w-full">
-                <Image
-                  src={chain.name === Chain.Solana ? solanaLogo : ethLogo}
-                  alt="eth"
-                  width={35}
-                  height={35}
-                  className="ml-2"
-                />
-                <p>{chain.name === Chain.Solana ? "$SOL" : "$ETH"}</p>
-                <p className="text-light-gray text-sm ml-4">
+              <div className="h-[70px] flex items-center justify-between py-2 px-7 rounded-xl bg-dark w-full">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={chain.name === Chain.Solana ? solanaLogo : ethLogo}
+                    alt="chain-logo"
+                    width={35}
+                    height={35}
+                    className="rounded-full"
+                  />
+                  <p>{chain.name === Chain.Solana ? "$SOL" : "$ETH"}</p>
+                </div>
+                <p className="text-light-gray text-sm">
                   {sellPayout !== BigInt(0) ? Number(formatUnits(sellPayout)).toFixed(6) : "0.0"}
                 </p>
               </div>
@@ -438,7 +466,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
           <button
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
             disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === "" || !isConnected}
-            className={`flex items-center justify-center w-full h-[40px] p-4 rounded-xl text-lg font-proximaSoftBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
+            className={`flex items-center justify-center w-full h-[40px] p-4 rounded-xl text-lg font-proximaNovaBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
               activeTab === TradingTab.BUY
                 ? "bg-green text-black hover:bg-light-green"
                 : "bg-red text-white hover:bg-rose"

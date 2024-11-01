@@ -1,51 +1,46 @@
 import { memepoolsAbi } from "@/abi/memepools";
-import { contractAddress, ethChain, rpcUrl } from "@/config/env";
+import { contractAddress } from "@/config/env";
 import { Token } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect } from "react";
-import { createPublicClient, formatUnits, http } from "viem";
-import { TokenInfo } from "@/types/token/types";
+import { useEffect } from "react";
+import { formatUnits } from "viem";
 import { Channel } from "@/models/channel";
 import Pusher from "pusher-js";
 import getEthPrice from "@/lib/getEthPrice";
+import { useReadContract } from "wagmi";
 
 export default function useTokenInfo(token: Token) {
   const queryClient = useQueryClient();
-  const publicClient = createPublicClient({
-    chain: ethChain,
-    transport: http(rpcUrl),
-  });
 
-  const getTokenInfo = useCallback(async () => {
-    const ethPrice = await getEthPrice();
-    const tokenInfo = (await publicClient.readContract({
-      address: contractAddress,
-      abi: memepoolsAbi,
-      functionName: "tokenInfos",
-      args: [token.tokenAddress],
-    })) as any[];
-
-    let result: TokenInfo = {
-      tokenAddress: tokenInfo[0],
-      creator: tokenInfo[1],
-      totalSupply: Number(formatUnits(tokenInfo[2], 18)),
-      availableSupply: Number(formatUnits(tokenInfo[3], 18)),
-      marketcap: Number(formatUnits(tokenInfo[4], 18)) * ethPrice,
-      tokensSold: Number(formatUnits(tokenInfo[5], 18)),
-      balance: tokenInfo[6],
-      price: tokenInfo[7],
-      name: tokenInfo[8],
-      symbol: tokenInfo[9],
-      readyForLp: tokenInfo[10],
-      liquidityPoolSeeded: tokenInfo[11],
-    };
-
-    return result;
-  }, [publicClient, token.tokenAddress]);
+  const { data: tokenInfoRaw, refetch: refetchTokenInfoRaw } = useReadContract({
+    address: contractAddress,
+    abi: memepoolsAbi,
+    functionName: "tokenInfos",
+    args: [token.tokenAddress],
+  }) as { data: any[]; refetch: () => void };
 
   const { data: tokenInfo, refetch: refetchTokenInfo } = useQuery({
     queryKey: ["tokenInfo", token.id],
-    queryFn: () => getTokenInfo(),
+    queryFn: async () => {
+      const ethPrice = await getEthPrice();
+      if (!tokenInfoRaw) return null;
+
+      return {
+        tokenAddress: tokenInfoRaw[0],
+        creator: tokenInfoRaw[1],
+        totalSupply: Number(formatUnits(tokenInfoRaw[2], 18)),
+        availableSupply: Number(formatUnits(tokenInfoRaw[3], 18)),
+        marketcap: Number(formatUnits(tokenInfoRaw[4], 18)) * ethPrice,
+        tokensSold: Number(formatUnits(tokenInfoRaw[5], 18)),
+        balance: tokenInfoRaw[6],
+        price: tokenInfoRaw[7],
+        name: tokenInfoRaw[8],
+        symbol: tokenInfoRaw[9],
+        readyForLp: tokenInfoRaw[10],
+        liquidityPoolSeeded: tokenInfoRaw[11],
+      };
+    },
+    enabled: !!tokenInfoRaw,
   });
 
   useEffect(() => {
@@ -64,7 +59,19 @@ export default function useTokenInfo(token: Token) {
     const sellChannel = pusher.subscribe(Channel.Sell);
 
     const handleTrade = () => {
-      queryClient.invalidateQueries({ queryKey: ["tokenInfo", token.id] });
+      refetchTokenInfoRaw();
+
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["tokenInfo", token.id],
+        });
+      }, 1000);
+
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["maxBuyPrice", token.id],
+        });
+      }, 2000);
     };
 
     buyChannel.bind(token.id, handleTrade);
@@ -76,7 +83,7 @@ export default function useTokenInfo(token: Token) {
       pusher.unsubscribe(Channel.Buy);
       pusher.unsubscribe(Channel.Sell);
     };
-  }, [token.id, queryClient]);
+  }, [token.id, queryClient, tokenInfo?.availableSupply, refetchTokenInfoRaw]);
 
   return {
     tokenInfo,

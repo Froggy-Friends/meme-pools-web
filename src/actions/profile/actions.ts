@@ -58,7 +58,7 @@ export async function updateUserData(formData: FormData, address: Address) {
   let imageUrl = "";
   let blob: PutBlobResult;
 
-  if (imageFile) {
+  if (imageFile && imageFile.name !== "undefined") {
     blob = await put(imageFile.name, imageFile, {
       access: "public",
     });
@@ -67,7 +67,7 @@ export async function updateUserData(formData: FormData, address: Address) {
       ? (imageUrl = user.imageUrl)
       : (imageUrl = blob.url);
   } else {
-    imageUrl = defaultProfileAvatarUrl;
+    imageUrl = user?.imageUrl || defaultProfileAvatarUrl;
   }
 
   const email = formData.get("email") as string;
