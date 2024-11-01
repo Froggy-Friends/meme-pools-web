@@ -50,7 +50,6 @@ export async function updateUserData(formData: FormData, address: Address) {
   const name = formData.get("username") as string;
 
   const imageFile = formData.get("profile-picture") as File;
-  console.log("imageFile", imageFile);
 
   const ethAddress = formData.get("ethereum-address") as string;
 

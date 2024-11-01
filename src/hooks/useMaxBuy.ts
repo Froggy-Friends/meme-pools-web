@@ -3,6 +3,7 @@ import useTokenInfo from "./useTokenInfo";
 import useBuyPrice from "./useBuyPrice";
 import { formatEther, parseUnits } from "viem";
 import { useQuery } from "@tanstack/react-query";
+import * as Sentry from "@sentry/react";
 
 export default function useMaxBuy(token: Token) {
   const { tokenInfo } = useTokenInfo(token);
@@ -28,7 +29,7 @@ export default function useMaxBuy(token: Token) {
           ? Number(formattedCost).toFixed(2)
           : "0.0";
       } catch (err) {
-        console.error("Error calculating max buy price:", err);
+        Sentry.captureException(err);
         return "0.0";
       }
     },

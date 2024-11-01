@@ -15,11 +15,7 @@ type TokenSwitcherProps = {
 
 export default function TokenSwitcher({ imgName, imgSrc, token, onChange, balance }: TokenSwitcherProps) {
   const handleClick = () => {
-    if (imgName === "ETH") {
-      onChange(token.ticker, token.image);
-    } else {
-      onChange("ETH", ethLogo);
-    }
+    imgName === "ETH" ? onChange(token.ticker, token.image) : onChange("ETH", ethLogo);
   };
 
   return (
