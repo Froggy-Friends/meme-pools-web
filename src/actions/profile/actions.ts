@@ -1,17 +1,19 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { Address } from "@/lib/types";
+import { revalidatePath } from "next/cache";
 import { put, PutBlobResult } from "@vercel/blob";
-import { defaultProfileAvatarUrl, fetchUserCacheTag } from "@/config/user";
+import { defaultProfileAvatarUrl } from "@/config/user";
 import { UserParams } from "@/app/profile/[username]/types";
 import { fetchFollow, fetchUser } from "@/queries/profile/queries";
 import { cookies } from "next/headers";
-import { User } from "@prisma/client";
+import { Follow, User } from "@prisma/client";
 import { FollowStatus } from "@/models/follow";
 import { Cookie } from "@/models/cookie";
 import { Chain } from "@/models/chain";
+import { getPusher } from "@/config/pusher";
+import { Channel } from "@/models/channel";
+import { Address } from "viem";
 
 export const createUser = async ({
   name,
@@ -23,23 +25,23 @@ export const createUser = async ({
     return;
   }
 
-  if (!name) {
-    name = wallet;
-  }
-
   imageUrl = defaultProfileAvatarUrl;
 
-  await prisma.user.create({
-    data: {
-      name: name!,
-      solAddress: !wallet.includes("0x") ? wallet : null,
-      ethAddress: wallet.includes("0x") ? wallet : null,
-      imageUrl: imageUrl,
-      email: email,
-    },
-  });
+  try {
+    const user = await prisma.user.create({
+      data: {
+        name: name || wallet,
+        solAddress: !wallet.includes("0x") ? wallet : null,
+        ethAddress: wallet.includes("0x") ? wallet : null,
+        imageUrl: imageUrl,
+        email: email,
+      },
+    });
 
-  revalidateTag(fetchUserCacheTag);
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export async function updateUserData(formData: FormData, address: Address) {
@@ -56,7 +58,7 @@ export async function updateUserData(formData: FormData, address: Address) {
   let imageUrl = "";
   let blob: PutBlobResult;
 
-  if (imageFile) {
+  if (imageFile && imageFile.name !== "undefined") {
     blob = await put(imageFile.name, imageFile, {
       access: "public",
     });
@@ -65,7 +67,7 @@ export async function updateUserData(formData: FormData, address: Address) {
       ? (imageUrl = user.imageUrl)
       : (imageUrl = blob.url);
   } else {
-    imageUrl = defaultProfileAvatarUrl;
+    imageUrl = user?.imageUrl || defaultProfileAvatarUrl;
   }
 
   const email = formData.get("email") as string;
@@ -85,62 +87,102 @@ export async function updateUserData(formData: FormData, address: Address) {
       },
     });
 
-    revalidateTag(fetchUserCacheTag);
+    revalidatePath("/profile");
   } else {
     return;
   }
 }
 
-export const followUser = async (accountId: string, followerId: string) => {
-  const follow = await fetchFollow(accountId, followerId);
+type FollowWithFollower = Follow & {
+  followerUser: User;
+  followingUser: User;
+};
 
-  if (!follow) {
-    await prisma.follow.create({
+export const followUser = async (accountId: string, followerId: string) => {
+  const existingFollow = await fetchFollow(accountId, followerId);
+  let follow: FollowWithFollower | null = null;
+
+  if (!existingFollow) {
+    follow = await prisma.follow.create({
       data: {
         account: accountId,
         follower: followerId,
         status: "Follow",
         followedAt: new Date(Date.now()),
       },
+      include: {
+        followerUser: true,
+        followingUser: true,
+      },
     });
   } else {
-    await prisma.follow.update({
+    follow = await prisma.follow.update({
       where: {
-        id: follow.id,
+        id: existingFollow.id,
       },
       data: {
         status: "Follow",
         followedAt: new Date(Date.now()),
         updatedAt: new Date(Date.now()),
       },
+      include: {
+        followerUser: true,
+        followingUser: true,
+      },
     });
   }
+
+  const pusher = getPusher();
+  await pusher.trigger(Channel.Follow, accountId, {
+    feedData: {
+      user: follow.followerUser,
+      date: follow.followedAt,
+      value: follow.followingUser.name,
+    },
+  });
 };
 
 export const unfollowUser = async (accountId: string, followerId: string) => {
-  const follow = await fetchFollow(accountId, followerId);
-
-  if (!follow) {
-    await prisma.follow.create({
+  const existingFollow = await fetchFollow(accountId, followerId);
+  let follow: FollowWithFollower | null = null;
+  if (!existingFollow) {
+    follow = await prisma.follow.create({
       data: {
         account: accountId,
         follower: followerId,
         status: "Unfollow",
         unfollowedAt: new Date(Date.now()),
       },
+      include: {
+        followerUser: true,
+        followingUser: true,
+      },
     });
   } else {
-    await prisma.follow.update({
+    follow = await prisma.follow.update({
       where: {
-        id: follow.id,
+        id: existingFollow.id,
       },
       data: {
         status: "Unfollow",
         unfollowedAt: new Date(Date.now()),
         updatedAt: new Date(Date.now()),
       },
+      include: {
+        followerUser: true,
+        followingUser: true,
+      },
     });
   }
+
+  const pusher = getPusher();
+  await pusher.trigger(Channel.Unfollow, accountId, {
+    feedData: {
+      user: follow.followerUser,
+      date: follow.unfollowedAt,
+      value: follow.followingUser.name,
+    },
+  });
 };
 
 export const setUserCookies = async (user: User | null, chain?: Chain) => {

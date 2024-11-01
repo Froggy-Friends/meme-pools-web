@@ -1,12 +1,10 @@
 import { usernameDisplayLength } from "@/config/user";
-import { User } from "@prisma/client";
 
-export const getUserDisplayName = (user: User) => {
-  if (!user) {
+export const getUserDisplayName = (username: string | undefined) => {
+  if (!username) {
     return "----";
-  } else if (user.name.length > usernameDisplayLength) {
-    return user.name.substring(0, usernameDisplayLength) + "...";
-  } else {
-    return user.name;
+  } else if (username.length > usernameDisplayLength) {
+    return username.substring(0, usernameDisplayLength) + "..";
   }
+  return username;
 };

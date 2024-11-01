@@ -7,7 +7,8 @@ import { MdKeyboardCommandKey } from "react-icons/md";
 import { useEffect } from "react";
 
 export default function TokenSearch() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
   useEffect(() => {
     const down = (e: any) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -21,22 +22,24 @@ export default function TokenSearch() {
   }, [onOpen]);
 
   return (
-    <section className="w-2/3 flex items-center gap-x-4">
+    <section className="flex items-center ml-12 tablet:ml-0 w-[200px] tablet:w-[280px] desktop:w-[330px]">
       <button
-        onClick={(e) => onOpen()}
-        className="flex items-center justify-between h-8 w-1/3 px-4 border-[0.25px] border-white/[5%] rounded-lg bg-dark-gray hover:bg-gray transition"
+        onClick={e => onOpen()}
+        className="flex items-center justify-between h-8 w-full px-4 border-[0.25px] border-white/[5%] rounded-xl bg-dark-gray hover:bg-gray transition"
       >
         <div className="flex items-center gap-x-4">
           <FaMagnifyingGlass size={16} />
-          <p className="text-light-gray">Search token</p>
+          <p className="text-light-gray flex gap-x-1">
+            Search <span className="hidden tablet:block">token</span>
+          </p>
         </div>
 
-        <div className="flex items-center bg-dark rounded-[4px] h-6 px-2">
+        <div className="hidden laptop:flex items-center bg-dark rounded-[4px] h-6 px-2">
           <MdKeyboardCommandKey size={14} />
           <p className="font-semibold text-sm">K</p>
         </div>
       </button>
-      <TokenSearchModal isOpen={isOpen} onOpenChange={onOpenChange} />
+      <TokenSearchModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} />
     </section>
   );
 }

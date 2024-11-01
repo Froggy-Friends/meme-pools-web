@@ -1,26 +1,32 @@
-import { frogFunAbi } from "@/abi/frogFun";
+import { memepoolsAbi } from "@/abi/memepools";
+import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { CreateTokenParams, TokenCreated } from "@/types/token/types";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
 import { toast } from "react-hot-toast";
+import { ContractEvent } from "@/models/contractEvent";
+import * as Sentry from "@sentry/react";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
-  const address = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-  const contract = new Contract(address!, frogFunAbi, signer);
+  const contract = new Contract(contractAddress, memepoolsAbi, signer);
 
   const getTokenDetails = async (
     receipt: ContractTransactionReceipt
   ): Promise<TokenCreated> => {
     const event = receipt.logs.find(
-      (e) => e instanceof EventLog && e.fragment.name === "TokenCreated"
+      (e) =>
+        e instanceof EventLog && e.fragment.name === ContractEvent.TokenCreated
     ) as EventLog;
-    const [creator, tokenId, reserved, tokenAddress] = event.args;
+
+    const [tokenAddress, creator, name, symbol, reserved] = event.args;
+
     return {
-      creator,
-      tokenId,
-      reserved,
       tokenAddress,
+      creator,
+      name,
+      symbol,
+      reserved,
     };
   };
 
@@ -30,21 +36,29 @@ export default function useCreateToken() {
     symbol,
   }: CreateTokenParams) => {
     try {
-      const cost = await contract.calculateReservePrice(reservedAmount);
+      const [price, cost, fee, total] = await contract.calculateReservePrice(
+        reservedAmount
+      );
       const tx = await contract.createToken(name, symbol, reservedAmount, {
-        value: cost,
+        value: total,
       });
+      const txHash = tx.hash;
       const receipt = await tx.wait();
-      const { creator, tokenId, reserved, tokenAddress } =
-        await getTokenDetails(receipt);
+
+      const { creator, reserved, tokenAddress } = await getTokenDetails(
+        receipt
+      );
+
       return {
-        creator,
-        tokenId,
-        reserved,
         tokenAddress,
+        creator,
+        name,
+        symbol,
+        reserved,
+        txHash,
       };
     } catch (error) {
-      console.log(error);
+      Sentry.captureException(error);
       toast.error("Launch token failed");
     }
   };

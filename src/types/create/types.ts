@@ -1,0 +1,1 @@
+export type CreateModalInputs = "twitter" | "telegram" | "website" | "discord" | "other";

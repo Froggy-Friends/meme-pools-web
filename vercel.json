@@ -1,0 +1,28 @@
+{
+  "crons": [
+    {
+      "path": "/api/tasks/refresh-newest",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/tasks/refresh-trending",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/tasks/refresh-transactions",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/tasks/refresh-volume",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/tasks/refresh-comments",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/tasks/refresh-votes",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}

@@ -1,4 +1,6 @@
-import { CommentLikes, Token, User } from "@prisma/client";
+import { Chain } from "@/models/chain";
+import { Trade } from "@/models/trade";
+import { CommentLikes, Meme, Token, Trades, User } from "@prisma/client";
 import { UseMutationResult } from "@tanstack/react-query";
 
 export type CreateTokenParams = {
@@ -8,10 +10,37 @@ export type CreateTokenParams = {
 };
 
 export type TokenCreated = {
-  creator: string;
-  tokenId: number;
-  reserved: number;
   tokenAddress: string;
+  creator: string;
+  name: string;
+  symbol: string;
+  reserved: number;
+};
+
+export type TokensBought = {
+  tokenAddress: string;
+  buyer: string;
+  amount: number;
+  price: number;
+  cost: number;
+};
+
+export type TokensSold = {
+  tokenAddress: string;
+  seller: string;
+  amount: number;
+  price: number;
+  payout: number;
+};
+
+export type TokenTradeEvent = {
+  maker: string;
+  tradeType: Trade;
+  price: number;
+  amount: number;
+  nativeCost: number;
+  usdCost: number;
+  txHash: string;
 };
 
 export type CommentWithLikes = {
@@ -25,13 +54,16 @@ export type CommentWithLikes = {
   commentLikeCount: number;
   commentDislikeCount: number;
   user: User;
+  isNew?: boolean;
 };
 
 export type TokenWithVoteCount = Token & { _count: { TokenVote: number } };
 
-export type TokenWithVotes = Token & { user: User }  & {
+export type TokenWithVotes = Token & { user: User } & {
   voteCount: { upVotes: number; downVotes: number };
 };
+
+export type TokenSearchResult = Token & { voteCount: number };
 
 export type HandleDislike = UseMutationResult<
   void,
@@ -58,3 +90,39 @@ export type HandleLike = UseMutationResult<
 >;
 
 export type CommentLikesWithUser = CommentLikes & { user: User };
+
+export type TradeWithUserAndToken = Trades & { User: User } & { Token: Token };
+
+export type MemeWithUser = Meme & { user: User };
+
+export type FormattedTrade = {
+  id: string;
+  category: Trade;
+  username: string;
+  userAvatar: string | null;
+  amount: number;
+  tokenTicker: string;
+  nativeCost: number;
+  usdCost: number;
+  chain: Chain;
+  transactionHash: string;
+  createdAt: Date;
+  isNew?: boolean;
+};
+
+export type TxStatus = "idle" | "pending" | "completed" | "error";
+
+export type TokenInfo = {
+  tokenAddress: string;
+  creator: string;
+  totalSupply: number;
+  availableSupply: number;
+  marketcap: number;
+  tokensSold: number;
+  balance: bigint;
+  price: bigint;
+  name: string;
+  symbol: string;
+  readyForLp: boolean;
+  liquidityPoolSeeded: boolean;
+};

@@ -7,11 +7,16 @@ html {
 }
 
 @font-face {
-  font-family: "ProximaSoft";
-  src: url("../../public/fonts/ProximaSoft-Regular.woff2");
+  font-family: "AllumiBold";
+  src: url("../../public/fonts/AllumiStd-Bold.otf");
 }
 
 @font-face {
-  font-family: "ProximaSoftBold";
-  src: url("../../public/fonts/ProximaSoft-Bold.woff2");
+  font-family: "ProximaNova";
+  src: url("../../public/fonts/ProximaNova-Regular.otf");
+}
+
+@font-face {
+  font-family: "ProximaNovaBold";
+  src: url("../../public/fonts/ProximaNova-Bold.otf");
 }

@@ -16,26 +16,13 @@ type TokenCommentProps = {
   comment: CommentWithLikes;
   author: User;
   cachedUser: User | null;
+  isNew?: boolean;
 };
 
-export default function TokenComment({
-  comment,
-  author,
-  cachedUser,
-}: TokenCommentProps) {
-  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(
-    comment,
-    cachedUser!
-  );
+export default function TokenComment({ comment, author, cachedUser, isNew }: TokenCommentProps) {
+  const { userCommentLike, userCommentDislike } = getUserCommentInteraction(comment, cachedUser);
 
-  const {
-    likes,
-    commentLike,
-    handleLike,
-    dislikes,
-    commentDisLike,
-    handleDislike,
-  } = useCommentLike(
+  const { likes, commentLike, handleLike, dislikes, commentDisLike, handleDislike } = useCommentLike(
     comment,
     userCommentLike,
     userCommentDislike,
@@ -44,7 +31,11 @@ export default function TokenComment({
   );
 
   return (
-    <div className="flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1">
+    <div
+      className={`flex items-center justify-between w-full h-[70px] rounded-lg bg-dark px-4 mb-1 ${
+        isNew ? "animate-primaryPulse" : ""
+      }`}
+    >
       <div className="flex items-center gap-x-4">
         <Image
           src={author.imageUrl || defaultProfileAvatarUrl}
@@ -60,26 +51,18 @@ export default function TokenComment({
               href={`/profile/${author.name}`}
               className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
             >
-              {getUserDisplayName(author)}
+              {getUserDisplayName(author.name)}
             </Link>
             <p className="text-gray">{getTimeDifference(comment.createdAt)}</p>
           </div>
 
-          <p>{comment.message}</p>
+          <p className="overflow-y-auto">{comment.message}</p>
         </div>
       </div>
 
       <div className="flex gap-x-3">
-        <LikeButton
-          likes={likes}
-          commentLike={commentLike}
-          handleLike={handleLike}
-        />
-        <DislikeButton
-          dislikes={dislikes}
-          commentDisLike={commentDisLike}
-          handleDislike={handleDislike}
-        />
+        <LikeButton likes={likes} commentLike={commentLike} handleLike={handleLike} />
+        <DislikeButton dislikes={dislikes} commentDisLike={commentDisLike} handleDislike={handleDislike} />
       </div>
     </div>
   );

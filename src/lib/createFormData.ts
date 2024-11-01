@@ -1,6 +1,6 @@
-import { LaunchFormValues } from "@/components/launch/LaunchCoinForm";
+import { CreateFormValues } from "@/components/create/CreateCoinForm";
 
-export const createFormData = (data: LaunchFormValues) => {
+export const createFormData = (data: CreateFormValues) => {
   const formData = new FormData();
 
   formData.set("name", data.name);

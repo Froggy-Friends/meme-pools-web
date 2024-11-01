@@ -1,12 +1,9 @@
-import { wethAddress } from "@/config/eth/token";
 import getEthPrice from "@/lib/getEthPrice";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import BondingCurveProgress from "../../../../components/token/BondingCurveProgress";
-import CommentsAndTradesContainer from "../../../../components/token/CommentsAndTradesContainer";
-import VotingProgress from "@/components/token/VotingProgress";
 import TokenInfo from "../../../../components/token/TokenInfo";
-import TokenSwap from "../../../../components/token/TokenSwap";
+import Swap from "../../../../components/swap/Swap";
 import { fetchTokenByAddress } from "../../../../queries/token/queries";
 import { SearchParams } from "@/lib/types";
 import { CommentAndTradesView, CommentAndTradesViews } from "@/models/comment";
@@ -14,16 +11,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { fetchUser, fetchUserById } from "@/queries/profile/queries";
 import { Chain } from "@/models/chain";
-import BackButton from "@/components/BackButton";
 import { cookies } from "next/headers";
 import { Cookie } from "@/models/cookie";
+import TokenActions from "@/components/token/TokenActions";
+import TokenInteractionContainer from "../../../../components/token/TokenInteractionContainer";
+import LiquidityPoolBanner from "@/components/token/LiquidityPoolBanner";
 
-const DynamicTokenChart = dynamic(
-  () => import("../../../../components/token/TokenChart"),
-  {
-    ssr: false,
-  }
-);
+const DynamicTokenChart = dynamic(() => import("../../../../components/token/TokenChart"), {
+  ssr: false,
+});
 
 type TokenDetailsPageProps = {
   params: {
@@ -32,13 +28,8 @@ type TokenDetailsPageProps = {
   searchParams: SearchParams;
 };
 
-export default async function TokenDetailsPage({
-  params,
-  searchParams,
-}: TokenDetailsPageProps) {
-  const view =
-    (searchParams.view as CommentAndTradesView) ||
-    CommentAndTradesViews.COMMENTS;
+export default async function TokenDetailsPage({ params, searchParams }: TokenDetailsPageProps) {
+  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.TRADES;
   const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
@@ -46,45 +37,40 @@ export default async function TokenDetailsPage({
     redirect("/");
   }
 
-  const ethPrice = await getEthPrice(wethAddress);
+  const ethPrice = await getEthPrice();
   const creator = await fetchUserById(token.userId);
   const cookieStore = cookies();
   const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const cachedUser = await fetchUser(cachedUserEvmAddress?.value);
 
   return (
-    <main className="flex flex-col max-w-[1200px] min-h-[100vh] px-4 mx-auto">
+    <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 tablet:px-4">
       <Header chain={Chain.Eth} />
 
-      <BackButton />
+      <LiquidityPoolBanner token={token} />
 
-      <TokenInfo
-        token={token}
-        creator={creator}
-        cachedUser={cachedUser || null}
-      />
+      <TokenInfo token={token} creator={creator} />
 
-      <div className="flex gap-x-10">
-        <div className="w-[65%] flex flex-col">
-          <DynamicTokenChart />
+      <div className="flex flex-col desktop:flex-row gap-x-10 w-full">
+        <div className="flex-[3] flex flex-col mobile-chart">
+          <TokenActions token={token} cachedUser={cachedUser || null} />
+          <DynamicTokenChart token={token} />
         </div>
 
-        <div className="flex flex-col">
-          <TokenSwap
-            tokenAddress={token.tokenAddress}
-            tokenTicker={token.ticker.toUpperCase()}
-            currPrice={2}
-            ethPrice={ethPrice}
-          />
+        <div className="flex-1 flex flex-col laptop:flex-row desktop:flex-col gap-x-6  mt-[55px] desktop:mt-0 mobile-trade">
+          <Swap token={token} currPrice={2} ethPrice={ethPrice} />
 
-          <BondingCurveProgress />
-          <VotingProgress token={token} />
+          <div className="flex flex-col tablet:flex-row laptop:flex-col gap-x-4 mt-12 desktop:mt-0">
+            <BondingCurveProgress token={token} />
+          </div>
         </div>
       </div>
-      <CommentsAndTradesContainer
+
+      <TokenInteractionContainer
         view={view}
         tokenAddress={tokenAddress}
         tokenId={token.id}
+        tokenTicker={token.ticker}
         cachedUser={cachedUser || null}
       />
       <Footer />

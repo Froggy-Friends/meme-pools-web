@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 
@@ -8,7 +8,7 @@ export default function EvmConnectButton() {
   return (
     <>
       <button
-        className="py-2 px-4 rounded-md bg-green text-dark text-xl font-proximaSoftBold hover:bg-light-green active:scale-[0.97] transition"
+        className="flex items-center h-8 w-38 py-2 px-4 rounded-xl bg-primary text-dark text-sm font-proximaNovaBold hover:bg-light-primary active:scale-[0.97] transition"
         onClick={() => open()}
       >
         Connect

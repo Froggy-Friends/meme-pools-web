@@ -7,20 +7,20 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Channel } from "@/models/channel";
 import Pusher from "pusher-js";
+import { usePostHog } from "posthog-js/react";
+import Link from "next/link";
 
 type TokenCommentsProps = {
   comments: CommentWithLikes[];
   cachedUser: User | null;
   tokenId: string;
+  tokenTicker: string;
 };
 
-export default function TokenComments({
-  comments,
-  cachedUser,
-  tokenId,
-}: TokenCommentsProps) {
+export default function TokenComments({ comments, cachedUser, tokenId, tokenTicker }: TokenCommentsProps) {
   const queryClient = useQueryClient();
   const [tokenComments, setTokenComments] = useState(comments);
+  const posthog = usePostHog();
 
   const { data } = useQuery({
     queryKey: ["token-comments", tokenId],
@@ -28,31 +28,23 @@ export default function TokenComments({
   });
 
   useEffect(() => {
-    if (
-      !process.env.NEXT_PUBLIC_PUSHER_CLUSTER ||
-      !process.env.NEXT_PUBLIC_PUSHER_KEY
-    ) {
+    if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
       throw new Error("Missing pusher env variables");
     }
-    
+
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });
 
     const channel = pusher.subscribe(Channel.Comment);
 
-    channel.bind(tokenId, (newData: CommentWithLikes) => {
+    channel.bind(tokenId, ({ comment }: { comment: CommentWithLikes }) => {
       queryClient.setQueryData(
         ["token-comments", tokenId],
-        [
-          ...tokenComments,
-          { ...newData, commentLikeCount: 0, commentDislikeCount: 0 },
-        ]
+        [...tokenComments, { ...comment, commentLikeCount: 0, commentDislikeCount: 0, isNew: true }]
       );
-      setTokenComments((prev) => [
-        ...prev,
-        { ...newData, commentLikeCount: 0, commentDislikeCount: 0 },
-      ]);
+      setTokenComments(prev => [...prev, { ...comment, commentLikeCount: 0, commentDislikeCount: 0, isNew: true }]);
+      posthog.capture("new_comment", { tokenId: tokenId, comment: comment });
     });
 
     return () => {
@@ -60,17 +52,27 @@ export default function TokenComments({
       channel.unsubscribe();
       pusher.disconnect();
     };
-  }, [queryClient, tokenComments, tokenId]);
+  }, [queryClient, tokenComments, tokenId, posthog]);
 
   return (
-    <section className="flex flex-col mt-4">
-      {data.map((comment) => {
+    <section className="flex flex-col">
+      {!data.length && (
+        <p className="ml-1">
+          Be the first to{" "}
+          <Link href="#post-comment" className="text-primary hover:text-light-primary transition">
+            comment
+          </Link>{" "}
+          on ${tokenTicker}
+        </p>
+      )}
+      {data.map(comment => {
         return (
           <TokenComment
             key={comment.id}
             comment={comment}
             author={comment.user}
             cachedUser={cachedUser || null}
+            isNew={comment.isNew}
           />
         );
       })}

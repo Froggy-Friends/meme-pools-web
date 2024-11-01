@@ -1,7 +1,5 @@
-export function formatAddress(str: string, chars: number) {
+export function formatAddress(str: string | null) {
   if (!str) return null;
 
-  const start = str.substring(0, chars);
-  const end = str.substring(str.length-chars);
-  return `${start}...${end}`;
+  return str.substring(str.length - 7, str.length);
 }

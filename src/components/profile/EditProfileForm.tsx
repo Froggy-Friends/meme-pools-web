@@ -16,9 +16,7 @@ type HowItWorkdsModalProps = {
   profileUser: User;
 };
 
-export default function EditProfileForm({
-  profileUser,
-}: HowItWorkdsModalProps) {
+export default function EditProfileForm({ profileUser }: HowItWorkdsModalProps) {
   const router = useRouter();
   const [userExists, setUserExists] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(false);
@@ -26,7 +24,7 @@ export default function EditProfileForm({
   const { currentUser } = useUser();
   const disabled = profileUser.id !== currentUser?.id;
   const inputStyles =
-    "h-10 w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
+    "h-10 w-fit min-w-[375px] max-w-[410px] tablet:min-w-[425px] tablet:w-[425px] laptop:min-w-[340px] laptop:w-[340px] desktop:min-w-[425px] desktop:w-[425px] bg-dark-gray mb-6 mt-1 px-2 rounded-lg outline-0 focus:ring-2 ring-gray";
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -34,9 +32,7 @@ export default function EditProfileForm({
 
       address && (await updateUserData(formData, address));
 
-      setTimeout(() => {
-        toast.success("Profile successfully updated!");
-      }, 2000);
+      toast.success("Profile successfully updated!");
 
       if (username) {
         router.push(`/profile/${username}`);
@@ -46,7 +42,7 @@ export default function EditProfileForm({
     }
   };
 
-  const debounced = useDebouncedCallback(async (value) => {
+  const debounced = useDebouncedCallback(async value => {
     const usernameExists = await fetchUserByName(value);
     if (usernameExists) {
       setUserExists(true);
@@ -56,99 +52,102 @@ export default function EditProfileForm({
   }, 500);
 
   return (
-    <form className="mt-4 flex flex-col" action={handleSubmit}>
-      <div className="flex">
-        <div className="flex flex-col mx-12">
-          <div className="flex items-center gap-x-3">
-            <label htmlFor="username">Username</label>
-            {userExists && (
-              <p className="text-red-500">Username already exists</p>
-            )}
-            {usernameAvailable && (
-              <p className="text-green">Username available</p>
-            )}
+    <>
+      <div className="h-[2px] mt-2 laptop:mt-4 w-full tablet:w-[430px] tablet:mx-auto laptop:mx-0 laptop:w-[720px] desktop:w-[890px] bg-dark-gray" />
+      <form
+        className="mt-6 mb-12 laptop:mb-24 flex flex-col items-center w-full laptop:items-start laptop:w-fit"
+        action={handleSubmit}
+      >
+        <div className="flex flex-col laptop:flex-row laptop:gap-x-10">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-x-3">
+              <label htmlFor="username">Username</label>
+              {userExists && <p className="text-red">Username already exists</p>}
+              {usernameAvailable && <p className="text-primary">Username available</p>}
+            </div>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              minLength={1}
+              maxLength={44}
+              className={cn(inputStyles, userExists && "ring-red", usernameAvailable && "ring-primary")}
+              autoComplete="off"
+              defaultValue={profileUser.name}
+              onChange={async e => {
+                setUserExists(false);
+                setUsernameAvailable(false);
+                await debounced(e.target.value);
+              }}
+              disabled={disabled}
+            />
+
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              className={inputStyles}
+              autoComplete="off"
+              defaultValue={profileUser.email || ""}
+              disabled={disabled}
+            />
+
+            <label htmlFor="profile-picture">Profile Picture</label>
+            <input
+              type="file"
+              id="profile-picture"
+              name="profile-picture"
+              className={`${inputStyles} ${
+                disabled
+                  ? "file:hover:cursor-not-allowed file:hover:bg-gray"
+                  : "file:hover:cursor-pointer file:hover:bg-gray/80"
+              } file:mt-1 file:bg-gray file:rounded-lg file:text-white file:border-0 file:px-2 file:py-1`}
+              autoComplete="off"
+              disabled={disabled}
+            />
           </div>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            minLength={1}
-            maxLength={44}
+
+          <div className="flex flex-col">
+            <label htmlFor="ethereum-address">Ethereum Address</label>
+            <input
+              type="text"
+              id="ethereum-address"
+              name="ethereum-address"
+              className={inputStyles}
+              pattern="^(0x)[0-9a-fA-F]{40}$"
+              title="Enter a valid Ethereum address."
+              autoComplete="off"
+              defaultValue={profileUser.ethAddress || ""}
+              disabled={disabled}
+            />
+
+            <label htmlFor="solana-address">Solana Address</label>
+            <input
+              type="text"
+              id="solana-address"
+              name="solana-address"
+              className={inputStyles}
+              autoComplete="off"
+              defaultValue={profileUser.solAddress || ""}
+              disabled={disabled}
+            />
+          </div>
+        </div>
+
+        {!disabled && (
+          <FormSubmitButton
+            disabled={userExists}
+            pendingText="SAVING..."
             className={cn(
-              inputStyles,
-              userExists && "ring-red-500",
-              usernameAvailable && "ring-green"
+              "self-center flex justify-center items-center text-lg bg-primary text-dark font-proximaNovaBold h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-12 laptop:mt-20 laptop:mb-24 laptop:mr-6 rounded-xl hover:bg-light-primary active:scale-[0.98] transition",
+              userExists && "hover:bg-primary"
             )}
-            autoComplete="off"
-            defaultValue={profileUser.name}
-            onChange={async (e) => {
-              setUserExists(false);
-              setUsernameAvailable(false);
-              await debounced(e.target.value);
-            }}
-            disabled={disabled}
-          />
-
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className={inputStyles}
-            autoComplete="off"
-            defaultValue={profileUser.email || ""}
-            disabled={disabled}
-          />
-
-          <label htmlFor="profile-picture">Profile Picture</label>
-          <input
-            type="file"
-            id="profile-picture"
-            name="profile-picture"
-            className={`${inputStyles} file:mt-1 file:bg-gray file:rounded-lg file:text-white file:border-0 file:px-2 file:py-1 file:hover:cursor-pointer file:hover:bg-gray/80`}
-            autoComplete="off"
-            disabled={disabled}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="ethereum-address">Ethereum Address</label>
-          <input
-            type="text"
-            id="ethereum-address"
-            name="ethereum-address"
-            className={inputStyles}
-            pattern="^(0x)[0-9a-fA-F]{40}$"
-            title="Enter a valid Ethereum address."
-            autoComplete="off"
-            defaultValue={profileUser.ethAddress || ""}
-            disabled={disabled}
-          />
-
-          <label htmlFor="solana-address">Solana Address</label>
-          <input
-            type="text"
-            id="solana-address"
-            name="solana-address"
-            className={inputStyles}
-            autoComplete="off"
-            defaultValue={profileUser.solAddress || ""}
-            disabled={disabled}
-          />
-        </div>
-      </div>
-
-      {!disabled && (
-        <FormSubmitButton
-          disabled={userExists}
-          className={cn(
-            "self-center flex justify-center items-center text-lg bg-green text-dark font-proximaSoftBold h-10 w-[425px] my-20 mr-6 rounded-3xl hover:bg-light-green active:scale-[0.98] transition",
-            userExists && "hover:bg-green"
-          )}
-        >
-          SAVE PROFILE
-        </FormSubmitButton>
-      )}
-    </form>
+          >
+            SAVE PROFILE
+          </FormSubmitButton>
+        )}
+      </form>
+    </>
   );
 }

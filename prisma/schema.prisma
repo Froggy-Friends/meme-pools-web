@@ -30,8 +30,6 @@ model Token {
   twitter      String?
   telegram     String?
   website      String?
-  discord      String?
-  other        String?
   userId       String        @db.Uuid
   name         String
   createdAt    DateTime      @default(now()) @db.Timestamptz(6)
@@ -39,46 +37,54 @@ model Token {
   tokenAddress String        @unique
   tokenCreator String
   marketCap    Int
+  discord      String?
+  other        String?
+  chain        String
   Comment      Comment[]
   leaderboard  Leaderboard[]
   user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
   TokenVote    TokenVote[]
   Trades       Trades[]
+  Meme         Meme[]
 }
 
 model User {
-  id            String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
-  name          String         @unique(map: "unique_username")
-  imageUrl      String?
-  email         String?
-  createdAt     DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt     DateTime?      @default(now()) @db.Timestamptz(6)
-  solAddress    String?        @unique(map: "User_solanaAddress_key")
-  ethAddress    String?        @unique(map: "User_ethereumAddress_key")
-  twitterId     BigInt?        @unique(map: "unique_twitter_id")
-  twitterFollowers             BigInt?
-  Comment       Comment[]
-  CommentLikes  CommentLikes[]
-  followingUser Follow[]       @relation("Follow_accountToUser")
-  followerUser  Follow[]       @relation("Follow_followerToUser")
-  leaderboard   Leaderboard[]
-  token         Token[]
-  TokenVote     TokenVote[]
-  Trades        Trades[]
+  id               String         @id(map: "user_pkey") @default(uuid()) @db.Uuid
+  name             String         @unique(map: "User_name_key")
+  imageUrl         String?
+  email            String?
+  createdAt        DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime?      @default(now()) @db.Timestamptz(6)
+  solAddress       String?        @unique(map: "User_solanaAddress_key")
+  ethAddress       String?        @unique(map: "User_ethereumAddress_key")
+  twitterId        BigInt?        @unique(map: "unique_twitter_id")
+  twitterFollowers BigInt?
+  Comment          Comment[]
+  CommentLikes     CommentLikes[]
+  followingUser    Follow[]       @relation("Follow_accountToUser")
+  followerUser     Follow[]       @relation("Follow_followerToUser")
+  leaderboard      Leaderboard[]
+  token            Token[]
+  TokenVote        TokenVote[]
+  Trades           Trades[]
+  Meme             Meme[]
 }
 
 model Trades {
-  id          String   @id(map: "trade_pkey") @default(uuid()) @db.Uuid
-  tokenId     String   @db.Uuid
-  userId      String   @db.Uuid
-  category    String
-  price       Int
-  amount      Int
-  nativeToken String
-  chain       String
-  createdAt   DateTime @default(now()) @db.Timetz(6)
-  Token       Token    @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
-  User        User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
+  id              String   @id(map: "trade_pkey") @default(uuid()) @db.Uuid
+  tokenId         String   @db.Uuid
+  userId          String   @db.Uuid
+  category        String
+  price           Decimal  @db.Decimal(26, 18)
+  amount          Decimal  @db.Decimal(28, 18)
+  nativeCost      Decimal  @db.Decimal(26, 18)
+  usdCost         Decimal  @db.Decimal(26, 18)
+  nativeToken     String
+  chain           String
+  transactionHash String
+  createdAt       DateTime @default(now()) @db.Timestamptz(6)
+  Token           Token    @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
+  User            User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
 }
 
 model Follow {
@@ -129,4 +135,16 @@ model TokenVote {
   User       User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vote_user_fk")
 
   @@unique([tokenId, userId], map: "vote_token_user_unique")
+}
+
+model Meme {
+  id        String    @id(map: "meme_pkey") @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenId   String    @db.Uuid
+  imageUrl  String
+  caption   String
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @default(now()) @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
+  token     Token     @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
 }

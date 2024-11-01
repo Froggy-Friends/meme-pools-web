@@ -1,12 +1,5 @@
-
-export default async function getEthPrice(address: string) {
-  const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
+export default async function getEthPrice() {
+  const res = await fetch("https://api.coinbase.com/v2/prices/ETH-USD/spot");
   const data = await res.json();
-  const ethPrice = data.ethereum.usd;
-
-  if (!ethPrice) {
-    throw new Error("Error fetching ETH price");
-  }
-
-  return Number(ethPrice);
+  return Number(data.data.amount);
 }

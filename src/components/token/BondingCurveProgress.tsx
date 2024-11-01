@@ -1,23 +1,45 @@
-import { Progress } from "@nextui-org/react";
+"use client";
 
-export default function BondingCurveProgress() {
+import { Progress } from "@nextui-org/react";
+import { Token } from "@prisma/client";
+import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
+import useTokenInfo from "@/hooks/useTokenInfo";
+import useMarketcapGoal from "@/hooks/useMarketcapGoal";
+import Link from "next/link";
+
+type BondingCurveProgressProps = {
+  token: Token;
+};
+
+export default function BondingCurveProgress({ token }: BondingCurveProgressProps) {
+  const { tokenInfo } = useTokenInfo(token);
+  const marketcapGoal = useMarketcapGoal();
+
   return (
-    <section className="mt-6 w-[350px]">
+    <section className="mt-6 laptop:mt-7 desktop:mt-4 w-full tablet:w-[430px]">
       <Progress
         aria-label="Downloading..."
         size="md"
-        value={5}
+        value={tokenInfo?.tokensSold ? getBondingCurvePercentage(tokenInfo.tokensSold) : 0}
         classNames={{
-          base: "max-w-md",
+          base: "max-w-full",
           track: "drop-shadow-md bg-dark-gray h-4",
-          indicator: "bg-light-green",
-          label: "tracking-wider font-small text-default-600",
+          indicator: "bg-light-primary",
+          label: "tracking-wider font-small text-light-gray",
           value: "text-foreground/60 text-gray",
         }}
         showValueLabel={true}
         className="max-w-md pb-2"
-        label="Bonding Curve Progress"
+        label="Launch Progress"
       />
+      <p className="text-light-gray">
+        Marketcap: <span className="text-light-primary">${tokenInfo?.marketcap?.toFixed(2)}</span>
+      </p>
+
+      <p className="text-cream text-sm pt-2">
+        The creator can launch ${token.ticker} and enable trading on dexes once it reaches a market cap of{" "}
+        <span className="text-green">${marketcapGoal}</span>.
+      </p>
     </section>
   );
 }

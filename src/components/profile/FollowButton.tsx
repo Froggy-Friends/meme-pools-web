@@ -14,19 +14,12 @@ type FollowButtonProps = {
   className?: string;
 };
 
-export default function FollowButton({
-  isFollowing,
-  cachedUser,
-  user,
-  className,
-}: FollowButtonProps) {
+export default function FollowButton({ isFollowing, cachedUser, user, className }: FollowButtonProps) {
   const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ["isFollowing", cachedUser.id, user.id],
     initialData: isFollowing,
   });
-
-  console.log(data);
 
   const handleClick = useMutation({
     mutationKey: ["changeFollow", cachedUser.id, user.id],
@@ -37,31 +30,18 @@ export default function FollowButton({
       }
     },
     onMutate: async () => {
-      const previousData = await queryClient.getQueryData([
-        "isFollowing",
-        cachedUser.id,
-        user.id,
-      ]);
+      const previousData = await queryClient.getQueryData(["isFollowing", cachedUser.id, user.id]);
 
       if (previousData === FollowStatus.UNFOLLOW || previousData === "false") {
-        queryClient.setQueryData(
-          ["isFollowing", cachedUser.id, user.id],
-          FollowStatus.FOLLOW
-        );
+        queryClient.setQueryData(["isFollowing", cachedUser.id, user.id], FollowStatus.FOLLOW);
       } else if (previousData === FollowStatus.FOLLOW) {
-        queryClient.setQueryData(
-          ["isFollowing", cachedUser.id, user.id],
-          FollowStatus.UNFOLLOW
-        );
+        queryClient.setQueryData(["isFollowing", cachedUser.id, user.id], FollowStatus.UNFOLLOW);
       }
 
       return { previousData };
     },
     onError(error, variables, context) {
-      queryClient.setQueryData(
-        ["isFollowing", cachedUser.id, user.id],
-        context?.previousData
-      );
+      queryClient.setQueryData(["isFollowing", cachedUser.id, user.id], context?.previousData);
       toast.error((error as Error).message);
     },
     onSettled: async () => {
@@ -74,10 +54,10 @@ export default function FollowButton({
   return (
     <button
       className={cn(
-        "text-xl rounded-3xl py-2 w-36 text-dark font-proximaSoftBold active:scale-[0.98] transition",
+        "text-xl rounded-xl py-2 w-36 text-dark font-proximaNovaBold active:scale-[0.98] transition",
         data && data !== FollowStatus.FOLLOW && "bg-cream/85  hover:bg-cream",
         data === FollowStatus.FOLLOW &&
-          "bg-dark text-white font-proximaSoft border-[0.25px] border-white/[5%] hover:bg-red-500/[4%] hover:text-red-500 hover:border-red-500 transition",
+          "bg-dark text-white font-proximaNova border-[0.25px] border-white/[5%] hover:bg-red/[4%] hover:text-red hover:border-red transition",
         className
       )}
       disabled={handleClick.isPending}

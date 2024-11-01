@@ -1,9 +1,13 @@
 export enum Channel {
   Comment = "comment",
   CommentLikes = "comment-likes",
-  Votes = "votes",
+  CommentDislikes = "comment-dislikes",
+  Upvotes = "votes",
+  Downvotes = "downvotes",
   Follow = "follow",
+  Unfollow = "unfollow",
   CreateToken = "create-token",
   Buy = "buy",
   Sell = "sell",
+  Meme = "meme",
 }

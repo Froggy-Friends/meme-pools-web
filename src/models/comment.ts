@@ -6,6 +6,7 @@ export enum CommentLikeStatus {
 export enum CommentAndTradesViews {
   COMMENTS = "comments",
   TRADES = "trades",
+  MEMES = "memes",
 }
 
-export type CommentAndTradesView = "comments" | "trades";
+export type CommentAndTradesView = "comments" | "trades" | "memes";
