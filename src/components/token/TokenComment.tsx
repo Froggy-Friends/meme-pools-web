@@ -36,7 +36,7 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
         isNew ? "animate-primaryPulse" : ""
       }`}
     >
-      <div className="flex items-center gap-x-4">
+      <div className="flex items-center gap-x-2 tablet:gap-x-4">
         <Image
           src={author.imageUrl || defaultProfileAvatarUrl}
           alt="user-profile-picture"
@@ -45,18 +45,18 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
           className="rounded-full"
         />
 
-        <div className="flex flex-col">
-          <div className="flex gap-x-4">
+        <div className="flex flex-col mr-2 tablet:mr-0">
+          <div className="flex gap-x-2 tablet:gap-x-4">
             <Link
               href={`/profile/${author.name}`}
               className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
             >
               {getUserDisplayName(author.name)}
             </Link>
-            <p className="text-gray">{getTimeDifference(comment.createdAt)}</p>
+            <p className="text-xs mt-1 tablet:mt-0 text-gray tablet:text-base">{getTimeDifference(comment.createdAt)}</p>
           </div>
 
-          <p className="overflow-y-auto">{comment.message}</p>
+          <p className="overflow-y-auto text-sm tablet:text-base">{comment.message}</p>
         </div>
       </div>
 

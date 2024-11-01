@@ -27,7 +27,7 @@ export default async function Header({ chain }: HeaderProps) {
       classNames={{ wrapper: "px-0" }}
     >
       <NavbarBrand>
-        <Logo height={48} width={48} />
+        <Logo height={48} width={48} className="w-12 h-12 -mr-6 tablet:-mr-0" />
         <p className="hidden laptop:block text-2xl font-allumiBold pl-1">Meme Pools</p>
         <Link
           href="https://x.com/memepoolsx"
