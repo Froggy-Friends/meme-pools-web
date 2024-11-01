@@ -29,14 +29,15 @@ export default function TokenChart({ token }: TokenChartProps) {
     user_id: "0",
     fullscreen: false,
     autosize: true,
+    container: "tv_chart_container",
     timeframe: { from: (token.createdAt.getTime() + 60000) / 1000, to: Date.now() / 1000 },
   };
 
   return (
-    <>
+    <div style={{ width: "100%", height: "100%", position: "relative" }}>
       <Head>
         <title>TradingView Charting Library and Next.js</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
       </Head>
       <Script
         src="/static/datafeeds/udf/dist/bundle.js"
@@ -46,6 +47,6 @@ export default function TokenChart({ token }: TokenChartProps) {
         }}
       />
       {isScriptReady && <TVChartContainer {...defaultWidgetProps} />}
-    </>
+    </div>
   );
 }
