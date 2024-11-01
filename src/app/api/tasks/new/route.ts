@@ -8,26 +8,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ success: false }, { status: 401 });
   }
   try {
-    await fetch(`${memepoolsApi}/tasks/refresh-trending`, {
+    await fetch(`${memepoolsApi}/tasks/refresh-newest`, {
       method: "POST",
     });
-
-    await fetch(`${memepoolsApi}/tasks/refresh-transactions`, {
-      method: "POST",
-    });
-
-    await fetch(`${memepoolsApi}/tasks/refresh-volume`, {
-      method: "POST",
-    });
-
-    await fetch(`${memepoolsApi}/tasks/refresh-comments`, {
-      method: "POST",
-    });
-
-    await fetch(`${memepoolsApi}/tasks/refresh-votes`, {
-      method: "POST",
-    });
-
+    
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error:", error);
