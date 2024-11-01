@@ -71,7 +71,7 @@ export default function MobileMenu({
           </div>
         </NavbarMenuItem>
 
-        <NavbarMenuItem key="profile" className="-ml-3">
+        <NavbarMenuItem key="profile" className="-ml-3" isActive={isConnected}>
           <Link color="foreground" className="w-full text-2xl mt-8" href={`/profile/${currentUser?.name}`} size="lg">
             Profile
           </Link>
@@ -95,14 +95,14 @@ export default function MobileMenu({
           </Link>
         </NavbarMenuItem>
 
-        <NavbarMenuItem key="privacy" className="-ml-3">
-          <Link color="foreground" className="w-full text-2xl mt-2" href="/privacy" size="lg">
-            Privacy
-          </Link>
-        </NavbarMenuItem>
-
         <NavbarMenuItem key="terms" className="-ml-3">
-          <Link color="foreground" className="w-full text-2xl mt-2" href="/terms" size="lg">
+          <Link
+            color="foreground"
+            className="w-full text-2xl mt-2"
+            href="https://docs.memepools.com/terms"
+            target="_blank"
+            size="lg"
+          >
             Terms
           </Link>
         </NavbarMenuItem>
