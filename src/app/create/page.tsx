@@ -11,11 +11,8 @@ export default function CreateCoin() {
 
       <div className="flex justify-center items-center w-full">
         <div className="flex items-center mt-4 gap-x-4">
-          <h1 className="text-[24px] tablet:text-4xl laptop:text-5xl">
-            Create your coin on{" "}
-            <span className="font-allumiBold text-primary">
-              <span>Meme Pools</span>
-            </span>
+          <h1 className="font-proximaNovaBold text-[24px] tablet:text-4xl laptop:text-5xl">
+            Create your coin on <span className="text-primary">Meme Pools</span>
           </h1>
         </div>
       </div>
