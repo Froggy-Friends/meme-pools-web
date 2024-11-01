@@ -54,6 +54,7 @@ export default function SwapModal({
           handleSwapModalClose();
         }
       }}
+      isDismissable={false}
     >
       <ModalContent>
         <ModalBody className="flex flex-col justify-center items-center gap-8">
