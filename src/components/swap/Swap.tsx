@@ -88,11 +88,6 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
   );
   const { maxBuyPrice } = useMaxBuy(token);
 
-  useEffect(() => {
-    console.log("tokenInfo", tokenInfo);
-    console.log("maxBuyPrice", maxBuyPrice);
-  }, [maxBuyPrice, tokenInfo]);
-
   const debouncedBuyCost = useDebouncedCallback(async (amount: string) => {
     if (amount === "") {
       setBuyCost(BigInt(0));
