@@ -178,6 +178,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     await refetchTokenInfo();
     if (!isApproved) {
       await approveToken();
+      await refetchAllowance();
     }
   };
 
@@ -186,6 +187,7 @@ export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps)
     onSwapModalOpen();
     if (!isApproved) {
       await approveToken();
+      await refetchAllowance();
     }
     const receipt = await sellToken(tokenAddress, formattedSellAmount);
     await postTradeData(receipt, TradingTab.SELL, ethPrice);
