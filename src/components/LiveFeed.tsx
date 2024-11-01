@@ -37,6 +37,14 @@ export default function LiveFeed() {
       setTimeout(() => {
         setIsAnimating(false);
       }, 500);
+
+      setTimeout(() => {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setLatestTrade(null);
+          setIsAnimating(false);
+        }, 350);
+      }, 5000);
     });
 
     return () => {

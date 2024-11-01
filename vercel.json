@@ -3,6 +3,10 @@
     {
       "path": "/api/tasks/new",
       "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/tasks/cron",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
