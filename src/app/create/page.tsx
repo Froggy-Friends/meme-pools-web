@@ -6,7 +6,7 @@ import CreatorRewards from "@/components/create/CreatorRewards";
 
 export default function CreateCoin() {
   return (
-    <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 tablet:px-4">
+    <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-0 tablet:px-4">
       <Header chain={Chain.Eth} />
 
       <div className="flex justify-center items-center w-full">
