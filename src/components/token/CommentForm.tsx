@@ -72,7 +72,7 @@ export default function CommentForm({ tokenId }: CommentFormProps) {
       <button
         disabled={!currentUser}
         className={cn(
-          "bg-primary h-10 w-28 rounded-xl mt-4 py-1 px-8 text-dark font-proximaSoftBold active:scale-[0.97] self-end hover:bg-light-primary transition",
+          "bg-primary h-10 w-28 rounded-xl mt-4 py-1 px-8 text-dark font-proximaNovaBold active:scale-[0.97] self-end hover:bg-light-primary transition",
           {
             "hover:bg-primary": !currentUser,
           }
