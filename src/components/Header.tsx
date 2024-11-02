@@ -24,7 +24,7 @@ export default async function Header({ chain }: HeaderProps) {
     <Navbar
       className="bg-dark flex justify-between items-center w-full h-20 mb-12 laptop:mb-24"
       maxWidth="full"
-      classNames={{ wrapper: "px-0" }}
+      classNames={{ wrapper: "pl-0 pr-2 tablet:pr-0 tablet:px-0" }}
     >
       <NavbarBrand>
         <Logo height={48} width={48} className="w-12 h-12 -mr-6 tablet:-mr-0" />

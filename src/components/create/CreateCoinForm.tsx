@@ -56,9 +56,10 @@ export default function CreateCoinForm() {
     resetField,
     reset,
     formState: { errors, isSubmitting },
+    watch,
   } = useForm<CreateFormValues>();
   const inputStyles =
-    "h-10 min-w-[375px] max-w-[410px] tablet:min-w-[350px] tablet:w-[350px] laptop:min-w-[430px] laptop:w-[430px] desktop:min-w-[450px] desktop:w-[450px] px-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
+    "h-10 w-[calc(100vw-1rem)] max-w-[410px] tablet:w-[350px] laptop:w-[420px] laptop:max-w-[420px] desktop:max-w-[450px] desktop:w-[450px] px-4 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray";
 
   const onSubmit = handleSubmit(async (data: CreateFormValues) => {
     const formData = createFormData(data);
@@ -155,7 +156,7 @@ export default function CreateCoinForm() {
 
   return (
     <section className="mt-20">
-      <form onSubmit={onSubmit} className="flex flex-col items-center max-w-[925px] mx-auto" ref={formRef}>
+      <form onSubmit={onSubmit} className="flex flex-col items-center max-w-[925px] mx-auto px-4 tablet:px-0" ref={formRef}>
         <button
           onClick={() => formRef.current?.reset()}
           className="flex items-center gap-x-2 self-end bg-dark-gray rounded-3xl mb-4 px-4 py-2 hover:bg-gray active:scale-[0.97] transition"
@@ -164,7 +165,7 @@ export default function CreateCoinForm() {
           <GrRefresh size={18} />
         </button>
 
-        <div className="flex flex-col tablet:flex-row gap-x-4 laptop:gap-x-10">
+        <div className="flex flex-col tablet:flex-row tablet:gap-x-4 laptop:gap-x-10">
           <div className="flex flex-col">
             <div className="flex gap-x-1">
               <label htmlFor="name" className="mb-1">
@@ -250,7 +251,7 @@ export default function CreateCoinForm() {
                 required: "Token description is required",
               })}
               id="description"
-              className="h-32 min-w-[375px] max-w-[410px] tablet:min-w-[350px] tablet:w-[350px] laptop:min-w-[430px] laptop:w-[430px] desktop:min-w-[450px] desktop:w-[450px] mb-5 px-2 py-2 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
+              className="h-32 w-[calc(100vw-1rem)] max-w-[410px] tablet:w-[350px] laptop:w-[420px] laptop:max-w-[420px] desktop:max-w-[450px] desktop:w-[450px] px-4 py-2 mb-5 rounded-lg outline-none bg-dark-gray focus:ring-2 ring-gray"
             />
 
             <div className="flex gap-x-1 items-center">
@@ -306,24 +307,25 @@ export default function CreateCoinForm() {
         <div className="flex flex-col mt-10">
           <p className="mb-1 ml-1 tablet:ml-4 laptop:ml-5">Optional Links</p>
 
-          <div className="flex min-w-[375px] max-w-[415px] tablet:min-w-[750px] tablet:w-[750px] laptop:min-w-[925px] laptop:w-[925px] desktop:min-w-[975px] desktop:w-[975px] justify-between">
-            <CreateCoinFormModal name="twitter" pattern="https://x.com/*" register={register} resetField={resetField} />
-            <CreateCoinFormModal name="telegram" register={register} resetField={resetField} />
-            <CreateCoinFormModal name="website" pattern="https://.*" register={register} resetField={resetField} />
+          <div className="flex w-[calc(100vw-1rem)] max-w-[415px] tablet:min-w-[720px] tablet:w-[720px] laptop:min-w-[875px] laptop:w-[875px] desktop:min-w-[950px] desktop:w-[950px] justify-between">
+            <CreateCoinFormModal name="twitter" pattern="https://x.com/*" register={register} resetField={resetField} watch={watch} />
+            <CreateCoinFormModal name="telegram" register={register} resetField={resetField} watch={watch} />
+            <CreateCoinFormModal name="website" pattern="https://.*" register={register} resetField={resetField} watch={watch} />
             <CreateCoinFormModal
               name="discord"
               pattern="https://discord.gg/*"
               register={register}
               resetField={resetField}
+              watch={watch}
             />
-            <CreateCoinFormModal name="other" pattern="https://.*" register={register} resetField={resetField} />
+            <CreateCoinFormModal name="other" pattern="https://.*" register={register} resetField={resetField} watch={watch} />
           </div>
         </div>
 
         <FormSubmitButton
           isSubmitting={isSubmitting}
           pendingText="LAUNCHING..."
-          className="h-10 min-w-[375px] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-20 bg-primary rounded-xl flex items-center justify-center hover:bg-light-primary active:scale-[0.97] transition"
+          className="h-10 w-[calc(100vw-1rem)] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-20 bg-primary rounded-xl flex items-center justify-center hover:bg-light-primary active:scale-[0.97] transition"
         >
           <p className="text-black font-proximaNovaBold">CREATE COIN</p>
         </FormSubmitButton>

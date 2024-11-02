@@ -7,7 +7,7 @@ import { Trade } from "@/models/trade";
 import { TokenVoteData, TokenVoteStatus } from "@/models/token";
 import { fetchUser } from "@/queries/profile/queries";
 import { fetchTokenByAddress } from "@/queries/token/queries";
-import { CommentLikes, Prisma, TokenVote } from "@prisma/client";
+import { CommentLikes, Prisma, Token, TokenVote } from "@prisma/client";
 import { Address, formatUnits } from "viem";
 import { formatTradeData } from "@/lib/formatTradeData";
 import { put } from "@vercel/blob";
@@ -314,4 +314,25 @@ export const addMeme = async (
   });
 
   await pusher.trigger(Channel.Meme, tokenId, meme);
+};
+
+export const updateTokenSocials = async (token: Token, formData: FormData) => {
+  const twitter = formData.get("twitter") as string;
+  const telegram = formData.get("telegram") as string;
+  const discord = formData.get("discord") as string;
+  const website = formData.get("website") as string;
+  const other = formData.get("other") as string;
+
+  await prisma.token.update({
+    where: {
+      id: token.id,
+    },
+    data: {
+      twitter: twitter || token.twitter,
+      telegram: telegram || token.telegram,
+      discord: discord || token.discord,
+      website: website || token.website,
+      other: other || token.other,
+    },
+  });
 };

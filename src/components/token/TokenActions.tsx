@@ -29,7 +29,7 @@ function TokenActions({ token, cachedUser }: TokenActionsProps) {
         </div>
       </div>
 
-      <TokenSocials token={token} />
+      <TokenSocials token={token} cachedUser={cachedUser || null} />
     </div>
   );
 }

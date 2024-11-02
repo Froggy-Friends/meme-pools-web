@@ -112,17 +112,17 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
             <div className="flex items-center gap-3">
               {token.twitter && (
                 <a href={token.twitter} target="_blank">
-                  <FaXTwitter className="text-light-gray" width={12} height={12} />
+                  <FaXTwitter className="text-light-gray hover:text-white transition" width={12} height={12} />
                 </a>
               )}
               {token.website && (
                 <a href={token.website} target="_blank">
-                  <CiGlobe className="text-light-gray" width={12} height={12} />
+                  <CiGlobe className="text-light-gray hover:text-white transition" width={12} height={12} />
                 </a>
               )}
               {token.telegram && (
                 <a href={token.telegram} target="_blank">
-                  <FaTelegramPlane className="text-light-gray" width={12} height={12} />
+                  <FaTelegramPlane className="text-light-gray hover:text-white transition" width={12} height={12} />
                 </a>
               )}
             </div>

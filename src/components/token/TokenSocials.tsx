@@ -1,23 +1,29 @@
 "use client";
 
 import { FaXTwitter } from "react-icons/fa6";
-import { FaTelegram, FaGlobe } from "react-icons/fa";
+import { FaTelegram, FaGlobe, FaEdit } from "react-icons/fa";
 import { IoMdShareAlt } from "react-icons/io";
-import { Token } from "@prisma/client";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { MdOutlineEdit } from "react-icons/md";
+import { Token, User } from "@prisma/client";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import useCopy from "@/hooks/useClipboardCopy";
 import useXPost from "@/hooks/useXPost";
 import { etherscanUrl } from "@/config/env";
+import useUser from "@/hooks/useUser";
+import EditSocialsModal from "./EditSocialsModal";
 
 type TokenSocialsParams = {
   token: Token;
+  cachedUser: User | null;
 };
 
-export default function TokenSocials({ token }: TokenSocialsParams) {
+export default function TokenSocials({ token, cachedUser }: TokenSocialsParams) {
   const linkStyles = "py-[0.375rem] px-1 laptop:px-2 text-white/80";
   const copy = useCopy();
   const post = useXPost();
+  const { currentUser } = useUser();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleShareLink = () => {
     copy(window.location.href);
@@ -29,6 +35,11 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
 
   return (
     <div className="flex gap-x-1 items-center mt-2 laptop:mt-4">
+      {(cachedUser?.id === token.userId || currentUser?.id === token.userId) && (
+        <button onClick={onOpen}>
+          <MdOutlineEdit className="w-5 h-5 tablet:w-7 tablet:h-7 text-white/80 hover:text-white hover:scale-[1.02] transition-all" />
+        </button>
+      )}
       <Link
         href={token.telegram || ""}
         target="_blank"
@@ -85,6 +96,7 @@ export default function TokenSocials({ token }: TokenSocialsParams) {
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
+      <EditSocialsModal isOpen={isOpen} onClose={onOpenChange} token={token} />
     </div>
   );
 }
