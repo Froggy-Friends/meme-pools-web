@@ -1,12 +1,13 @@
 "use client";
 
 import { updateTokenSocials } from "@/actions/token/actions";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import FormSubmitButton from "../FormSubmitButton";
 import { Token } from "@prisma/client";
 import { useChain } from "@/context/chain";
 import { revalidatePath } from "next/cache";
+import * as Sentry from "@sentry/nextjs";
 
 type EditSocialsModalProps = {
   isOpen: boolean;
@@ -23,7 +24,7 @@ export default function EditSocialsModal({ isOpen, onClose, token }: EditSocials
       revalidatePath(`/${chain.name}/token/${token.tokenAddress}`);
       onClose();
     } catch (error) {
-      console.error(error);
+      Sentry.captureException(error);
       toast.error("Failed to update social links");
     }
   };
