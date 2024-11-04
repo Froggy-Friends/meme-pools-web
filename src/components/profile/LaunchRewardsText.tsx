@@ -16,7 +16,7 @@ export default function LaunchRewardsText({ address }: LaunchRewardsTextProps) {
         You earn <span className="text-green">${rewardAmount}</span> per coin launch with{" "}
         <span
           className={`${
-            rewardTier === "tier one" ? "text-bronze" : rewardTier === "tier two" ? "text-light-gray" : "text-gold"
+            rewardTier === "bronze" ? "text-bronze" : rewardTier === "silver" ? "text-light-gray" : "text-gold"
           }`}
         >
           {rewardTier}
