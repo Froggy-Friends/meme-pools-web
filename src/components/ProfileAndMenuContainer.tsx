@@ -5,7 +5,8 @@ import useUser from "@/hooks/useUser";
 import { User } from "@prisma/client";
 import MobileMenu from "./MobileMenu";
 import { useChain } from "@/context/chain";
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount } from "wagmi";
+import { useDisconnect } from "@reown/appkit/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 type NavbarProps = {

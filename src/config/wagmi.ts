@@ -1,27 +1,23 @@
-import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
-import { cookieStorage, createStorage, http } from "wagmi";
-import { mainnet, sepolia, baseSepolia, base } from "wagmi/chains";
 import { isProd, walletConnectProjectId } from "./env";
+import { cookieStorage, createStorage } from '@wagmi/core'
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
+import { mainnet, sepolia, baseSepolia, base } from '@reown/appkit/networks'
 
-export const metadata = {
-  name: "Meme Pools",
-  description: "Create an instantly tradeable coin on Meme Pools.",
-  url: "https://memepools.com",
-  icons: ["https://avatars.githubusercontent.com/u/37784886"],
-};
+if (!walletConnectProjectId) {
+  throw new Error('Project ID is not defined')
+}
 
 export const wagmiChains = {
   eth: isProd ? mainnet : sepolia,
   base: isProd ? base : baseSepolia,
 };
-const chains = [wagmiChains.eth, wagmiChains.base] as const;
+const networks = [wagmiChains.eth, wagmiChains.base];
 
-export const config = defaultWagmiConfig({
-  chains,
-  projectId: walletConnectProjectId,
-  metadata,
-  ssr: true,
+export const wagmiAdapter = new WagmiAdapter({
   storage: createStorage({
-    storage: cookieStorage,
+    storage: cookieStorage
   }),
+  ssr: true,
+  projectId: walletConnectProjectId,
+  networks,
 });
