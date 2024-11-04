@@ -2,8 +2,12 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { PostHog } from 'posthog-node'
 
+if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+  throw new Error('NEXT_PUBLIC_POSTHOG_KEY is not set')
+}
+
 const posthog = new PostHog(
-  process.env.NEXT_PUBLIC_POSTHOG_KEY!,
+  process.env.NEXT_PUBLIC_POSTHOG_KEY,
   { host: process.env.NEXT_PUBLIC_POSTHOG_HOST }
 )
 
