@@ -55,7 +55,10 @@ export default async function Header({ chain }: HeaderProps) {
           <ProfileAndMenuContainer cachedUser={user || null} />
         </div>
       </NavbarContent>
-      <NavbarMenuToggle className="bg-dark tablet:hidden" />
+      <NavbarMenuToggle 
+        className="bg-dark tablet:hidden"
+        aria-label="Toggle menu"
+      />
     </Navbar>
   );
 }
