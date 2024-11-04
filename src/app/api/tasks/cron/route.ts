@@ -10,22 +10,37 @@ export async function GET(request: Request) {
   try {
     await fetch(`${memepoolsApi}/tasks/refresh-trending`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
     });
 
     await fetch(`${memepoolsApi}/tasks/refresh-transactions`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
     });
 
     await fetch(`${memepoolsApi}/tasks/refresh-volume`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
     });
 
     await fetch(`${memepoolsApi}/tasks/refresh-comments`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
     });
 
     await fetch(`${memepoolsApi}/tasks/refresh-votes`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
     });
 
     return NextResponse.json({ success: true });

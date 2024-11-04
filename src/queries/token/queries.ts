@@ -32,7 +32,13 @@ export const fetchTokens = async (
   page: number
 ): Promise<TokenWithCreator[]> => {
   const response = await fetch(
-    `${memepoolsApi}/token/${tokenFilter}?page=${page}`
+    `${memepoolsApi}/token/${tokenFilter}?page=${page}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
+    }
   );
   const tokens = await response.json();
 
@@ -79,6 +85,10 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
 export const fetchTopVotesTokens = async () => {
   const response = await fetch(`${memepoolsApi}/token/votes?page=1`, {
     cache: "no-store",
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${process.env.CRON_SECRET}`,
+    },
   });
 
   const tokens: TokenWithVotes[] = await response.json();
@@ -145,16 +155,20 @@ export const searchTokens = async (search: string) => {
     },
   });
 
-  return Promise.all(tokens.map(async token => {
-    const voteCounts = await getVotesByTokenId(token.id);
-    return {
-      ...token,
-      voteCount: voteCounts.upvotes - voteCounts.downvotes,
-    };
-  }));
+  return Promise.all(
+    tokens.map(async (token) => {
+      const voteCounts = await getVotesByTokenId(token.id);
+      return {
+        ...token,
+        voteCount: voteCounts.upvotes - voteCounts.downvotes,
+      };
+    })
+  );
 };
 
-export const searchTokensByCa = async (contractAddress: string): Promise<TokenSearchResult | null> => {
+export const searchTokensByCa = async (
+  contractAddress: string
+): Promise<TokenSearchResult | null> => {
   const token = await prisma.token.findFirst({
     where: {
       tokenAddress: contractAddress,
