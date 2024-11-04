@@ -5,6 +5,7 @@ import {
   ResolutionString,
   widget,
 } from "../../../public/static/charting_library";
+import { memepoolsApi } from "@/config/env";
 
 export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) => {
   const chartContainerRef = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
@@ -13,7 +14,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: props.symbol,
       // BEWARE: no trailing slash is expected in feed URL
-      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(`/api/chart`, undefined, {
+      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(`${memepoolsApi}/trade`, undefined, {
         maxResponseLength: 5000,
         expectedOrder: "latestFirst",
         supports_search: true,
