@@ -10,9 +10,10 @@ export default function useMaxBuy(token: Token) {
   const { buyPriceTokens } = useBuyPrice();
 
   const { data: maxBuyPrice } = useQuery({
-    queryKey: ["maxBuyPrice", token.id],
+    queryKey: ["maxBuyPrice", token.id, tokenInfo?.availableSupply],
     enabled: !!tokenInfo?.availableSupply && tokenInfo.availableSupply > 0,
     staleTime: 0,
+    gcTime: 0,
     retry: false,
     queryFn: async () => {
       try {

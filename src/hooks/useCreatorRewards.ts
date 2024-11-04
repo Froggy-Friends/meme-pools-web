@@ -11,7 +11,7 @@ import useEthPrice from "./useEthPrice";
 
 export default function useCreatorRewards(walletAddress: Address) {
   const ethPrice = useEthPrice();
-  let rewardTier = "tier one";
+  let rewardTier = "bronze";
   let ethMultiplier = tierOneEthReward;
 
   const { data: frogBalance } = useReadContract({
@@ -25,10 +25,10 @@ export default function useCreatorRewards(walletAddress: Address) {
   });
 
   if (frogBalance && Number(frogBalance) >= 5) {
-    rewardTier = "tier three";
+    rewardTier = "gold";
     ethMultiplier = tierThreeEthReward;
   } else if (frogBalance && Number(frogBalance) >= 1) {
-    rewardTier = "tier two";
+    rewardTier = "silver";
     ethMultiplier = tierTwoEthReward;
   }
 

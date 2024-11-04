@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import dynamic from "next/dynamic";
-import { cookieToInitialState } from "wagmi";
 import { headers } from "next/headers";
-import { config } from "@/config/wagmi";
 import Web3ModalProvider from "@/context";
 import { NextUIProvider } from "@nextui-org/react";
 import ResponsiveToaster from "@/components/ResponsiveToaster";
@@ -28,13 +26,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialState = cookieToInitialState(config, headers().get("cookie"));
+  const cookies = headers().get("cookie");
 
   return (
     <html lang="en">
       <body className="font-proximaNova overflow-y-scroll bg-dark text-white dark">
         <NextUIProvider>
-          <Web3ModalProvider initialState={initialState}>
+          <Web3ModalProvider cookies={cookies}>
             <AppWalletProvider>
               <ChainProvider>
                 <PHProvider>
