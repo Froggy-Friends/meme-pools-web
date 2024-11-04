@@ -7,40 +7,42 @@ import { formatUnits } from "viem";
 import { Channel } from "@/models/channel";
 import Pusher from "pusher-js";
 import getEthPrice from "@/lib/getEthPrice";
-import { useReadContract } from "wagmi";
+import { usePublicClient } from "wagmi";
 
 export default function useTokenInfo(token: Token) {
   const queryClient = useQueryClient();
-
-  const { data: tokenInfoRaw, refetch: refetchTokenInfoRaw } = useReadContract({
-    address: contractAddress,
-    abi: memepoolsAbi,
-    functionName: "tokenInfos",
-    args: [token.tokenAddress],
-  }) as { data: any[]; refetch: () => void };
+  const publicClient = usePublicClient();
 
   const { data: tokenInfo, refetch: refetchTokenInfo } = useQuery({
     queryKey: ["tokenInfo", token.id],
     queryFn: async () => {
-      const ethPrice = await getEthPrice();
-      if (!tokenInfoRaw) return null;
+      const [ethPrice, rawInfo] = (await Promise.all([
+        getEthPrice(),
+        publicClient?.readContract({
+          address: contractAddress,
+          abi: memepoolsAbi,
+          functionName: "tokenInfos",
+          args: [token.tokenAddress],
+        }),
+      ])) as [number, any[]];
+
+      if (!rawInfo) return null;
 
       return {
-        tokenAddress: tokenInfoRaw[0],
-        creator: tokenInfoRaw[1],
-        totalSupply: Number(formatUnits(tokenInfoRaw[2], 18)),
-        availableSupply: Number(formatUnits(tokenInfoRaw[3], 18)),
-        marketcap: Number(formatUnits(tokenInfoRaw[4], 18)) * ethPrice,
-        tokensSold: Number(formatUnits(tokenInfoRaw[5], 18)),
-        balance: tokenInfoRaw[6],
-        price: tokenInfoRaw[7],
-        name: tokenInfoRaw[8],
-        symbol: tokenInfoRaw[9],
-        readyForLp: tokenInfoRaw[10],
-        liquidityPoolSeeded: tokenInfoRaw[11],
+        tokenAddress: rawInfo[0],
+        creator: rawInfo[1],
+        totalSupply: Number(formatUnits(rawInfo[2], 18)),
+        availableSupply: Number(formatUnits(rawInfo[3], 18)),
+        marketcap: Number(formatUnits(rawInfo[4], 18)) * ethPrice,
+        tokensSold: Number(formatUnits(rawInfo[5], 18)),
+        balance: rawInfo[6],
+        price: rawInfo[7],
+        name: rawInfo[8],
+        symbol: rawInfo[9],
+        readyForLp: rawInfo[10],
+        liquidityPoolSeeded: rawInfo[11],
       };
     },
-    enabled: !!tokenInfoRaw,
   });
 
   useEffect(() => {
@@ -58,21 +60,7 @@ export default function useTokenInfo(token: Token) {
     const buyChannel = pusher.subscribe(Channel.Buy);
     const sellChannel = pusher.subscribe(Channel.Sell);
 
-    const handleTrade = () => {
-      refetchTokenInfoRaw();
-
-      setTimeout(() => {
-        queryClient.invalidateQueries({
-          queryKey: ["tokenInfo", token.id],
-        });
-      }, 1000);
-
-      setTimeout(() => {
-        queryClient.invalidateQueries({
-          queryKey: ["maxBuyPrice", token.id],
-        });
-      }, 2000);
-    };
+    const handleTrade = async () => {};
 
     buyChannel.bind(token.id, handleTrade);
     sellChannel.bind(token.id, handleTrade);
@@ -83,7 +71,7 @@ export default function useTokenInfo(token: Token) {
       pusher.unsubscribe(Channel.Buy);
       pusher.unsubscribe(Channel.Sell);
     };
-  }, [token.id, queryClient, tokenInfo?.availableSupply, refetchTokenInfoRaw]);
+  }, [token.id, queryClient, tokenInfo?.availableSupply, refetchTokenInfo]);
 
   return {
     tokenInfo,

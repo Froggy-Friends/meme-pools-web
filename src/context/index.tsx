@@ -1,28 +1,46 @@
 "use client";
 
-import { config } from "@/config/wagmi";
-import { ReactNode, useState } from "react";
-
-import { createWeb3Modal } from "@web3modal/wagmi/react";
-
+import { wagmiAdapter } from "@/config/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import { State, WagmiProvider } from "wagmi";
+import { createAppKit } from "@reown/appkit/react";
+import { mainnet, sepolia, baseSepolia, base } from "@reown/appkit/networks";
+import React, { type ReactNode } from "react";
+import { cookieToInitialState, WagmiProvider, type Config } from "wagmi";
 import { walletConnectProjectId } from "@/config/env";
+import { ethChain } from "@/config/env";
 
-createWeb3Modal({
-  wagmiConfig: config,
+const queryClient = new QueryClient();
+
+if (!walletConnectProjectId) {
+  throw new Error("Project ID is not defined");
+}
+
+const metadata = {
+  name: "Meme Pools",
+  description: "Create an instantly tradeable coin on Meme Pools.",
+  url: "https://memepools.com",
+  icons: ["https://avatars.githubusercontent.com/u/37784886"],
+};
+
+const modal = createAppKit({
+  adapters: [wagmiAdapter],
   projectId: walletConnectProjectId,
-  enableAnalytics: true,
-  enableOnramp: true,
+  networks: [mainnet, sepolia, baseSepolia, base],
+  defaultNetwork: ethChain,
+  metadata: metadata,
+  features: {
+    analytics: true, // Optional - defaults to your Cloud configuration
+  },
 });
 
-export default function Web3ModalProvider({ children, initialState }: { children: ReactNode; initialState?: State }) {
-  const [queryClient] = useState(() => new QueryClient());
+function Web3ModalProvider({ children, cookies }: { children: ReactNode; cookies: string | null }) {
+  const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies);
 
   return (
-    <WagmiProvider config={config} initialState={initialState}>
+    <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </WagmiProvider>
   );
 }
+
+export default Web3ModalProvider;
