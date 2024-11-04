@@ -10,8 +10,11 @@ export async function GET(request: Request) {
   try {
     await fetch(`${memepoolsApi}/tasks/refresh-newest`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
     });
-    
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error:", error);
