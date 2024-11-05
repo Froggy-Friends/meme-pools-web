@@ -4,6 +4,7 @@ import { getVotesByTokenId } from "@/actions/token/actions";
 import { memepoolsApi } from "@/config/env";
 import prisma from "@/lib/prisma";
 import { TokenWithCreator } from "@/lib/types";
+import { Chain } from "@/models/chain";
 import { TokenFilter, TokenVoteStatus } from "@/models/token";
 import { TokenSearchResult, TokenWithVotes } from "@/types/token/types";
 
@@ -29,10 +30,11 @@ export const checkTokenTickerExists = async (ticker: string) => {
 
 export const fetchTokens = async (
   tokenFilter: TokenFilter,
-  page: number
+  page: number,
+  chain: Chain
 ): Promise<TokenWithCreator[]> => {
   const response = await fetch(
-    `${memepoolsApi}/token/${tokenFilter}?page=${page}`,
+    `${memepoolsApi}/token/${chain}/${tokenFilter}?page=${page}`,
     {
       method: "GET",
       headers: {
@@ -82,8 +84,9 @@ export const fetchTokenByAddress = async (tokenAddress: string) => {
   return token;
 };
 
-export const fetchTopVotesTokens = async () => {
-  const response = await fetch(`${memepoolsApi}/token/votes?page=1`, {
+export const fetchTopVotesTokens = async (chain: Chain) => {
+  console.log("fetching top votes tokens", chain);
+  const response = await fetch(`${memepoolsApi}/token/${chain}/votes?page=1`, {
     cache: "no-store",
     method: "GET",
     headers: {
@@ -92,7 +95,7 @@ export const fetchTopVotesTokens = async () => {
   });
 
   const tokens: TokenWithVotes[] = await response.json();
-
+  
   return tokens.slice(0, 3);
 };
 
