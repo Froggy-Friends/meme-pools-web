@@ -1,9 +1,9 @@
 "use client";
 
-import { wagmiAdapter } from "@/config/wagmi";
+import { solanaWeb3JsAdapter, wagmiAdapter } from "@/config/reown";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createAppKit } from "@reown/appkit/react";
-import { mainnet, sepolia, baseSepolia, base } from "@reown/appkit/networks";
+import { mainnet, sepolia, baseSepolia, base, solana, solanaTestnet, solanaDevnet } from "@reown/appkit/networks";
 import React, { type ReactNode } from "react";
 import { cookieToInitialState, WagmiProvider, type Config } from "wagmi";
 import { walletConnectProjectId } from "@/config/env";
@@ -23,13 +23,14 @@ const metadata = {
 };
 
 const modal = createAppKit({
-  adapters: [wagmiAdapter],
+  adapters: [wagmiAdapter, solanaWeb3JsAdapter],
   projectId: walletConnectProjectId,
-  networks: [mainnet, sepolia, baseSepolia, base],
+  networks: [mainnet, sepolia, baseSepolia, base, solana, solanaTestnet, solanaDevnet],
   defaultNetwork: ethChain,
   metadata: metadata,
   features: {
-    analytics: true, // Optional - defaults to your Cloud configuration
+    analytics: true,
+    socials: false, // Optional - defaults to your Cloud configuration
   },
 });
 
