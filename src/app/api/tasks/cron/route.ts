@@ -1,6 +1,12 @@
 import { memepoolsApi } from "@/config/env";
 import { NextResponse } from "next/server";
 
+const refreshConfig = {
+  eth: ["trending", "transactions", "volume", "comments", "votes"],
+  solana: ["trending", "transactions", "volume", "comments", "votes"],
+  // Easy to add different endpoints per chain if needed
+} as const;
+
 export async function GET(request: Request) {
   if (
     request.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
@@ -8,40 +14,18 @@ export async function GET(request: Request) {
     return NextResponse.json({ success: false }, { status: 401 });
   }
   try {
-    await fetch(`${memepoolsApi}/tasks/refresh-trending`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.CRON_SECRET}`,
-      },
-    });
-
-    await fetch(`${memepoolsApi}/tasks/refresh-transactions`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.CRON_SECRET}`,
-      },
-    });
-
-    await fetch(`${memepoolsApi}/tasks/refresh-volume`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.CRON_SECRET}`,
-      },
-    });
-
-    await fetch(`${memepoolsApi}/tasks/refresh-comments`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.CRON_SECRET}`,
-      },
-    });
-
-    await fetch(`${memepoolsApi}/tasks/refresh-votes`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.CRON_SECRET}`,
-      },
-    });
+    await Promise.all(
+      Object.entries(refreshConfig).flatMap(([chain, endpoints]) =>
+        endpoints.map((endpoint) =>
+          fetch(`${memepoolsApi}/tasks/refresh/${chain}/${endpoint}`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${process.env.CRON_SECRET}`,
+            },
+          })
+        )
+      )
+    );
 
     return NextResponse.json({ success: true });
   } catch (error) {

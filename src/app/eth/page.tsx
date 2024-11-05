@@ -10,13 +10,13 @@ import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query
 
 export default async function EthHomePage() {
   const queryClient = new QueryClient();
-  const topTokens = await fetchTopVotesTokens();
+  const topTokens = await fetchTopVotesTokens(Chain.Eth);
 
   const defaultTokensQueryKey = ["tokens", TokenFilter.New, 1];
 
   await queryClient.prefetchQuery({
     queryKey: defaultTokensQueryKey,
-    queryFn: async () => fetchTokens(TokenFilter.New, 1),
+    queryFn: async () => fetchTokens(TokenFilter.New, 1, Chain.Eth),
   });
 
   return (
@@ -28,7 +28,7 @@ export default async function EthHomePage() {
 
           <Spotlight />
 
-          <TokenPageContent chain={Chain.Eth} />
+          <TokenPageContent />
         </div>
       </HydrationBoundary>
 

@@ -14,9 +14,9 @@ import Link from "next/link";
 import useTokenByAddress from "@/hooks/useTokenByAddress";
 
 export default function Spotlight() {
-  const payload = useFeatureFlagPayload("spotlight");
-  const { token } = useTokenByAddress(payload as string);
   const { chain } = useChain();
+  const payload = useFeatureFlagPayload(`spotlight-${chain.name}`);
+  const { token } = useTokenByAddress(payload as string);
   const [latestTrade, setLatestTrade] = useState<FormattedTrade | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 

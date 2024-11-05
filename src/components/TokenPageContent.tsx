@@ -9,11 +9,7 @@ import TokenRefreshButton from "./TokenRefreshButton";
 import PaginationControls from "./tokens/PaginationControls";
 import TokenReverseButton from "./TokenReverseButton";
 
-type TokenPageContentProps = {
-  chain: Chain;
-};
-
-export default function TokenPageContent({ chain }: TokenPageContentProps) {
+export default function TokenPageContent() {
   const [filter, setFilter] = useState<TokenFilter>(TokenFilter.New);
   const [page, setPage] = useState(1);
   const [reverse, setReverse] = useState(false);
