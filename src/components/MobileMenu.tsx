@@ -11,6 +11,7 @@ import { setUserCookies } from "@/actions/profile/actions";
 import ChainSwitcher from "./ChainSwitcher";
 import HowItWorksButton from "./HowItWorksButton";
 import ConnectButton from "./ConnectButton";
+import { useChainSync } from "@/hooks/useChainSync";
 
 type MobileMenuProps = {
   cachedUser: User | null;
@@ -18,9 +19,19 @@ type MobileMenuProps = {
   isConnected: boolean;
   chain: Chain;
   disconnect: () => void;
+  address: string | null | undefined;
 };
 
-export default function MobileMenu({ cachedUser, currentUser, isConnected, chain, disconnect }: MobileMenuProps) {
+export default function MobileMenu({
+  cachedUser,
+  currentUser,
+  isConnected,
+  chain,
+  disconnect,
+  address,
+}: MobileMenuProps) {
+  useChainSync({ isConnected, address, chain });
+
   return (
     <section className="tablet:hidden">
       <NavbarMenu className="bg-dark mt-6 min-w-[100vw] max-w-full left-0 right-0">

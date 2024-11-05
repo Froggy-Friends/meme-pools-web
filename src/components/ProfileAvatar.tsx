@@ -9,6 +9,7 @@ import { defaultProfileAvatarUrl } from "@/config/user";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { setUserCookies } from "@/actions/profile/actions";
 import Link from "next/link";
+import { useChainSync } from "@/hooks/useChainSync";
 
 type ProfileAvatarProps = {
   cachedUser: User | null;
@@ -16,13 +17,16 @@ type ProfileAvatarProps = {
   isConnected: boolean;
   chain: Chain;
   disconnect: () => void;
+  address: string | null | undefined;
 };
 
-export default function ProfileAvatar({ cachedUser, currentUser, isConnected, chain, disconnect }: ProfileAvatarProps) {
+export default function ProfileAvatar({ cachedUser, currentUser, isConnected, chain, disconnect, address }: ProfileAvatarProps) {
+  useChainSync({ isConnected, address, chain });
+
   return (
     <section className="hidden tablet:block">
       <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
-        {!isConnected && <ConnectButton />}
+      {!isConnected && <ConnectButton />}
         <DropdownTrigger>
           <div className="hover:bg-gray rounded-lg p-1 laptop:p-2 cursor-pointer">
             <Image
