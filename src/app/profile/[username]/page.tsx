@@ -22,7 +22,9 @@ type ProfilePageProps = {
 export default async function ProfilePage({ params, searchParams }: ProfilePageProps) {
   const cookieStore = cookies();
   const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
-  const cachedUser = await fetchUser(cachedUserEvmAddress?.value);
+  const cachedUserSolanaAddress = cookieStore.get(Cookie.SolanaAddress);
+  const chain = cachedUserSolanaAddress?.value ? Chain.Solana : Chain.Eth;
+  const cachedUser = await fetchUser(chain === Chain.Solana ? cachedUserSolanaAddress?.value : cachedUserEvmAddress?.value);
   const profileUser = await fetchUserByName(params.username);
   if (!profileUser) {
     throw new Error("User not found");
@@ -34,7 +36,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
 
   return (
     <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 laptop:px-4">
-      <Header chain={Chain.Eth} />
+      <Header chain={chain} />
 
       <ProfileInfo profileUser={profileUser} cachedUser={cachedUser} isFollowing={isFollowing?.status || "false"} />
 

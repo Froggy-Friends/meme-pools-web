@@ -16,7 +16,7 @@ export default function ProfileAndMenuContainer({ cachedUser }: NavbarProps) {
   const { currentUser } = useUser();
   const { chain } = useChain();
 
-  const { isConnected } = useAppKitAccount();
+  const { isConnected, address } = useAppKitAccount();
   const { disconnect } = useDisconnect();
 
   return (
@@ -27,6 +27,7 @@ export default function ProfileAndMenuContainer({ cachedUser }: NavbarProps) {
         isConnected={isConnected}
         chain={chain.name}
         disconnect={disconnect}
+        address={address}
       />
 
       <MobileMenu
@@ -35,6 +36,7 @@ export default function ProfileAndMenuContainer({ cachedUser }: NavbarProps) {
         isConnected={isConnected}
         chain={chain.name}
         disconnect={disconnect}
+        address={address}
       />
     </>
   );

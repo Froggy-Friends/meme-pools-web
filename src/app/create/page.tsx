@@ -3,11 +3,17 @@ import CreateCoinForm from "@/components/create/CreateCoinForm";
 import Footer from "@/components/Footer";
 import { Chain } from "@/models/chain";
 import CreatorRewards from "@/components/create/CreatorRewards";
+import { Cookie } from "@/models/cookie";
+import { cookies } from "next/headers";
 
-export default function CreateCoin() {
+export default async function CreateCoin() {
+  const cookieStore = cookies();
+  const cachedUserSolanaAddress = cookieStore.get(Cookie.SolanaAddress);
+  const chain = cachedUserSolanaAddress?.value ? Chain.Solana : Chain.Eth;
+
   return (
     <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-0 tablet:px-4">
-      <Header chain={Chain.Eth} />
+      <Header chain={chain} />
 
       <div className="flex justify-center items-center w-full">
         <div className="flex items-center mt-4 gap-x-4">
