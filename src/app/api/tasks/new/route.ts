@@ -8,7 +8,14 @@ export async function GET(request: Request) {
     return NextResponse.json({ success: false }, { status: 401 });
   }
   try {
-    await fetch(`${memepoolsApi}/tasks/refresh-newest`, {
+    await fetch(`${memepoolsApi}/tasks/refresh/eth/newest`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CRON_SECRET}`,
+      },
+    });
+
+    await fetch(`${memepoolsApi}/tasks/refresh/solana/newest`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.CRON_SECRET}`,
