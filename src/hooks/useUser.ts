@@ -1,43 +1,42 @@
 import { useCallback, useEffect, useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { useAccount } from "wagmi";
 import { fetchUser } from "@/queries/profile/queries";
 import { createUser, setUserCookies } from "@/actions/profile/actions";
 import { User } from "@prisma/client";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 export default function useUser() {
   const [currentUser, setCurrentUser] = useState<User | null>();
-  const { publicKey } = useWallet();
-  const { address, isDisconnected } = useAccount();
+  const { address, isConnected } = useAppKitAccount();
 
   const checkAndCreateUser = useCallback(async () => {
-    if (!address && !publicKey?.toString()) {
+    if (!address) {
       return;
     }
-    const user = await fetchUser(address || publicKey?.toString());
+    const user = await fetchUser(address);
 
     if (user) {
       setCurrentUser(user);
       await setUserCookies(user);
-    } else if (!user && (address || publicKey?.toString())) {
-      const wallet = address || publicKey?.toString();
+    } else if (!user && address) {
       const user = await createUser({
-        wallet: wallet,
-        name: wallet,
+        wallet: address,
+        name: address,
       });
 
       setCurrentUser(user);
       user && (await setUserCookies(user));
     }
-  }, [address, publicKey]);
+  }, [address]);
 
   useEffect(() => {
     checkAndCreateUser();
-  }, [checkAndCreateUser, address, publicKey]);
+  }, [checkAndCreateUser, address]);
 
   useEffect(() => {
-    setCurrentUser(null);
-  }, [isDisconnected]);
+    if (!isConnected) {
+      setCurrentUser(null);
+    }
+  }, [isConnected]);
 
   return { currentUser };
 }

@@ -1,8 +1,7 @@
 "use client";
 
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
-import EvmConnectButton from "./eth/EvmConnectButton";
-import SolConnectButton from "./solana/SolConnectButton";
+import ConnectButton from "./ConnectButton";
 import { Chain } from "@/models/chain";
 import { User } from "@prisma/client";
 import Image from "next/image";
@@ -15,26 +14,15 @@ type ProfileAvatarProps = {
   cachedUser: User | null;
   currentUser: User | null;
   isConnected: boolean;
-  connected: boolean;
   chain: Chain;
   disconnect: () => void;
-  solDisconnect: () => void;
 };
 
-export default function ProfileAvatar({
-  cachedUser,
-  currentUser,
-  isConnected,
-  connected,
-  chain,
-  disconnect,
-  solDisconnect,
-}: ProfileAvatarProps) {
+export default function ProfileAvatar({ cachedUser, currentUser, isConnected, chain, disconnect }: ProfileAvatarProps) {
   return (
     <section className="hidden tablet:block">
       <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
-        {!isConnected && chain === Chain.Eth && <EvmConnectButton />}
-        {!connected && chain === Chain.Solana && <SolConnectButton />}
+        {!isConnected && <ConnectButton />}
         <DropdownTrigger>
           <div className="hover:bg-gray rounded-lg p-1 laptop:p-2 cursor-pointer">
             <Image
@@ -69,7 +57,7 @@ export default function ProfileAvatar({
                 disconnect();
                 await setUserCookies(null, Chain.Eth);
               } else if (chain === Chain.Solana) {
-                solDisconnect();
+                disconnect();
                 await setUserCookies(null, Chain.Solana);
               }
             }}

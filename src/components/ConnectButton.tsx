@@ -6,7 +6,7 @@ import { useAppKitEvents } from "@reown/appkit/react";
 import { usePostHog } from "posthog-js/react";
 import { useEffect } from "react";
 
-export default function EvmConnectButton() {
+export default function ConnectButton() {
   const { open } = useAppKit();
   const { loading } = useAppKitState();
   const events = useAppKitEvents();

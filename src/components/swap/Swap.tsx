@@ -12,7 +12,7 @@ import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
 import { Input, useDisclosure } from "@nextui-org/react";
 import TokenSwitcher from "../token/TokenSwitcher";
-import { wagmiChains } from "@/config/wagmi";
+import { wagmiChains } from "@/config/reown";
 import useEthBalance from "@/hooks/useEthBalance";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import SwapModal from "./SwapModal";
