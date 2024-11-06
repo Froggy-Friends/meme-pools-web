@@ -17,9 +17,10 @@ export default async function ClaimTokens({ profileUser, cachedUser }: ClaimToke
   return (
     <section className="mt-10 mb-12 flex flex-col gap-y-2 bg-dark-gray rounded-xl p-4 tablet:p-6 w-full tablet:w-[75%] laptop:w-[66%]">
       <ClaimRewardsText address={profileUser.ethAddress as Address} />
-      {claimableTokens.map(token => {
-        return <ClaimableTokenCard key={token.id} token={token} enabled={enabled} />;
-      })}
+      {claimableTokens &&
+        claimableTokens.map(token => {
+          return <ClaimableTokenCard key={token.id} token={token} enabled={enabled} />;
+        })}
     </section>
   );
 }
