@@ -3,14 +3,14 @@
 import { useChain } from "@/context/chain";
 import useLaunchCoin from "@/hooks/useLaunchCoin";
 import { formatTicker } from "@/lib/formatTicker";
-import { ClaimableToken } from "@/types/token/types";
 import { cn, Link } from "@nextui-org/react";
 import Image from "next/image";
 import { useState } from "react";
 import presentIcon from "../../../public/present.svg";
+import { Token } from "@prisma/client";
 
 type CreatedCoinCardProps = {
-  token: ClaimableToken;
+  token: Token;
   enabled: boolean;
 };
 
@@ -35,7 +35,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
             <div className="flex items-center gap-x-1">
               <button
                 disabled={isRevealed}
-                onClick={() => setIsRevealed(true)}
+                onClick={() => setIsRevealed(true)} //TODO: add logic to fetch elligible rewards
                 className={cn(
                   "text-light-gray text-[13px] tablet:text-base transition",
                   !isRevealed && "hover:text-cream"
@@ -50,7 +50,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
                 />
               </button>
               <p className="text-xs tablet:text-sm text-light-gray">{`${
-                isRevealed ? `${token.tokensClaimable} ${formatTicker(token.ticker)}` : "*************"
+                isRevealed ? `${formatTicker(token.ticker)}` : "*************" // TODO add logic to render elligible rewards once fetched
               }`}</p>
             </div>
           </div>
@@ -58,10 +58,10 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
 
         <button
           disabled={!enabled}
-          onClick={() => launchCoin(token.tokenAddress)}
+          onClick={() => launchCoin(token.tokenAddress)} //TODO: add claim logic
           className={cn(
             `bg-gray text-black font-bold rounded-xl px-6 tablet:px-8 py-[0.125rem] tablet:py-1 hover:cursor-default`,
-            token.tokensClaimable > 0 && enabled && "bg-primary hover:cursor-pointer hover:bg-light-primary transition"
+            enabled && "bg-primary hover:cursor-pointer hover:bg-light-primary transition"
           )}
         >
           Claim

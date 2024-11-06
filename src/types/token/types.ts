@@ -1,6 +1,6 @@
 import { Chain } from "@/models/chain";
 import { Trade } from "@/models/trade";
-import { CommentLikes, Meme, Token, Trades, User } from "@prisma/client";
+import { Claim, CommentLikes, Meme, Token, Trades, User } from "@prisma/client";
 import { UseMutationResult } from "@tanstack/react-query";
 
 export type CreateTokenParams = {
@@ -127,4 +127,4 @@ export type TokenInfo = {
   liquidityPoolSeeded: boolean;
 };
 
-export type ClaimableToken = Token & { tokensClaimable: number };
+export type ClaimWithToken = Claim & { token: Token };

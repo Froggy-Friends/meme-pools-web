@@ -8,7 +8,7 @@ import { TokenVoteData, TokenVoteStatus } from "@/models/token";
 import { fetchUser } from "@/queries/profile/queries";
 import { fetchTokenByAddress } from "@/queries/token/queries";
 import { CommentLikes, Prisma, Token, TokenVote } from "@prisma/client";
-import { Address, formatUnits } from "viem";
+import { Address } from "viem";
 import { formatTradeData } from "@/lib/formatTradeData";
 import { put } from "@vercel/blob";
 
@@ -334,5 +334,16 @@ export const updateTokenSocials = async (token: Token, formData: FormData) => {
       website: website || token.website,
       other: other || token.other,
     },
+  });
+};
+
+export const createClaimRecords = async (tokenAddress: string) => {
+  const claims = Array.from({ length: 4444 }, (_, i) => ({
+    frogId: i + 1,
+    tokenAddress,
+  }));
+  
+  await prisma.claim.createMany({
+    data: claims,
   });
 };
