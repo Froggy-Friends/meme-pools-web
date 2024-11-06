@@ -1,28 +1,17 @@
-import { useReadContract } from "wagmi";
 import { Address } from "viem";
-import { froggyFriendsAddress } from "@/config/eth/froggyFriends";
-import { froggyFriendsAbi } from "@/abi/froggyFriends";
 import {
   tierOneEthReward,
   tierTwoEthReward,
   tierThreeEthReward,
 } from "@/lib/constants";
 import useEthPrice from "./useEthPrice";
+import useFrogBalance from "./useFrogBalance";
 
 export default function useCreatorRewards(walletAddress: Address) {
+  const frogBalance = useFrogBalance(walletAddress);
   const ethPrice = useEthPrice();
   let rewardTier = "bronze";
   let ethMultiplier = tierOneEthReward;
-
-  const { data: frogBalance } = useReadContract({
-    address: froggyFriendsAddress,
-    abi: froggyFriendsAbi,
-    functionName: "balanceOf",
-    args: [walletAddress],
-    query: {
-      enabled: !!walletAddress,
-    },
-  });
 
   if (frogBalance && Number(frogBalance) >= 5) {
     rewardTier = "gold";
