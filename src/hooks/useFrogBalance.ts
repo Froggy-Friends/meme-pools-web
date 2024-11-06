@@ -4,8 +4,6 @@ import { froggyFriendsAbi } from "@/abi/froggyFriends";
 import { Address } from "viem";
 
 export default function useFrogBalance(walletAddress: Address) {
-  if (!walletAddress) return 0;
-
   const { data: frogBalance } = useReadContract({
     address: froggyFriendsAddress,
     abi: froggyFriendsAbi,

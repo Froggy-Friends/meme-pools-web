@@ -1,6 +1,5 @@
 import ClaimRewardsText from "./ClaimRewardsText";
 import { Address } from "viem";
-import Link from "next/link";
 import { User } from "@prisma/client";
 import { fetchClaimableTokens } from "@/queries/profile/queries";
 import ClaimableTokenCard from "./ClaimableTokenCard";
