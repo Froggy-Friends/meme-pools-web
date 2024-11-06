@@ -339,7 +339,7 @@ export const updateTokenSocials = async (token: Token, formData: FormData) => {
 
 export const createClaimRecords = async (tokenAddress: string) => {
   const claims = Array.from({ length: 4444 }, (_, i) => ({
-    frogId: i + 1,
+    frogId: i,
     tokenAddress,
   }));
   
