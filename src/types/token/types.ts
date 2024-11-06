@@ -126,3 +126,5 @@ export type TokenInfo = {
   readyForLp: boolean;
   liquidityPoolSeeded: boolean;
 };
+
+export type ClaimableToken = Token & { tokensClaimable: number };
