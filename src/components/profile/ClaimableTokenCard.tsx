@@ -7,6 +7,7 @@ import { ClaimableToken } from "@/types/token/types";
 import { cn, Link } from "@nextui-org/react";
 import Image from "next/image";
 import { useState } from "react";
+import presentIcon from "../../../public/present.svg";
 
 type CreatedCoinCardProps = {
   token: ClaimableToken;
@@ -30,13 +31,28 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
             >
               ${formatTicker(token.ticker)}
             </Link>
-            <button
-              disabled={isRevealed}
-              onClick={() => setIsRevealed(true)}
-              className={cn("text-light-gray text-[13px] tablet:text-base transition", !isRevealed && "hover:text-cream")}
-            >
-              {isRevealed ? `${token.tokensClaimable} ${formatTicker(token.ticker)}` : "*************"}
-            </button>
+
+            <div className="flex items-center gap-x-1">
+              <button
+                disabled={isRevealed}
+                onClick={() => setIsRevealed(true)}
+                className={cn(
+                  "text-light-gray text-[13px] tablet:text-base transition",
+                  !isRevealed && "hover:text-cream"
+                )}
+              >
+                <Image
+                  src={presentIcon}
+                  alt="present"
+                  width={16}
+                  height={16}
+                  className={cn("transition-transform duration-1000", !isRevealed && "animate-pulseScale")}
+                />
+              </button>
+              <p className="text-xs tablet:text-sm text-light-gray">{`${
+                isRevealed ? `${token.tokensClaimable} ${formatTicker(token.ticker)}` : "*************"
+              }`}</p>
+            </div>
           </div>
         </div>
 
@@ -44,7 +60,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
           disabled={!enabled}
           onClick={() => launchCoin(token.tokenAddress)}
           className={cn(
-            `bg-gray text-black font-bold rounded-xl px-6 tablet:px-8 py-1 hover:cursor-default`,
+            `bg-gray text-black font-bold rounded-xl px-6 tablet:px-8 py-[0.125rem] tablet:py-1 hover:cursor-default`,
             token.tokensClaimable > 0 && enabled && "bg-primary hover:cursor-pointer hover:bg-light-primary transition"
           )}
         >
