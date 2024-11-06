@@ -6,6 +6,9 @@ import Image from "next/image";
 import { baseLogo, solanaLogo, ethLogo, chainConfigs } from "@/config/chains";
 import { useRouter } from "next/navigation";
 import { useChain } from "@/context/chain";
+import { useAppKit, useAppKitAccount, useAppKitNetwork, useDisconnect } from "@reown/appkit/react";
+import { isWalletChainCompatible } from "@/lib/wallet";
+import { setUserCookies } from "@/actions/profile/actions";
 
 type ChainSwitcherProps = {
   height?: number;
@@ -15,6 +18,9 @@ type ChainSwitcherProps = {
 export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcherProps) {
   const router = useRouter();
   const { chain, setChain } = useChain();
+  const { open } = useAppKit();
+  const { disconnect } = useDisconnect();
+  const { address } = useAppKitAccount();
 
   const getChainLogo = (chain: Chain) => {
     if (chain === Chain.Base) return baseLogo;
@@ -22,9 +28,16 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
     else if (chain === Chain.Solana) return solanaLogo;
     else return ethLogo;
   };
+  
+  const handleChainSwitch = async (chainConfig: ChainConfig) => {
+    const isWalletCompatible = isWalletChainCompatible(address, chainConfig.name);
 
-  // see src/configs/chains for configs
-  const handleChainSwitch = (chainConfig: ChainConfig) => {
+    if (!isWalletCompatible) {
+      await disconnect();
+      await setUserCookies(null, chain.name);
+      open();
+    }
+ 
     setChain(chainConfig);
     router.push(`/${chainConfig.name}`);
   };
@@ -42,7 +55,7 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
           />
         </div>
       </DropdownTrigger>
-      <DropdownMenu disabledKeys={["Solana", "Base"]}>
+      <DropdownMenu disabledKeys={["Base"]}>
         <DropdownItem key="Eth" className="dark" onPress={() => handleChainSwitch(chainConfigs.eth)}>
           <div className="flex items-center gap-x-3">
             <Image src={ethLogo} alt="eth-logo" height={height} width={width} />

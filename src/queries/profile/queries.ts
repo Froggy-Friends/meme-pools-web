@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { User } from "@prisma/client";
 import { TokenWithCreator } from "@/lib/types";
+import { ClaimWithToken } from "@/types/token/types";
 
 export const fetchUser = async (wallet: string | undefined) => {
   if (!wallet) {
@@ -126,4 +127,20 @@ export const fetchCreatedTokens = async (
   });
 
   return tokens;
+};
+
+export const fetchClaimableTokens = async (frogIds: number[]): Promise<ClaimWithToken[]> => {
+  const claims = await prisma.claim.findMany({
+    where: {
+      isClaimed: false,
+      frogId: {
+        in: frogIds
+      }
+    },
+    include: {
+      token: true,
+    }
+  });
+
+  return claims;
 };

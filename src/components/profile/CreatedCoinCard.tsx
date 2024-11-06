@@ -22,7 +22,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
   const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold);
 
   return (
-    <section className="flex flex-col tablet:flex-row items-center justify-between bg-dark rounded-xl p-4 gap-4">
+    <section className="flex flex-col tablet:flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">
       <div className="flex justify-between w-full tablet:w-[200px] tablet:justify-start items-center">
         <div className="flex gap-x-4 mr-4">
           <Image src={token.image} alt={token.name} width={50} height={50} className="rounded-full" />

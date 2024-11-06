@@ -64,11 +64,16 @@ const config: Config = {
             backgroundColor: "#2f5a8c",
           },
         },
+        pulseScale: {
+          "0%, 100%": { transform: "scale(0.95)" },
+          "50%": { transform: "scale(1.1)" },
+        },
       },
       animation: {
         fadeInSlideUp: "fadeInSlideUp 0.7s",
         pulseStrong: "pulseStrong 1.5s infinite",
         primaryPulse: "primaryPulse 1s ease-in-out",
+        pulseScale: "pulseScale 1s infinite",
       },
     },
   },

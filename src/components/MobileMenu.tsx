@@ -10,34 +10,34 @@ import { Chain } from "@/models/chain";
 import { setUserCookies } from "@/actions/profile/actions";
 import ChainSwitcher from "./ChainSwitcher";
 import HowItWorksButton from "./HowItWorksButton";
-import EvmConnectButton from "./eth/EvmConnectButton";
-import SolConnectButton from "./solana/SolConnectButton";
+import ConnectButton from "./ConnectButton";
+import { useChainSync } from "@/hooks/useChainSync";
 
 type MobileMenuProps = {
   cachedUser: User | null;
   currentUser: User | null;
   isConnected: boolean;
-  connected: boolean;
   chain: Chain;
   disconnect: () => void;
-  solDisconnect: () => void;
+  address: string | null | undefined;
 };
 
 export default function MobileMenu({
   cachedUser,
   currentUser,
   isConnected,
-  connected,
   chain,
   disconnect,
-  solDisconnect,
+  address,
 }: MobileMenuProps) {
+  useChainSync({ isConnected, address, chain });
+
   return (
     <section className="tablet:hidden">
       <NavbarMenu className="bg-dark mt-6 min-w-[100vw] max-w-full left-0 right-0">
         <NavbarMenuItem>
           <div className="flex items-center justify-between -ml-4">
-            {(isConnected || connected) && (
+            {isConnected && (
               <div className="flex items-center gap-x-2">
                 <Image
                   src={cachedUser?.imageUrl || currentUser?.imageUrl || defaultProfileAvatarUrl}
@@ -55,7 +55,7 @@ export default function MobileMenu({
                         disconnect();
                         await setUserCookies(null, Chain.Eth);
                       } else if (chain === Chain.Solana) {
-                        solDisconnect();
+                        disconnect();
                         await setUserCookies(null, Chain.Solana);
                       }
                     }}
@@ -65,8 +65,7 @@ export default function MobileMenu({
                 </div>
               </div>
             )}
-            {!isConnected && (chain === Chain.Eth || chain === Chain.Base) && <EvmConnectButton />}
-            {!connected && chain === Chain.Solana && <SolConnectButton />}
+            {!isConnected && <ConnectButton />}
             <ChainSwitcher height={40} width={40} />
           </div>
         </NavbarMenuItem>

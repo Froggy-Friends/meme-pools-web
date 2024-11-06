@@ -12,7 +12,7 @@ import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
 import { Input, useDisclosure } from "@nextui-org/react";
 import TokenSwitcher from "../token/TokenSwitcher";
-import { wagmiChains } from "@/config/wagmi";
+import { wagmiChains } from "@/config/reown";
 import useEthBalance from "@/hooks/useEthBalance";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import SwapModal from "./SwapModal";
@@ -41,7 +41,6 @@ export enum TradingTab {
 
 type TradingWidgetProps = {
   token: TokenWithVoteCount;
-  currPrice: number;
   ethPrice: number;
 };
 
@@ -50,7 +49,7 @@ const PURCHASE_AMOUNTS_TOKENS = [0.25, 0.5, 1, 2];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 const rule = /^[\d,]*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
 
-export default function Swap({ token, currPrice, ethPrice }: TradingWidgetProps) {
+export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
   const { isConnected } = useAccount();
