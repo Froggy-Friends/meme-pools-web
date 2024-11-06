@@ -13,6 +13,9 @@ export const memepoolsApi = isProd
 export const contractAddress: Address = isProd
   ? "0x0"
   : "0xAbb58eed276eDBFD5a2A1E47Be2F8556039ce90D";
+export const froggyFriendsAddress = isProd
+  ? "0x7ad05c1b87e93BE306A9Eadf80eA60d7648F1B6F"
+  : "0xc8939011efd81fB0ca8382ed15EAb160c3a69313";
 export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = isProd ? 8453 : 84532;
 export const ethChain = isProd ? mainnet : sepolia;

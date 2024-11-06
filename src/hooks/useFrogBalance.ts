@@ -1,4 +1,4 @@
-import { froggyFriendsAddress } from "@/config/eth/froggyFriends";
+import { froggyFriendsAddress } from "@/config/env";
 import { useReadContract } from "wagmi";
 import { froggyFriendsAbi } from "@/abi/froggyFriends";
 import { Address } from "viem";

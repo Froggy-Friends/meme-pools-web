@@ -47,6 +47,7 @@ model Token {
   TokenVote    TokenVote[]
   Trades       Trades[]
   Meme         Meme[]
+  Claim        Claim[]
 }
 
 model User {
@@ -148,4 +149,15 @@ model Meme {
   updatedAt DateTime? @default(now()) @db.Timestamptz(6)
   user      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
   token     Token     @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
+}
+
+model Claim {
+  id             String    @id(map: "claim_pkey") @default(uuid()) @db.Uuid
+  frogId         Int
+  tokenAddress   String
+  claimerAddress String?
+  isClaimed      Boolean   @default(false)
+  createdAt      DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime? @default(now()) @db.Timestamptz(6)
+  token          Token     @relation(fields: [tokenAddress], references: [tokenAddress], onDelete: NoAction, onUpdate: NoAction, map: "token_address_fkey")
 }
