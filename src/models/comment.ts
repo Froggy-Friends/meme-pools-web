@@ -4,9 +4,10 @@ export enum CommentLikeStatus {
 }
 
 export enum CommentAndTradesViews {
+  HOLDERS = "holders",
   COMMENTS = "comments",
   TRADES = "trades",
   MEMES = "memes",
 }
 
-export type CommentAndTradesView = "comments" | "trades" | "memes";
+export type CommentAndTradesView = "holders" | "comments" | "trades" | "memes";

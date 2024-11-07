@@ -1,9 +1,11 @@
 import { memepoolsAbi } from "@/abi/memepools";
-import { contractAddress, rpcUrl } from "@/config/env";
-import { Contract, ethers } from "ethers";
+import { contractAddress } from "@/config/env";
+import { useEthersProvider } from "@/config/eth/wagmi-ethers";
+import { Contract } from "ethers";
+import * as Sentry from "@sentry/react";
 
 export default function useSellPrice() {
-  const provider = new ethers.JsonRpcProvider(rpcUrl);
+  const provider = useEthersProvider();
   const contract = new Contract(contractAddress, memepoolsAbi, provider);
 
   const getSellPrice = async (tokenAddress: string, amount: bigint) => {
@@ -17,7 +19,7 @@ export default function useSellPrice() {
 
       totalPayout = payout;
     } catch (error) {
-      console.log(error);
+      Sentry.captureException(error);
     }
 
     return totalPayout;

@@ -29,7 +29,7 @@ type TokenDetailsPageProps = {
 };
 
 export default async function TokenDetailsPage({ params, searchParams }: TokenDetailsPageProps) {
-  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.TRADES;
+  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.HOLDERS;
   const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
