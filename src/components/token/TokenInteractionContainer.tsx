@@ -9,6 +9,7 @@ import { formatTradesData } from "@/lib/formatTradesData";
 import TokenMemes from "./TokenMemes";
 import MemeForm from "./MemeForm";
 import TokenHolders from "./TokenHolders";
+import BubbleMaps from "./BubbleMaps";
 
 type TokenInteractionContainerProps = {
   view: CommentAndTradesView;
@@ -42,7 +43,12 @@ export default async function TokenInteractionContainer({
           </div>
         </div>
         <div className="flex-grow overflow-y-auto p-2 laptop:px-6">
-          {view === "holders" && <TokenHolders tokenAddress={tokenAddress} tokenId={tokenId} />}
+          {view === "holders" && (
+            <div className="flex flex-col tablet:flex-row gap-y-2 tablet:gap-x-2">
+              <TokenHolders tokenAddress={tokenAddress} tokenId={tokenId} />
+              <BubbleMaps />
+            </div>
+          )}
           {view === "comments" && (
             <TokenComments
               comments={comments}
