@@ -1,40 +1,46 @@
-import { etherscanUrl, solanaExplorerUrl } from "@/config/env";
+import { contractAddress, etherscanUrl, solanaExplorerUrl } from "@/config/env";
 import { formatAddress } from "@/lib/formatAddress";
-import { TokenHolderEth, TokenHolderSol } from "@/types/token/types";
+import { TokenHolderData } from "@/types/token/types";
 import Link from "next/link";
-import { isEthHolder } from "./TokenHolders";
-import { getHolderPercentage } from "@/lib/getHolderPercentage";
+import { Chain } from "@/models/chain";
+import { formatBalance } from "@/lib/formatBalance";
 
 type TokenHolderProps = {
-  holder: TokenHolderEth | TokenHolderSol;
-  isRefetching: boolean;
+  holder: TokenHolderData;
+  chain: Chain;
+  creator: string | null;
 };
 
-export default function TokenHolder({ holder, isRefetching }: TokenHolderProps) {
+export default function TokenHolder({ holder, chain, creator }: TokenHolderProps) {
+  const isMemepoolsEth = holder.owner.toLowerCase() === contractAddress.toLowerCase();
+  const isCreator = creator && holder.owner.toLowerCase() === creator.toLowerCase();
+
   return (
-    <div
-      className={`flex items-center justify-between bg-dark p-2 rounded-lg h-12  w-full laptop:w-1/2 ${
-        isRefetching ? "animate-primaryPulse" : ""
-      }`}
-    >
-      <p>{holder.rank}</p>
-      <Link
-        href={
-          isEthHolder(holder)
-            ? `${etherscanUrl}/address/${holder.owner_address}`
-            : `${solanaExplorerUrl}/account/${holder.owner}`
-        }
-        className="text-primary hover:text-light-primary transition"
-        target="_blank"
-      >
-        {isEthHolder(holder) ? formatAddress(holder.owner_address) : formatAddress(holder.owner)}
-      </Link>
-      <p>
-        {isEthHolder(holder)
-          ? holder.percentage_relative_to_total_supply.toFixed(2)
-          : getHolderPercentage(holder).toFixed(2)}
-        %
-      </p>
-    </div>
+    <>
+      <div className="pl-4 pb-1 text-sm tablet:text-base">{holder.rank}</div>
+      <div className="pb-1 text-sm tablet:text-base">
+        <Link
+          href={
+            chain === Chain.Eth
+              ? `${etherscanUrl}/address/${holder.owner}`
+              : `${solanaExplorerUrl}/account/${holder.owner}`
+          }
+          className="text-left text-primary hover:text-light-primary transition"
+          target="_blank"
+        >
+          {formatAddress(holder.owner)}
+        </Link>
+      </div>
+      <div className="pb-1 text-center -mt-[1px]">
+        {isMemepoolsEth && (
+          <span className="bg-cream rounded-3xl px-[0.625rem] text-center text-sm text-black font-bold">MP</span>
+        )}
+        {isCreator && (
+          <span className="bg-cream rounded-3xl px-2 text-center text-sm text-black font-extrabold">Dev</span>
+        )}
+      </div>
+      <div className="text-center pb-1 text-sm tablet:text-base">{formatBalance(holder.amount)}</div>
+      <div className="text-center pb-1 text-sm tablet:text-base">{holder.percentage.toFixed(1)}%</div>
+    </>
   );
 }

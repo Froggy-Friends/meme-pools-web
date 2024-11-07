@@ -151,3 +151,10 @@ export type TokenHolderSol = {
   frozen: boolean;
   rank: number;
 };
+
+export type TokenHolderData = {
+  rank: number;
+  owner: string;
+  amount: number;
+  percentage: number;
+};

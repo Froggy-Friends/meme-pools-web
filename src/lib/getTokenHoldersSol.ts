@@ -1,9 +1,11 @@
-import { TokenHolderSol } from "@/types/token/types";
+import { TokenHolderSol, TokenHolderData } from "@/types/token/types";
 import * as Sentry from "@sentry/nextjs";
+import { getHolderPercentage } from "./getHolderPercentage";
 
 export const getTokenHoldersSol = async (
-  mintAddress: string
-): Promise<TokenHolderSol[]> => {
+  mintAddress: string,
+  count: number
+): Promise<TokenHolderData[]> => {
   if (!process.env.HELIUS_RPC_URL) {
     throw new Error("HELIUS_RPC_URL is not defined");
   }
@@ -28,17 +30,22 @@ export const getTokenHoldersSol = async (
     });
 
     const data = await response.json();
-    const formattedData: TokenHolderSol[] = data.result.token_accounts.map(
+    const formattedData: TokenHolderData[] = data.result.token_accounts.map(
       (holder: TokenHolderSol, index: number) => {
         holder.amount = holder.amount / 10 ** 6;
-        return { ...holder, rank: index + 1 };
+        return {
+          rank: index + 1,
+          owner: holder.owner,
+          amount: holder.amount,
+          percentage: getHolderPercentage(holder.amount),
+        };
       }
     );
-    const sortedData: TokenHolderSol[] = formattedData.sort(
-      (a: TokenHolderSol, b: TokenHolderSol) => b.amount - a.amount
+    const sortedData: TokenHolderData[] = formattedData.sort(
+      (a: TokenHolderData, b: TokenHolderData) => b.amount - a.amount
     );
 
-    return sortedData;
+    return sortedData.slice(0, count);
   } catch (error) {
     Sentry.captureException(error);
     return [];
