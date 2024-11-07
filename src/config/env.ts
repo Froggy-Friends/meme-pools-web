@@ -20,17 +20,13 @@ export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = isProd ? 8453 : 84532;
 export const ethChain = isProd ? mainnet : sepolia;
 export const baseChain = isProd ? base : baseSepolia;
+export const moralisEthChain = isProd ? "eth" : "sepolia";
 
 // solana
 export const solanaChainId = isProd ? 0 : 0;
 
 // wallet connect
 export const walletConnectProjectId = "28fb63c6591b078e4eca73e608508aec";
-
-// rpc
-export const rpcUrl = isProd
-  ? "https://eth-mainnet.g.alchemy.com/v2/358SQJo2XqDKYfLOCmgg6blgDdMZgVAm"
-  : "https://eth-sepolia.g.alchemy.com/v2/358SQJo2XqDKYfLOCmgg6blgDdMZgVAm";
 
 // explorer
 export const etherscanUrl = isProd
