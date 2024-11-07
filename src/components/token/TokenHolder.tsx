@@ -1,13 +1,13 @@
 import { contractAddress, etherscanUrl, solanaExplorerUrl } from "@/config/env";
 import { formatAddress } from "@/lib/formatAddress";
-import { TTokenHolder } from "@/types/token/types";
+import { TokenHolderData } from "@/types/token/types";
 import Link from "next/link";
 import { Chain } from "@/models/chain";
 import { formatBalance } from "@/lib/formatBalance";
 import { useEffect } from "react";
 
 type TokenHolderProps = {
-  holder: TTokenHolder;
+  holder: TokenHolderData;
   chain: Chain;
   creator: string | null;
 };

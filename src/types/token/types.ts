@@ -152,7 +152,7 @@ export type TokenHolderSol = {
   rank: number;
 };
 
-export type TTokenHolder = {
+export type TokenHolderData = {
   rank: number;
   owner: string;
   amount: number;

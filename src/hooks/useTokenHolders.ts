@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { TTokenHolder } from "@/types/token/types";
+import { TokenHolderData } from "@/types/token/types";
 import { Chain } from "@/models/chain";
 import { useEffect } from "react";
 import Pusher from "pusher-js";
@@ -22,7 +22,7 @@ export default function useTokenHolders(
     },
     enabled: Boolean(tokenAddress),
   }) as {
-    data: TTokenHolder[];
+    data: TokenHolderData[];
     isLoading: boolean;
     isRefetching: boolean;
   };
