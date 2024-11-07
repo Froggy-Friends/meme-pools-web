@@ -4,7 +4,6 @@ import { TokenHolderData } from "@/types/token/types";
 import Link from "next/link";
 import { Chain } from "@/models/chain";
 import { formatBalance } from "@/lib/formatBalance";
-import { useEffect } from "react";
 
 type TokenHolderProps = {
   holder: TokenHolderData;
@@ -18,8 +17,8 @@ export default function TokenHolder({ holder, chain, creator }: TokenHolderProps
 
   return (
     <>
-      <td className="w-[20%] pl-4 pb-1 text-sm tablet:text-base">{holder.rank}</td>
-      <td className="w-[21%] pb-1 text-sm tablet:text-base">
+      <div className="pl-4 pb-1 text-sm tablet:text-base">{holder.rank}</div>
+      <div className="pb-1 text-sm tablet:text-base">
         <Link
           href={
             chain === Chain.Eth
@@ -31,17 +30,17 @@ export default function TokenHolder({ holder, chain, creator }: TokenHolderProps
         >
           {formatAddress(holder.owner)}
         </Link>
-      </td>
-      <td className="w-[10%] pb-1">
+      </div>
+      <div className="pb-1 text-center -mt-[1px]">
         {isMemepoolsEth && (
           <span className="bg-cream rounded-3xl px-[0.625rem] text-center text-sm text-black font-bold">MP</span>
         )}
         {isCreator && (
-          <span className="bg-cream rounded-3xl px-2  text-center text-sm text-black font-extrabold">Dev</span>
+          <span className="bg-cream rounded-3xl px-2 text-center text-sm text-black font-extrabold">Dev</span>
         )}
-      </td>
-      <td className="w-[29%] text-center pb-1 text-sm tablet:text-base">{formatBalance(holder.amount)}</td>
-      <td className="w-[20%] text-center pb-1 text-sm tablet:text-base">{holder.percentage.toFixed(1)}%</td>
+      </div>
+      <div className="text-center pb-1 text-sm tablet:text-base">{formatBalance(holder.amount)}</div>
+      <div className="text-center pb-1 text-sm tablet:text-base">{holder.percentage.toFixed(1)}%</div>
     </>
   );
 }
