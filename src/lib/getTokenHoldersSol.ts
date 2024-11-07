@@ -3,7 +3,8 @@ import * as Sentry from "@sentry/nextjs";
 import { getHolderPercentage } from "./getHolderPercentage";
 
 export const getTokenHoldersSol = async (
-  mintAddress: string
+  mintAddress: string,
+  count: number
 ): Promise<TokenHolderData[]> => {
   if (!process.env.HELIUS_RPC_URL) {
     throw new Error("HELIUS_RPC_URL is not defined");
@@ -44,7 +45,7 @@ export const getTokenHoldersSol = async (
       (a: TokenHolderData, b: TokenHolderData) => b.amount - a.amount
     );
 
-    return sortedData.slice(0, 20);
+    return sortedData.slice(0, count);
   } catch (error) {
     Sentry.captureException(error);
     return [];

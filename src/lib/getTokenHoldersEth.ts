@@ -3,8 +3,9 @@ import { moralisEthChain } from "@/config/env";
 import { TokenHolderEth } from "@/types/token/types";
 import * as Sentry from "@sentry/nextjs";
 
-export const getTokenHoldersEth = async (
-  tokenAddress: Address
+export const getTokenHoldersEth  = async (
+  tokenAddress: Address,
+  count: number
 ): Promise<TokenHolderEth[]> => {
   if (!process.env.MORALIS_API_KEY) {
     throw new Error("Moralis API key is not set");
@@ -33,7 +34,7 @@ export const getTokenHoldersEth = async (
       })
     );
 
-    return formattedData.slice(0, 20);
+    return formattedData.slice(0, count);
   } catch (error) {
     Sentry.captureException(error);
     return [];
