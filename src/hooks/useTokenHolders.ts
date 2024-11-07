@@ -1,14 +1,18 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { TokenHolderEth, TokenHolderSol } from "@/types/token/types";
+import { TTokenHolder } from "@/types/token/types";
 import { Chain } from "@/models/chain";
 import { useEffect } from "react";
 import Pusher from "pusher-js";
 import { Channel } from "@/models/channel";
 
-export default function useTokenHolders(tokenAddress: string, chain: Chain, tokenId: string) {
+export default function useTokenHolders(
+  tokenAddress: string,
+  chain: Chain,
+  tokenId: string
+) {
   const queryClient = useQueryClient();
 
-  const { data: holders, isLoading, isRefetching } = useQuery({
+  const { data: holders } = useQuery({
     queryKey: ["tokenHolders", chain, tokenAddress],
     queryFn: async () => {
       const response = await fetch(
@@ -18,14 +22,14 @@ export default function useTokenHolders(tokenAddress: string, chain: Chain, toke
     },
     enabled: Boolean(tokenAddress),
   }) as {
-    data: TokenHolderEth[] | TokenHolderSol[];
+    data: TTokenHolder[];
     isLoading: boolean;
     isRefetching: boolean;
   };
 
   useEffect(() => {
     if (!tokenId) return;
-    
+
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
     });
@@ -33,9 +37,11 @@ export default function useTokenHolders(tokenAddress: string, chain: Chain, toke
     const buyChannel = pusher.subscribe(Channel.Buy);
     const sellChannel = pusher.subscribe(Channel.Sell);
 
-    [buyChannel, sellChannel].forEach(channel => {
+    [buyChannel, sellChannel].forEach((channel) => {
       channel.bind(tokenId, () => {
-        queryClient.invalidateQueries({ queryKey: ["tokenHolders", chain, tokenAddress] });
+        queryClient.invalidateQueries({
+          queryKey: ["tokenHolders", chain, tokenAddress],
+        });
       });
     });
 
@@ -46,5 +52,5 @@ export default function useTokenHolders(tokenAddress: string, chain: Chain, toke
     };
   }, [tokenAddress, chain, tokenId, queryClient]);
 
-  return { holders, isLoading, isRefetching };
+  return { holders };
 }

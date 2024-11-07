@@ -24,10 +24,16 @@ export const getTokenHoldersEth = async (
 
     const data = await response.json();
 
-    return data.result.map((holder: TokenHolderEth, index: number) => ({
-      ...holder,
-      rank: index + 1,
-    }));
+    const formattedData = data.result.map(
+      (holder: TokenHolderEth, index: number) => ({
+        rank: index + 1,
+        owner: holder.owner_address,
+        amount: Number(holder.balance_formatted),
+        percentage: holder.percentage_relative_to_total_supply,
+      })
+    );
+
+    return formattedData.slice(0, 20);
   } catch (error) {
     Sentry.captureException(error);
     return [];
