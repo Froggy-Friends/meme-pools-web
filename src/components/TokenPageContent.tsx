@@ -23,7 +23,7 @@ export default function TokenPageContent() {
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-x-2 tablet:gap-x-4">
             <TokenFiltersDropdown selectedFilter={filter} onFilterChange={setFilter} />
-            <TokenRefreshButton tokenFilter={filter} tokenPage={page} reverse={reverse} />
+            <TokenRefreshButton tokenFilter={filter} tokenPage={page} reverse={reverse} isNsfw={isNsfw} />
             <TokenReverseButton reverse={reverse} toggleReverse={() => setReverse(!reverse)} />
           </div>
           <Switch
