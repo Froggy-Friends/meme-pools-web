@@ -7,20 +7,30 @@ type UseTokenOptions = {
   filter: TokenFilter;
   page: number;
   reverse: boolean;
+  isNsfw: boolean;
 };
 
-export default function useTokens({ filter, page, reverse }: UseTokenOptions) {
+export default function useTokens({
+  filter,
+  page,
+  reverse,
+  isNsfw,
+}: UseTokenOptions) {
   const { chain } = useChain();
-  
+
   const {
     data: tokens,
     isPending: isLoadingTokens,
     refetch,
   } = useQuery({
-    queryKey: ["tokens", filter, page, reverse],
+    queryKey: ["tokens", filter, page, reverse, isNsfw],
     queryFn: async () => {
       const tokens = await fetchTokens(filter, page, chain.name);
-      return reverse ? tokens.reverse() : tokens;
+      let filteredTokens = tokens;
+      if (!isNsfw) {
+        filteredTokens = tokens.filter((token) => !token.isNsfw);
+      }
+      return reverse ? filteredTokens.reverse() : filteredTokens;
     },
   });
 

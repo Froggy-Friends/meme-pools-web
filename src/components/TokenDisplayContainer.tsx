@@ -6,13 +6,15 @@ type TokenDisplayContainerProps = {
   filter: TokenFilter;
   page: number;
   reverse: boolean;
+  isNsfw: boolean;
 };
 
-export default function TokenDisplayContainer({ filter, page, reverse }: TokenDisplayContainerProps) {
+export default function TokenDisplayContainer({ filter, page, reverse, isNsfw }: TokenDisplayContainerProps) {
   const { tokens } = useTokens({
     filter,
     page,
     reverse,
+    isNsfw,
   });
   if (!tokens || tokens.length === 0) return null;
   return (
