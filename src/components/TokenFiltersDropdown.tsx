@@ -30,7 +30,7 @@ export default function TokenFiltersDropdown({
   return (
     <Dropdown onOpenChange={setIsOpen} className="bg-dark-gray">
       <DropdownTrigger>
-        <button className="px-3 h-8 bg-dark-gray border border-gray rounded-[4px] w-[180px] text-sm relative flex items-center justify-center hover:bg-gray transition">
+        <button className="px-3 h-8 bg-dark-gray border border-gray rounded-[4px] w-[145px] tablet:w-[180px] text-sm relative flex items-center justify-center hover:bg-gray transition">
           {formattedFilter}
           <FaChevronDown
             size={10}
