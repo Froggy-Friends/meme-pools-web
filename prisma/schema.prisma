@@ -41,6 +41,7 @@ model Token {
   other        String?
   chain        String
   isClaimable  Boolean       @default(false)
+  isNsfw       Boolean       @default(false)
   Comment      Comment[]
   leaderboard  Leaderboard[]
   user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")

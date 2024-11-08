@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { createFormData } from "@/lib/createFormData";
 import { useChain } from "@/context/chain";
 import Image from "next/image";
-import { cn } from "@nextui-org/react";
+import { cn, Switch } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { GrRefresh } from "react-icons/gr";
 import { useCallback, useRef, useState } from "react";
@@ -49,6 +49,7 @@ export default function CreateCoinForm() {
   const [tokenImageBlob, setTokenImageBlob] = useState<PutBlobResult | null>(null);
   const [reserveCost, setReserveCost] = useState<string | null>(null);
   const [formattedReservedAmount, setFormattedReservedAmount] = useState("");
+  const [isNsfw, setIsNsfw] = useState(false);
 
   const {
     register,
@@ -87,7 +88,8 @@ export default function CreateCoinForm() {
         tokenDetails.tokenAddress,
         tokenDetails.creator,
         chain.name,
-        tokenImageBlob
+        tokenImageBlob,
+        isNsfw
       );
 
       if (reservedAmount !== BigInt(0)) {
@@ -156,14 +158,35 @@ export default function CreateCoinForm() {
 
   return (
     <section className="mt-20">
-      <form onSubmit={onSubmit} className="flex flex-col items-center max-w-[925px] mx-auto px-4 tablet:px-0" ref={formRef}>
-        <button
-          onClick={() => formRef.current?.reset()}
-          className="flex items-center gap-x-2 self-end bg-dark-gray rounded-3xl mb-4 px-4 py-2 hover:bg-gray active:scale-[0.97] transition"
-        >
-          <p>Reset</p>
-          <GrRefresh size={18} />
-        </button>
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-col items-center max-w-[925px] mx-auto px-4 tablet:px-0"
+        ref={formRef}
+      >
+        <div className="flex self-end items-center gap-x-2 tablet:gap-x-4 -mr-3 tablet:-mr-0 desktop:-mr-2">
+          <div className="flex items-center gap-x-1 mb-[15px]">
+            <Switch
+              isSelected={isNsfw}
+              onValueChange={setIsNsfw}
+              color="primary"
+              size="sm"
+              classNames={{
+                thumb: "bg-dark",
+                base: cn("inline-flex flex-row-reverse", "justify-between cursor-pointer gap-2"),
+                wrapper: "hover:bg-light-gray",
+              }}
+            >
+              <p className="text-lg">NSFW</p>
+            </Switch>
+          </div>
+          <button
+            onClick={() => formRef.current?.reset()}
+            className="flex items-center gap-x-2 bg-dark-gray rounded-xl mb-4 px-4 py-2 hover:bg-gray active:scale-[0.97] transition"
+          >
+            <p>Reset</p>
+            <GrRefresh size={18} />
+          </button>
+        </div>
 
         <div className="flex flex-col tablet:flex-row tablet:gap-x-4 laptop:gap-x-10">
           <div className="flex flex-col">
@@ -305,12 +328,24 @@ export default function CreateCoinForm() {
         </div>
 
         <div className="flex flex-col mt-10">
-          <p className="mb-1 ml-1 tablet:ml-4 laptop:ml-5">Optional Links</p>
+          <p className="mb-1">Optional Links</p>
 
           <div className="flex w-[calc(100vw-1rem)] max-w-[415px] tablet:min-w-[720px] tablet:w-[720px] laptop:min-w-[875px] laptop:w-[875px] desktop:min-w-[950px] desktop:w-[950px] justify-between">
-            <CreateCoinFormModal name="twitter" pattern="https://x.com/*" register={register} resetField={resetField} watch={watch} />
+            <CreateCoinFormModal
+              name="twitter"
+              pattern="https://x.com/*"
+              register={register}
+              resetField={resetField}
+              watch={watch}
+            />
             <CreateCoinFormModal name="telegram" register={register} resetField={resetField} watch={watch} />
-            <CreateCoinFormModal name="website" pattern="https://.*" register={register} resetField={resetField} watch={watch} />
+            <CreateCoinFormModal
+              name="website"
+              pattern="https://.*"
+              register={register}
+              resetField={resetField}
+              watch={watch}
+            />
             <CreateCoinFormModal
               name="discord"
               pattern="https://discord.gg/*"
@@ -318,7 +353,13 @@ export default function CreateCoinForm() {
               resetField={resetField}
               watch={watch}
             />
-            <CreateCoinFormModal name="other" pattern="https://.*" register={register} resetField={resetField} watch={watch} />
+            <CreateCoinFormModal
+              name="other"
+              pattern="https://.*"
+              register={register}
+              resetField={resetField}
+              watch={watch}
+            />
           </div>
         </div>
 

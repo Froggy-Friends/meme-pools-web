@@ -8,14 +8,16 @@ type TokenRefreshButtonProps = {
   tokenFilter: TokenFilter;
   tokenPage: number;
   reverse: boolean;
+  isNsfw: boolean;
 };
 
-export default function TokenRefreshButton({ tokenFilter, tokenPage, reverse }: TokenRefreshButtonProps) {
+export default function TokenRefreshButton({ tokenFilter, tokenPage, reverse, isNsfw }: TokenRefreshButtonProps) {
   const [isSpinning, setIsSpinning] = useState(false);
   const { refetch } = useTokens({
     filter: tokenFilter,
     page: tokenPage,
     reverse,
+    isNsfw,
   });
 
   const handleClick = async () => {

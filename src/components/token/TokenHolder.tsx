@@ -17,7 +17,7 @@ export default function TokenHolder({ holder, chain, creator }: TokenHolderProps
 
   return (
     <>
-      <div className="pl-4 pb-1 text-sm tablet:text-base">{holder.rank}</div>
+      <div className="pr-3 tablet:pr-6 pb-1 text-center text-sm tablet:text-base">{holder.rank}</div>
       <div className="pb-1 text-sm tablet:text-base">
         <Link
           href={
@@ -31,7 +31,7 @@ export default function TokenHolder({ holder, chain, creator }: TokenHolderProps
           {formatAddress(holder.owner)}
         </Link>
       </div>
-      <div className="pb-1 text-center -mt-[1px]">
+      <div className="pb-1 text-center -mt-[3px] tablet:-mt-[1px]">
         {isMemepoolsEth && (
           <span className="bg-cream rounded-3xl px-[0.625rem] text-center text-sm text-black font-bold">MP</span>
         )}
