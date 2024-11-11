@@ -11,6 +11,8 @@ import { CommentLikes, Prisma, Token, TokenVote } from "@prisma/client";
 import { Address } from "viem";
 import { formatTradeData } from "@/lib/formatTradeData";
 import { put } from "@vercel/blob";
+import { revalidatePath } from "next/cache";
+import { Chain } from "@/models/chain";
 
 export async function getVotesByTokenId(
   tokenId: string
@@ -316,7 +318,11 @@ export const addMeme = async (
   await pusher.trigger(Channel.Meme, tokenId, meme);
 };
 
-export const updateTokenSocials = async (token: Token, formData: FormData) => {
+export const updateTokenSocials = async (
+  token: Token,
+  formData: FormData,
+  chain: Chain
+) => {
   const twitter = formData.get("twitter") as string;
   const telegram = formData.get("telegram") as string;
   const discord = formData.get("discord") as string;
@@ -335,6 +341,8 @@ export const updateTokenSocials = async (token: Token, formData: FormData) => {
       other: other || token.other,
     },
   });
+
+  revalidatePath(`/${chain}/token/${token.tokenAddress}`);
 };
 
 export const createClaimRecords = async (tokenAddress: string) => {
@@ -342,7 +350,7 @@ export const createClaimRecords = async (tokenAddress: string) => {
     frogId: i,
     tokenAddress,
   }));
-  
+
   await prisma.claim.createMany({
     data: claims,
   });
