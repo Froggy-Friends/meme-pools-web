@@ -87,6 +87,15 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   );
   const { maxBuyPrice } = useMaxBuy(token);
 
+  const insufficientBuyBalance =
+    buyAmount !== "" &&
+    ethBalance &&
+    (buyTokenName === "ETH"
+      ? Number(buyAmount) > Number(formatEther(ethBalance.value))
+      : Number(formatEther(buyCost)) > Number(formatEther(ethBalance.value)));
+
+  const insufficientSellBalance = sellAmount !== "" && Number(sellAmount) > Number(tokenBalance);
+
   const debouncedBuyCost = useDebouncedCallback(async (amount: string) => {
     if (amount === "") {
       setBuyCost(BigInt(0));
@@ -466,14 +475,23 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
           </div>
           <button
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
-            disabled={activeTab === TradingTab.BUY ? buyAmount === "" : sellAmount === "" || !isConnected}
-            className={`flex items-center justify-center w-full h-[40px] p-4 rounded-xl text-lg font-proximaNovaBold hover:bg-opacity-80 disabled:bg-gray active:scale-[0.98] transition ${
+            disabled={
+              !isConnected ||
+              (activeTab === TradingTab.BUY
+                ? buyAmount === "" || insufficientBuyBalance
+                : sellAmount === "" || insufficientSellBalance)
+            }
+            className={`flex items-center justify-center w-full h-[40px] p-4 rounded-xl text-lg font-proximaNovaBold hover:bg-opacity-80 disabled:bg-gray disabled:text-light-gray active:scale-[0.98] transition ${
               activeTab === TradingTab.BUY
                 ? "bg-green text-black hover:bg-light-green"
                 : "bg-red text-white hover:bg-rose"
             }`}
           >
-            TRADE
+            {activeTab === TradingTab.BUY && insufficientBuyBalance
+              ? "Insufficient ETH"
+              : activeTab === TradingTab.SELL && insufficientSellBalance
+              ? "Insufficient Balance"
+              : "TRADE"}
           </button>
         </div>
       </div>
