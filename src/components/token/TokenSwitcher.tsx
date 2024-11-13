@@ -1,6 +1,5 @@
 import { ethLogo } from "@/config/chains";
 import { formatBalance } from "@/lib/formatBalance";
-import { formatTicker } from "@/lib/formatTicker";
 import { TokenWithVoteCount } from "@/types/token/types";
 import Image from "next/image";
 import { FaWallet } from "react-icons/fa";

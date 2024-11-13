@@ -2,7 +2,6 @@ import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress } from "@/config/env";
 import { Contract, parseEther } from "ethers";
 import * as Sentry from "@sentry/react";
-import { ethers } from "ethers";
 import { useEthersProvider } from "@/config/eth/wagmi-ethers";
 
 export default function useBuyPrice() {
