@@ -5,14 +5,16 @@ import LiveFeed from "./LiveFeed";
 import VotingLeaderboard from "./VotingLeaderboard";
 import { useFeatureFlagPayload, useFeatureFlagEnabled } from "posthog-js/react";
 import { useState, useEffect } from "react";
+import { useChain } from "@/context/chain";
 
 type LeaderBoardAndFeedContainerProps = {
   topTokens: Token[];
 };
 
 export default function LeaderBoardAndFeedContainer({ topTokens }: LeaderBoardAndFeedContainerProps) {
-  const payload = useFeatureFlagPayload("spotlight");
-  const isSpotlightEnabled = useFeatureFlagEnabled("spotlight");
+  const { chain } = useChain();
+  const payload = useFeatureFlagPayload(`spotlight-${chain.name}`);
+  const isSpotlightEnabled = useFeatureFlagEnabled(`spotlight-${chain.name}`);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

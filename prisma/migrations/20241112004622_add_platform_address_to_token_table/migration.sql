@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Token" ADD COLUMN     "platformAddress" TEXT NOT NULL DEFAULT '0xAbb58eed276eDBFD5a2A1E47Be2F8556039ce90D';

@@ -128,3 +128,33 @@ export type TokenInfo = {
 };
 
 export type ClaimWithToken = Claim & { token: Token };
+
+export type TokenHolderEth = {
+  balance: string;
+  balance_formatted: string;
+  is_contract: boolean;
+  owner_address: string;
+  owner_address_label: string | null;
+  entity: string | null;
+  entity_logo: string | null;
+  usd_value: number | null;
+  percentage_relative_to_total_supply: number;
+  rank: number;
+};
+
+export type TokenHolderSol = {
+  address: string;
+  mint: string;
+  owner: string;
+  amount: number;
+  delegated_amount: number;
+  frozen: boolean;
+  rank: number;
+};
+
+export type TokenHolderData = {
+  rank: number;
+  owner: string;
+  amount: number;
+  percentage: number;
+};

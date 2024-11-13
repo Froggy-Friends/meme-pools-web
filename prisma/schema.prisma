@@ -23,31 +23,33 @@ model Leaderboard {
 }
 
 model Token {
-  id           String        @id(map: "token_pkey") @default(uuid()) @db.Uuid
-  ticker       String
-  description  String
-  image        String
-  twitter      String?
-  telegram     String?
-  website      String?
-  userId       String        @db.Uuid
-  name         String
-  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
-  updatedAt    DateTime?     @default(now()) @db.Timestamptz(6)
-  tokenAddress String        @unique
-  tokenCreator String
-  marketCap    Int
-  discord      String?
-  other        String?
-  chain        String
-  isClaimable  Boolean       @default(false)
-  Comment      Comment[]
-  leaderboard  Leaderboard[]
-  user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
-  TokenVote    TokenVote[]
-  Trades       Trades[]
-  Meme         Meme[]
-  Claim        Claim[]
+  id              String        @id(map: "token_pkey") @default(uuid()) @db.Uuid
+  ticker          String
+  description     String
+  image           String
+  twitter         String?
+  telegram        String?
+  website         String?
+  userId          String        @db.Uuid
+  name            String
+  createdAt       DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime?     @default(now()) @db.Timestamptz(6)
+  tokenAddress    String        @unique
+  tokenCreator    String
+  marketCap       Int
+  discord         String?
+  other           String?
+  chain           String
+  isClaimable     Boolean       @default(false)
+  isNsfw          Boolean       @default(false)
+  platformAddress String        @default("0xAbb58eed276eDBFD5a2A1E47Be2F8556039ce90D")
+  Comment         Comment[]
+  leaderboard     Leaderboard[]
+  user            User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
+  TokenVote       TokenVote[]
+  Trades          Trades[]
+  Meme            Meme[]
+  Claim           Claim[]
 }
 
 model User {

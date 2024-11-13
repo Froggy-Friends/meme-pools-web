@@ -1,12 +1,24 @@
 import { isProd, walletConnectProjectId } from "./env";
-import { cookieStorage, createStorage } from '@wagmi/core'
-import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { SolanaAdapter } from '@reown/appkit-adapter-solana'
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets'
-import { mainnet, sepolia, baseSepolia, base, solana, solanaDevnet, solanaTestnet } from '@reown/appkit/networks'
+import { cookieStorage, createStorage } from "@wagmi/core";
+import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
+import { SolanaAdapter } from "@reown/appkit-adapter-solana";
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
+import {
+  mainnet,
+  sepolia,
+  baseSepolia,
+  base,
+  solana,
+  solanaDevnet,
+  solanaTestnet,
+} from "@reown/appkit/networks";
+import { http } from "viem";
 
 if (!walletConnectProjectId) {
-  throw new Error('Project ID is not defined')
+  throw new Error("Project ID is not defined");
 }
 
 export const wagmiChains = {
@@ -16,13 +28,23 @@ export const wagmiChains = {
 
 export const wagmiAdapter = new WagmiAdapter({
   storage: createStorage({
-    storage: cookieStorage
+    storage: cookieStorage,
   }),
   ssr: true,
   projectId: walletConnectProjectId,
-  networks: [wagmiChains.eth, wagmiChains.base, solana, solanaTestnet, solanaDevnet],
+  networks: [
+    wagmiChains.eth,
+    wagmiChains.base,
+    solana,
+    solanaTestnet,
+    solanaDevnet,
+  ],
+  transports: {
+    [mainnet.id]: http(process.env.ETH_MAINNET_RPC_URL),
+    [sepolia.id]: http(process.env.SEPOLIA_RPC_URL),
+  },
 });
 
 export const solanaWeb3JsAdapter = new SolanaAdapter({
-  wallets: [new PhantomWalletAdapter(), new SolflareWalletAdapter()]
-})
+  wallets: [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
+});

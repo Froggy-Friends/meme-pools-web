@@ -14,7 +14,8 @@ export const createCoin = async (
   tokenAddress: string,
   tokenCreator: string,
   chain: string,
-  blob: PutBlobResult | null
+  blob: PutBlobResult | null,
+  isNsfw: boolean
 ) => {
   const user = await fetchUser(address);
 
@@ -42,6 +43,7 @@ export const createCoin = async (
           tokenCreator: tokenCreator,
           chain: chain,
           marketCap: 100,
+          isNsfw: isNsfw,
         },
       });
 

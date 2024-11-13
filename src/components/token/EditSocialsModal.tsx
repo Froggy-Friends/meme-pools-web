@@ -19,9 +19,8 @@ export default function EditSocialsModal({ isOpen, onClose, token }: EditSocials
   const { chain } = useChain();
   const handleSubmit = async (formData: FormData) => {
     try {
-      await updateTokenSocials(token, formData);
+      await updateTokenSocials(token, formData, chain.name);
       toast.success("Social links updated");
-      revalidatePath(`/${chain.name}/token/${token.tokenAddress}`);
       onClose();
     } catch (error) {
       Sentry.captureException(error);
