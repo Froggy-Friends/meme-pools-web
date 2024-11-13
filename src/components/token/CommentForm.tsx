@@ -7,15 +7,22 @@ import { CommentWithLikes } from "@/types/token/types";
 import toast from "react-hot-toast";
 import { useRef } from "react";
 import { cn } from "@nextui-org/react";
+import { Address } from "viem";
+import useTokenBalance from "@/hooks/useTokenBalance";
+import { wagmiChains } from "@/config/reown";
+import { formatTicker } from "@/lib/formatTicker";
 
 type CommentFormProps = {
   tokenId: string;
+  tokenAddress: string;
+  tokenTicker: string;
 };
 
-export default function CommentForm({ tokenId }: CommentFormProps) {
+export default function CommentForm({ tokenId, tokenAddress, tokenTicker }: CommentFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const { currentUser } = useUser();
   const queryClient = useQueryClient();
+  const { tokenBalance } = useTokenBalance(tokenAddress as Address, wagmiChains.eth.id);
 
   const addComment = useMutation({
     mutationKey: ["add-comment", tokenId],
@@ -64,17 +71,19 @@ export default function CommentForm({ tokenId }: CommentFormProps) {
       id="post-comment"
     >
       <textarea
-        placeholder="Post a comment..."
+        placeholder={
+          tokenBalance === 0 ? `Buy $${formatTicker(tokenTicker)} to post a comment...` : "Post a comment..."
+        }
         className="w-full desktop:w-[725px] h-[200px] bg-dark rounded-xl p-4 outline-none focus:ring-2 ring-gray"
         name="comment"
         id="comment"
       />
       <button
-        disabled={!currentUser}
+        disabled={!currentUser || tokenBalance === 0}
         className={cn(
-          "bg-primary h-10 w-28 rounded-xl mt-4 py-1 px-8 text-dark font-proximaNovaBold active:scale-[0.97] self-end hover:bg-light-primary transition",
+          "bg-primary h-10 w-28 rounded-xl mt-4 py-1 px-8 text-dark font-proximaNovaBold active:scale-[0.97] self-end disabled:bg-gray disabled:text-white/90 hover:bg-light-primary transition",
           {
-            "hover:bg-primary": !currentUser,
+            "hover:bg-gray": !currentUser || tokenBalance === 0,
           }
         )}
       >
