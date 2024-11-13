@@ -72,18 +72,18 @@ export default function CommentForm({ tokenId, tokenAddress, tokenTicker }: Comm
     >
       <textarea
         placeholder={
-          tokenBalance === 0 ? `Buy $${formatTicker(tokenTicker)} to post a comment...` : "Post a comment..."
+          !tokenBalance ? `Buy $${formatTicker(tokenTicker)} to post a comment...` : "Post a comment..."
         }
         className="w-full desktop:w-[725px] h-[200px] bg-dark rounded-xl p-4 outline-none focus:ring-2 ring-gray"
         name="comment"
         id="comment"
       />
       <button
-        disabled={!currentUser || tokenBalance === 0}
+        disabled={!currentUser || !tokenBalance}
         className={cn(
           "bg-primary h-10 w-28 rounded-xl mt-4 py-1 px-8 text-dark font-proximaNovaBold active:scale-[0.97] self-end disabled:bg-gray disabled:text-white/90 hover:bg-light-primary transition",
           {
-            "hover:bg-gray": !currentUser || tokenBalance === 0,
+            "hover:bg-gray": !currentUser || !tokenBalance,
           }
         )}
       >

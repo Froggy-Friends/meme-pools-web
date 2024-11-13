@@ -32,14 +32,14 @@ export default function MemeForm({ tokenId, tokenAddress, tokenTicker }: MemeFor
       id="post-meme"
     >
       <textarea
-        placeholder={tokenBalance === 0 ? `Buy $${formatTicker(tokenTicker)} to post a meme...` : "Post a meme..."}
+        placeholder={!tokenBalance ? `Buy $${formatTicker(tokenTicker)} to post a meme...` : "Post a meme..."}
         className="w-full desktop:w-[725px] h-[200px] bg-dark rounded-xl p-4 outline-none focus:ring-2 ring-gray"
         name="caption"
         id="caption"
       />
       <div className="flex flex-col tablet:flex-row tablet:justify-between items-start tablet:items-center mt-4 gap-y-4 tablet:gap-x-4">
         <input
-          disabled={!currentUser || tokenBalance === 0}
+          disabled={!currentUser || !tokenBalance}
           type="file"
           name="image"
           id="image"
@@ -47,11 +47,11 @@ export default function MemeForm({ tokenId, tokenAddress, tokenTicker }: MemeFor
         />
         <FormSubmitButton
           pendingText="POSTING..."
-          disabled={!currentUser || tokenBalance === 0}
+          disabled={!currentUser || !tokenBalance}
           className={cn(
             "w-full tablet:w-28 bg-primary h-10 rounded-xl py-1 px-8 text-dark font-proximaNovaBold active:scale-[0.97] disabled:bg-gray disabled:text-white/90 hover:bg-light-primary transition-all",
             {
-              "hover:bg-gray": !currentUser || tokenBalance === 0,
+              "hover:bg-gray": !currentUser || !tokenBalance,
             }
           )}
         >
