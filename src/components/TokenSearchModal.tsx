@@ -13,10 +13,42 @@ type TokenSearchModalProps = {
   onClose: () => void;
 };
 
+type SortField = "date" | "time" | "mc";
+type SortDirection = "asc" | "desc";
+
 export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: TokenSearchModalProps) {
   const [tokens, setTokens] = useState<TokenSearchResult[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(prev => (prev === "desc" ? "asc" : "desc"));
+    } else {
+      setSortField(field);
+      setSortDirection("desc");
+    }
+  };
+
+  const sortedTokens = tokens
+    ? [...tokens].sort((a, b) => {
+        if (!sortField) return 0;
+
+        const modifier = sortDirection === "asc" ? 1 : -1;
+        switch (sortField) {
+          case "date":
+            return (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) * modifier;
+          case "time":
+            return (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) * modifier;
+          case "mc":
+            return (a.marketCap - b.marketCap) * modifier;
+          default:
+            return 0;
+        }
+      })
+    : null;
 
   const debounced = useDebouncedCallback(async value => {
     if (value === "") {
@@ -47,6 +79,8 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
           onOpenChange();
           setTokens(null);
           setNoResults(false);
+          setSortField(null);
+          setSortDirection("desc");
         }}
         size="2xl"
         className="bg-dark max-h-[500px] min-h-[175px] overflow-y-auto mt-12"
@@ -86,15 +120,36 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
                   <p>Token</p>
 
                   <div className="flex max-w-[65%] tablet:w-1/2 justify-between">
-                    <p className="w-24 text-right">Date</p>
-                    <p className="w-24 text-right">Time</p>
-                    <p className="w-16 text-right">MC</p>
+                    <button
+                      onClick={() => handleSort("date")}
+                      className={`w-24 text-right hover:text-primary transition ${
+                        sortField === "date" ? "text-primary" : ""
+                      }`}
+                    >
+                      Date {sortField === "date" && (sortDirection === "asc" ? "↑" : "↓")}
+                    </button>
+                    <button
+                      onClick={() => handleSort("time")}
+                      className={`w-24 text-right hover:text-primary transition ${
+                        sortField === "time" ? "text-primary" : ""
+                      }`}
+                    >
+                      Time {sortField === "time" && (sortDirection === "asc" ? "↑" : "↓")}
+                    </button>
+                    <button
+                      onClick={() => handleSort("mc")}
+                      className={`w-16 text-right hover:text-primary transition ${
+                        sortField === "mc" ? "text-primary" : ""
+                      }`}
+                    >
+                      MC {sortField === "mc" && (sortDirection === "asc" ? "↑" : "↓")}
+                    </button>
                   </div>
                 </div>
 
-                {!isLoading && tokens && (
+                {!isLoading && sortedTokens && (
                   <div className="mb-2">
-                    {tokens?.map(token => {
+                    {sortedTokens.map(token => {
                       return <SearchTokenDisplay key={token.id} token={token} onClose={onClose} />;
                     })}
                   </div>
