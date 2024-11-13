@@ -94,7 +94,7 @@ export const fetchTopVotesTokens = async (chain: Chain) => {
   });
 
   const tokens: TokenWithVotes[] = await response.json();
-  
+
   return tokens.slice(0, 3);
 };
 
@@ -146,6 +146,12 @@ export const searchTokens = async (search: string) => {
             mode: "insensitive",
           },
         },
+        {
+          tokenAddress: {
+            equals: search,
+            mode: "insensitive",
+          },
+        },
       ],
     },
     orderBy: {
@@ -166,25 +172,6 @@ export const searchTokens = async (search: string) => {
       };
     })
   );
-};
-
-export const searchTokensByCa = async (
-  contractAddress: string
-): Promise<TokenSearchResult | null> => {
-  const token = await prisma.token.findFirst({
-    where: {
-      tokenAddress: contractAddress,
-    },
-  });
-
-  if (!token) return null;
-
-  const voteCounts = await getVotesByTokenId(token.id);
-
-  return {
-    ...token,
-    voteCount: voteCounts.upvotes - voteCounts.downvotes,
-  };
 };
 
 export const fetchTrades = async (tokenId: string) => {
