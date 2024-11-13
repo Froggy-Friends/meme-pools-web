@@ -188,7 +188,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     await refetchAllowance();
     const updatedTokenInfo = await refetchTokenInfo();
     await updateTokenMarketcap(token.id, updatedTokenInfo.data?.marketcap || 0);
-    if (!isApproved && buyTxHash) {
+    if (!isApproved && receipt) {
       await approveToken();
       await refetchAllowance();
     }
