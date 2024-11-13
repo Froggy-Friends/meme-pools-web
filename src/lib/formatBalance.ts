@@ -7,7 +7,10 @@ export function formatBalance(num: number, eth?: boolean): string {
       const formatted = num / 1000;
       return `${formatted.toFixed(2)}K`;
     }
-    
-    const formatted = num / 1000000;
-    return `${formatted.toFixed(2)}M`;
+    if (num < 999999999) {
+      const formatted = num / 1000000;
+      return `${formatted.toFixed(2)}M`;
+    }
+    const formatted = num / 1000000000;
+    return `${formatted.toFixed(1)}B`;
   }
