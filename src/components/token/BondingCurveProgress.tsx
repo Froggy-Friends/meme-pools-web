@@ -5,7 +5,6 @@ import { Token } from "@prisma/client";
 import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import useMarketcapGoal from "@/hooks/useMarketcapGoal";
-import Link from "next/link";
 
 type BondingCurveProgressProps = {
   token: Token;

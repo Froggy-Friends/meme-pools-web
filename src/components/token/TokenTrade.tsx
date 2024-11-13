@@ -21,19 +21,21 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
       }`}
     >
       <div className="flex items-center gap-x-3 tablet:gap-x-4">
-        <Image
-          src={trade.userAvatar || defaultProfileAvatarUrl}
-          alt="user-profile-picture"
-          height={50}
-          width={50}
-          className="rounded-full"
-        />
+        <Link href={`/profile/${trade.username}`}>
+          <Image
+            src={trade.userAvatar || defaultProfileAvatarUrl}
+            alt="user-profile-picture"
+            height={50}
+            width={50}
+            className="rounded-full"
+          />
+        </Link>
 
         <div className="flex flex-col">
           <div className="flex gap-x-2 tablet:gap-x-4">
             <Link
               href={`/profile/${trade.username}`}
-              className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
+              className="text-white/80 hover:text-white hover:underline transition"
             >
               {getUserDisplayName(trade.username)}
             </Link>

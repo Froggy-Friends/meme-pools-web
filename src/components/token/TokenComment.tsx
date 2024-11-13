@@ -38,19 +38,21 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
     >
       <div className="flex flex-col">
         <div className="flex items-center gap-x-2 tablet:gap-x-4">
-          <Image
-            src={author.imageUrl || defaultProfileAvatarUrl}
-            alt="user-profile-picture"
-            height={50}
-            width={50}
-            className="rounded-full"
-          />
+          <Link href={`/profile/${author.name}`}>
+            <Image
+              src={author.imageUrl || defaultProfileAvatarUrl}
+              alt="user-profile-picture"
+              height={50}
+              width={50}
+              className="rounded-full"
+            />
+          </Link>
 
           <div className="flex flex-col mr-2 tablet:mr-0">
             <div className="flex gap-x-2 tablet:gap-x-4">
               <Link
                 href={`/profile/${author.name}`}
-                className="font-proximaSoftBold text-white/80 hover:text-white hover:underline transition"
+                className="text-white/80 hover:text-white hover:underline transition"
               >
                 {getUserDisplayName(author.name)}
               </Link>

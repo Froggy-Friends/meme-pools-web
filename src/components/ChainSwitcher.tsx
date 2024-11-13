@@ -6,7 +6,7 @@ import Image from "next/image";
 import { baseLogo, solanaLogo, ethLogo, chainConfigs } from "@/config/chains";
 import { useRouter } from "next/navigation";
 import { useChain } from "@/context/chain";
-import { useAppKit, useAppKitAccount, useAppKitNetwork, useDisconnect } from "@reown/appkit/react";
+import { useAppKit, useAppKitAccount, useDisconnect } from "@reown/appkit/react";
 import { isWalletChainCompatible } from "@/lib/wallet";
 import { setUserCookies } from "@/actions/profile/actions";
 

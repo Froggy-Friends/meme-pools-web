@@ -28,9 +28,11 @@ export default async function CreatedTokens({ profileUser, cachedUser }: Created
       {!createdTokens.length && cachedUser && cachedUser.id !== profileUser.id && (
         <p className="ml-1 -mt-8">No coins created</p>
       )}
-      {createdTokens.map(token => {
-        return <CreatedCoinCard key={token.id} token={token} enabled={enabled} />;
-      })}
+      {createdTokens
+        .sort((a, b) => (b.marketCap ?? 0) - (a.marketCap ?? 0))
+        .map(token => {
+          return <CreatedCoinCard key={token.id} token={token} enabled={enabled} />;
+        })}
     </section>
   );
 }

@@ -6,7 +6,6 @@ import { toast } from "react-hot-toast";
 import FormSubmitButton from "../FormSubmitButton";
 import { Token } from "@prisma/client";
 import { useChain } from "@/context/chain";
-import { revalidatePath } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
 
 type EditSocialsModalProps = {

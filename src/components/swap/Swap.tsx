@@ -33,6 +33,7 @@ import { useAccount } from "wagmi";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { formatBalance } from "@/lib/formatBalance";
 import useMaxBuy from "@/hooks/useMaxBuy";
+import { updateTokenMarketcap } from "@/actions/token/actions";
 
 export enum TradingTab {
   BUY,
@@ -104,7 +105,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
 
     if (buyTokenName === "ETH") {
       const totalTokens = await buyPriceEth(tokenAddress, amount);
-      setBuyTokensReceived(formatUnits(totalTokens, 18));
+      const formattedTotalTokens = Math.round(Number(formatUnits(totalTokens, 18)));
+      setBuyTokensReceived(formattedTotalTokens.toString());
     } else {
       const buyAmountWei = parseUnits(amount, 18);
       const totalCost = await buyPriceTokens(tokenAddress, buyAmountWei);
@@ -176,15 +178,17 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
       onSwapModalOpen();
       receipt = await buyToken(tokenAddress, buyAmountWei, parseEther(buyAmount));
     } else {
-      const buyAmountWei = parseUnits(buyAmount, 18);
+      const roundedBuyAmount = Math.round(Number(buyAmount));
+      const buyAmountWei = parseUnits(roundedBuyAmount.toString(), 18);
       onSwapModalOpen();
       receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
     }
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
     await refetchBalance();
     await refetchAllowance();
-    await refetchTokenInfo();
-    if (!isApproved) {
+    const updatedTokenInfo = await refetchTokenInfo();
+    await updateTokenMarketcap(token.id, updatedTokenInfo.data?.marketcap || 0);
+    if (!isApproved && receipt) {
       await approveToken();
       await refetchAllowance();
     }
@@ -201,7 +205,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     await postTradeData(receipt, TradingTab.SELL, ethPrice);
     await refetchBalance();
     await refetchAllowance();
-    await refetchTokenInfo();
+    const updatedTokenInfo = await refetchTokenInfo();
+    await updateTokenMarketcap(token.id, updatedTokenInfo.data?.marketcap || 0);
   };
 
   return (
@@ -250,11 +255,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                 }}
                 placeholder="0.0"
                 value={
-                  buyAmount && buyTokenName !== "ETH"
-                    ? formatNumber(Math.round(Number(buyAmount)))
-                    : buyAmount && buyTokenName === "ETH"
-                    ? buyAmount
-                    : ""
+                  buyAmount && buyTokenName !== "ETH" ? buyAmount : buyAmount && buyTokenName === "ETH" ? buyAmount : ""
                 }
                 onChange={handleBuyAmountChange}
                 type="text"
@@ -324,7 +325,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                     alt="eth"
                     width={35}
                     height={35}
-                    className="rounded-full"
+                    className="rounded-full w-[35px] h-[35px] object-cover"
                   />
                   <p>
                     {(chain.name === Chain.Solana && buyTokenName === "SOL") ||
@@ -365,7 +366,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                 autoComplete="off"
                 startContent={
                   <div className="flex items-center gap-2">
-                    <Image src={token.image} alt={token.name} height={35} width={35} className="rounded-full" />
+                    <Image src={token.image} alt={token.name} height={35} width={35} className="rounded-full w-[35px] h-[35px] object-cover" />
                     <p className="uppercase mb-3">${formatTicker(token.ticker)}</p>
                   </div>
                 }
@@ -390,7 +391,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                     alt="chain-logo"
                     width={35}
                     height={35}
-                    className="rounded-full"
+                    className="rounded-full w-[35px] h-[35px] object-cover"
                   />
                   <p>{chain.name === Chain.Solana ? "$SOL" : "$ETH"}</p>
                 </div>

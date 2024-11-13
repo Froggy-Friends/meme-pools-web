@@ -1,5 +1,6 @@
 import { useChain } from "@/context/chain";
 import useTokenInfo from "@/hooks/useTokenInfo";
+import { formatAddress } from "@/lib/formatAddress";
 import { formatMarketcap } from "@/lib/formatMarketcap";
 import { TokenSearchResult } from "@/types/token/types";
 import dayjs from "dayjs";
@@ -25,9 +26,12 @@ export default function SearchTokenDisplay({ token, onClose }: SearchTokenDispla
     >
       <div className="flex gap-x-2 items-center">
         <Image src={token.image} alt="token-image" height={40} width={40} className="rounded-md" />
-        <p className="text-light-primary text-sm tablet:text-base truncate max-w-[100px] tablet:max-w-[150px]">
-          ${token.ticker}
-        </p>
+        <div className="flex flex-col justify-center min-w-0 w-[100px] tablet:w-[150px]">
+          <p className="text-light-primary text-sm tablet:text-base truncate">${token.ticker}</p>
+          <p className="text-light-gray text-xs tablet:text-sm -mt-[2px] truncate">
+            CA: {formatAddress(token.tokenAddress)}
+          </p>
+        </div>
       </div>
 
       <div className="flex max-w-[65%] tablet:w-1/2 justify-between items-center">
