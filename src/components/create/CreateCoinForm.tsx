@@ -123,10 +123,10 @@ export default function CreateCoinForm() {
       }
 
       reset();
+      router.push(`/${chain.name}/token/${tokenDetails.tokenAddress}`);
       setTimeout(() => {
         onClose();
         setTicker("");
-        router.push(`/${chain.name}/token/${tokenDetails.tokenAddress}`);
       }, 0);
     } catch (error) {
       setTimeout(() => {
