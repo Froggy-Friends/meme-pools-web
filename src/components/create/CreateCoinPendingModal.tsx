@@ -29,8 +29,8 @@ export default function CreateCoinPendingModal({
       onOpenChange={onOpenChange}
       size="xl"
       className="bg-dark text-white w-[500px] h-[300px] laptop:h-[325px] p-6"
-      isDismissable={txStatus === "completed" ? true : false}
-      closeButton={txStatus === "completed" ? true : false}
+      isDismissable={txStatus === "completed"}
+      hideCloseButton={txStatus !== "completed"}
     >
       <ModalContent>
         <ModalBody className="flex flex-col justify-center items-center gap-[4rem]">

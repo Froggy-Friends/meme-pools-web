@@ -122,18 +122,14 @@ export default function CreateCoinForm() {
         toast.success("Coin created!");
       }
 
+      onClose();
+      setTicker("");
       reset();
       router.push(`/${chain.name}/token/${tokenDetails.tokenAddress}`);
-      setTimeout(() => {
-        onClose();
-        setTicker("");
-      }, 0);
     } catch (error) {
-      setTimeout(() => {
-        onClose();
-        setTicker("");
-      }, 0);
       toast.error((error as Error).message);
+      onClose();
+      setTicker("");
     }
   });
 
