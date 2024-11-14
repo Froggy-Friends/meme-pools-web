@@ -43,6 +43,7 @@ export default function CreateCoinFormModal({ name, pattern, register, resetFiel
         size="xl"
         className="bg-dark text-white w-[700px] h-[350px] laptop:h-[400px] p-3"
         hideCloseButton={true}
+        placement="center"
       >
         <ModalContent>
           {onClose => (

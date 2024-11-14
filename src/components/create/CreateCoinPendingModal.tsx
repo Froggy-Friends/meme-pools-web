@@ -31,6 +31,7 @@ export default function CreateCoinPendingModal({
       className="bg-dark text-white w-[500px] h-[300px] laptop:h-[325px] p-6"
       isDismissable={txStatus === "completed"}
       hideCloseButton={txStatus !== "completed"}
+      placement="center"
     >
       <ModalContent>
         <ModalBody className="flex flex-col justify-center items-center gap-[4rem]">
@@ -60,7 +61,7 @@ export default function CreateCoinPendingModal({
                   className="rounded-full h-5 w-5 object-cover"
                 />
               )}
-              <p className="text-lg">${ticker.toUpperCase()}</p>
+              <p className="text-lg max-w-[150px] truncate">${ticker.toUpperCase()}</p>
             </div>
 
             <p className="text-light-gray">

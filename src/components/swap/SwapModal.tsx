@@ -55,6 +55,7 @@ export default function SwapModal({
         }
       }}
       isDismissable={false}
+      placement="center"
     >
       <ModalContent>
         <ModalBody className="flex flex-col justify-center items-center gap-8">
