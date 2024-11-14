@@ -20,10 +20,11 @@ import { PutBlobResult } from "@vercel/blob";
 import { useDebouncedCallback } from "use-debounce";
 import useReservePrice from "@/hooks/useReservePrice";
 import { MdInfoOutline } from "react-icons/md";
-import { Tooltip } from "@nextui-org/react";
+import { Tooltip, useDisclosure } from "@nextui-org/react";
 import { formatNumber } from "@/lib/formatNumber";
 import usePostTradeData from "@/hooks/usePostTradeData";
 import getEthPrice from "@/lib/getEthPrice";
+import CreateCoinPendingModal from "./CreateCoinPendingModal";
 
 export type CreateFormValues = {
   name: string;
@@ -40,16 +41,18 @@ export type CreateFormValues = {
 
 export default function CreateCoinForm() {
   const { address, isConnected } = useAccount();
-  const { createToken } = useCreateToken();
+  const { createToken, txStatus, txHash } = useCreateToken();
   const { chain } = useChain();
   const { getReservePrice } = useReservePrice();
   const { postReserveData } = usePostTradeData();
   const router = useRouter();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const formRef = useRef<HTMLFormElement>(null);
   const [tokenImageBlob, setTokenImageBlob] = useState<PutBlobResult | null>(null);
   const [reserveCost, setReserveCost] = useState<string | null>(null);
   const [formattedReservedAmount, setFormattedReservedAmount] = useState("");
   const [isNsfw, setIsNsfw] = useState(false);
+  const [ticker, setTicker] = useState("");
 
   const {
     register,
@@ -68,9 +71,14 @@ export default function CreateCoinForm() {
     const reservedAmount = parseUnits(numericReservedAmount, 18) || BigInt(0);
 
     try {
+      setTicker("");
+
       if (!address || !isConnected) {
         throw new Error("Wallet not connected");
       }
+
+      setTicker(data.ticker);
+      onOpen();
 
       const tokenDetails = await createToken({
         reservedAmount: reservedAmount,
@@ -79,6 +87,7 @@ export default function CreateCoinForm() {
       });
 
       if (!tokenDetails) {
+        onClose();
         return;
       }
 
@@ -114,8 +123,16 @@ export default function CreateCoinForm() {
       }
 
       reset();
-      router.push(`/${chain.name}/token/${tokenDetails.tokenAddress}`);
+      setTimeout(() => {
+        onClose();
+        setTicker("");
+        router.push(`/${chain.name}/token/${tokenDetails.tokenAddress}`);
+      }, 0);
     } catch (error) {
+      setTimeout(() => {
+        onClose();
+        setTicker("");
+      }, 0);
       toast.error((error as Error).message);
     }
   });
@@ -313,7 +330,13 @@ export default function CreateCoinForm() {
               >
                 {!tokenImageBlob && <div className="w-7 h-7 rounded-full bg-dark"></div>}
                 {tokenImageBlob && (
-                  <Image src={tokenImageBlob.url} alt="token image" width={28} height={28} className="rounded-full" />
+                  <Image
+                    src={tokenImageBlob.url}
+                    alt="token image"
+                    width={28}
+                    height={28}
+                    className="rounded-full h-7 w-7 object-cover"
+                  />
                 )}
               </div>
               <div
@@ -365,12 +388,21 @@ export default function CreateCoinForm() {
 
         <FormSubmitButton
           isSubmitting={isSubmitting}
-          pendingText="LAUNCHING..."
+          pendingText="CREATING COIN..."
           className="h-10 w-[calc(100vw-1rem)] max-w-[410px] laptop:min-w-[425px] laptop:w-[425px] my-20 bg-primary rounded-xl flex items-center justify-center hover:bg-light-primary active:scale-[0.97] transition"
         >
           <p className="text-black font-proximaNovaBold">CREATE COIN</p>
         </FormSubmitButton>
       </form>
+
+      <CreateCoinPendingModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        txStatus={txStatus}
+        txHash={txHash}
+        ticker={ticker}
+        tokenImage={tokenImageBlob?.url || null}
+      />
     </section>
   );
 }
