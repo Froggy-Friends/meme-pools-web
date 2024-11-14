@@ -119,7 +119,7 @@ export default function CreateCoinForm() {
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
-        toast.success("Coin launched!");
+        toast.success("Coin created!");
       }
 
       reset();
