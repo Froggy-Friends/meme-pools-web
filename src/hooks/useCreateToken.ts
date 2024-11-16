@@ -1,15 +1,18 @@
 import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
-import { CreateTokenParams, TokenCreated } from "@/types/token/types";
+import { CreateTokenParams, TokenCreated, TxStatus } from "@/types/token/types";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
 import { toast } from "react-hot-toast";
 import { ContractEvent } from "@/models/contractEvent";
 import * as Sentry from "@sentry/react";
+import { useState } from "react";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
   const contract = new Contract(contractAddress, memepoolsAbi, signer);
+  const [txStatus, setTxStatus] = useState<TxStatus>("idle");
+  const [txHash, setTxHash] = useState<string | null>(null);
 
   const getTokenDetails = async (
     receipt: ContractTransactionReceipt
@@ -35,6 +38,8 @@ export default function useCreateToken() {
     name,
     symbol,
   }: CreateTokenParams) => {
+    setTxStatus("idle");
+
     try {
       const [price, cost, fee, total] = await contract.calculateReservePrice(
         reservedAmount
@@ -42,9 +47,11 @@ export default function useCreateToken() {
       const tx = await contract.createToken(name, symbol, reservedAmount, {
         value: total,
       });
+      setTxStatus("pending");
+      setTxHash(tx.hash);
       const txHash = tx.hash;
       const receipt = await tx.wait();
-
+      setTxStatus("completed");
       const { creator, reserved, tokenAddress } = await getTokenDetails(
         receipt
       );
@@ -58,6 +65,7 @@ export default function useCreateToken() {
         txHash,
       };
     } catch (error) {
+      setTxStatus("error");
       Sentry.captureException(error);
       toast.error("Launch token failed");
     }
@@ -65,5 +73,7 @@ export default function useCreateToken() {
 
   return {
     createToken,
+    txStatus,
+    txHash,
   };
 }

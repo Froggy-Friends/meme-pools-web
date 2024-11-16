@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { put, PutBlobResult } from "@vercel/blob";
 import { defaultProfileAvatarUrl } from "@/config/user";
-import { UserParams } from "@/app/profile/[username]/types";
+import { UserParams } from "@/types/profile/types";
 import { fetchFollow, fetchUser } from "@/queries/profile/queries";
 import { cookies } from "next/headers";
 import { Follow, User } from "@prisma/client";

@@ -1,6 +1,5 @@
 import { ethLogo } from "@/config/chains";
 import { formatBalance } from "@/lib/formatBalance";
-import { formatTicker } from "@/lib/formatTicker";
 import { TokenWithVoteCount } from "@/types/token/types";
 import Image from "next/image";
 import { FaWallet } from "react-icons/fa";
@@ -21,7 +20,7 @@ export default function TokenSwitcher({ imgName, imgSrc, token, onChange, balanc
   return (
     <button onClick={handleClick} className="flex items-center gap-2">
       <Image
-        className="h-[35px] w-[35px] rounded-3xl active:scale-95 transition"
+        className="h-[35px] w-[35px] object-cover rounded-3xl active:scale-95 transition"
         src={imgSrc}
         alt="ticker"
         width={35}

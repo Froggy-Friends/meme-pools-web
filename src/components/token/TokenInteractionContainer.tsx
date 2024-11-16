@@ -69,8 +69,8 @@ export default async function TokenInteractionContainer({
         </div>
       </div>
 
-      {view === "comments" && <CommentForm tokenId={tokenId} />}
-      {view === "memes" && <MemeForm tokenId={tokenId} />}
+      {view === "comments" && <CommentForm tokenId={tokenId} tokenAddress={tokenAddress} tokenTicker={tokenTicker} />}
+      {view === "memes" && <MemeForm tokenId={tokenId} tokenAddress={tokenAddress} tokenTicker={tokenTicker} />}
     </section>
   );
 }

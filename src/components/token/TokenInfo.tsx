@@ -5,7 +5,6 @@ import Image from "next/image";
 import { defaultProfileAvatarUrl } from "@/config/user";
 import { TokenWithVoteCount } from "@/types/token/types";
 import Link from "next/link";
-import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { formatTicker } from "@/lib/formatTicker";
 
 type TokenInfoParams = {

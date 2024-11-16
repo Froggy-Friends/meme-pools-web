@@ -2,10 +2,7 @@ import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress } from "@/config/env";
 import { Token } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { formatUnits } from "viem";
-import { Channel } from "@/models/channel";
-import Pusher from "pusher-js";
 import getEthPrice from "@/lib/getEthPrice";
 import { usePublicClient } from "wagmi";
 
@@ -44,34 +41,6 @@ export default function useTokenInfo(token: Token) {
       };
     },
   });
-
-  useEffect(() => {
-    if (
-      !process.env.NEXT_PUBLIC_PUSHER_CLUSTER ||
-      !process.env.NEXT_PUBLIC_PUSHER_KEY
-    ) {
-      throw new Error("Missing pusher env variables");
-    }
-
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-    });
-
-    const buyChannel = pusher.subscribe(Channel.Buy);
-    const sellChannel = pusher.subscribe(Channel.Sell);
-
-    const handleTrade = async () => {};
-
-    buyChannel.bind(token.id, handleTrade);
-    sellChannel.bind(token.id, handleTrade);
-
-    return () => {
-      buyChannel.unbind(token.id, handleTrade);
-      sellChannel.unbind(token.id, handleTrade);
-      pusher.unsubscribe(Channel.Buy);
-      pusher.unsubscribe(Channel.Sell);
-    };
-  }, [token.id, queryClient, tokenInfo?.availableSupply, refetchTokenInfo]);
 
   return {
     tokenInfo,

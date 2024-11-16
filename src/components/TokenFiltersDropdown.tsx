@@ -5,7 +5,6 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Button,
 } from "@nextui-org/react";
 import { FaChevronDown } from "react-icons/fa6";
 import { TokenFilter } from "@/models/token";

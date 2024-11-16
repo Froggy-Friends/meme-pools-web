@@ -355,3 +355,13 @@ export const createClaimRecords = async (tokenAddress: string) => {
     data: claims,
   });
 };
+
+export const updateTokenMarketcap = async (
+  tokenId: string,
+  marketcap: number
+) => {
+  await prisma.token.update({
+    where: { id: tokenId },
+    data: { marketCap: marketcap },
+  });
+};
