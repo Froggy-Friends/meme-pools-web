@@ -1,13 +1,12 @@
 import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress } from "@/config/env";
 import { Token } from "@prisma/client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formatUnits } from "viem";
 import getEthPrice from "@/lib/getEthPrice";
 import { usePublicClient } from "wagmi";
 
 export default function useTokenInfo(token: Token) {
-  const queryClient = useQueryClient();
   const publicClient = usePublicClient();
 
   const { data: tokenInfo, refetch: refetchTokenInfo } = useQuery({
@@ -38,6 +37,7 @@ export default function useTokenInfo(token: Token) {
         symbol: rawInfo[9],
         readyForLp: rawInfo[10],
         liquidityPoolSeeded: rawInfo[11],
+        autoLaunch: rawInfo[12],
       };
     },
   });
