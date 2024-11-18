@@ -7,6 +7,7 @@ export type CreateTokenParams = {
   reservedAmount: BigInt;
   name: string | FormDataEntryValue;
   symbol: string | FormDataEntryValue;
+  autoLaunch: boolean;
 };
 
 export type TokenCreated = {

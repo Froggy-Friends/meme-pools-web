@@ -360,6 +360,11 @@ export const memepoolsAbi = [
         name: "reservedAmount",
         type: "uint256",
       },
+      {
+        internalType: "bool",
+        name: "autoLaunch",
+        type: "bool",
+      },
     ],
     name: "createToken",
     outputs: [],
