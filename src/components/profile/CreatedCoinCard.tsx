@@ -72,7 +72,10 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
           onClick={() => launchCoin(token.tokenAddress)}
           className={cn(
             `bg-gray text-black font-bold rounded-xl px-8 py-1 hover:cursor-default`,
-            bondingCurvePercentage === 100 && enabled && "bg-green hover:cursor-pointer hover:bg-light-green transition"
+            bondingCurvePercentage === 100 &&
+              enabled &&
+              !tokenInfo?.autoLaunch &&
+              "bg-green hover:cursor-pointer hover:bg-light-green transition"
           )}
         >
           Launch

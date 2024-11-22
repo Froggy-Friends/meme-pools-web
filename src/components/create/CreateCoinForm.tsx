@@ -53,6 +53,7 @@ export default function CreateCoinForm() {
   const [formattedReservedAmount, setFormattedReservedAmount] = useState("");
   const [isNsfw, setIsNsfw] = useState(false);
   const [ticker, setTicker] = useState("");
+  const [autoLaunch, setAutoLaunch] = useState(true);
 
   const {
     register,
@@ -84,6 +85,7 @@ export default function CreateCoinForm() {
         reservedAmount: reservedAmount,
         name: data.name,
         symbol: data.ticker,
+        autoLaunch: autoLaunch,
       });
 
       if (!tokenDetails) {
@@ -177,7 +179,32 @@ export default function CreateCoinForm() {
         ref={formRef}
       >
         <div className="flex self-end items-center gap-x-2 tablet:gap-x-4 -mr-3 tablet:-mr-0 desktop:-mr-2">
-          <div className="flex items-center gap-x-1 mb-[15px]">
+          <div className="flex items-center gap-x-2 tablet:gap-x-4 mb-[15px]">
+            <Switch
+              isSelected={autoLaunch}
+              onValueChange={setAutoLaunch}
+              color="primary"
+              size="sm"
+              classNames={{
+                thumb: "bg-dark",
+                base: cn("inline-flex flex-row-reverse", "justify-between cursor-pointer gap-2"),
+                wrapper: "hover:bg-light-gray",
+              }}
+            >
+              {" "}
+              <div className="flex gap-x-1 items-center">
+                <Tooltip
+                  placement="top"
+                  content="Meme Pools will auto-deploy your coin LP at 100% launch progress. Toggle off for manual deployment on your profile page."
+                  className="max-w-[200px] tablet:max-w-[300px]"
+                >
+                  <button>
+                    <MdInfoOutline size={21} className="text-light-gray" />
+                  </button>
+                </Tooltip>
+                <p className="text-[15px] tablet:text-lg">Auto Launch</p>
+              </div>
+            </Switch>
             <Switch
               isSelected={isNsfw}
               onValueChange={setIsNsfw}
@@ -189,15 +216,15 @@ export default function CreateCoinForm() {
                 wrapper: "hover:bg-light-gray",
               }}
             >
-              <p className="text-lg">NSFW</p>
+              <p className="text-[15px] tablet:text-lg">NSFW</p>
             </Switch>
           </div>
           <button
             onClick={() => formRef.current?.reset()}
-            className="flex items-center gap-x-2 bg-dark-gray rounded-xl mb-4 px-4 py-2 hover:bg-gray active:scale-[0.97] transition"
+            className="flex items-center gap-x-2 bg-dark-gray rounded-xl mb-4 px-[0.6rem] tablet:px-4 py-2 hover:bg-gray active:scale-[0.97] transition"
           >
-            <p>Reset</p>
-            <GrRefresh size={18} />
+            <p className="text-[15px] tablet:text-base">Reset</p>
+            <GrRefresh className="h-4 w-4 tablet:h-5 tablet:w-5" />
           </button>
         </div>
 
