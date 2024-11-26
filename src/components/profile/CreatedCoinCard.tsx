@@ -9,6 +9,7 @@ import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import { cn, Link, Progress } from "@nextui-org/react";
 import { Token } from "@prisma/client";
 import Image from "next/image";
+import { useState } from "react";
 
 type CreatedCoinCardProps = {
   token: Token;
@@ -20,6 +21,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
   const { launchCoin } = useLaunchCoin();
   const { chain } = useChain();
   const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold);
+  const [isLaunching, setIsLaunching] = useState(false);
 
   return (
     <section className="flex flex-col tablet:flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">
@@ -29,7 +31,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
           <div>
             <Link
               href={`/${chain.name}/token/${token.tokenAddress}`}
-              className="text-xl text-white hover:text-light-primary transition"
+              className="text-base tablet:text-xl text-white hover:text-light-primary transition"
             >
               ${formatTicker(token.ticker)}
             </Link>
@@ -39,13 +41,23 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
 
         <button
           disabled={!enabled}
-          onClick={() => launchCoin(token.tokenAddress)}
+          onClick={async () => {
+            setIsLaunching(true);
+            await launchCoin(token.tokenAddress, token.ticker);
+            setIsLaunching(false);
+          }}
           className={cn(
-            `tablet:hidden bg-gray text-black font-bold rounded-xl px-5 h-8 hover:cursor-default`,
-            bondingCurvePercentage === 100 && enabled && "bg-green hover:cursor-pointer hover:bg-light-green transition"
+            `tablet:hidden bg-gray text-black font-bold rounded-xl px-5 h-8 max-w-[90px] hover:cursor-default active:scale-[0.98] transition`,
+            bondingCurvePercentage === 100 &&
+              enabled &&
+              !isLaunching &&
+              !tokenInfo?.autoLaunch &&
+              !tokenInfo?.liquidityPoolSeeded &&
+              "bg-green hover:cursor-pointer hover:bg-light-green transition",
+            isLaunching && "bg-gray px-2 hover:cursor-default"
           )}
         >
-          Launch
+          {isLaunching ? "Launching.." : "Launch"}
         </button>
       </div>
 
@@ -69,16 +81,23 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
       <div className="hidden tablet:flex w-full tablet:w-[200px] justify-center tablet:justify-end">
         <button
           disabled={!enabled}
-          onClick={() => launchCoin(token.tokenAddress)}
+          onClick={async () => {
+            setIsLaunching(true);
+            await launchCoin(token.tokenAddress, token.ticker);
+            setIsLaunching(false);
+          }}
           className={cn(
-            `bg-gray text-black font-bold rounded-xl px-8 py-1 hover:cursor-default`,
+            `bg-gray text-black font-bold rounded-xl px-8 py-1 max-w-[140px] hover:cursor-default active:scale-[0.98] transition`,
             bondingCurvePercentage === 100 &&
               enabled &&
               !tokenInfo?.autoLaunch &&
-              "bg-green hover:cursor-pointer hover:bg-light-green transition"
+              !isLaunching &&
+              !tokenInfo?.liquidityPoolSeeded &&
+              "bg-green hover:cursor-pointer hover:bg-light-green transition",
+            isLaunching && "bg-gray px-[18px] hover:cursor-default"
           )}
         >
-          Launch
+          {isLaunching ? "Launching.." : "Launch"}
         </button>
       </div>
     </section>

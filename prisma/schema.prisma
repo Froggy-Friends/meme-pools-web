@@ -42,7 +42,7 @@ model Token {
   chain           String
   isClaimable     Boolean       @default(false)
   isNsfw          Boolean       @default(false)
-  platformAddress String        @default("0xAbb58eed276eDBFD5a2A1E47Be2F8556039ce90D")
+  platformAddress String        
   Comment         Comment[]
   leaderboard     Leaderboard[]
   user            User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
