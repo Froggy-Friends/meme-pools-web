@@ -1,7 +1,6 @@
 "use client";
 
 import { useChain } from "@/context/chain";
-import useLaunchCoin from "@/hooks/useLaunchCoin";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { formatBalance } from "@/lib/formatBalance";
 import { formatMarketcap } from "@/lib/formatMarketcap";
@@ -9,9 +8,7 @@ import { formatTicker } from "@/lib/formatTicker";
 import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import { TokenWithBalance } from "@/types/token/types";
 import { cn, Link, Progress } from "@nextui-org/react";
-import { Token } from "@prisma/client";
 import Image from "next/image";
-import { useEffect } from "react";
 
 type PurchasedCoinCardProps = {
   token: TokenWithBalance;
@@ -39,10 +36,10 @@ export default function PurchasedCoinCard({ token }: PurchasedCoinCardProps) {
           </div>
         </div>
 
-        <div className="tablet:hidden w-full">
+        <div className="tablet:hidden flex w-full justify-end">
           <div className="flex flex-col items-center">
-            <p className="text-sm text-white/75">Balance</p>
-            <p className="text-sm text-white/75">{formatBalance(token.balance)}</p>
+            <p className="text-sm text-light-gray">Balance</p>
+            <p className="text-sm">{formatBalance(token.balance)}</p>
           </div>
         </div>
       </div>
@@ -60,14 +57,14 @@ export default function PurchasedCoinCard({ token }: PurchasedCoinCardProps) {
             value: "text-foreground/60 text-gray text-center",
           }}
           showValueLabel={true}
-          label="Progress"
+          label="Launch Progress"
         />
       </div>
 
-      <div className="hidden tablet:flex w-full tablet:w-[200px] justify-center tablet:justify-end">
+      <div className="hidden tablet:flex tablet:w-[100px] justify-center tablet:justify-end">
         <div className="flex flex-col items-center">
-          <p className="text-sm text-white/75">Balance</p>
-          <p className="text-sm text-white/75">{formatBalance(token.balance)}</p>
+          <p className="text-light-gray">Balance</p>
+          <p>{formatBalance(token.balance)}</p>
         </div>
       </div>
     </section>

@@ -46,7 +46,9 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
 
       <ProfileMenuToggle profileUser={profileUser} cachedUser={cachedUser} currentView={view} />
 
-      {view === "holdings" && <UserHoldings profileUser={profileUser} cachedUser={cachedUser || null} />}
+      {view === "holdings" && profileUser.id === cachedUser?.id && (
+        <UserHoldings profileUser={profileUser} cachedUser={cachedUser || null} />
+      )}
       {view === "settings" && profileUser.id === cachedUser?.id && <EditProfileForm profileUser={profileUser} />}
       {view === "created" && <CreatedTokens profileUser={profileUser} cachedUser={cachedUser || null} />}
       {view === "followers" && (

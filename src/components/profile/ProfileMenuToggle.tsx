@@ -23,7 +23,9 @@ export default function ProfileMenuToggle({ profileUser, cachedUser, currentView
   return (
     <div className="overflow-x-auto">
       <section className="flex gap-x-4 items-center my-6 min-w-max">
-        <ProfileMenuButton view="Holdings" profileUser={profileUser} currentView={currentView} />
+        {cachedUser?.id === profileUser.id && (
+          <ProfileMenuButton view="Holdings" profileUser={profileUser} currentView={currentView} />
+        )}
         {cachedUser?.id === profileUser.id && (
           <ProfileMenuButton view="Settings" profileUser={profileUser} currentView={currentView} />
         )}

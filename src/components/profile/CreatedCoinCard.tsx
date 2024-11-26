@@ -74,7 +74,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
             value: "text-foreground/60 text-gray text-center",
           }}
           showValueLabel={true}
-          label="Progress"
+          label="Launch Progress"
         />
       </div>
 
