@@ -528,7 +528,17 @@ export const memepoolsAbi = [
       },
       {
         internalType: "bool",
+        name: "readyForLp",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
         name: "liquidityPoolSeeded",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "autoLaunch",
         type: "bool",
       },
     ],

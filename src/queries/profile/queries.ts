@@ -142,5 +142,9 @@ export const fetchClaimableTokens = async (frogIds: number[]): Promise<ClaimWith
     }
   });
 
-  return claims;
+  const uniqueClaims = claims.reduce((acc, claim) => {
+    return acc.some(c => c.token.id === claim.token.id) ? acc : [...acc, claim];
+  }, [] as ClaimWithToken[]);
+
+  return uniqueClaims;
 };

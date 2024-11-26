@@ -7,6 +7,7 @@ import { fetchUser } from "@/queries/profile/queries";
 import { Address } from "viem";
 import { getPusher } from "@/config/pusher";
 import { Channel } from "@/models/channel";
+import { contractAddress } from "@/config/env";
 
 export const createCoin = async (
   formData: FormData,
@@ -44,6 +45,7 @@ export const createCoin = async (
           chain: chain,
           marketCap: 100,
           isNsfw: isNsfw,
+          platformAddress: contractAddress,
         },
       });
 

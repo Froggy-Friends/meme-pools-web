@@ -26,6 +26,7 @@ const ResponsiveToaster = () => {
           style: {
             backgroundColor: "#63aff5",
             color: "#000",
+            fontWeight: "bold",
           },
         },
         error: {
@@ -35,6 +36,17 @@ const ResponsiveToaster = () => {
             fontWeight: "bold",
           },
           icon: null,
+        },
+        loading: {
+          style: {
+            backgroundColor: "#63aff5",
+            color: "#000",
+            fontWeight: "bold",
+          },
+          iconTheme: {
+            primary: "#63aff5",
+            secondary: "#000",
+          },
         },
       }}
     />
