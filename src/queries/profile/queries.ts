@@ -1,9 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { User } from "@prisma/client";
+import { Token, User } from "@prisma/client";
 import { TokenWithCreator } from "@/lib/types";
-import { ClaimWithToken } from "@/types/token/types";
+import { ClaimWithToken, TokenWithBalance } from "@/types/token/types";
 
 export const fetchUser = async (wallet: string | undefined) => {
   if (!wallet) {
@@ -143,4 +143,42 @@ export const fetchClaimableTokens = async (frogIds: number[]): Promise<ClaimWith
   });
 
   return claims;
+};
+
+export const fetchUserHoldings = async (userId: string): Promise<TokenWithBalance[]> => {
+  const holdings = await prisma.token.findMany({
+    where: {
+      Trades: {
+        some: {
+          userId: userId,
+        },
+      },
+    },
+    include: {
+      Trades: {
+        where: {
+          userId: userId,
+        },
+        select: {
+          category: true,
+          amount: true,
+        },
+      },
+    },
+  });
+
+  return holdings.map(token => {
+    const balance = token.Trades.reduce(
+      (sum, trade) => sum + (trade.category === 'buy' ? Number(trade.amount) : -Number(trade.amount)),
+      0
+    );
+    return {
+      ...token,
+      Trades: token.Trades.map(trade => ({
+        ...trade,
+        amount: Number(trade.amount)
+      })),
+      balance
+    };
+  }).filter(token => token.balance > 0);
 };

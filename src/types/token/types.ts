@@ -159,3 +159,8 @@ export type TokenHolderData = {
   amount: number;
   percentage: number;
 };
+
+export type TokenWithBalance = Token & {
+  Trades: { category: string; amount: number }[];
+  balance: number;
+};
