@@ -1,23 +1,25 @@
 "use client";
 
 import { useChain } from "@/context/chain";
-import useLaunchCoin from "@/hooks/useLaunchCoin";
 import { formatTicker } from "@/lib/formatTicker";
 import { cn, Link } from "@nextui-org/react";
 import Image from "next/image";
 import { useState } from "react";
 import presentIcon from "../../../public/present.svg";
 import { Token } from "@prisma/client";
+import useClaimRewards from "@/hooks/useClaimRewards";
 
 type CreatedCoinCardProps = {
   token: Token;
   enabled: boolean;
+  isClaimed: boolean;
 };
 
-export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps) {
-  const { launchCoin } = useLaunchCoin();
+export default function CreatedCoinCard({ token, enabled, isClaimed }: CreatedCoinCardProps) {
   const { chain } = useChain();
   const [isRevealed, setIsRevealed] = useState(false);
+  const [isClaiming, setIsClaiming] = useState(false);
+  const { claimBatch } = useClaimRewards();
 
   return (
     <section className="flex flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">
@@ -57,14 +59,19 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
         </div>
 
         <button
-          disabled={!enabled}
-          onClick={() => launchCoin(token.tokenAddress)} //TODO: add claim logic
+          disabled={!enabled || isClaimed}
+          onClick={async () => {
+            setIsClaiming(true);
+            await claimBatch(token.tokenAddress, token.ticker);
+            setIsClaiming(false);
+          }}
           className={cn(
-            `bg-gray text-black font-bold rounded-xl px-6 tablet:px-8 py-[0.125rem] tablet:py-1 hover:cursor-default`,
-            enabled && "bg-primary hover:cursor-pointer hover:bg-light-primary transition"
+            `bg-gray text-black font-bold rounded-xl px-6 tablet:px-8 py-[0.125rem] max-w-[100px] tablet:py-1 hover:cursor-default active:scale-[0.98] transition`,
+            enabled && !isClaimed && !isClaiming && "bg-primary hover:cursor-pointer hover:bg-light-primary transition",
+            isClaiming && "bg-gray px-[0.625rem] tablet:px-4 hover:cursor-default"
           )}
         >
-          Claim
+          {isClaiming ? "Claiming.." : "Claim"}
         </button>
       </div>
     </section>

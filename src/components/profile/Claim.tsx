@@ -20,7 +20,7 @@ export default async function ClaimTokens({ profileUser, cachedUser }: ClaimToke
       <ClaimRewardsText address={profileUser.ethAddress as Address} />
       {claimableTokens &&
         claimableTokens.map(claim => {
-          return <ClaimableTokenCard key={claim.id} token={claim.token} enabled={enabled} />;
+          return <ClaimableTokenCard key={claim.id} token={claim.token} enabled={enabled} isClaimed={claim.isClaimed}/>;
         })}
     </section>
   );
