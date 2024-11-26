@@ -5,7 +5,7 @@ export const getFrogsByWallet = async (address: Address) => {
     return [];
   }
 
-  const response = await fetch(`http://localhost:3000/api/frog-ids?address=${address}`);
+  const response = await fetch(`/api/frog-ids?address=${address}`);
   const data = await response.json();
 
   return data.result.map((frog: any) => Number(frog.token_id));

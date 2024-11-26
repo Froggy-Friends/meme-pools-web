@@ -1,4 +1,4 @@
-import { froggyFriendsAddress } from "@/config/env";
+import { froggyFriendsAddress, moralisEthChain } from "@/config/env";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   }
 
   const response = await fetch(
-    `https://deep-index.moralis.io/api/v2.2/${address}/nft?chain=sepolia&format=decimal&token_addresses%5B0%5D=${froggyFriendsAddress}&media_items=false`,
+    `https://deep-index.moralis.io/api/v2.2/${address}/nft?chain=${moralisEthChain}&format=decimal&token_addresses%5B0%5D=${froggyFriendsAddress}&media_items=false`,
     {
       method: "GET",
       headers: {
