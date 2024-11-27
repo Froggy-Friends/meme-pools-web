@@ -144,7 +144,7 @@ export const memepoolsAbi = [
       {
         internalType: "uint256",
         name: "ethAmount",
-        type: "address",
+        type: "uint256",
       },
       {
         internalType: "address",
