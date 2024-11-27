@@ -21,7 +21,8 @@ export default function useBuyToken(onSwapModalClose: () => void) {
     setBuyTxHash(null);
 
     try {
-      const tx = await contract.buyTokens(tokenAddress, amount, {
+      // TODO add dynamic slippage
+      const tx = await contract.buyTokens(tokenAddress, amount, 100, {
         value: totalCost,
       });
       setBuyTxHash(tx.hash);

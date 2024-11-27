@@ -5,7 +5,6 @@ import CreatedCoinCard from "./CreatedCoinCard";
 import { Address } from "viem";
 import LaunchRewardsText from "./LaunchRewardsText";
 import { cn } from "@nextui-org/react";
-import { useMemo } from "react";
 
 type CreatedTokensProps = {
   profileUser: User;
@@ -15,10 +14,7 @@ type CreatedTokensProps = {
 export default async function CreatedTokens({ profileUser, cachedUser }: CreatedTokensProps) {
   const createdTokens = await fetchCreatedTokens(profileUser.id);
   let enabled = profileUser.id === cachedUser?.id;
-  const sortedCreatedTokens = useMemo(
-    () => createdTokens.sort((a, b) => (b.marketCap ?? 0) - (a.marketCap ?? 0)),
-    [createdTokens]
-  );
+  const sortedCreatedTokens = createdTokens.sort((a, b) => (b.marketCap ?? 0) - (a.marketCap ?? 0));
 
   return (
     <>

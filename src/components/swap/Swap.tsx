@@ -33,7 +33,7 @@ import { useAccount } from "wagmi";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { formatBalance } from "@/lib/formatBalance";
 import useMaxBuy from "@/hooks/useMaxBuy";
-import { updateTokenMarketcap } from "@/actions/token/actions";
+import { updateTokenIsClaimable, createClaimRecords, updateTokenMarketcap } from "@/actions/token/actions";
 
 export enum TradingTab {
   BUY,
@@ -191,6 +191,10 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     if (!isApproved && receipt) {
       await approveToken();
       await refetchAllowance();
+    }
+    if (updatedTokenInfo.data?.autoLaunch && updatedTokenInfo.data?.liquidityPoolSeeded && !token.isClaimable) {
+      await updateTokenIsClaimable(token.id);
+      await createClaimRecords(token.tokenAddress);
     }
   };
 
@@ -366,7 +370,13 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                 autoComplete="off"
                 startContent={
                   <div className="flex items-center gap-2">
-                    <Image src={token.image} alt={token.name} height={35} width={35} className="rounded-full w-[35px] h-[35px] object-cover" />
+                    <Image
+                      src={token.image}
+                      alt={token.name}
+                      height={35}
+                      width={35}
+                      className="rounded-full w-[35px] h-[35px] object-cover"
+                    />
                     <p className="uppercase mb-3">${formatTicker(token.ticker)}</p>
                   </div>
                 }
