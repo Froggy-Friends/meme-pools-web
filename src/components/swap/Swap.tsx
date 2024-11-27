@@ -69,8 +69,6 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const [buyTokenName, setBuyTokenName] = useState("ETH");
   const [buyTokenSrc, setBuyTokenSrc] = useState(ethLogo);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
-  const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
-  const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
   const { buyToken, buyTxStatus, buyTxHash, setBuyTxHash } = useBuyToken(onSwapModalClose);
   const { buyPriceTokens, buyPriceEth } = useBuyPrice();
   const { sellToken, sellTxStatus, sellTxHash, setSellTxHash } = useSellToken(onSwapModalClose);
