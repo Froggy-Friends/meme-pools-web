@@ -15,16 +15,21 @@ export default function useBuyToken(onSwapModalClose: () => void) {
   const buyToken = async (
     tokenAddress: string,
     amount: bigint,
-    totalCost: bigint
+    totalCost: bigint,
+    slippagePercent: number
   ) => {
     setBuyTxStatus("idle");
     setBuyTxHash(null);
 
     try {
-      // TODO add dynamic slippage
-      const tx = await contract.buyTokens(tokenAddress, amount, 100, {
-        value: totalCost,
-      });
+      const tx = await contract.buyTokens(
+        tokenAddress,
+        amount,
+        slippagePercent,
+        {
+          value: totalCost,
+        }
+      );
       setBuyTxHash(tx.hash);
       setBuyTxStatus("pending");
       const receipt = await tx.wait();
@@ -32,7 +37,11 @@ export default function useBuyToken(onSwapModalClose: () => void) {
       return receipt;
     } catch (error) {
       setBuyTxStatus("error");
-      toast.error("Buy token error");
+      if ((error as Error).message.includes("slippage")) {
+        toast.error("Slippage reached");
+      } else {
+        toast.error("Buy token error");
+      }
       onSwapModalClose();
     }
   };

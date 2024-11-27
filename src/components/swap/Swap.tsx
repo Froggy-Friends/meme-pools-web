@@ -1,8 +1,7 @@
 "use client";
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
-import { ChangeEvent, useEffect, useState } from "react";
-import SlippageModal from "../token/SlippageModal";
+import { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
@@ -34,6 +33,7 @@ import useTokenInfo from "@/hooks/useTokenInfo";
 import { formatBalance } from "@/lib/formatBalance";
 import useMaxBuy from "@/hooks/useMaxBuy";
 import { updateTokenIsClaimable, createClaimRecords, updateTokenMarketcap } from "@/actions/token/actions";
+import SlippagePopover from "./SlippagePopover";
 
 export enum TradingTab {
   BUY,
@@ -64,15 +64,11 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const [buyAmount, setBuyAmount] = useState("");
   const [buyTokensReceived, setBuyTokensReceived] = useState("");
   const [buyCost, setBuyCost] = useState<bigint>(BigInt(0));
-  const [buyLoading, setBuyLoading] = useState(false);
   const [sellAmount, setSellAmount] = useState("");
   const [sellPayout, setSellPayout] = useState<bigint>(BigInt(0));
   const [buyTokenName, setBuyTokenName] = useState("ETH");
   const [buyTokenSrc, setBuyTokenSrc] = useState(ethLogo);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
-  const [priorityFee, setPriorityFee] = useState<number>(defualtPriorityFee);
-  const [isSlippageModalOpen, setIsSlippageModalOpen] = useState(false);
-  const [showPresets, setShowPresets] = useState(false);
   const { buyToken, buyTxStatus, buyTxHash, setBuyTxHash } = useBuyToken(onSwapModalClose);
   const { buyPriceTokens, buyPriceEth } = useBuyPrice();
   const { sellToken, sellTxStatus, sellTxHash, setSellTxHash } = useSellToken(onSwapModalClose);
@@ -172,16 +168,17 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
 
   const buyTokens = async () => {
     let receipt: ContractTransactionReceipt;
+    const formattedSlippage = slippagePercent * 100;
 
     if (buyTokenName === "ETH") {
       const buyAmountWei = parseUnits(buyTokensReceived, 18);
       onSwapModalOpen();
-      receipt = await buyToken(tokenAddress, buyAmountWei, parseEther(buyAmount));
+      receipt = await buyToken(tokenAddress, buyAmountWei, parseEther(buyAmount), formattedSlippage);
     } else {
       const roundedBuyAmount = Math.round(Number(buyAmount));
       const buyAmountWei = parseUnits(roundedBuyAmount.toString(), 18);
       onSwapModalOpen();
-      receipt = await buyToken(tokenAddress, buyAmountWei, buyCost);
+      receipt = await buyToken(tokenAddress, buyAmountWei, buyCost, formattedSlippage);
     }
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
     await refetchBalance();
@@ -200,12 +197,13 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
 
   const sellTokens = async () => {
     const formattedSellAmount = parseUnits(sellAmount, 18);
+    const formattedSlippage = slippagePercent * 100;
     onSwapModalOpen();
     if (!isApproved) {
       await approveToken();
       await refetchAllowance();
     }
-    const receipt = await sellToken(tokenAddress, formattedSellAmount);
+    const receipt = await sellToken(tokenAddress, formattedSellAmount, sellPayout, formattedSlippage);
     await postTradeData(receipt, TradingTab.SELL, ethPrice);
     await refetchBalance();
     await refetchAllowance();
@@ -243,9 +241,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
               Sell
             </button>
           </div>
-          <button className="flex justify-center items-center w-[65px] h-[35px] rounded-3xl bg-dark-gray">
-            <Image src="/setting.svg" alt="slippage" height={20} width={20} />
-          </button>
+          <SlippagePopover slippagePercent={slippagePercent} setSlippagePercent={setSlippagePercent} />
         </div>
         <div className="relative flex flex-col justify-between gap-2 py-4 px-5 mt-4 rounded-3xl bg-dark-gray w-full min-h-[240px]">
           {activeTab === TradingTab.BUY && (
@@ -414,7 +410,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
           <div className="flex items-center pl-2 gap-2">
             <button
               onClick={() => resetAmounts()}
-              className="flex items-center justify-center bg-dark rounded-2xl p-2 hover:bg-light-gray transition"
+              className="flex items-center justify-center bg-black rounded-2xl p-2 hover:bg-gray transition"
             >
               <Image src="/reset.svg" alt="reset" width={10} height={10} />
             </button>
@@ -431,8 +427,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   disabled={!isConnected}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
                     amount.toString() === buyAmount
-                      ? "bg-gray hover:bg-gray cursor-default"
-                      : "bg-dark hover:bg-light-gray"
+                      ? "bg-black hover:bg-black cursor-default"
+                      : "bg-black hover:bg-gray"
                   }`}
                 >
                   {amount}
@@ -458,8 +454,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   disabled={!isConnected}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
                     amount.toString() === buyAmount
-                      ? "bg-gray hover:bg-gray cursor-default"
-                      : "bg-dark hover:bg-light-gray"
+                      ? "bg-black hover:bg-black cursor-default"
+                      : "bg-black hover:bg-gray"
                   }`}
                 >
                   {amount}%
@@ -476,8 +472,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   }}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
                     tokensByPercentage(amount, tokenBalance) === sellAmount
-                      ? "bg-gray hover:bg-gray cursor-default"
-                      : "bg-dark hover:bg-light-gray"
+                      ? "bg-black hover:bg-black cursor-default"
+                      : "bg-black hover:bg-gray"
                   }`}
                 >
                   {amount}%
@@ -506,14 +502,6 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
           </button>
         </div>
       </div>
-      <SlippageModal
-        isOpen={isSlippageModalOpen}
-        onClose={({ slippagePercent, priorityFee }) => {
-          setSlippagePercent(slippagePercent);
-          setPriorityFee(priorityFee);
-          setIsSlippageModalOpen(false);
-        }}
-      />
       <SwapModal
         fromImageUrl={activeTab === TradingTab.BUY ? ethLogo : token.image}
         fromAmount={

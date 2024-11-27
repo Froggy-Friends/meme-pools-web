@@ -12,12 +12,21 @@ export default function useSellToken(onSwapModalClose: () => void) {
   const [sellTxStatus, setSellTxStatus] = useState<TxStatus>("idle");
   const [sellTxHash, setSellTxHash] = useState<string | null>(null);
 
-  const sellToken = async (tokenAddress: string, amount: bigint) => {
+  const sellToken = async (
+    tokenAddress: string,
+    amount: bigint,
+    maxPayout: bigint,
+    slippagePercent: number
+  ) => {
     setSellTxStatus("idle");
     setSellTxHash(null);
-
     try {
-      const tx = await contract.sellTokens(tokenAddress, amount);
+      const tx = await contract.sellTokens(
+        tokenAddress,
+        amount,
+        maxPayout,
+        slippagePercent
+      );
       setSellTxHash(tx.hash);
       setSellTxStatus("pending");
       const receipt = await tx.wait();
@@ -25,8 +34,11 @@ export default function useSellToken(onSwapModalClose: () => void) {
       return receipt;
     } catch (error) {
       setSellTxStatus("error");
-      toast.error("Sell token error");
-      console.log(error);
+      if ((error as Error).message.includes("slippage")) {
+        toast.error("Slippage reached");
+      } else {
+        toast.error("Sell token error");
+      }
       onSwapModalClose();
     }
   };
