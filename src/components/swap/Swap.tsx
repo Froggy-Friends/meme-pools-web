@@ -2,7 +2,6 @@
 
 import { defualtPriorityFee, defaultSlippagePercent } from "@/config/eth/token";
 import { ChangeEvent, useState } from "react";
-import SlippageModal from "../token/SlippageModal";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
@@ -505,14 +504,6 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
           </button>
         </div>
       </div>
-      <SlippageModal
-        isOpen={isSlippageModalOpen}
-        onClose={({ slippagePercent, priorityFee }) => {
-          setSlippagePercent(slippagePercent);
-          setPriorityFee(priorityFee);
-          setIsSlippageModalOpen(false);
-        }}
-      />
       <SwapModal
         fromImageUrl={activeTab === TradingTab.BUY ? ethLogo : token.image}
         fromAmount={
