@@ -8,6 +8,9 @@ import { useState } from "react";
 import presentIcon from "../../../public/present.svg";
 import { Token } from "@prisma/client";
 import useClaimRewards from "@/hooks/useClaimRewards";
+import useRewards from "@/hooks/useRewards";
+import { Address } from "viem";
+import { formatNumber } from "@/lib/formatNumber";
 
 type CreatedCoinCardProps = {
   token: Token;
@@ -19,6 +22,8 @@ export default function CreatedCoinCard({ token, enabled, isClaimed }: CreatedCo
   const { chain } = useChain();
   const [isRevealed, setIsRevealed] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
+  const [rewards, setRewards] = useState("0");
+  const { fetchRewards, pending } = useRewards();
   const { claimBatch } = useClaimRewards();
 
   return (
@@ -37,7 +42,11 @@ export default function CreatedCoinCard({ token, enabled, isClaimed }: CreatedCo
             <div className="flex items-center gap-x-1">
               <button
                 disabled={isRevealed}
-                onClick={() => setIsRevealed(true)} //TODO: add logic to fetch elligible rewards
+                onClick={async () => {
+                  setIsRevealed(true);
+                  const rewards = await fetchRewards(token.tokenAddress as Address);
+                  setRewards(rewards.toString());
+                }}
                 className={cn(
                   "text-light-gray text-[13px] tablet:text-base transition",
                   !isRevealed && "hover:text-cream"
@@ -52,7 +61,7 @@ export default function CreatedCoinCard({ token, enabled, isClaimed }: CreatedCo
                 />
               </button>
               <p className="text-xs tablet:text-sm text-light-gray">{`${
-                isRevealed ? `${formatTicker(token.ticker)}` : "*************" // TODO add logic to render elligible rewards once fetched
+                isRevealed && !pending ? `${formatNumber(rewards)} $${formatTicker(token.ticker)}` : "*************"
               }`}</p>
             </div>
           </div>

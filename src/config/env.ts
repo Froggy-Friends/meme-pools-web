@@ -4,6 +4,11 @@ import { base, baseSepolia, mainnet, sepolia } from "viem/chains";
 export const env = process.env.NEXT_PUBLIC_ENV;
 export const isProd = env === "prod";
 
+// domain
+export const memepoolsDomain = isProd
+  ? "https://memepools.com"
+  : "https://beta.memepools.com";
+
 // api
 export const memepoolsApi = isProd
   ? "https://api.memepools.com"
@@ -12,11 +17,13 @@ export const memepoolsApi = isProd
 // evm
 export const contractAddress: Address = isProd
   ? "0x0"
-  : "0x62F058eA8c299950eEf5D97Af108785c5D321D77";
-export const froggyFriendsAddress = isProd
+  : "0xa0f9fEdB35c40041211348112851509b91E8df97";
+export const froggyFriendsAddress: Address = isProd
   ? "0x7ad05c1b87e93BE306A9Eadf80eA60d7648F1B6F"
   : "0xc8939011efd81fB0ca8382ed15EAb160c3a69313";
-export const claimContractAddress = "0x224fC0645eFfb7936A81a7143e4914CC964CbD4d";
+export const claimContractAddress: Address = isProd
+  ? "0x0"
+  : "0xe059B3b56316f69A2B72EEa869e2503949FFa4cc";
 export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = isProd ? 8453 : 84532;
 export const ethChain = isProd ? mainnet : sepolia;

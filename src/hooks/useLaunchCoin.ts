@@ -4,7 +4,7 @@ import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { Contract } from "ethers";
 import toast from "react-hot-toast";
 import * as Sentry from "@sentry/react";
-import { createClaimRecords } from "@/actions/token/actions";
+import { createClaimRecords, updateTokenIsClaimable } from "@/actions/token/actions";
 import { formatTicker } from "@/lib/formatTicker";
 
 export default function useLaunchCoin() {
@@ -21,6 +21,7 @@ export default function useLaunchCoin() {
         error: "Launch coin error"
       });
 
+      await updateTokenIsClaimable(tokenAddress);
       await createClaimRecords(tokenAddress); 
     } catch (error) {
       Sentry.captureException(error);

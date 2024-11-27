@@ -2,7 +2,6 @@ import { fetchUserHoldings } from "@/queries/profile/queries";
 import { User } from "@prisma/client";
 import Link from "next/link";
 import PurchasedCoinCard from "./PurchasedCoinCard";
-import { useMemo } from "react";
 
 type UserHoldingsProps = {
   profileUser: User;
@@ -12,7 +11,7 @@ type UserHoldingsProps = {
 export default async function UserHoldings({ profileUser, cachedUser }: UserHoldingsProps) {
   const holdings = await fetchUserHoldings(profileUser.id);
   let enabled = profileUser.id === cachedUser?.id;
-  const sortedHoldings = useMemo(() => holdings.sort((a, b) => (b.marketCap ?? 0) - (a.marketCap ?? 0)), [holdings]);
+  const sortedHoldings = holdings.sort((a, b) => (b.marketCap ?? 0) - (a.marketCap ?? 0));
 
   return (
     <section className="mt-10 mb-12 flex flex-col gap-y-2 bg-dark-gray rounded-xl p-6">
