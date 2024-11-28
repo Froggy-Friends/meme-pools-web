@@ -1,5 +1,6 @@
 "use client";
 
+import { useChain } from "@/context/chain";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { Token } from "@prisma/client";
 import Link from "next/link";
@@ -11,6 +12,7 @@ type LiquidityPoolBannerProps = {
 
 export default function LiquidityPoolBanner({ token }: LiquidityPoolBannerProps) {
   const { tokenInfo } = useTokenInfo(token);
+  const { chain } = useChain();
 
   return (
     <>
@@ -18,9 +20,15 @@ export default function LiquidityPoolBanner({ token }: LiquidityPoolBannerProps)
         <section className="w-full h-12 tablet:h-20 mb-8 tablet:mb-12 flex items-center justify-center bg-primary rounded-lg tablet:text-3xl">
           {tokenInfo?.liquidityPoolSeeded ? (
             <p className="text-black flex items-center gap-x-2">
-              All coins sold, trade now on Uniswap{" "}
+              All coins sold, trade now on {chain.name === "solana" ? "Raydium" : "Uniswap"}
               <Link
-                href={`https://app.uniswap.org/explore/tokens/ethereum/${token.tokenAddress}`}
+                href={
+                  chain.name === "solana"
+                    ? `https://raydium.io/swap/?inputMint=So11111111111111111111111111111111111111112&outputMint=${token.tokenAddress}`
+                    : `https://app.uniswap.org/explore/tokens/${chain.name === "eth" ? "ethereum" : chain.name}/${
+                        token.tokenAddress
+                      }`
+                }
                 target="_blank"
                 className="text-black hover:text-dark hover:scale-[1.04] transition"
               >
