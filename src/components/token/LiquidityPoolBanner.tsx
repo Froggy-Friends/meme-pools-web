@@ -2,6 +2,8 @@
 
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { Token } from "@prisma/client";
+import Link from "next/link";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 type LiquidityPoolBannerProps = {
   token: Token;
@@ -14,7 +16,20 @@ export default function LiquidityPoolBanner({ token }: LiquidityPoolBannerProps)
     <>
       {tokenInfo?.readyForLp && (
         <section className="w-full h-12 tablet:h-20 mb-8 tablet:mb-12 flex items-center justify-center bg-primary rounded-lg tablet:text-3xl">
-          <p className="text-black">All coins sold, liquidity pool coming soon!</p>
+          {tokenInfo?.liquidityPoolSeeded ? (
+            <p className="text-black flex items-center gap-x-2">
+              All coins sold, trade now on Uniswap{" "}
+              <Link
+                href={`https://app.uniswap.org/explore/tokens/ethereum/${token.tokenAddress}`}
+                target="_blank"
+                className="text-black hover:text-dark hover:scale-[1.04] transition"
+              >
+                <FaExternalLinkAlt size={20} className="mt-1" />
+              </Link>
+            </p>
+          ) : (
+            <p className="text-black">All coins sold, liquidity pool coming soon!</p>
+          )}
         </section>
       )}
     </>
