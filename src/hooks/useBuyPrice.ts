@@ -1,6 +1,6 @@
 import { memepoolsAbi } from "@/abi/memepools";
 import { contractAddress } from "@/config/env";
-import { Contract, parseEther } from "ethers";
+import { Contract } from "ethers";
 import * as Sentry from "@sentry/react";
 import { useEthersProvider } from "@/config/eth/wagmi-ethers";
 
@@ -24,12 +24,12 @@ export default function useBuyPrice() {
     return totalCost;
   };
 
-  const buyPriceEth = async (tokenAddress: string, amount: string) => {
+  const buyPriceEth = async (tokenAddress: string, amount: bigint) => {
     let totalTokens: bigint = BigInt(0);
 
     try {
       const tokens = await contract.calculateTokensForETH(
-        parseEther(amount),
+        amount,
         tokenAddress
       );
 

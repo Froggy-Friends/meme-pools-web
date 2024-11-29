@@ -1,5 +1,5 @@
 import { memepoolsTokenAbi } from "@/abi/memepoolsToken";
-import { Address, formatUnits } from "viem";
+import { Address, formatEther } from "viem";
 import { useAccount, useReadContracts } from "wagmi";
 import { contractAddress } from "@/config/env";
 import { useState } from "react";
@@ -25,11 +25,14 @@ export default function useAllowance(tokenAddress: Address, chainId: number) {
 
   const formattedAllowance =
     address && data && data.length
-      ? Number(formatUnits(data[0].result as bigint, 18))
+      ? Number(formatEther(data[0].result as bigint))
       : 0;
 
   useEffect(() => {
-    if (formattedAllowance >= tokenBalance && formattedAllowance > 0) {
+    if (
+      formattedAllowance >= Number(formatEther(tokenBalance as bigint)) &&
+      formattedAllowance > 0
+    ) {
       setIsApproved(true);
     } else {
       setIsApproved(false);
