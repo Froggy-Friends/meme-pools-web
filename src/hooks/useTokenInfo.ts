@@ -38,6 +38,7 @@ export default function useTokenInfo(token: Token) {
         readyForLp: rawInfo[10],
         liquidityPoolSeeded: rawInfo[11],
         autoLaunch: rawInfo[12],
+        availableSupplyRaw: rawInfo[3],
       };
     },
   });
