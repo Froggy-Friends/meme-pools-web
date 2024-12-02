@@ -35,10 +35,17 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
         Marketcap: <span className="text-light-primary">${tokenInfo?.marketcap?.toFixed(2)}</span>
       </p>
 
-      <p className="text-cream text-sm pt-2">
-        The creator can launch ${token.ticker} and enable trading on dexes once it reaches a market cap of{" "}
-        <span className="text-green">${marketcapGoal}</span>.
-      </p>
+      {!tokenInfo?.autoLaunch ? (
+        <p className="text-cream pt-2">
+          ${token.ticker} will be launched and trading enabled on dexes once it reaches a market cap of{" "}
+          <span className="text-green">${marketcapGoal}</span>.
+        </p>
+      ) : (
+        <p className="text-cream pt-2">
+          The creator can launch ${token.ticker} and enable trading on dexes once it reaches a market cap of{" "}
+          <span className="text-green">${marketcapGoal}</span>.
+        </p>
+      )}
     </section>
   );
 }
