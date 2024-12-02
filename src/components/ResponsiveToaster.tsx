@@ -21,6 +21,9 @@ const ResponsiveToaster = () => {
     <Toaster
       position={position}
       toastOptions={{
+        style: {
+          maxWidth: "350px",
+        },
         success: {
           icon: null,
           style: {

@@ -142,5 +142,5 @@ export default function usePostTradeData() {
     []
   );
 
-  return { postTradeData, postReserveData };
+  return { postTradeData, postReserveData, getBuyTokenDetails, getSellTokenDetails };
 }

@@ -3,40 +3,44 @@ import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { Contract } from "ethers";
 import toast from "react-hot-toast";
-import { useState } from "react";
-import { TxStatus } from "@/types/token/types";
+import usePostTradeData from "./usePostTradeData";
+import { Token } from "@prisma/client";
+import { BuyToast } from "@/components/swap/BuyToast";
 
 export default function useBuyToken(onSwapModalClose: () => void) {
   const signer = useEthersSigner();
   const contract = new Contract(contractAddress, memepoolsAbi, signer);
-  const [buyTxStatus, setBuyTxStatus] = useState<TxStatus>("idle");
-  const [buyTxHash, setBuyTxHash] = useState<string | null>(null);
+  const { getBuyTokenDetails } = usePostTradeData();
 
   const buyToken = async (
-    tokenAddress: string,
+    token: Token,
     amount: bigint,
     totalCost: bigint,
     slippagePercent: number
   ) => {
-    setBuyTxStatus("idle");
-    setBuyTxHash(null);
-
     try {
+      BuyToast(token, totalCost, amount, "", Infinity, false, "buy-toast");
+
       const tx = await contract.buyTokens(
-        tokenAddress,
+        token.tokenAddress,
         amount,
         slippagePercent,
         {
           value: totalCost,
         }
       );
-      setBuyTxHash(tx.hash);
-      setBuyTxStatus("pending");
+
+      BuyToast(token, totalCost, amount, tx.hash, Infinity, false, "buy-toast");
+
       const receipt = await tx.wait();
-      setBuyTxStatus("completed");
+
+      const { amount: finalAmount, cost: finalCost } = await getBuyTokenDetails(receipt);
+
+      BuyToast(token, finalCost, finalAmount, tx.hash, 15000, true, "buy-toast");
+
       return receipt;
     } catch (error) {
-      setBuyTxStatus("error");
+      toast.remove("buy-toast");
       if ((error as Error).message.includes("slippage")) {
         toast.error("Slippage reached");
       } else {
@@ -46,5 +50,5 @@ export default function useBuyToken(onSwapModalClose: () => void) {
     }
   };
 
-  return { buyToken, buyTxStatus, buyTxHash, setBuyTxHash };
+  return { buyToken };
 }

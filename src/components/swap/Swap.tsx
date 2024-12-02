@@ -70,19 +70,16 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const [buyTokenName, setBuyTokenName] = useState("ETH");
   const [buyTokenSrc, setBuyTokenSrc] = useState(ethLogo);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
-  const { buyToken, buyTxStatus, buyTxHash, setBuyTxHash } = useBuyToken(onSwapModalClose);
+  const { buyToken } = useBuyToken(onSwapModalClose);
   const { buyPriceTokens, buyPriceEth } = useBuyPrice();
-  const { sellToken, sellTxStatus, sellTxHash, setSellTxHash } = useSellToken(onSwapModalClose);
+  const { sellToken } = useSellToken(onSwapModalClose);
   const getSellPrice = useSellPrice();
   const ethBalance = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
   const { isApproved, refetchAllowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
-  const { approveToken, approveTxStatus, setApproveTxStatus, approveTxHash, setApproveTxHash } = useApproveToken(
-    tokenAddress,
-    onSwapModalClose
-  );
+  const { approveToken } = useApproveToken(token, onSwapModalClose);
   const { maxBuyPrice } = useMaxBuy(token);
 
   const insufficientBuyBalance =
@@ -154,29 +151,14 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     }
   };
 
-  const handleSwapModalClose = () => {
-    onSwapModalClose();
-    setBuyAmount(BigInt(0));
-    setBuyInputValue("");
-    setSellAmount(BigInt(0));
-    setBuyCost(BigInt(0));
-    setSellPayout(BigInt(0));
-    setApproveTxStatus("idle");
-    setApproveTxHash(null);
-    setBuyTxHash(null);
-    setSellTxHash(null);
-  };
-
   const buyTokens = async () => {
     let receipt: ContractTransactionReceipt;
     const formattedSlippage = slippagePercent * 100;
 
     if (buyTokenName === "ETH") {
-      onSwapModalOpen();
-      receipt = await buyToken(tokenAddress, buyTokensReceived, buyAmount, formattedSlippage);
+      receipt = await buyToken(token, buyTokensReceived, buyAmount, formattedSlippage);
     } else {
-      onSwapModalOpen();
-      receipt = await buyToken(tokenAddress, buyAmount, buyCost, formattedSlippage);
+      receipt = await buyToken(token, buyAmount, buyCost, formattedSlippage);
     }
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
     await refetchBalance();
@@ -200,7 +182,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
       await approveToken();
       await refetchAllowance();
     }
-    const receipt = await sellToken(tokenAddress, sellAmount, sellPayout, formattedSlippage);
+    const receipt = await sellToken(token, sellAmount, sellPayout, formattedSlippage);
     await postTradeData(receipt, TradingTab.SELL, ethPrice);
     await refetchBalance();
     await refetchAllowance();
@@ -508,35 +490,6 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
           </button>
         </div>
       </div>
-      <SwapModal
-        fromImageUrl={activeTab === TradingTab.BUY ? ethLogo : token.image}
-        fromAmount={
-          activeTab === TradingTab.BUY && buyTokenName === "ETH"
-            ? formatEther(buyAmount)
-            : activeTab === TradingTab.BUY
-            ? Number(formatUnits(buyCost, 18)).toFixed(6)
-            : formatNumber(Math.round(Number(formatEther(sellAmount))))
-        }
-        fromTicker={activeTab === TradingTab.BUY ? "ETH" : token.ticker}
-        toImageUrl={activeTab === TradingTab.SELL ? ethLogo : token.image}
-        toAmount={
-          activeTab === TradingTab.BUY && buyTokenName === "ETH"
-            ? formatNumber(Number(formatEther(buyTokensReceived)))
-            : activeTab === TradingTab.BUY
-            ? formatNumber(Number(formatEther(buyAmount)))
-            : Number(formatUnits(sellPayout)).toFixed(6)
-        }
-        toTicker={activeTab === TradingTab.BUY ? token.ticker : "ETH"}
-        isOpen={isSwapModalOpen}
-        onOpenChange={onSwapModalOpenChange}
-        txStatus={activeTab === TradingTab.BUY ? buyTxStatus : sellTxStatus}
-        txHash={activeTab === TradingTab.BUY ? buyTxHash : sellTxHash}
-        approveTxHash={approveTxHash}
-        isApproved={isApproved}
-        approveTxStatus={approveTxStatus}
-        handleSwapModalClose={handleSwapModalClose}
-        activeTab={activeTab}
-      />
     </>
   );
 }
