@@ -134,15 +134,12 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   };
 
   const resetAmounts = () => {
-    if (activeTab === TradingTab.BUY) {
       setBuyAmount(BigInt(0));
       setBuyInputValue("");
       debouncedBuyCost(BigInt(0));
       setBuyTokensReceived(BigInt(0));
-    } else {
       setSellAmount(BigInt(0));
       debouncedSellPayout(BigInt(0));
-    }
   };
 
   const buyTokens = async () => {
@@ -199,7 +196,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
             <button
               onClick={() => {
                 setActiveTab(TradingTab.BUY);
-                setBuyAmount(BigInt(0));
+                resetAmounts();
               }}
               className={`w-[65px] h-[35px] rounded-xl font-proximaNovaBold ${
                 activeTab === TradingTab.BUY
@@ -212,7 +209,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
             <button
               onClick={() => {
                 setActiveTab(TradingTab.SELL);
-                setSellAmount(BigInt(0));
+                resetAmounts();
               }}
               className={`w-[65px] h-[35px] rounded-xl font-proximaNovaBold text-white ${
                 activeTab === TradingTab.SELL ? "bg-red" : "bg-dark-gray hover:bg-gray transition"
