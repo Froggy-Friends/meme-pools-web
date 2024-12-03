@@ -9,9 +9,11 @@ import { cn } from "@nextui-org/react";
 type CreatedTokensProps = {
   profileUser: User;
   cachedUser: User | null;
+  delegatedWallets: Address[];
 };
 
-export default async function CreatedTokens({ profileUser, cachedUser }: CreatedTokensProps) {
+export default async function CreatedTokens({ profileUser, cachedUser, delegatedWallets }: CreatedTokensProps) {
+  const walletAddresses = delegatedWallets ? [...delegatedWallets, profileUser.ethAddress] : [profileUser.ethAddress];
   const createdTokens = await fetchCreatedTokens(profileUser.id);
   let enabled = profileUser.id === cachedUser?.id;
   const sortedCreatedTokens = createdTokens.sort((a, b) => (b.marketCap ?? 0) - (a.marketCap ?? 0));
@@ -27,9 +29,9 @@ export default async function CreatedTokens({ profileUser, cachedUser }: Created
           !createdTokens.length && cachedUser && cachedUser.id !== profileUser.id && "bg-dark"
         )}
       >
-        {enabled && <LaunchRewardsText address={profileUser.ethAddress as Address} />}
+        {enabled && <LaunchRewardsText addresses={walletAddresses as Address[]} />}
         {!createdTokens.length && cachedUser && cachedUser.id === profileUser.id && (
-          <p className="ml-1 -mt-8">
+          <p className="-mt-8">
             <Link href="/create" className="text-primary hover:text-light-primary transition">
               Create
             </Link>{" "}

@@ -13,6 +13,8 @@ import CreatedTokens from "@/components/profile/CreatedTokens";
 import EditProfileForm from "@/components/profile/EditProfileForm";
 import Claim from "@/components/profile/Claim";
 import UserHoldings from "@/components/profile/UserHoldings";
+import { getDelegations } from "@/lib/getDelegations";
+import { Address } from "viem";
 
 type ProfilePageProps = {
   params: {
@@ -37,20 +39,33 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
   const followers = await fetchFollowers(profileUser.id);
   const following = await fetchFollowing(profileUser.id);
   const view = (searchParams.view as string) || (profileUser.id === cachedUser?.id ? "holdings" : "created");
+  const delegatedWallets = await getDelegations(profileUser.ethAddress as Address);
 
   return (
     <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 laptop:px-4">
       <Header chain={chain} />
 
-      <ProfileInfo profileUser={profileUser} cachedUser={cachedUser} isFollowing={isFollowing?.status || "false"} />
+      <ProfileInfo
+        profileUser={profileUser}
+        cachedUser={cachedUser}
+        isFollowing={isFollowing?.status || "false"}
+        delegatedWallets={delegatedWallets}
+      />
 
-      <ProfileMenuToggle profileUser={profileUser} cachedUser={cachedUser} currentView={view} />
+      <ProfileMenuToggle
+        profileUser={profileUser}
+        cachedUser={cachedUser}
+        currentView={view}
+        delegatedWallets={delegatedWallets}
+      />
 
       {view === "holdings" && profileUser.id === cachedUser?.id && (
         <UserHoldings profileUser={profileUser} cachedUser={cachedUser || null} />
       )}
       {view === "settings" && profileUser.id === cachedUser?.id && <EditProfileForm profileUser={profileUser} />}
-      {view === "created" && <CreatedTokens profileUser={profileUser} cachedUser={cachedUser || null} />}
+      {view === "created" && (
+        <CreatedTokens profileUser={profileUser} cachedUser={cachedUser || null} delegatedWallets={delegatedWallets} />
+      )}
       {view === "followers" && (
         <Followers followers={followers} profileUser={profileUser} cachedUser={cachedUser || null} />
       )}
@@ -58,7 +73,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
         <Following following={following} profileUser={profileUser} cachedUser={cachedUser || null} />
       )}
       {view === "claim" && profileUser.id === cachedUser?.id && (
-        <Claim profileUser={profileUser} cachedUser={cachedUser || null} />
+        <Claim profileUser={profileUser} cachedUser={cachedUser || null} delegatedWallets={delegatedWallets} />
       )}
 
       <Footer />

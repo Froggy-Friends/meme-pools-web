@@ -9,15 +9,20 @@ import { defaultProfileAvatarUrl } from "@/config/user";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { Address } from "viem";
 import useCreatorRewards from "@/hooks/useCreatorRewards";
+import { useMemo } from "react";
 
 type ProfileInfoParams = {
   profileUser: User;
   cachedUser: User | null | undefined;
   isFollowing: string;
+  delegatedWallets: Address[];
 };
 
-export default function ProfileInfo({ profileUser, cachedUser, isFollowing }: ProfileInfoParams) {
-  const { rewardAmount } = useCreatorRewards(profileUser.ethAddress as Address);
+export default function ProfileInfo({ profileUser, cachedUser, isFollowing, delegatedWallets }: ProfileInfoParams) {
+  const walletAddresses = useMemo(() => {
+    return delegatedWallets ? [...delegatedWallets, profileUser.ethAddress] : [profileUser.ethAddress];
+  }, [delegatedWallets, profileUser.ethAddress]);
+  const { rewardAmount } = useCreatorRewards(walletAddresses as Address[]);
   const { isConnected } = useAccount();
   const { currentUser } = useUser();
   const disabled = currentUser?.id !== profileUser.id;
