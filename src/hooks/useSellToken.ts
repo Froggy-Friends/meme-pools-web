@@ -7,7 +7,7 @@ import usePostTradeData from "./usePostTradeData";
 import { SellToast } from "@/components/swap/SellToast";
 import { Token } from "@prisma/client";
 
-export default function useSellToken(onSwapModalClose: () => void) {
+export default function useSellToken() {
   const signer = useEthersSigner();
   const contract = new Contract(contractAddress, memepoolsAbi, signer);
   const { getSellTokenDetails } = usePostTradeData();
@@ -28,11 +28,21 @@ export default function useSellToken(onSwapModalClose: () => void) {
         slippagePercent
       );
 
-      SellToast(token, maxPayout, amount, tx.hash, Infinity, false, "sell-toast");
+      SellToast(
+        token,
+        maxPayout,
+        amount,
+        tx.hash,
+        Infinity,
+        false,
+        "sell-toast"
+      );
 
       const receipt = await tx.wait();
 
-      const { payout, amount: finalAmount } = await getSellTokenDetails(receipt);
+      const { payout, amount: finalAmount } = await getSellTokenDetails(
+        receipt
+      );
 
       SellToast(token, payout, finalAmount, tx.hash, 15000, true, "sell-toast");
 
@@ -44,7 +54,6 @@ export default function useSellToken(onSwapModalClose: () => void) {
       } else {
         toast.error("Sell token error");
       }
-      onSwapModalClose();
     }
   };
 
