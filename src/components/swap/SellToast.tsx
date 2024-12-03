@@ -49,10 +49,10 @@ export const SellToast = (
           </div>
 
           <div className="flex flex-col items-start">
-            <p className="-mb-1">{isSuccess ? "Swapped" : "Swapping"}</p>
+            <p className="-mb-[0.1rem]">{isSuccess ? "Swapped" : "Swapping"}</p>
             <Link
               href={`${etherscanUrl}/tx/${txHash}`}
-              className="text-light-gray hover:text-cream transition text-[15px]"
+              className="text-light-gray hover:text-cream transition text-[15px] leading-[1.125]"
               target="_blank"
             >
               {formatBalance(Math.round(Number(formatEther(BigInt(tokenAmount)))))} ${formatTicker(token.ticker)} for{" "}

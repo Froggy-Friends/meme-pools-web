@@ -50,10 +50,10 @@ export const BuyToast = (
           </div>
 
           <div className="flex flex-col items-start">
-            <p>{isSuccess ? "Swapped" : "Swapping"}</p>
+            <p className="-mb-[0.1rem]">{isSuccess ? "Swapped" : "Swapping"}</p>
             <Link
               href={`${etherscanUrl}/tx/${txHash}`}
-              className="text-light-gray hover:text-cream transition text-[15px] -mt-1"
+              className="text-light-gray hover:text-cream transition text-[15px] leading-[1.125]"
               target="_blank"
             >
               {Number(formatEther(BigInt(ethAmount)))
