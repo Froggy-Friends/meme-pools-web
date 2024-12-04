@@ -17,13 +17,13 @@ export const memepoolsApi = isProd
 // evm
 export const contractAddress: Address = isProd
   ? "0x0"
-  : "0xa0f9fEdB35c40041211348112851509b91E8df97";
+  : "0x6B6B8Ce15b6D5CA7bEb36956111750784f7027Fb";
 export const froggyFriendsAddress: Address = isProd
   ? "0x7ad05c1b87e93BE306A9Eadf80eA60d7648F1B6F"
   : "0xc8939011efd81fB0ca8382ed15EAb160c3a69313";
 export const claimContractAddress: Address = isProd
   ? "0x0"
-  : "0xe059B3b56316f69A2B72EEa869e2503949FFa4cc";
+  : "0xB580ECca9192Dd1ea73d31122390AA6DA7772E61";
 export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = isProd ? 8453 : 84532;
 export const ethChain = isProd ? mainnet : sepolia;

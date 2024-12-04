@@ -8,10 +8,7 @@ import { Contract } from "ethers";
 import toast from "react-hot-toast";
 import { parseUnits } from "viem";
 
-export default function useApproveToken(
-  token: Token,
-  onSwapModalClose: () => void
-) {
+export default function useApproveToken(token: Token) {
   const signer = useEthersSigner();
   const contract = new Contract(token.tokenAddress, memepoolsTokenAbi, signer);
 
@@ -32,7 +29,6 @@ export default function useApproveToken(
     } catch (error) {
       toast.remove("approve-toast");
       toast.error("Approve token error");
-      onSwapModalClose();
     }
   };
 

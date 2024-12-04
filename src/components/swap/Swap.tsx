@@ -5,16 +5,15 @@ import { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
-import { Address, formatEther, parseEther, parseUnits } from "viem";
+import { Address, formatEther, parseUnits } from "viem";
 import { ContractTransactionReceipt, formatUnits } from "ethers";
 import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
-import { Input, useDisclosure } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import TokenSwitcher from "../token/TokenSwitcher";
 import { wagmiChains } from "@/config/reown";
 import useEthBalance from "@/hooks/useEthBalance";
 import useTokenBalance from "@/hooks/useTokenBalance";
-import SwapModal from "./SwapModal";
 import { ethLogo, solanaLogo } from "@/config/chains";
 import usePostTradeData from "@/hooks/usePostTradeData";
 import { useDebouncedCallback } from "use-debounce";
@@ -54,12 +53,6 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const { ticker, tokenAddress } = token;
   const { chain } = useChain();
   const { isConnected } = useAccount();
-  const {
-    isOpen: isSwapModalOpen,
-    onOpen: onSwapModalOpen,
-    onOpenChange: onSwapModalOpenChange,
-    onClose: onSwapModalClose,
-  } = useDisclosure();
   const [activeTab, setActiveTab] = useState(TradingTab.BUY);
   const [buyAmount, setBuyAmount] = useState<bigint>(BigInt(0));
   const [buyTokensReceived, setBuyTokensReceived] = useState<bigint>(BigInt(0));
@@ -70,16 +63,16 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const [buyTokenName, setBuyTokenName] = useState("ETH");
   const [buyTokenSrc, setBuyTokenSrc] = useState(ethLogo);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
-  const { buyToken } = useBuyToken(onSwapModalClose);
+  const { buyToken } = useBuyToken();
   const { buyPriceTokens, buyPriceEth } = useBuyPrice();
-  const { sellToken } = useSellToken(onSwapModalClose);
+  const { sellToken } = useSellToken();
   const getSellPrice = useSellPrice();
-  const ethBalance = useEthBalance(wagmiChains.eth.id);
+  const { ethBalance, refetchEthBalance } = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
   const { isApproved, refetchAllowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
-  const { approveToken } = useApproveToken(token, onSwapModalClose);
+  const { approveToken } = useApproveToken(token);
   const { maxBuyPrice } = useMaxBuy(token);
 
   const insufficientBuyBalance =
@@ -141,14 +134,12 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   };
 
   const resetAmounts = () => {
-    if (activeTab === TradingTab.BUY) {
-      setBuyAmount(BigInt(0));
-      setBuyInputValue("");
-      debouncedBuyCost(BigInt(0));
-    } else {
-      setSellAmount(BigInt(0));
-      debouncedSellPayout(BigInt(0));
-    }
+    setBuyAmount(BigInt(0));
+    setBuyInputValue("");
+    debouncedBuyCost(BigInt(0));
+    setBuyTokensReceived(BigInt(0));
+    setSellAmount(BigInt(0));
+    debouncedSellPayout(BigInt(0));
   };
 
   const buyTokens = async () => {
@@ -162,9 +153,13 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     }
     await postTradeData(receipt, TradingTab.BUY, ethPrice);
     await refetchBalance();
+    await refetchEthBalance();
     await refetchAllowance();
     const updatedTokenInfo = await refetchTokenInfo();
     await updateTokenMarketcap(token.id, updatedTokenInfo.data?.marketcap || 0);
+    if (receipt) {
+      resetAmounts();
+    }
     if (!isApproved && receipt) {
       await approveToken();
       await refetchAllowance();
@@ -177,7 +172,6 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
 
   const sellTokens = async () => {
     const formattedSlippage = slippagePercent * 100;
-    onSwapModalOpen();
     if (!isApproved) {
       await approveToken();
       await refetchAllowance();
@@ -185,9 +179,13 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     const receipt = await sellToken(token, sellAmount, sellPayout, formattedSlippage);
     await postTradeData(receipt, TradingTab.SELL, ethPrice);
     await refetchBalance();
+    await refetchEthBalance();
     await refetchAllowance();
     const updatedTokenInfo = await refetchTokenInfo();
     await updateTokenMarketcap(token.id, updatedTokenInfo.data?.marketcap || 0);
+    if (receipt) {
+      resetAmounts();
+    }
   };
 
   return (
@@ -198,7 +196,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
             <button
               onClick={() => {
                 setActiveTab(TradingTab.BUY);
-                setBuyAmount(BigInt(0));
+                resetAmounts();
               }}
               className={`w-[65px] h-[35px] rounded-xl font-proximaNovaBold ${
                 activeTab === TradingTab.BUY
@@ -211,7 +209,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
             <button
               onClick={() => {
                 setActiveTab(TradingTab.SELL);
-                setSellAmount(BigInt(0));
+                resetAmounts();
               }}
               className={`w-[65px] h-[35px] rounded-xl font-proximaNovaBold text-white ${
                 activeTab === TradingTab.SELL ? "bg-red" : "bg-dark-gray hover:bg-gray transition"
@@ -265,19 +263,22 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
               <div className="flex flex-col items-end absolute top-[3.4rem] right-[2.2rem] transform -translate-y-1/2">
                 <button
                   disabled={!isConnected}
-                  onClick={() => {
+                  onClick={async () => {
+                    const updatedTokenInfo = await refetchTokenInfo();
                     setBuyInputValue(
-                      buyTokenName === "ETH" ? maxBuyPrice || "0" : tokenInfo?.availableSupply.toString() || "0"
+                      buyTokenName === "ETH"
+                        ? formatEther((maxBuyPrice as bigint) || BigInt(0)).substring(0, 8) || "0"
+                        : updatedTokenInfo?.data?.availableSupply.toString() || "0"
                     );
                     setBuyAmount(
                       buyTokenName === "ETH"
-                        ? parseEther(maxBuyPrice || "0") || BigInt(0)
-                        : tokenInfo?.availableSupplyRaw || BigInt(0)
+                        ? maxBuyPrice || BigInt(0)
+                        : updatedTokenInfo?.data?.availableSupplyRaw || BigInt(0)
                     );
                     if (buyTokenName !== "ETH") {
-                      debouncedBuyCost(tokenInfo?.availableSupplyRaw || BigInt(0));
+                      debouncedBuyCost(updatedTokenInfo?.data?.availableSupplyRaw || BigInt(0));
                     } else {
-                      setBuyTokensReceived(tokenInfo?.availableSupplyRaw || BigInt(0));
+                      setBuyTokensReceived(updatedTokenInfo?.data?.availableSupplyRaw || BigInt(0));
                     }
                   }}
                   className="text-black bg-primary rounded-3xl px-2 text-xs hover:bg-light-primary transition"
@@ -285,8 +286,10 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   MAX
                 </button>
                 <p className="text-light-gray text-xs whitespace-nowrap">
-                  {buyTokenName === "ETH"
-                    ? `${maxBuyPrice || 0.0} ETH`
+                  {tokenInfo?.liquidityPoolSeeded
+                    ? "0.0"
+                    : buyTokenName === "ETH"
+                    ? `${Number(formatEther((maxBuyPrice as bigint) || BigInt(0))).toFixed(2) || 0.0} ETH`
                     : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
                 </p>
               </div>
@@ -455,8 +458,12 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   key={amount}
                   disabled={!isConnected}
                   onClick={() => {
-                    setSellAmount(tokensByPercentage(amount, Number(tokenBalance)));
-                    debouncedSellPayout(tokensByPercentage(amount, Number(tokenBalance)));
+                    setSellAmount(
+                      amount === 100 ? (tokenBalance as bigint) : tokensByPercentage(amount, Number(tokenBalance))
+                    );
+                    debouncedSellPayout(
+                      amount === 100 ? (tokenBalance as bigint) : tokensByPercentage(amount, Number(tokenBalance))
+                    );
                   }}
                   className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
                     tokensByPercentage(amount, Number(tokenBalance)) === sellAmount

@@ -5,11 +5,11 @@ import useFrogBalance from "@/hooks/useFrogBalance";
 import { Address } from "viem";
 
 type ClaimRewardsTextProps = {
-  address: Address;
+  addresses: Address[];
 };
 
-export default function ClaimRewardsText({ address }: ClaimRewardsTextProps) {
-  const frogBalance = useFrogBalance(address);
+export default function ClaimRewardsText({ addresses }: ClaimRewardsTextProps) {
+  const frogBalance = useFrogBalance(addresses);
 
   return (
     <div className="mb-6">

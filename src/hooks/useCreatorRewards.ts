@@ -7,8 +7,8 @@ import {
 import useEthPrice from "./useEthPrice";
 import useFrogBalance from "./useFrogBalance";
 
-export default function useCreatorRewards(walletAddress: Address) {
-  const frogBalance = useFrogBalance(walletAddress);
+export default function useCreatorRewards(walletAddresses: Address[]) {
+  const frogBalance = useFrogBalance(walletAddresses);
   const ethPrice = useEthPrice();
   let rewardTier = "bronze";
   let ethMultiplier = tierOneEthReward;

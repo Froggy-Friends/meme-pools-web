@@ -17,7 +17,7 @@ export default async function UserHoldings({ profileUser, cachedUser }: UserHold
     <section className="mt-10 mb-12 flex flex-col gap-y-2 bg-dark-gray rounded-xl p-6">
       <p className="text-2xl mb-4">Holdings</p>
       {!holdings.length && cachedUser && cachedUser.id === profileUser.id && (
-        <p className="ml-1 -mt-8">
+        <p className="-mt-4">
           <Link href="/" className="text-primary hover:text-light-primary transition">
             Buy
           </Link>{" "}

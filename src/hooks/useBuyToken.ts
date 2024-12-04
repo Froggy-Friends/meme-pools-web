@@ -7,7 +7,7 @@ import usePostTradeData from "./usePostTradeData";
 import { Token } from "@prisma/client";
 import { BuyToast } from "@/components/swap/BuyToast";
 
-export default function useBuyToken(onSwapModalClose: () => void) {
+export default function useBuyToken() {
   const signer = useEthersSigner();
   const contract = new Contract(contractAddress, memepoolsAbi, signer);
   const { getBuyTokenDetails } = usePostTradeData();
@@ -34,9 +34,17 @@ export default function useBuyToken(onSwapModalClose: () => void) {
 
       const receipt = await tx.wait();
 
-      const { amount: finalAmount, cost: finalCost } = await getBuyTokenDetails(receipt);
+      const { amount: finalAmount } = await getBuyTokenDetails(receipt);
 
-      BuyToast(token, finalCost, finalAmount, tx.hash, 15000, true, "buy-toast");
+      BuyToast(
+        token,
+        totalCost,
+        finalAmount,
+        tx.hash,
+        15000,
+        true,
+        "buy-toast"
+      );
 
       return receipt;
     } catch (error) {
@@ -46,7 +54,6 @@ export default function useBuyToken(onSwapModalClose: () => void) {
       } else {
         toast.error("Buy token error");
       }
-      onSwapModalClose();
     }
   };
 
