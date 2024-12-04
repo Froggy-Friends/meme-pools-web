@@ -5,7 +5,7 @@ import { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
 import useBuyToken from "@/hooks/useBuyToken";
-import { Address, formatEther, parseEther, parseUnits } from "viem";
+import { Address, formatEther, parseUnits } from "viem";
 import { ContractTransactionReceipt, formatUnits } from "ethers";
 import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
@@ -134,12 +134,12 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   };
 
   const resetAmounts = () => {
-      setBuyAmount(BigInt(0));
-      setBuyInputValue("");
-      debouncedBuyCost(BigInt(0));
-      setBuyTokensReceived(BigInt(0));
-      setSellAmount(BigInt(0));
-      debouncedSellPayout(BigInt(0));
+    setBuyAmount(BigInt(0));
+    setBuyInputValue("");
+    debouncedBuyCost(BigInt(0));
+    setBuyTokensReceived(BigInt(0));
+    setSellAmount(BigInt(0));
+    debouncedSellPayout(BigInt(0));
   };
 
   const buyTokens = async () => {
@@ -267,12 +267,12 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                     const updatedTokenInfo = await refetchTokenInfo();
                     setBuyInputValue(
                       buyTokenName === "ETH"
-                        ? maxBuyPrice || "0"
+                        ? formatEther((maxBuyPrice as bigint) || BigInt(0)).substring(0, 8) || "0"
                         : updatedTokenInfo?.data?.availableSupply.toString() || "0"
                     );
                     setBuyAmount(
                       buyTokenName === "ETH"
-                        ? parseEther(maxBuyPrice || "0") || BigInt(0)
+                        ? maxBuyPrice || BigInt(0)
                         : updatedTokenInfo?.data?.availableSupplyRaw || BigInt(0)
                     );
                     if (buyTokenName !== "ETH") {
@@ -286,8 +286,10 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   MAX
                 </button>
                 <p className="text-light-gray text-xs whitespace-nowrap">
-                  {buyTokenName === "ETH"
-                    ? `${maxBuyPrice || 0.0} ETH`
+                  {tokenInfo?.liquidityPoolSeeded
+                    ? "0.0"
+                    : buyTokenName === "ETH"
+                    ? `${Number(formatEther((maxBuyPrice as bigint) || BigInt(0))).toFixed(2) || 0.0} ETH`
                     : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
                 </p>
               </div>
