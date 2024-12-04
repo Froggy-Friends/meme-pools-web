@@ -17,7 +17,7 @@ type CreatedCoinCardProps = {
 };
 
 export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps) {
-  const { tokenInfo } = useTokenInfo(token);
+  const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
   const { launchCoin } = useLaunchCoin();
   const { chain } = useChain();
   const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold);
@@ -43,7 +43,8 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
           disabled={!enabled}
           onClick={async () => {
             setIsLaunching(true);
-            await launchCoin(token.tokenAddress, token.ticker);
+            await launchCoin(token.tokenAddress, token.ticker, token.id);
+            await refetchTokenInfo();
             setIsLaunching(false);
           }}
           className={cn(
@@ -83,7 +84,8 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
           disabled={!enabled}
           onClick={async () => {
             setIsLaunching(true);
-            await launchCoin(token.tokenAddress, token.ticker);
+            await launchCoin(token.tokenAddress, token.ticker, token.id);
+            await refetchTokenInfo();
             setIsLaunching(false);
           }}
           className={cn(
