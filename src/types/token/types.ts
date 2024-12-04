@@ -7,6 +7,7 @@ export type CreateTokenParams = {
   reservedAmount: BigInt;
   name: string | FormDataEntryValue;
   symbol: string | FormDataEntryValue;
+  autoLaunch: boolean;
 };
 
 export type TokenCreated = {
@@ -157,4 +158,9 @@ export type TokenHolderData = {
   owner: string;
   amount: number;
   percentage: number;
+};
+
+export type TokenWithBalance = Token & {
+  Trades: { category: string; amount: number }[];
+  balance: number;
 };

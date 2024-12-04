@@ -68,12 +68,22 @@ const config: Config = {
           "0%, 100%": { transform: "scale(0.95)" },
           "50%": { transform: "scale(1.1)" },
         },
+        enter: {
+          "0%": { transform: "scale(0.9)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        leave: {
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "100%": { transform: "scale(0.9)", opacity: "0" },
+        },
       },
       animation: {
         fadeInSlideUp: "fadeInSlideUp 0.7s",
         pulseStrong: "pulseStrong 1.5s infinite",
         primaryPulse: "primaryPulse 1s ease-in-out",
         pulseScale: "pulseScale 1s infinite",
+        enter: "enter 300ms ease-out",
+        leave: "leave 300ms ease-in forwards",
       },
     },
   },

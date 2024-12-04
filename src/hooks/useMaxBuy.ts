@@ -25,10 +25,7 @@ export default function useMaxBuy(token: Token) {
           parseUnits(availableSupply, 18)
         );
 
-        const formattedCost = formatEther(totalCost);
-        return Number(formattedCost) > 0
-          ? Number(formattedCost).toFixed(2)
-          : "0.0";
+        return totalCost > 0 ? totalCost : "0.0";
       } catch (err) {
         Sentry.captureException(err);
         return "0.0";

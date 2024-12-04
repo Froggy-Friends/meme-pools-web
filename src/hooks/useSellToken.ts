@@ -3,33 +3,59 @@ import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { Contract } from "ethers";
 import toast from "react-hot-toast";
-import { useState } from "react";
-import { TxStatus } from "@/types/token/types";
+import usePostTradeData from "./usePostTradeData";
+import { SellToast } from "@/components/swap/SellToast";
+import { Token } from "@prisma/client";
 
-export default function useSellToken(onSwapModalClose: () => void) {
+export default function useSellToken() {
   const signer = useEthersSigner();
   const contract = new Contract(contractAddress, memepoolsAbi, signer);
-  const [sellTxStatus, setSellTxStatus] = useState<TxStatus>("idle");
-  const [sellTxHash, setSellTxHash] = useState<string | null>(null);
+  const { getSellTokenDetails } = usePostTradeData();
 
-  const sellToken = async (tokenAddress: string, amount: bigint) => {
-    setSellTxStatus("idle");
-    setSellTxHash(null);
-
+  const sellToken = async (
+    token: Token,
+    amount: bigint,
+    maxPayout: bigint,
+    slippagePercent: number
+  ) => {
     try {
-      const tx = await contract.sellTokens(tokenAddress, amount);
-      setSellTxHash(tx.hash);
-      setSellTxStatus("pending");
+      SellToast(token, maxPayout, amount, "", Infinity, false, "sell-toast");
+
+      const tx = await contract.sellTokens(
+        token.tokenAddress,
+        amount,
+        maxPayout,
+        slippagePercent
+      );
+
+      SellToast(
+        token,
+        maxPayout,
+        amount,
+        tx.hash,
+        Infinity,
+        false,
+        "sell-toast"
+      );
+
       const receipt = await tx.wait();
-      setSellTxStatus("completed");
+
+      const { payout, amount: finalAmount } = await getSellTokenDetails(
+        receipt
+      );
+
+      SellToast(token, payout, finalAmount, tx.hash, 15000, true, "sell-toast");
+
       return receipt;
     } catch (error) {
-      setSellTxStatus("error");
-      toast.error("Sell token error");
-      console.log(error);
-      onSwapModalClose();
+      toast.remove("sell-toast");
+      if ((error as Error).message.includes("slippage")) {
+        toast.error("Slippage reached");
+      } else {
+        toast.error("Sell token error");
+      }
     }
   };
 
-  return { sellToken, sellTxStatus, sellTxHash, setSellTxHash };
+  return { sellToken };
 }

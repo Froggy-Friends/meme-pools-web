@@ -225,3 +225,15 @@ export const handleFollow = async (
 
   return errorMessage;
 };
+
+export const updateClaimStatus = async (
+  frogIds: number[],
+  tokenAddress: string
+) => {
+  await prisma.claim.updateMany({
+    where: { frogId: { in: frogIds }, tokenAddress },
+    data: { isClaimed: true },
+  });
+
+  revalidatePath("/profile");
+};

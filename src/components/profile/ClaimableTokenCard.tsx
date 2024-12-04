@@ -1,23 +1,30 @@
 "use client";
 
 import { useChain } from "@/context/chain";
-import useLaunchCoin from "@/hooks/useLaunchCoin";
 import { formatTicker } from "@/lib/formatTicker";
 import { cn, Link } from "@nextui-org/react";
 import Image from "next/image";
 import { useState } from "react";
 import presentIcon from "../../../public/present.svg";
 import { Token } from "@prisma/client";
+import useClaimRewards from "@/hooks/useClaimRewards";
+import useRewards from "@/hooks/useRewards";
+import { Address } from "viem";
+import { formatNumber } from "@/lib/formatNumber";
 
 type CreatedCoinCardProps = {
   token: Token;
   enabled: boolean;
+  isClaimed: boolean;
 };
 
-export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps) {
-  const { launchCoin } = useLaunchCoin();
+export default function CreatedCoinCard({ token, enabled, isClaimed }: CreatedCoinCardProps) {
   const { chain } = useChain();
   const [isRevealed, setIsRevealed] = useState(false);
+  const [isClaiming, setIsClaiming] = useState(false);
+  const [rewards, setRewards] = useState("0");
+  const { fetchRewards, pending } = useRewards();
+  const { claimBatch } = useClaimRewards();
 
   return (
     <section className="flex flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">
@@ -35,7 +42,11 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
             <div className="flex items-center gap-x-1">
               <button
                 disabled={isRevealed}
-                onClick={() => setIsRevealed(true)} //TODO: add logic to fetch elligible rewards
+                onClick={async () => {
+                  setIsRevealed(true);
+                  const rewards = await fetchRewards(token.tokenAddress as Address);
+                  setRewards(rewards.toString());
+                }}
                 className={cn(
                   "text-light-gray text-[13px] tablet:text-base transition",
                   !isRevealed && "hover:text-cream"
@@ -50,21 +61,26 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
                 />
               </button>
               <p className="text-xs tablet:text-sm text-light-gray">{`${
-                isRevealed ? `${formatTicker(token.ticker)}` : "*************" // TODO add logic to render elligible rewards once fetched
+                isRevealed && !pending ? `${formatNumber(rewards)} $${formatTicker(token.ticker)}` : "*************"
               }`}</p>
             </div>
           </div>
         </div>
 
         <button
-          disabled={!enabled}
-          onClick={() => launchCoin(token.tokenAddress)} //TODO: add claim logic
+          disabled={!enabled || isClaimed}
+          onClick={async () => {
+            setIsClaiming(true);
+            await claimBatch(token.tokenAddress, token.ticker);
+            setIsClaiming(false);
+          }}
           className={cn(
-            `bg-gray text-black font-bold rounded-xl px-6 tablet:px-8 py-[0.125rem] tablet:py-1 hover:cursor-default`,
-            enabled && "bg-primary hover:cursor-pointer hover:bg-light-primary transition"
+            `bg-gray text-black font-bold rounded-xl px-6 tablet:px-8 py-[0.125rem] max-w-[100px] tablet:py-1 hover:cursor-default active:scale-[0.98] transition`,
+            enabled && !isClaimed && !isClaiming && "bg-primary hover:cursor-pointer hover:bg-light-primary transition",
+            isClaiming && "bg-gray px-[0.625rem] tablet:px-4 hover:cursor-default"
           )}
         >
-          Claim
+          {isClaiming ? "Claiming.." : "Claim"}
         </button>
       </div>
     </section>

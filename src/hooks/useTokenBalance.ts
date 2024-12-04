@@ -1,6 +1,6 @@
 import { useAccount, useReadContracts } from "wagmi";
 import { memepoolsTokenAbi } from "@/abi/memepoolsToken";
-import { Address, formatUnits } from "viem";
+import { Address } from "viem";
 
 export default function useTokenBalance(
   tokenAddress: Address,
@@ -23,8 +23,8 @@ export default function useTokenBalance(
   return {
     tokenBalance:
       address && data && data.length
-        ? Number(formatUnits(data[0].result as bigint, 18))
-        : 0,
+        ? data[0].result
+        : BigInt(0),
     refetchBalance: refetch,
   };
 }

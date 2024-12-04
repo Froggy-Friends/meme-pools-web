@@ -1,18 +1,22 @@
 import { froggyFriendsAddress } from "@/config/env";
-import { useReadContract } from "wagmi";
+import { useReadContracts } from "wagmi";
 import { froggyFriendsAbi } from "@/abi/froggyFriends";
-import { Address } from "viem";
+import { Abi, Address } from "viem";
 
-export default function useFrogBalance(walletAddress: Address) {
-  const { data: frogBalance } = useReadContract({
-    address: froggyFriendsAddress,
-    abi: froggyFriendsAbi,
-    functionName: "balanceOf",
-    args: [walletAddress],
-    query: {
-      enabled: !!walletAddress,
-    },
+export default function useFrogBalance(walletAddresses: Address[]) {
+  const { data: frogBalances } = useReadContracts({
+    contracts: walletAddresses.map((address) => ({
+      address: froggyFriendsAddress,
+      abi: froggyFriendsAbi as Abi,
+      functionName: "balanceOf",
+      args: [address],
+    })),
   });
 
-  return Number(frogBalance) ?? 0;
+  const totalBalance = frogBalances?.reduce(
+    (sum, result) => sum + (Number(result.result) ?? 0),
+    0
+  );
+
+  return totalBalance ?? 0;
 }

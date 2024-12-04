@@ -37,6 +37,7 @@ export default function useCreateToken() {
     reservedAmount,
     name,
     symbol,
+    autoLaunch,
   }: CreateTokenParams) => {
     setTxStatus("idle");
 
@@ -44,9 +45,15 @@ export default function useCreateToken() {
       const [price, cost, fee, total] = await contract.calculateReservePrice(
         reservedAmount
       );
-      const tx = await contract.createToken(name, symbol, reservedAmount, {
-        value: total,
-      });
+      const tx = await contract.createToken(
+        name,
+        symbol,
+        reservedAmount,
+        autoLaunch,
+        {
+          value: total,
+        }
+      );
       setTxStatus("pending");
       setTxHash(tx.hash);
       const txHash = tx.hash;

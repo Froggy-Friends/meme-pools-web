@@ -3,11 +3,11 @@ import useCreatorRewards from "@/hooks/useCreatorRewards";
 import { Address } from "viem";
 
 type LaunchRewardsTextProps = {
-  address: Address;
+  addresses: Address[];
 };
 
-export default function LaunchRewardsText({ address }: LaunchRewardsTextProps) {
-  const { rewardTier, rewardAmount } = useCreatorRewards(address);
+export default function LaunchRewardsText({ addresses }: LaunchRewardsTextProps) {
+  const { rewardTier, rewardAmount } = useCreatorRewards(addresses);
 
   return (
     <div>

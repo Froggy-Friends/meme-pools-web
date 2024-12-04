@@ -5,15 +5,25 @@ import ProfileMenuButton from "./ProfileMenuButton";
 import useFrogBalance from "@/hooks/useFrogBalance";
 import { Address } from "viem";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 type ProfileMenuToggleProps = {
   profileUser: User;
   cachedUser: User | null | undefined;
   currentView: string;
+  delegatedWallets: Address[];
 };
 
-export default function ProfileMenuToggle({ profileUser, cachedUser, currentView }: ProfileMenuToggleProps) {
-  const frogBalance = useFrogBalance(profileUser.ethAddress as Address);
+export default function ProfileMenuToggle({
+  profileUser,
+  cachedUser,
+  currentView,
+  delegatedWallets,
+}: ProfileMenuToggleProps) {
+  const walletAddresses = useMemo(() => {
+    return delegatedWallets ? [...delegatedWallets, profileUser.ethAddress] : [profileUser.ethAddress];
+  }, [delegatedWallets, profileUser.ethAddress]);
+  const frogBalance = useFrogBalance(walletAddresses as Address[]);
   const router = useRouter();
 
   if (frogBalance === 0 && currentView === "Claim") {
@@ -23,6 +33,9 @@ export default function ProfileMenuToggle({ profileUser, cachedUser, currentView
   return (
     <div className="overflow-x-auto">
       <section className="flex gap-x-4 items-center my-6 min-w-max">
+        {cachedUser?.id === profileUser.id && (
+          <ProfileMenuButton view="Holdings" profileUser={profileUser} currentView={currentView} />
+        )}
         {cachedUser?.id === profileUser.id && (
           <ProfileMenuButton view="Settings" profileUser={profileUser} currentView={currentView} />
         )}

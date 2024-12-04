@@ -345,6 +345,13 @@ export const updateTokenSocials = async (
   revalidatePath(`/${chain}/token/${token.tokenAddress}`);
 };
 
+export const updateTokenIsClaimable = async (tokenId: string) => {
+  await prisma.token.update({
+    where: { id: tokenId },
+    data: { isClaimable: true },
+  });
+};
+
 export const createClaimRecords = async (tokenAddress: string) => {
   const claims = Array.from({ length: 4444 }, (_, i) => ({
     frogId: i,
