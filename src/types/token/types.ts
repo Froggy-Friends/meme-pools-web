@@ -143,6 +143,13 @@ export type TokenHolderEth = {
   rank: number;
 };
 
+export type FormattedTokenHolderEth = {
+  rank: number;
+  owner: string;
+  amount: number;
+  percentage: number;
+};
+
 export type TokenHolderSol = {
   address: string;
   mint: string;

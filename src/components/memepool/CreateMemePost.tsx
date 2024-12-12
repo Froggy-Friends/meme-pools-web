@@ -1,25 +1,49 @@
 "use client";
 
 import { IoCloseCircle } from "react-icons/io5";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import Image from "next/image";
 import useUser from "@/hooks/useUser";
 import { addMeme, addPost } from "@/actions/memepool/actions";
 import { toast } from "react-hot-toast";
 import FormSubmitButton from "../FormSubmitButton";
 import { useRouter } from "next/navigation";
+import useIsAHolder from "@/hooks/useIsAHolder";
+import { TokenOrigin, TokenType } from "@/models/token";
+import { Token } from "@prisma/client";
+import { Address } from "viem";
+import useTokenBalance from "@/hooks/useTokenBalance";
+import { wagmiChains } from "@/config/reown";
+import { useAccount } from "wagmi";
 
 type CreateMemePostProps = {
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
-  tokenId: string;
+  token: Token;
 };
 
-export default function CreateMemePost({ isVisible, setIsVisible, tokenId }: CreateMemePostProps) {
+export default function CreateMemePost({ isVisible, setIsVisible, token }: CreateMemePostProps) {
   const [images, setImages] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useUser();
+  const { isConnected } = useAccount();
+  const { isHolder } = useIsAHolder(
+    token.tokenAddress as Address,
+    currentUser?.ethAddress as Address,
+    token.type as TokenType
+  );
+  const { tokenBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const router = useRouter();
+  const disabled = useMemo(() => {
+    if (!isConnected) return true;
+    if (images.length === 0) return true;
+    if (token.origin === TokenOrigin.Internal) {
+      if (!tokenBalance) return true;
+    } else if (token.origin === TokenOrigin.External) {
+      if (!isHolder) return true;
+    }
+    return false;
+  }, [token.origin, tokenBalance, isHolder, images.length, isConnected]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -36,7 +60,7 @@ export default function CreateMemePost({ isVisible, setIsVisible, tokenId }: Cre
   const handlePostMemes = async () => {
     if (images.length === 0) return;
 
-    const post = await addPost(tokenId, currentUser?.id);
+    const post = await addPost(token.id, currentUser?.id);
     if (!post) {
       toast.error("Failed to create post");
       return;
@@ -46,7 +70,7 @@ export default function CreateMemePost({ isVisible, setIsVisible, tokenId }: Cre
       images.map(async img => {
         const formData = new FormData();
         formData.append("image", img);
-        await addMeme(tokenId, currentUser?.id, formData, post.id);
+        await addMeme(token.id, currentUser?.id, formData, post.id);
       })
     );
 
@@ -126,7 +150,7 @@ export default function CreateMemePost({ isVisible, setIsVisible, tokenId }: Cre
           </div>
 
           <FormSubmitButton
-            disabled={images.length === 0}
+            disabled={disabled}
             pendingText="Posting..."
             className="bg-primary text-black font-proximaNovaBold px-8 py-1 rounded-xl mx-auto mt-auto hover:bg-light-primary disabled:bg-gray active:scale-[0.98] transition"
           >

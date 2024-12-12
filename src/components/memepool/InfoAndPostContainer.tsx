@@ -15,7 +15,7 @@ export default function InfoAndPostContainer({ token }: InfoAndPostContainerProp
   return (
     <section>
       <CollectionInfo token={token} setIsVisible={setIsVisible} />
-      <CreateMemePost isVisible={isVisible} setIsVisible={setIsVisible} tokenId={token.id} />
+      <CreateMemePost isVisible={isVisible} setIsVisible={setIsVisible} token={token} />
     </section>
-  )
+  );
 }
