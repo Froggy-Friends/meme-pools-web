@@ -44,7 +44,7 @@ model Token {
   isNsfw          Boolean       @default(false)
   platformAddress String
   origin          String        @default("internal")
-  bannerImage     String?
+  bannerImage     String?       @default("https://qojtn2d8pd7yjrch.public.blob.vercel-storage.com/MEMEPOOL-BANNER-CdewEFgVdlXs3JQK7jvHBDDPJyBoUE.png")
   type            String?       @default("ERC20")
   Comment         Comment[]
   leaderboard     Leaderboard[]
