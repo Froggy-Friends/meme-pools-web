@@ -33,8 +33,10 @@ export const wagmiAdapter = new WagmiAdapter({
   ssr: true,
   projectId: walletConnectProjectId,
   networks: [
-    wagmiChains.eth,
-    wagmiChains.base,
+    mainnet,
+    sepolia,
+    base,
+    baseSepolia,
     solana,
     solanaTestnet,
     solanaDevnet,
