@@ -45,6 +45,7 @@ model Token {
   platformAddress String
   origin          String        @default("internal")
   bannerImage     String?
+  type            String?       @default("ERC20")
   Comment         Comment[]
   leaderboard     Leaderboard[]
   user            User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
