@@ -33,9 +33,13 @@ export default async function MemePool({ params }: MemePoolPageProps) {
       <Header chain={chain} />
 
       {token.bannerImage && (
-        <div className="w-full aspect-[3/1] laptop:aspect-[4/1] relative mb-12">
-          <Image src={token.bannerImage} alt="token-image" fill className="object-cover rounded-xl" />
-        </div>
+        <Image
+          src={token.bannerImage}
+          alt="token-image"
+          height={200}
+          width={1280}
+          className="rounded-xl mb-12 h-[150px] laptop:h-[250px] object-cover"
+        />
       )}
 
       <InfoAndPostContainer token={token} />

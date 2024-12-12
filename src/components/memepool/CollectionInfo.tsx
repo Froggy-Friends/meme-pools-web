@@ -11,6 +11,7 @@ import useTokenBalance from "@/hooks/useTokenBalance";
 import { wagmiChains } from "@/config/reown";
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
+import Link from "next/link";
 
 type CollectionInfoProps = {
   token: Token;
@@ -46,9 +47,14 @@ export default function CollectionInfo({ token, setIsVisible }: CollectionInfoPr
             height={50}
             className="rounded-full h-[50px] w-[50px] object-cover"
           />
-          <p className="text-xl tablet:text-3xl laptop:text-5xl max-w-[130px] tablet:max-w-none truncate">
+          <Link
+            href={token.origin === TokenOrigin.Internal ? `/${token.chain}/token/${token.tokenAddress}` : ""}
+            className={`text-xl tablet:text-3xl laptop:text-5xl max-w-[130px] tablet:max-w-none truncate ${
+              token.origin === TokenOrigin.External ? "cursor-default" : "cursor-pointer"
+            }`}
+          >
             {token.name}
-          </p>
+          </Link>
         </div>
 
         <div className="flex gap-x-4 items-center">
