@@ -55,7 +55,7 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
           />
         </div>
       </DropdownTrigger>
-      <DropdownMenu disabledKeys={["Base"]}>
+      <DropdownMenu disabledKeys={["Base", "Solana"]}>
         <DropdownItem key="Eth" className="dark" onPress={() => handleChainSwitch(chainConfigs.eth)}>
           <div className="flex items-center gap-x-3">
             <Image src={ethLogo} alt="eth-logo" height={height} width={width} />
