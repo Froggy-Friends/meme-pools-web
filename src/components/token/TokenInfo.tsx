@@ -6,6 +6,7 @@ import { defaultProfileAvatarUrl } from "@/config/user";
 import { TokenWithVoteCount } from "@/types/token/types";
 import Link from "next/link";
 import { formatTicker } from "@/lib/formatTicker";
+import memePoolIcon from "../../../public/memepools.svg";
 
 type TokenInfoParams = {
   token: TokenWithVoteCount;
@@ -24,12 +25,14 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
 
         <Link
           href={`/memepool/${token.tokenAddress}`}
-          className="bg-primary text-black flex items-center justify-center font-proximaNovaBold px-4 h-[30px] rounded-xl hover:bg-light-primary disabled:bg-gray active:scale-[0.98] transition"
+          className="hidden tablet:flex bg-dark-gray items-center justify-center gap-x-1 font-proximaNovaBold px-6 py-1 rounded-xl hover:bg-gray active:scale-[0.98] transition"
         >
-          Go to Meme Pool
+          <Image src={memePoolIcon} alt="memepool-icon" height={30} width={30} />
+          <p>View Meme Pool</p>
         </Link>
       </div>
-      <div className="flex items-center gap-x-2 pl-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-x-2 pl-3">
         {creator && (
           <Link href={`/profile/${creator.name}`} className="text-light-primary hover:text-cream transition">
             <Image
@@ -41,8 +44,18 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
             />
           </Link>
         )}
-        <p className="pl-4">{token.description}</p>
+        <p className="pl-4 max-w-[190px] tablet:max-w-none truncate">{token.description}</p>
       </div>
+
+      <Link
+          href={`/memepool/${token.tokenAddress}`}
+          className="flex tablet:hidden bg-dark-gray items-center justify-center gap-x-1 font-proximaNovaBold px-3 py-0.5 rounded-xl hover:bg-gray active:scale-[0.98] transition"
+        >
+          <Image src={memePoolIcon} alt="memepool-icon" height={25} width={25} />
+          <p className="text-sm">View MP</p>
+        </Link>
+      </div>
+      
     </section>
   );
 }
