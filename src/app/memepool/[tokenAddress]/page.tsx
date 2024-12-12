@@ -8,6 +8,8 @@ import { redirect } from "next/navigation";
 import InfoAndPostContainer from "@/components/memepool/InfoAndPostContainer";
 import PostContainer from "@/components/memepool/PostContainer";
 import Image from "next/image";
+import { getPosts } from "@/queries/memepool/queries";
+import PlaceHolder from "@/components/memepool/PlaceHolder";
 
 type MemePoolPageProps = {
   params: {
@@ -20,6 +22,7 @@ export default async function MemePool({ params }: MemePoolPageProps) {
   const cachedUserSolanaAddress = cookieStore.get(Cookie.SolanaAddress);
   const chain = cachedUserSolanaAddress?.value ? Chain.Solana : Chain.Eth;
   const token = await fetchTokenByAddress(params.tokenAddress);
+  const posts = await getPosts(token?.id);
 
   if (!token) {
     redirect("/");
@@ -30,14 +33,14 @@ export default async function MemePool({ params }: MemePoolPageProps) {
       <Header chain={chain} />
 
       {token.bannerImage && (
-        <div className="w-full h-[150px] laptop:h-[250px] relative mb-12">
+        <div className="w-full aspect-[3/1] laptop:aspect-[4/1] relative mb-12">
           <Image src={token.bannerImage} alt="token-image" fill className="object-cover rounded-xl" />
         </div>
       )}
 
       <InfoAndPostContainer token={token} />
 
-      <PostContainer tokenId={token.id} />
+      {posts.length > 0 ? <PostContainer tokenId={token.id} /> : <PlaceHolder />}
     </main>
   );
 }
