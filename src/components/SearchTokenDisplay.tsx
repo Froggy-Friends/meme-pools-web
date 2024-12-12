@@ -44,7 +44,7 @@ export default function SearchTokenDisplay({ token, onClose }: SearchTokenDispla
           {token.origin === "internal" ? formattedTime : "-----"}
         </p>
         <p className="w-16 text-right text-sm tablet:text-base">
-          ${token.origin === "internal" ? formatMarketcap(tokenInfo?.marketcap || 0) : "-----"}
+          {token.origin === "internal" ? `$${formatMarketcap(tokenInfo?.marketcap || 0)}` : "----"}
         </p>
       </div>
     </Link>
