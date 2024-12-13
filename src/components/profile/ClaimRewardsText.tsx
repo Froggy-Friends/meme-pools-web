@@ -16,7 +16,7 @@ export default function ClaimRewardsText({ addresses }: ClaimRewardsTextProps) {
       <div className="flex items-center justify-between mb-4 tablet:mb-[10px]">
         <p className="text-2xl">Claim Rewards</p>
         <p className="text-sm text-center bg-cream text-dark px-4 tablet:py-1 mr-5 tablet:mr-7 rounded-3xl font-proximaNovaBold tablet:w-[100px]">
-          {frogBalance || 0} Frogs
+          {frogBalance || 0} {frogBalance === 1 ? "Frog" : "Frogs"}
         </p>
       </div>
 

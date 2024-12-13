@@ -17,3 +17,13 @@ export enum TokenFilter {
   Comments = "comments",
   Votes = "votes",
 }
+
+export enum TokenOrigin {
+  Internal = "internal",
+  External = "external",
+}
+
+export enum TokenType {
+  ERC20 = "ERC20",
+  ERC721 = "ERC721",
+}

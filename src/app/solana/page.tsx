@@ -7,8 +7,11 @@ import { Chain } from "@/models/chain";
 import { TokenFilter } from "@/models/token";
 import { fetchTokens, fetchTopVotesTokens } from "@/queries/token/queries";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
 
 export default async function SolanaHomePage() {
+  redirect("/eth");
+
   const queryClient = new QueryClient();
   const topTokens = await fetchTopVotesTokens(Chain.Solana);
 

@@ -42,7 +42,10 @@ model Token {
   chain           String
   isClaimable     Boolean       @default(false)
   isNsfw          Boolean       @default(false)
-  platformAddress String        
+  platformAddress String
+  origin          String        @default("internal")
+  bannerImage     String?       @default("https://qojtn2d8pd7yjrch.public.blob.vercel-storage.com/MEMEPOOL-BANNER-CdewEFgVdlXs3JQK7jvHBDDPJyBoUE.png")
+  type            String?       @default("ERC20")
   Comment         Comment[]
   leaderboard     Leaderboard[]
   user            User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fkey")
@@ -50,6 +53,7 @@ model Token {
   Trades          Trades[]
   Meme            Meme[]
   Claim           Claim[]
+  Post            Post[]
 }
 
 model User {
@@ -72,6 +76,7 @@ model User {
   TokenVote        TokenVote[]
   Trades           Trades[]
   Meme             Meme[]
+  Post             Post[]
 }
 
 model Trades {
@@ -145,12 +150,13 @@ model Meme {
   id        String    @id(map: "meme_pkey") @default(uuid()) @db.Uuid
   userId    String    @db.Uuid
   tokenId   String    @db.Uuid
+  postId    String    @db.Uuid
   imageUrl  String
-  caption   String
   createdAt DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt DateTime? @default(now()) @db.Timestamptz(6)
   user      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
   token     Token     @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
+  post      Post      @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "post_id_fkey")
 }
 
 model Claim {
@@ -162,4 +168,15 @@ model Claim {
   createdAt      DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime? @default(now()) @db.Timestamptz(6)
   token          Token     @relation(fields: [tokenAddress], references: [tokenAddress], onDelete: NoAction, onUpdate: NoAction, map: "token_address_fkey")
+}
+
+model Post {
+  id        String    @id(map: "post_pkey") @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenId   String    @db.Uuid
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @default(now()) @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
+  token     Token     @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
+  memes     Meme[]
 }

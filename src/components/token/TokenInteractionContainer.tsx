@@ -3,11 +3,9 @@ import TokenTrades from "./TokenTrades";
 import ToggleViewButton from "./ToggleViewButton";
 import { CommentAndTradesView } from "@/models/comment";
 import CommentForm from "./CommentForm";
-import { fetchComments, fetchMemes, fetchTrades } from "@/queries/token/queries";
+import { fetchComments, fetchTrades } from "@/queries/token/queries";
 import { User } from "@prisma/client";
 import { formatTradesData } from "@/lib/formatTradesData";
-import TokenMemes from "./TokenMemes";
-import MemeForm from "./MemeForm";
 import TokenHolders from "./TokenHolders";
 import BubbleMaps from "./BubbleMaps";
 
@@ -28,7 +26,6 @@ export default async function TokenInteractionContainer({
 }: TokenInteractionContainerProps) {
   const comments = await fetchComments(tokenId);
   const trades = await fetchTrades(tokenId);
-  const memes = await fetchMemes(tokenId);
   const formattedTrades = formatTradesData(trades);
 
   return (
@@ -39,7 +36,6 @@ export default async function TokenInteractionContainer({
             <ToggleViewButton name="Holders" tokenAddress={tokenAddress} view={view} />
             <ToggleViewButton name="Trades" tokenAddress={tokenAddress} view={view} />
             <ToggleViewButton name="Comments" tokenAddress={tokenAddress} view={view} />
-            <ToggleViewButton name="Memes" tokenAddress={tokenAddress} view={view} />
           </div>
         </div>
         <div className="flex-grow overflow-y-auto p-2 laptop:px-6">
@@ -65,12 +61,10 @@ export default async function TokenInteractionContainer({
               tokenTicker={tokenTicker}
             />
           )}
-          {view === "memes" && <TokenMemes tokenId={tokenId} memes={memes} tokenTicker={tokenTicker} />}
         </div>
       </div>
 
       {view === "comments" && <CommentForm tokenId={tokenId} tokenAddress={tokenAddress} tokenTicker={tokenTicker} />}
-      {view === "memes" && <MemeForm tokenId={tokenId} tokenAddress={tokenAddress} tokenTicker={tokenTicker} />}
     </section>
   );
 }
