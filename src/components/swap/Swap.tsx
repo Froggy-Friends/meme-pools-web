@@ -164,6 +164,10 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
       await approveToken();
       await refetchAllowance();
     }
+    if (updatedTokenInfo.data?.autoLaunch && updatedTokenInfo.data?.liquidityPoolSeeded && !token.isClaimable) {
+      await updateTokenIsClaimable(token.id);
+      await createClaimRecords(token.tokenAddress);
+    }
   };
 
   const sellTokens = async () => {
