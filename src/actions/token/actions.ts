@@ -10,9 +10,9 @@ import { fetchTokenByAddress } from "@/queries/token/queries";
 import { CommentLikes, Prisma, Token, TokenVote } from "@prisma/client";
 import { Address } from "viem";
 import { formatTradeData } from "@/lib/formatTradeData";
-import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { Chain } from "@/models/chain";
+import { randomUUID } from "crypto";
 
 export async function getVotesByTokenId(
   tokenId: string
@@ -285,39 +285,6 @@ export const addTrade = async (
   }
 };
 
-export const addMeme = async (
-  tokenId: string,
-  userId: string | undefined,
-  formData: FormData
-) => {
-  const pusher = getPusher();
-
-  if (!userId) {
-    return;
-  }
-
-  const image = formData.get("image") as File;
-  const caption = formData.get("caption") as string;
-
-  const blob = await put(image.name, image, {
-    access: "public",
-  });
-
-  const meme = await prisma.meme.create({
-    data: {
-      tokenId: tokenId,
-      userId: userId,
-      imageUrl: blob.url,
-      caption: caption,
-    },
-    include: {
-      user: true,
-    },
-  });
-
-  await pusher.trigger(Channel.Meme, tokenId, meme);
-};
-
 export const updateTokenSocials = async (
   token: Token,
   formData: FormData,
@@ -356,6 +323,7 @@ export const createClaimRecords = async (tokenAddress: string) => {
   const claims = Array.from({ length: 4444 }, (_, i) => ({
     frogId: i,
     tokenAddress,
+    id: randomUUID(),
   }));
 
   await prisma.claim.createMany({

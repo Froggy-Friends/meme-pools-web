@@ -20,7 +20,9 @@ export default function SearchTokenDisplay({ token, onClose }: SearchTokenDispla
 
   return (
     <Link
-      href={`/${chain.name}/token/${token.tokenAddress}`}
+      href={
+        token.origin === "internal" ? `/${chain.name}/token/${token.tokenAddress}` : `/memepool/${token.tokenAddress}`
+      }
       className="flex justify-between items-center h-12 w-full px-2 rounded-md hover:bg-dark-primary transition"
       onClick={onClose}
     >
@@ -35,9 +37,15 @@ export default function SearchTokenDisplay({ token, onClose }: SearchTokenDispla
       </div>
 
       <div className="flex max-w-[65%] tablet:w-1/2 justify-between items-center">
-        <p className="w-24 text-right text-sm tablet:text-base">{formattedDate}</p>
-        <p className="w-24 text-right text-sm tablet:text-base">{formattedTime}</p>
-        <p className="w-16 text-right text-sm tablet:text-base">${formatMarketcap(tokenInfo?.marketcap || 0)}</p>
+        <p className="w-24 text-right text-sm tablet:text-base">
+          {token.origin === "internal" ? formattedDate : "-----"}
+        </p>
+        <p className="w-24 text-right text-sm tablet:text-base">
+          {token.origin === "internal" ? formattedTime : "-----"}
+        </p>
+        <p className="w-16 text-right text-sm tablet:text-base">
+          {token.origin === "internal" ? `$${formatMarketcap(tokenInfo?.marketcap || 0)}` : "----"}
+        </p>
       </div>
     </Link>
   );

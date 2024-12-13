@@ -1,8 +1,11 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Chain } from "@/models/chain";
+import { redirect } from "next/navigation";
 
 export default function BaseHomePage() {
+  redirect("/eth");
+  
   return (
     <main className="flex flex-col min-h-[100vh] mx-32 px-4">
       <Header chain={Chain.Base} />

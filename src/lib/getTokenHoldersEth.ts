@@ -1,12 +1,12 @@
 import { Address } from "viem";
 import { moralisEthChain } from "@/config/env";
-import { TokenHolderEth } from "@/types/token/types";
+import { TokenHolderEth, FormattedTokenHolderEth } from "@/types/token/types";
 import * as Sentry from "@sentry/nextjs";
 
-export const getTokenHoldersEth  = async (
+export const getTokenHoldersEth = async (
   tokenAddress: Address,
   count: number
-): Promise<TokenHolderEth[]> => {
+): Promise<FormattedTokenHolderEth[]> => {
   if (!process.env.MORALIS_API_KEY) {
     throw new Error("Moralis API key is not set");
   }

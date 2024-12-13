@@ -48,7 +48,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
       <Header chain={Chain.Eth} />
 
       <LiquidityPoolBanner token={token} />
-
+      
       <TokenInfo token={token} creator={creator} />
 
       <div className="flex flex-col desktop:flex-row gap-x-10 w-full">

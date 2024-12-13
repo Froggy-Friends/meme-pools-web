@@ -287,7 +287,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                 </button>
                 <p className="text-light-gray text-xs whitespace-nowrap">
                   {tokenInfo?.liquidityPoolSeeded
-                    ? "0.0"
+                    ? "0.0 ETH"
                     : buyTokenName === "ETH"
                     ? `${Number(formatEther((maxBuyPrice as bigint) || BigInt(0))).toFixed(2) || 0.0} ETH`
                     : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
