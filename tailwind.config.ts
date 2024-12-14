@@ -91,6 +91,7 @@ const config: Config = {
     nextui({
       theme: "dark",
     }),
+    require('tailwind-scrollbar-hide'),
   ],
 };
 export default config;
