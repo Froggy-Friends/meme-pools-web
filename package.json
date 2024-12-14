@@ -46,6 +46,7 @@
     "react-swipeable": "^7.0.2",
     "react-ts-tradingview-widgets": "^1.2.5",
     "react-virtuoso": "^4.10.4",
+    "tailwind-scrollbar-hide": "^1.1.7",
     "use-debounce": "^10.0.3",
     "use-immer": "^0.10.0",
     "viem": "^2.17.4",
