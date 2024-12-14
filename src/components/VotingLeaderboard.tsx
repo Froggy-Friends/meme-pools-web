@@ -24,7 +24,7 @@ export default function VotingLeaderboard({ tokens }: { tokens: Token[] }) {
 
           <span className="hidden laptop:block text-sm">{index === 0 ? "1st" : index === 1 ? "2nd" : "3rd"}</span>
 
-          <span className="text-xs rounded-[4px] bg-primary text-black px-2 py-1 font-proximaNovaBold hover:bg-light-primary transition">
+          <span className="text-xs rounded-[4px] bg-primary text-black px-2 py-1 font-proximaNovaBold max-w-[95px] tablet:max-w-[85px] laptop:max-w-[110px] desktop:max-w-[175px] truncate hover:bg-light-primary transition">
             ${token.ticker}
           </span>
         </Link>
