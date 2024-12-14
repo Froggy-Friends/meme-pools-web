@@ -75,7 +75,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
         <div className="flex flex-col px-3 mt-3">
           <Link href={`/${chain.name}/token/${token.tokenAddress}`}>
             <div className="flex items-center gap-1 laptop:gap-2.5">
-              <span className="bg-primary rounded-[4px] text-xs font-bold text-black px-2 py-1 hover:bg-light-primary transition">
+              <span className="bg-primary rounded-[4px] text-xs font-bold text-black px-2 py-1 max-w-[150px] truncate hover:bg-light-primary transition">
                 ${token.ticker}
               </span>
               <span className="text-white/75 hover:text-white transition truncate max-w-[100px] tablet:max-w-[130px]">
@@ -96,9 +96,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
                 className="rounded-full shrink-0 min-w-[25px] min-h-[25px] self-start"
               />
             </Link>
-            <p className="text-light-gray text-sm break-words line-clamp-3">
-              {token.description}
-            </p>
+            <p className="text-light-gray text-sm break-words line-clamp-3">{token.description}</p>
           </div>
         </div>
 
