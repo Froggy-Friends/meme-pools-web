@@ -40,7 +40,7 @@ export default function TokenHolder({ holder, chain, creator }: TokenHolderProps
         )}
       </div>
       <div className="text-center pb-1 text-sm tablet:text-base">{formatBalance(holder.amount)}</div>
-      <div className="text-center pb-1 text-sm tablet:text-base">{holder.percentage.toFixed(1)}%</div>
+      <div className="text-center pb-1 text-sm tablet:text-base">{holder?.percentage?.toFixed(1) || 0}%</div>
     </>
   );
 }
