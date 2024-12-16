@@ -41,6 +41,10 @@ export default function MemepoolPostCard({ post }: MemepoolPostCardProps) {
     preventScrollOnSwipe: true,
   });
 
+  if (!post?.memes?.length) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col w-full p-4 tablet:p-5 bg-dark-gray rounded-xl">
       <div className="flex items-center gap-x-2">

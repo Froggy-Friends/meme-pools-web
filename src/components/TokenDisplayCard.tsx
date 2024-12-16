@@ -93,7 +93,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
                 alt="token-image"
                 height={25}
                 width={25}
-                className="rounded-full shrink-0 min-w-[25px] min-h-[25px] self-start"
+                className="rounded-full shrink-0 min-w-[25px] min-h-[25px] object-cover self-start"
               />
             </Link>
             <p className="text-light-gray text-sm break-words line-clamp-3">{token.description}</p>
