@@ -340,3 +340,10 @@ export const updateTokenMarketcap = async (
     data: { marketCap: marketcap },
   });
 };
+
+export const updateTokenReadyForLp = async (tokenId: string) => {
+  const pusher = getPusher();
+  await pusher.trigger(Channel.ReadyForLp, tokenId, {
+    readyForLp: true,
+  });
+};

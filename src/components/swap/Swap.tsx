@@ -31,7 +31,12 @@ import { useAccount } from "wagmi";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { formatBalance } from "@/lib/formatBalance";
 import useMaxBuy from "@/hooks/useMaxBuy";
-import { updateTokenIsClaimable, createClaimRecords, updateTokenMarketcap } from "@/actions/token/actions";
+import {
+  updateTokenIsClaimable,
+  createClaimRecords,
+  updateTokenMarketcap,
+  updateTokenReadyForLp,
+} from "@/actions/token/actions";
 import SlippagePopover from "./SlippagePopover";
 
 export enum TradingTab {
@@ -164,9 +169,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
       await approveToken();
       await refetchAllowance();
     }
-    if (updatedTokenInfo.data?.autoLaunch && updatedTokenInfo.data?.liquidityPoolSeeded && !token.isClaimable) {
-      await updateTokenIsClaimable(token.id);
-      await createClaimRecords(token.tokenAddress);
+    if (updatedTokenInfo.data?.readyForLp) {
+      await updateTokenReadyForLp(token.id);
     }
   };
 
