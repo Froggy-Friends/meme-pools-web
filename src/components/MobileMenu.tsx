@@ -10,8 +10,10 @@ import { Chain } from "@/models/chain";
 import { setUserCookies } from "@/actions/profile/actions";
 import ChainSwitcher from "./ChainSwitcher";
 import HowItWorksButton from "./HowItWorksButton";
-import ConnectButton from "./ConnectButton";
+import dynamic from "next/dynamic";
 import { useChainSync } from "@/hooks/useChainSync";
+
+const ConnectButton = dynamic(() => import("./ConnectButton"), { ssr: false });
 
 type MobileMenuProps = {
   cachedUser: User | null;
