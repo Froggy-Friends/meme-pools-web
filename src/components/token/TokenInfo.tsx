@@ -32,22 +32,26 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
         </Link>
       </div>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-x-2 pl-3">
-        {creator && (
-          <Link href={`/profile/${creator.name}`} className="text-light-primary hover:text-cream transition">
-            <Image
-              src={creator.imageUrl || defaultProfileAvatarUrl}
-              alt="creator-logo"
-              height={30}
-              width={30}
-              className="rounded-full"
-            />
-          </Link>
-        )}
-        <p className="pl-4 max-w-[190px] tablet:max-w-none truncate">{token.description}</p>
-      </div>
+        <div className="flex gap-x-2 pl-3 flex-1">
+          {creator && (
+            <Link
+              href={`/profile/${creator.name}`}
+              className="text-light-primary hover:text-cream transition flex-shrink-0"
+            >
+              <Image
+                src={creator.imageUrl || defaultProfileAvatarUrl}
+                alt="creator-logo"
+                height={30}
+                width={30}
+                className="rounded-full"
+              />
+            </Link>
+          )}
+          <p className="hidden tablet:block pl-4 break-words">{token.description}</p>
+          <p className="tablet:hidden pl-4 max-w-[190px] truncate">{token.description}</p>
+        </div>
 
-      <Link
+        <Link
           href={`/memepool/${token.tokenAddress}`}
           className="flex tablet:hidden bg-dark-gray items-center justify-center gap-x-1 font-proximaNovaBold px-3 py-0.5 rounded-xl hover:bg-gray active:scale-[0.98] transition"
         >
@@ -55,7 +59,6 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
           <p className="text-sm">View MP</p>
         </Link>
       </div>
-      
     </section>
   );
 }

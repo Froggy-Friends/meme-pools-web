@@ -6,7 +6,7 @@ export const isProd = env === "prod";
 
 // domain
 export const memepoolsDomain = isProd
-  ? "https://memepools.com"
+  ? "https://www.memepools.com"
   : "https://beta.memepools.com";
 
 // api

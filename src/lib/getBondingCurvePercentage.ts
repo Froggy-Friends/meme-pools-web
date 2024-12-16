@@ -1,6 +1,8 @@
-import { maxTradeableSupply } from "@/lib/constants";
+import { maxTradeableSupply } from "./constants";
 
 export const getBondingCurvePercentage = (tokensSold: number | undefined) => {
   if (!tokensSold) return 0;
-  return Number(((tokensSold / maxTradeableSupply) * 100).toFixed(2));
+  const percentage = (tokensSold / (maxTradeableSupply - 1)) * 100;
+
+  return percentage === 100 ? 100 : Math.floor(Number(percentage));
 };

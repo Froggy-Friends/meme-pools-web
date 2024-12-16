@@ -44,7 +44,7 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
               alt="user-profile-picture"
               height={50}
               width={50}
-              className="rounded-full"
+              className="rounded-full h-12 w-12 object-cover"
             />
           </Link>
 
@@ -61,11 +61,13 @@ export default function TokenComment({ comment, author, cachedUser, isNew }: Tok
               </p>
             </div>
 
-            <p className="overflow-y-auto text-sm tablet:text-base">{comment.message}</p>
+            <p className="overflow-y-auto text-sm tablet:text-base max-h-[40px] tablet:max-h-[50px] max-w-[300px] tablet:max-w-[600px] laptop:max-w-[800px] desktop:max-w-[1020px]">
+              {comment.message}
+            </p>
           </div>
         </div>
 
-        <div className="flex gap-x-3 mt-5 ml-14 tablet:ml-16">
+        <div className="flex gap-x-3 mt-2 ml-14 tablet:ml-16">
           <LikeButton likes={likes} commentLike={commentLike} handleLike={handleLike} />
           <DislikeButton dislikes={dislikes} commentDisLike={commentDisLike} handleDislike={handleDislike} />
         </div>
