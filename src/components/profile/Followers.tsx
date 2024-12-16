@@ -24,6 +24,7 @@ export default function Followers({ followers, profileUser, cachedUser }: Follow
       {!followers.length && cachedUser && cachedUser.id === profileUser.id && (
         <p className="ml-1 -mt-4">No followers to show</p>
       )}
+      {!followers.length && !cachedUser && <p className="ml-1 -mt-4">No followers to show</p>}
       {followers.map(user => {
         return <UserCard key={user.id} user={user} view="followers" profileUser={profileUser} />;
       })}

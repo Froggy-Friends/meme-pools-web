@@ -20,13 +20,15 @@ export default async function CreatedTokens({ profileUser, cachedUser, delegated
 
   return (
     <>
+      {!createdTokens.length && !cachedUser && <p className="ml-1">No coins created</p>}
       {!createdTokens.length && cachedUser && cachedUser.id !== profileUser.id && (
         <p className="ml-1">No coins created</p>
       )}
       <section
         className={cn(
           "mt-10 mb-12 flex flex-col gap-y-2 bg-dark-gray rounded-xl p-6",
-          !createdTokens.length && cachedUser && cachedUser.id !== profileUser.id && "bg-dark"
+          !createdTokens.length && cachedUser && cachedUser.id !== profileUser.id && "bg-dark",
+          !createdTokens.length && !cachedUser && "bg-dark"
         )}
       >
         {enabled && <LaunchRewardsText addresses={walletAddresses as Address[]} />}

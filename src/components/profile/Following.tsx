@@ -16,6 +16,7 @@ export default function Following({ following, profileUser, cachedUser }: Follow
       {!following.length && cachedUser && cachedUser.id !== profileUser.id && (
         <p className="ml-1 -mt-4">Not following any users</p>
       )}
+      {!following.length && !cachedUser && <p className="ml-1 -mt-4">Not following any users</p>}
       {following.map(user => {
         return <UserCard key={user.id} user={user} view="following" profileUser={profileUser} />;
       })}
