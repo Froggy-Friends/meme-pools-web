@@ -49,7 +49,7 @@ export default function CollectionInfo({ token, setIsVisible }: CollectionInfoPr
           />
           <Link
             href={token.origin === TokenOrigin.Internal ? `/${token.chain}/token/${token.tokenAddress}` : ""}
-            className={`text-xl tablet:text-3xl laptop:text-5xl max-w-[130px] tablet:max-w-none truncate ${
+            className={`text-xl tablet:text-3xl laptop:text-5xl max-w-[130px] tablet:max-w-[350px] laptop:max-w-[500px] desktop:max-w-[750px] truncate ${
               token.origin === TokenOrigin.External ? "cursor-default" : "cursor-pointer"
             }`}
           >
