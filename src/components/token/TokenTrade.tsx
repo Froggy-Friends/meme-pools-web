@@ -25,9 +25,9 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
           <Image
             src={trade.userAvatar || defaultProfileAvatarUrl}
             alt="user-profile-picture"
-            height={50}
-            width={50}
-            className="rounded-full"
+            height={40}
+            width={40}
+            className="rounded-full h-[40px] w-[40px] tablet:h-[45px] tablet:w-[45px] object-cover"
           />
         </Link>
 

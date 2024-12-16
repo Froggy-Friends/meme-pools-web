@@ -43,7 +43,7 @@ export default function TokenInfo({ token, creator }: TokenInfoParams) {
                 alt="creator-logo"
                 height={30}
                 width={30}
-                className="rounded-full"
+                className="rounded-full h-[30px] w-[30px] object-cover"
               />
             </Link>
           )}
