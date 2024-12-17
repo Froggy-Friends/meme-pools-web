@@ -1,5 +1,6 @@
 import { memepoolsApi } from "@/config/env";
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 export async function GET(request: Request) {
   const endpoint = new URL(request.url).searchParams.get('endpoint');
@@ -15,7 +16,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error:", error);
+    Sentry.captureException(error);
     return NextResponse.json({ success: false }, { status: 500 });
   }
 }
