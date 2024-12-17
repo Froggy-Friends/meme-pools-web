@@ -16,7 +16,13 @@ type LiquidityPoolBannerProps = {
 export default function LiquidityPoolBanner({ token }: LiquidityPoolBannerProps) {
   const { tokenInfo } = useTokenInfo(token);
   const { chain } = useChain();
-  const [readyForLp, setReadyForLp] = useState(tokenInfo?.readyForLp);
+  const [readyForLp, setReadyForLp] = useState(false);
+
+  useEffect(() => {
+    if (tokenInfo?.readyForLp !== undefined) {
+      setReadyForLp(tokenInfo.readyForLp);
+    }
+  }, [tokenInfo?.readyForLp]);
 
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_PUSHER_CLUSTER || !process.env.NEXT_PUBLIC_PUSHER_KEY) {
