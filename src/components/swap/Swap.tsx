@@ -290,7 +290,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   MAX
                 </button>
                 <p className="text-light-gray text-xs whitespace-nowrap">
-                  {tokenInfo?.liquidityPoolSeeded
+                  {tokenInfo?.readyForLp
                     ? "0.0 ETH"
                     : buyTokenName === "ETH"
                     ? Number(formatEther((maxBuyPrice as bigint) || BigInt(0))) < 0.01
