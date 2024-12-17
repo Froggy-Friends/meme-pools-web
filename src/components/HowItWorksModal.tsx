@@ -7,6 +7,7 @@ import RewardTier from "./create/RewardTier";
 import { tierOneEthReward, tierThreeEthReward, tierTwoEthReward } from "@/lib/constants";
 import useEthPrice from "@/hooks/useEthPrice";
 import Link from "next/link";
+import { contractAddress } from "@/config/env";
 
 type HowItWorkdsModalProps = {
   isOpen: boolean;
@@ -15,7 +16,7 @@ type HowItWorkdsModalProps = {
 
 export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsModalProps) {
   const router = useRouter();
-  const marketcapGoal = useMarketcapGoal();
+  const marketcapGoal = useMarketcapGoal(contractAddress);
   const ethPrice = useEthPrice();
   const tierOneReward = Math.round(tierOneEthReward * ethPrice);
   const tierTwoReward = Math.round(tierTwoEthReward * ethPrice);

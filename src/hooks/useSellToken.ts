@@ -7,9 +7,9 @@ import usePostTradeData from "./usePostTradeData";
 import { SellToast } from "@/components/swap/SellToast";
 import { Token } from "@prisma/client";
 
-export default function useSellToken() {
+export default function useSellToken(token: Token) {
   const signer = useEthersSigner();
-  const contract = new Contract(contractAddress, memepoolsAbi, signer);
+  const contract = new Contract(token.platformAddress, memepoolsAbi, signer);
   const { getSellTokenDetails } = usePostTradeData();
 
   const sellToken = async (
