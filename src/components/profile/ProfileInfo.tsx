@@ -34,12 +34,14 @@ export default function ProfileInfo({ profileUser, cachedUser, isFollowing, dele
         alt="user-avatar"
         height={100}
         width={100}
-        className="rounded-full"
+        className="rounded-full h-[100px] w-[100px] object-cover"
       />
 
       <div className="flex flex-col ml-6 -mt-1" id="follow-button">
         <div className="flex items-center gap-x-5">
-          <p className="text-[48px] font-semibold">{getUserDisplayName(profileUser.name)}</p>
+          <p className="text-[40px] tablet:text-[48px] max-w-[240px] tablet:max-w-[495px] laptop:max-w-[650px] desktop:max-w-[925px] truncate font-semibold">
+            {profileUser.name}
+          </p>
           <p className="text-black font-bold bg-green rounded-3xl px-2 py-1 text-xs hidden tablet:block">
             ${rewardAmount} Rewards
           </p>
@@ -50,7 +52,7 @@ export default function ProfileInfo({ profileUser, cachedUser, isFollowing, dele
               isFollowing={isFollowing}
               cachedUser={cachedUser}
               user={profileUser}
-              className="py-1 w-32 -mt-1"
+              className="py-1 w-28 -mt-1"
             />
           )}
           <p className="text-black font-bold bg-green rounded-3xl px-2 py-1 text-xs tablet:hidden">
