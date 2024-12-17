@@ -68,10 +68,10 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const [buyTokenName, setBuyTokenName] = useState("ETH");
   const [buyTokenSrc, setBuyTokenSrc] = useState(ethLogo);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
-  const { buyToken } = useBuyToken();
-  const { buyPriceTokens, buyPriceEth } = useBuyPrice();
-  const { sellToken } = useSellToken();
-  const getSellPrice = useSellPrice();
+  const { buyToken } = useBuyToken(token);
+  const { buyPriceTokens, buyPriceEth } = useBuyPrice(token);
+  const { sellToken } = useSellToken(token);
+  const getSellPrice = useSellPrice(token);
   const { ethBalance, refetchEthBalance } = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
@@ -293,7 +293,9 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   {tokenInfo?.liquidityPoolSeeded
                     ? "0.0 ETH"
                     : buyTokenName === "ETH"
-                    ? `${Number(formatEther((maxBuyPrice as bigint) || BigInt(0))).toFixed(2) || 0.0} ETH`
+                    ? Number(formatEther((maxBuyPrice as bigint) || BigInt(0))) < 0.01
+                      ? ">0.01 ETH"
+                      : `${Number(formatEther((maxBuyPrice as bigint) || BigInt(0))).toFixed(2) || 0.0} ETH`
                     : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
                 </p>
               </div>

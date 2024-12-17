@@ -24,6 +24,7 @@ export const froggyFriendsAddress: Address = isProd
 export const claimContractAddress: Address = isProd
   ? "0x5D606A1eB8Cd7c50092866725B9982355b4a5F4C"
   : "0x5D606A1eB8Cd7c50092866725B9982355b4a5F4C";
+export const contractAddressV1 = "0x4bA69e95F5F18902Cad88a1e35E037F1DC7E7b77";
 export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = isProd ? 8453 : 84532;
 export const ethChain = isProd ? mainnet : sepolia;

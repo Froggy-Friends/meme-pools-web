@@ -15,7 +15,7 @@ export default function useTokenInfo(token: Token) {
       const [ethPrice, rawInfo] = (await Promise.all([
         getEthPrice(),
         publicClient?.readContract({
-          address: contractAddress,
+          address: token.platformAddress as `0x${string}`,
           abi: memepoolsAbi,
           functionName: "tokenInfos",
           args: [token.tokenAddress],

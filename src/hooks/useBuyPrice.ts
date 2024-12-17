@@ -3,10 +3,11 @@ import { contractAddress } from "@/config/env";
 import { Contract } from "ethers";
 import * as Sentry from "@sentry/react";
 import { useEthersProvider } from "@/config/eth/wagmi-ethers";
+import { Token } from "@prisma/client";
 
-export default function useBuyPrice() {
+export default function useBuyPrice(token: Token) {
   const provider = useEthersProvider();
-  const contract = new Contract(contractAddress, memepoolsAbi, provider);
+  const contract = new Contract(token.platformAddress, memepoolsAbi, provider);
 
   const buyPriceTokens = async (tokenAddress: string, amount: bigint) => {
     let totalCost: bigint = BigInt(0);

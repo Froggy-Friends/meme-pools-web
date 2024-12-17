@@ -5,6 +5,7 @@ import { Token } from "@prisma/client";
 import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import useMarketcapGoal from "@/hooks/useMarketcapGoal";
+import { Address } from "viem";
 
 type BondingCurveProgressProps = {
   token: Token;
@@ -12,7 +13,7 @@ type BondingCurveProgressProps = {
 
 export default function BondingCurveProgress({ token }: BondingCurveProgressProps) {
   const { tokenInfo } = useTokenInfo(token);
-  const marketcapGoal = useMarketcapGoal();
+  const marketcapGoal = useMarketcapGoal(token.platformAddress as Address);
 
   return (
     <section className="mt-6 laptop:mt-7 desktop:mt-4 w-full tablet:w-[430px]">

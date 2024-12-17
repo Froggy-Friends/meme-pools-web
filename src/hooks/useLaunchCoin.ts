@@ -9,10 +9,11 @@ import {
   updateTokenIsClaimable,
 } from "@/actions/token/actions";
 import { formatTicker } from "@/lib/formatTicker";
+import { Token } from "@prisma/client";
 
-export default function useLaunchCoin() {
+export default function useLaunchCoin(token: Token) {
   const signer = useEthersSigner();
-  const contract = new Contract(contractAddress, memepoolsAbi, signer);
+  const contract = new Contract(token.platformAddress, memepoolsAbi, signer);
 
   const launchCoin = async (
     tokenAddress: string,
