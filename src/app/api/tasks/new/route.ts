@@ -15,12 +15,20 @@ export async function GET(request: Request) {
       },
     });
 
-    await fetch(`${memepoolsApi}/tasks/refresh/solana/newest`, {
+    await fetch(`${memepoolsApi}/tasks/refresh/base/newest`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.CRON_SECRET}`,
       },
     });
+
+    // TODO: Uncomment this when we have solana support
+    // await fetch(`${memepoolsApi}/tasks/refresh/solana/newest`, {
+    //   method: "POST",
+    //   headers: {
+    //     Authorization: `Bearer ${process.env.CRON_SECRET}`,
+    //   },
+    // });
 
     return NextResponse.json({ success: true });
   } catch (error) {

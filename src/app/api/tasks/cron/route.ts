@@ -4,8 +4,8 @@ import * as Sentry from "@sentry/nextjs";
 
 const refreshConfig = {
   eth: ["trending", "transactions", "volume", "comments", "votes"],
-  solana: ["trending", "transactions", "volume", "comments", "votes"],
-  // Easy to add different endpoints per chain if needed
+  // solana: ["trending", "transactions", "volume", "comments", "votes"], // TODO: Uncomment this when we have solana support
+  base: ["trending", "transactions", "volume", "comments", "votes"],
 } as const;
 
 export async function GET(request: Request) {
