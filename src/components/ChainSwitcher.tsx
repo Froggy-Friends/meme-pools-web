@@ -55,23 +55,23 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
           />
         </div>
       </DropdownTrigger>
-      <DropdownMenu disabledKeys={["Base", "Solana"]}>
+      <DropdownMenu disabledKeys={["Solana"]}>
         <DropdownItem key="Eth" className="dark" onPress={() => handleChainSwitch(chainConfigs.eth)}>
           <div className="flex items-center gap-x-3">
             <Image src={ethLogo} alt="eth-logo" height={height} width={width} />
             <p className="text-[17px]">ETH</p>
           </div>
         </DropdownItem>
-        <DropdownItem key="Solana" className="dark" onPress={() => handleChainSwitch(chainConfigs.solana)}>
-          <div className="flex items-center gap-x-3">
-            <Image src={solanaLogo} alt="solana-logo" height={height} width={width} />
-            <p className="text-[17px]">Solana</p>
-          </div>
-        </DropdownItem>
         <DropdownItem key="Base" className="dark" onPress={() => handleChainSwitch(chainConfigs.base)}>
           <div className="flex items-center gap-x-3">
             <Image src={baseLogo} alt="base-logo" height={height} width={width} />
             <p className="text-[17px]">Base</p>
+          </div>
+        </DropdownItem>
+        <DropdownItem key="Solana" className="dark" onPress={() => handleChainSwitch(chainConfigs.solana)}>
+          <div className="flex items-center gap-x-3">
+            <Image src={solanaLogo} alt="solana-logo" height={height} width={width} />
+            <p className="text-[17px]">Solana</p>
           </div>
         </DropdownItem>
       </DropdownMenu>

@@ -27,7 +27,13 @@ export default function SearchTokenDisplay({ token, onClose }: SearchTokenDispla
       onClick={onClose}
     >
       <div className="flex gap-x-2 items-center">
-        <Image src={token.image} alt="token-image" height={40} width={40} className="rounded-md" />
+        <Image
+          src={token.image}
+          alt="token-image"
+          height={40}
+          width={40}
+          className="rounded-md h-[40px] w-[40px] object-cover"
+        />
         <div className="flex flex-col justify-center min-w-0 w-[100px] tablet:w-[150px]">
           <p className="text-light-primary text-sm tablet:text-base truncate">${token.ticker}</p>
           <p className="text-light-gray text-xs tablet:text-sm -mt-[2px] truncate">

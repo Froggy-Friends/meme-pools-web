@@ -10,7 +10,7 @@ type UseChainSyncProps = {
   isConnected: boolean;
   address: string | null | undefined;
   chain: Chain;
-}
+};
 
 export function useChainSync({
   isConnected,
@@ -29,10 +29,22 @@ export function useChainSync({
         if (chain !== walletType) {
           await Promise.resolve(
             setChain(
-              walletType === "solana" ? chainConfigs.solana : chainConfigs.eth
+              walletType === "solana"
+                ? chainConfigs.solana
+                : walletType === "eth" && chain === Chain.Eth
+                ? chainConfigs.eth
+                : chainConfigs.base
             )
           );
-          router.push(`/${walletType}`);
+          router.push(
+            `/${
+              walletType === "solana"
+                ? Chain.Solana
+                : walletType === "eth" && chain === Chain.Eth
+                ? Chain.Eth
+                : Chain.Base
+            }`
+          );
         }
       }
     },

@@ -66,7 +66,7 @@ export default function ProfileAvatar({
             className="dark"
             key="Disconnect"
             onPress={async () => {
-              if (chain === Chain.Eth) {
+              if (chain === Chain.Eth || chain === Chain.Base) {
                 disconnect();
                 await setUserCookies(null, Chain.Eth);
               } else if (chain === Chain.Solana) {

@@ -1,5 +1,4 @@
 import { memepoolsAbi } from "@/abi/memepools";
-import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { CreateTokenParams, TokenCreated, TxStatus } from "@/types/token/types";
 import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
@@ -7,9 +6,13 @@ import { toast } from "react-hot-toast";
 import { ContractEvent } from "@/models/contractEvent";
 import * as Sentry from "@sentry/react";
 import { useState } from "react";
+import { useChain } from "@/context/chain";
+import { getContractAddress } from "@/lib/getContractAddress";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
+  const { chain } = useChain();
+  const contractAddress = getContractAddress(chain.name);
   const contract = new Contract(contractAddress, memepoolsAbi, signer);
   const [txStatus, setTxStatus] = useState<TxStatus>("idle");
   const [txHash, setTxHash] = useState<string | null>(null);

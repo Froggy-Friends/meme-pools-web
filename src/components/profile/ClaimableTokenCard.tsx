@@ -11,6 +11,7 @@ import useClaimRewards from "@/hooks/useClaimRewards";
 import useRewards from "@/hooks/useRewards";
 import { Address } from "viem";
 import { formatNumber } from "@/lib/formatNumber";
+import { Chain } from "@/models/chain";
 
 type CreatedCoinCardProps = {
   token: Token;
@@ -24,7 +25,7 @@ export default function CreatedCoinCard({ token, enabled, isClaimed }: CreatedCo
   const [isClaiming, setIsClaiming] = useState(false);
   const [rewards, setRewards] = useState("0");
   const { fetchRewards, pending } = useRewards();
-  const { claimBatch } = useClaimRewards();
+  const { claimBatch } = useClaimRewards(token.chain as Chain);
 
   return (
     <section className="flex flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">
