@@ -12,7 +12,7 @@ export default async function EthHomePage() {
   const queryClient = new QueryClient();
   const topTokens = await fetchTopVotesTokens(Chain.Eth);
 
-  const defaultTokensQueryKey = ["tokens", TokenFilter.New, 1];
+  const defaultTokensQueryKey = ["tokens", TokenFilter.New, 1, Chain.Eth];
 
   await queryClient.prefetchQuery({
     queryKey: defaultTokensQueryKey,
