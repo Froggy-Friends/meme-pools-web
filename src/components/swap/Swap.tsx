@@ -75,7 +75,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const { ethBalance, refetchEthBalance } = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
-  const { isApproved, refetchAllowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { isApproved, refetchAllowance } = useAllowance(token, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
   const { approveToken } = useApproveToken(token);
   const { maxBuyPrice } = useMaxBuy(token);
