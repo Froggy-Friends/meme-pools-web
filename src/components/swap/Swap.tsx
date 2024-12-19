@@ -75,7 +75,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const { ethBalance, refetchEthBalance } = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
-  const { isApproved, refetchAllowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { isApproved, refetchAllowance } = useAllowance(token, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
   const { approveToken } = useApproveToken(token);
   const { maxBuyPrice } = useMaxBuy(token);
@@ -349,6 +349,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
           {activeTab === TradingTab.SELL && (
             <>
               <Input
+                disabled={tokenInfo?.readyForLp}
                 classNames={{
                   input: "text-right appearance-none",
                   inputWrapper: ["h-[70px] px-7 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
@@ -462,7 +463,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
               SELL_AMOUNTS.map(amount => (
                 <button
                   key={amount}
-                  disabled={!isConnected}
+                  disabled={!isConnected || tokenInfo?.readyForLp}
                   onClick={() => {
                     setSellAmount(
                       amount === 100 ? (tokenBalance as bigint) : tokensByPercentage(amount, Number(tokenBalance))
@@ -471,7 +472,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                       amount === 100 ? (tokenBalance as bigint) : tokensByPercentage(amount, Number(tokenBalance))
                     );
                   }}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition disabled:hover:bg-black ${
                     tokensByPercentage(amount, Number(tokenBalance)) === sellAmount
                       ? "bg-black hover:bg-black cursor-default"
                       : "bg-black hover:bg-gray"
@@ -485,6 +486,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
             disabled={
               !isConnected ||
+              tokenInfo?.readyForLp ||
               (activeTab === TradingTab.BUY
                 ? buyAmount === BigInt(0) || insufficientBuyBalance
                 : sellAmount === BigInt(0) || insufficientSellBalance)

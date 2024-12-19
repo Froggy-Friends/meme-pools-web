@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import usePostTradeData from "./usePostTradeData";
 import { SellToast } from "@/components/swap/SellToast";
 import { Token } from "@prisma/client";
+import * as Sentry from "@sentry/react";
 
 export default function useSellToken(token: Token) {
   const signer = useEthersSigner();
@@ -48,6 +49,7 @@ export default function useSellToken(token: Token) {
 
       return receipt;
     } catch (error) {
+      Sentry.captureException(error);
       toast.remove("sell-toast");
       if ((error as Error).message.includes("slippage")) {
         toast.error("Slippage reached");
