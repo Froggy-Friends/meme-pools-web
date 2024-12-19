@@ -9,7 +9,7 @@ import * as Sentry from "@sentry/react";
 import { updateClaimStatus } from "@/actions/profile/actions";
 import { formatTicker } from "@/lib/formatTicker";
 import { Chain } from "@/models/chain";
-import { getClaimContractAddress } from "@/lib/getClaimContractAddress";
+import { getClaimContractAddress } from "@/lib/chains";
 
 export default function useClaimRewards(chain: Chain) {
   const { currentUser } = useUser();
@@ -30,11 +30,11 @@ export default function useClaimRewards(chain: Chain) {
 
     try {
       const tx = await contract.claimBatch(tokenAddress, frogIds);
-      
+
       await toast.promise(tx.wait(), {
         loading: `Claiming $${formatTicker(tokenTicker)}`,
         success: `Rewards claimed successfully!`,
-        error: "Claim rewards error"
+        error: "Claim rewards error",
       });
 
       await updateClaimStatus(frogIds, tokenAddress);

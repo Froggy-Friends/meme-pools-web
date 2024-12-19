@@ -1,4 +1,12 @@
 import { chainConfigs } from "@/config/chains";
+import {
+  baseClaimContractAddress,
+  baseContractAddress,
+  claimContractAddress,
+  contractAddress,
+  froggyFriendsAddress,
+  froggyFriendsBaseAddress,
+} from "@/config/env";
 import { Chain, ChainConfig } from "@/models/chain";
 
 export function getChainConfig(path: string): ChainConfig {
@@ -12,3 +20,23 @@ export function getChainConfig(path: string): ChainConfig {
     return chainConfigs.eth;
   }
 }
+
+export const getExplorerUrl = (chain: Chain) => {
+  return chainConfigs[chain].explorerUrl;
+};
+
+export const getFrogAddress = (chain: Chain) => {
+  return chain === Chain.Eth ? froggyFriendsAddress : froggyFriendsBaseAddress;
+};
+
+export const getContractAddress = (chain: Chain) => {
+  return chain === Chain.Eth ? contractAddress : baseContractAddress;
+};
+
+export const getClaimContractAddress = (chain: Chain) => {
+  return chain === Chain.Eth ? claimContractAddress : baseClaimContractAddress;
+};
+
+export const getChainLogo = (chain: Chain) => {
+  return chainConfigs[chain].logo;
+};

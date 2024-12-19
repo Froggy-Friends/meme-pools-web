@@ -9,7 +9,8 @@ import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import { TokenWithBalance } from "@/types/token/types";
 import { cn, Link, Progress } from "@nextui-org/react";
 import Image from "next/image";
-import { ethLogo, baseLogo } from "@/config/chains";
+import { getChainLogo } from "@/lib/chains";
+import { Chain } from "@/models/chain";
 
 type PurchasedCoinCardProps = {
   token: TokenWithBalance;
@@ -33,7 +34,7 @@ export default function PurchasedCoinCard({ token }: PurchasedCoinCardProps) {
             className="rounded-full h-[50px] w-[50px] object-cover"
           />
           <Image
-            src={token.chain === "eth" ? ethLogo : baseLogo}
+            src={getChainLogo(token.chain as Chain)}
             alt={`${token.chain} logo`}
             width={20}
             height={20}

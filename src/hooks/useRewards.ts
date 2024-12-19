@@ -7,7 +7,7 @@ import useUser from "./useUser";
 import { formatUnits } from "viem";
 import { useState } from "react";
 import { Chain } from "@/models/chain";
-import { getClaimContractAddress } from "@/lib/getClaimContractAddress";
+import { getClaimContractAddress } from "@/lib/chains";
 
 export default function useRewards(chain: Chain) {
   const [pending, setPending] = useState(false);

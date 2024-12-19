@@ -1,3 +1,5 @@
+import { Address } from "viem";
+
 export enum Chain {
   Solana = "solana",
   Base = "base",
@@ -7,6 +9,8 @@ export enum Chain {
 export type ChainConfig = {
   name: Chain;
   id: number;
+  explorerUrl: string;
+  logo: string;
 };
 
 export type ChainConfigs = {
