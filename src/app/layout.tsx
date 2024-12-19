@@ -10,6 +10,10 @@ import { ChainProvider } from "@/components/ChainProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { PHProvider } from "@/context/posthog";
 import { Analytics } from "@vercel/analytics/react";
+import { Chain } from "@/models/chain";
+import { Cookie } from "@/models/cookie";
+import { getChainConfig } from "@/lib/chains";
+import { cookies } from "next/headers";
 
 const PostHogPageView = dynamic(() => import("../components/PotHogPageView"), { ssr: false });
 
@@ -26,15 +30,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookies = headers().get("cookie");
+  const modalCookies = headers().get("cookie");
+  const cookieStore = cookies();
+  const chainFromCookie = cookieStore.get(Cookie.Chain)?.value as Chain || Chain.Base;
+  const initialChain = getChainConfig(chainFromCookie);
 
   return (
     <html lang="en">
       <body className="font-proximaNova overflow-y-scroll bg-dark text-white dark">
         <NextUIProvider>
-          <Web3ModalProvider cookies={cookies}>
+          <Web3ModalProvider cookies={modalCookies}>
             <AppWalletProvider>
-              <ChainProvider>
+              <ChainProvider initialChain={initialChain}>
                 <PHProvider>
                   <PostHogPageView />
                   <ResponsiveToaster />
