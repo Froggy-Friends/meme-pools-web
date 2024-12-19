@@ -2,7 +2,7 @@ import { useChain } from "@/context/chain";
 import { getWalletType } from "@/lib/wallet";
 import { chainConfigs } from "@/config/chains";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Chain } from "@/models/chain";
 
@@ -19,6 +19,7 @@ export function useChainSync({
 }: UseChainSyncProps) {
   const router = useRouter();
   const { setChain } = useChain();
+  const pathname = usePathname();
 
   const { mutate: syncChain } = useMutation({
     mutationKey: ["chainSync", isConnected, address, chain],
@@ -36,15 +37,18 @@ export function useChainSync({
                 : chainConfigs.base
             )
           );
-          router.push(
-            `/${
-              walletType === "solana"
-                ? Chain.Solana
-                : walletType === "eth" && chain === Chain.Eth
-                ? Chain.Eth
-                : Chain.Base
-            }`
-          );
+
+          if (!pathname.includes("/profile") && !pathname.includes("/create")) {
+            router.push(
+              `/${
+                walletType === "solana"
+                  ? Chain.Solana
+                  : walletType === "eth" && chain === Chain.Eth
+                  ? Chain.Eth
+                  : Chain.Base
+              }`
+            );
+          }
         }
       }
     },
