@@ -1,6 +1,7 @@
 import { Address } from "viem";
 import { getTokenHoldersEth } from "@/lib/getTokenHoldersEth";
 import { getTokenHoldersSol } from "@/lib/getTokenHoldersSol";
+import { getTokenHoldersBase } from "@/lib/getTokenHoldersBase";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -10,6 +11,8 @@ export async function GET(request: Request) {
   const holders =
     chain === "eth"
       ? await getTokenHoldersEth(tokenAddress as Address, 20)
+      : chain === "base"
+      ? await getTokenHoldersBase(tokenAddress as Address, 20)
       : await getTokenHoldersSol(tokenAddress as string, 20);
   return Response.json(holders);
 }

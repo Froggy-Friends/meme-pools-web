@@ -5,16 +5,18 @@ import CreatedCoinCard from "./CreatedCoinCard";
 import { Address } from "viem";
 import LaunchRewardsText from "./LaunchRewardsText";
 import { cn } from "@nextui-org/react";
+import { Chain } from "@/models/chain";
 
 type CreatedTokensProps = {
   profileUser: User;
   cachedUser: User | null;
   delegatedWallets: Address[];
+  chain: Chain;
 };
 
-export default async function CreatedTokens({ profileUser, cachedUser, delegatedWallets }: CreatedTokensProps) {
+export default async function CreatedTokens({ profileUser, cachedUser, delegatedWallets, chain }: CreatedTokensProps) {
   const walletAddresses = delegatedWallets ? [...delegatedWallets, profileUser.ethAddress] : [profileUser.ethAddress];
-  const createdTokens = await fetchCreatedTokens(profileUser.id);
+  const createdTokens = await fetchCreatedTokens(profileUser.id, chain);
   let enabled = profileUser.id === cachedUser?.id;
   const sortedCreatedTokens = createdTokens.sort((a, b) => (b.marketCap ?? 0) - (a.marketCap ?? 0));
 

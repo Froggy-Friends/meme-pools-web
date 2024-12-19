@@ -6,6 +6,7 @@ import SearchTokenDisplay from "./SearchTokenDisplay";
 import SearchSkeleton from "./SearchSkeleton";
 import { TokenSearchResult } from "@/types/token/types";
 import { useDebouncedCallback } from "use-debounce";
+import { useChain } from "@/context/chain";
 
 type TokenSearchModalProps = {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
   const [noResults, setNoResults] = useState(false);
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const { chain } = useChain();
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -60,7 +62,7 @@ export default function TokenSearchModal({ isOpen, onOpenChange, onClose }: Toke
     setIsLoading(true);
     setNoResults(false);
 
-    const tokens = await searchTokens(value);
+    const tokens = await searchTokens(value, chain.name);
     setTokens(tokens);
     if (tokens.length === 0) setNoResults(true);
 
