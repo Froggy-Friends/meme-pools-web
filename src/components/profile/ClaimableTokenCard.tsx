@@ -12,6 +12,7 @@ import useRewards from "@/hooks/useRewards";
 import { Address } from "viem";
 import { formatNumber } from "@/lib/formatNumber";
 import { Chain } from "@/models/chain";
+import { ethLogo, baseLogo } from "@/config/chains";
 
 type CreatedCoinCardProps = {
   token: Token;
@@ -30,8 +31,21 @@ export default function CreatedCoinCard({ token, enabled, isClaimed }: CreatedCo
   return (
     <section className="flex flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">
       <div className="flex justify-between w-full items-center">
-        <div className="flex gap-x-2 tablet:gap-x-4 mr-4">
-          <Image src={token.image} alt={token.name} width={50} height={50} className="rounded-full" />
+        <div className="flex gap-x-2 tablet:gap-x-4 mr-4 relative">
+          <Image
+            src={token.image}
+            alt={token.name}
+            width={50}
+            height={50}
+            className="rounded-full h-[50px] w-[50px] object-cover"
+          />
+          <Image
+            src={token.chain === "eth" ? ethLogo : baseLogo}
+            alt={`${token.chain} logo`}
+            width={20}
+            height={20}
+            className="rounded-full h-[20px] w-[20px] object-cover absolute top-8 left-8 ring-4 ring-dark"
+          />
           <div className="flex flex-col">
             <Link
               href={`/${chain.name}/token/${token.tokenAddress}`}

@@ -10,6 +10,7 @@ import { cn, Link, Progress } from "@nextui-org/react";
 import { Token } from "@prisma/client";
 import Image from "next/image";
 import { useState } from "react";
+import { ethLogo, baseLogo } from "@/config/chains";
 
 type CreatedCoinCardProps = {
   token: Token;
@@ -26,8 +27,21 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
   return (
     <section className="flex flex-col tablet:flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">
       <div className="flex justify-between w-full tablet:w-[200px] tablet:justify-start items-center">
-        <div className="flex gap-x-4 mr-4">
-          <Image src={token.image} alt={token.name} width={50} height={50} className="rounded-full" />
+        <div className="flex gap-x-4 mr-4 relative">
+          <Image
+            src={token.image}
+            alt={token.name}
+            width={50}
+            height={50}
+            className="rounded-full h-[50px] w-[50px] object-cover"
+          />
+          <Image
+            src={token.chain === "eth" ? ethLogo : baseLogo}
+            alt={`${token.chain} logo`}
+            width={20}
+            height={20}
+            className="rounded-full h-[20px] w-[20px] object-cover absolute top-8 left-8 ring-4 ring-dark"
+          />
           <div>
             <Link
               href={`/${chain.name}/token/${token.tokenAddress}`}
