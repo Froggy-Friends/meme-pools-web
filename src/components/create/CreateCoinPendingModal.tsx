@@ -71,7 +71,7 @@ export default function CreateCoinPendingModal({
               {txHash ? (
                 <>
                   See confirmation{" "}
-                  <Link href={`${getExplorerUrl(chain.name)}/tx/${txHash}`} target="_blank">
+                  <Link href={getExplorerUrl(chain.name, txHash)} target="_blank">
                     <span className="text-light-gray hover:text-cream transition">{formatAddress(txHash)}</span>
                   </Link>
                 </>

@@ -21,8 +21,8 @@ export function getChainConfig(path: string): ChainConfig {
   }
 }
 
-export const getExplorerUrl = (chain: Chain) => {
-  return chainConfigs[chain].explorerUrl;
+export const getExplorerUrl = (chain: Chain, txHash: string) => {
+  return `https://${chainConfigs[chain].explorerUrl}/tx/${txHash}`;
 };
 
 export const getFrogAddress = (chain: Chain) => {
