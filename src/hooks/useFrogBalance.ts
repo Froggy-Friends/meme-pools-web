@@ -1,9 +1,12 @@
-import { froggyFriendsAddress } from "@/config/env";
 import { useReadContracts } from "wagmi";
 import { froggyFriendsAbi } from "@/abi/froggyFriends";
 import { Abi, Address } from "viem";
+import { Chain } from "@/models/chain";
+import { getFroggyFriendsAddress } from "@/lib/getFroggyFriendsAddress";
 
-export default function useFrogBalance(walletAddresses: Address[]) {
+export default function useFrogBalance(walletAddresses: Address[], chain: Chain) {
+  const froggyFriendsAddress = getFroggyFriendsAddress(chain);
+
   const { data: frogBalances } = useReadContracts({
     contracts: walletAddresses.map((address) => ({
       address: froggyFriendsAddress,

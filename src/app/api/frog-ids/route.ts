@@ -1,10 +1,14 @@
-import { froggyFriendsAddress, moralisEthChain } from "@/config/env";
+import { getFroggyFriendsAddress } from "@/lib/getFroggyFriendsAddress";
 import { getDelegations } from "@/lib/getDelegations";
 import { NextResponse } from "next/server";
+import { Chain } from "@/models/chain";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const address = searchParams.get("address");
+  const chain = searchParams.get("chain");
+
+  const froggyFriendsAddress = getFroggyFriendsAddress(chain as Chain);
 
   if (!address) {
     return NextResponse.json({ result: [] });
@@ -18,7 +22,7 @@ export async function GET(request: Request) {
     }
 
     const response = await fetch(
-      `https://deep-index.moralis.io/api/v2.2/${address}/nft?chain=${moralisEthChain}&format=decimal&token_addresses%5B0%5D=${froggyFriendsAddress}&media_items=false`,
+      `https://deep-index.moralis.io/api/v2.2/${address}/nft?chain=${chain}&format=decimal&token_addresses%5B0%5D=${froggyFriendsAddress}&media_items=false`,
       {
         method: "GET",
         headers: {

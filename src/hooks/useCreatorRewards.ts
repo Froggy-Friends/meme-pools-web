@@ -6,9 +6,11 @@ import {
 } from "@/lib/constants";
 import useEthPrice from "./useEthPrice";
 import useFrogBalance from "./useFrogBalance";
+import { useChain } from "@/context/chain";
 
 export default function useCreatorRewards(walletAddresses: Address[]) {
-  const frogBalance = useFrogBalance(walletAddresses);
+  const { chain } = useChain();
+  const frogBalance = useFrogBalance(walletAddresses, chain.name);
   const ethPrice = useEthPrice();
   let rewardTier = "bronze";
   let ethMultiplier = tierOneEthReward;
