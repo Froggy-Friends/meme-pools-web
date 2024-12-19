@@ -22,7 +22,7 @@ export default function useClaimRewards(chain: Chain) {
   );
 
   const claimBatch = async (tokenAddress: string, tokenTicker: string) => {
-    const frogIds = await getFrogsByWallet(currentUser?.ethAddress as Address);
+    const frogIds = await getFrogsByWallet(currentUser?.ethAddress as Address, chain);
 
     if (!frogIds.length) {
       return;

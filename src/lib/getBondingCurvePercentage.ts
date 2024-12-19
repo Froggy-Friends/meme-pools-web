@@ -1,5 +1,4 @@
-import { tokenLaunchBuffer } from "@/config/token";
-import { maxTradeableSupply } from "./constants";
+import { tokenLaunchBuffer, maxTradeableSupply } from "@/config/token";
 
 export const getBondingCurvePercentage = (tokensSold: number | undefined) => {
   if (!tokensSold) return 0;

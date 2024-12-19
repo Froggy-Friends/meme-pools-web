@@ -2,7 +2,7 @@ import { memepoolsTokenAbi } from "@/abi/memepoolsToken";
 import { ApproveToast } from "@/components/swap/ApproveToast";
 import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
-import { maxTotalSupply } from "@/lib/constants";
+import { maxTotalSupply } from "@/config/token";
 import { Token } from "@prisma/client";
 import { Contract } from "ethers";
 import toast from "react-hot-toast";
