@@ -14,18 +14,18 @@ import { formatNumber } from "@/lib/formatNumber";
 import { Chain } from "@/models/chain";
 import { ethLogo, baseLogo } from "@/config/chains";
 
-type CreatedCoinCardProps = {
+type ClaimableTokenCardProps = {
   token: Token;
   enabled: boolean;
   isClaimed: boolean;
 };
 
-export default function CreatedCoinCard({ token, enabled, isClaimed }: CreatedCoinCardProps) {
+export default function ClaimableTokenCard({ token, enabled, isClaimed }: ClaimableTokenCardProps) {
   const { chain } = useChain();
   const [isRevealed, setIsRevealed] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
   const [rewards, setRewards] = useState("0");
-  const { fetchRewards, pending } = useRewards();
+  const { fetchRewards, pending } = useRewards(token.chain as Chain);
   const { claimBatch } = useClaimRewards(token.chain as Chain);
 
   return (

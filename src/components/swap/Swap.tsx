@@ -72,10 +72,10 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const { buyPriceTokens, buyPriceEth } = useBuyPrice(token);
   const { sellToken } = useSellToken(token);
   const getSellPrice = useSellPrice(token);
-  const { ethBalance, refetchEthBalance } = useEthBalance(wagmiChains.eth.id);
-  const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { ethBalance, refetchEthBalance } = useEthBalance(chain.id);
+  const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, chain.id);
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
-  const { isApproved, refetchAllowance } = useAllowance(token, wagmiChains.eth.id);
+  const { isApproved, refetchAllowance } = useAllowance(token, chain.id);
   const { postTradeData } = usePostTradeData();
   const { approveToken } = useApproveToken(token);
   const { maxBuyPrice } = useMaxBuy(token);
@@ -311,7 +311,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   <Image
                     src={
                       (chain.name === Chain.Solana && buyTokenName === "SOL") ||
-                      (chain.name === Chain.Eth && buyTokenName === "ETH")
+                      (chain.name === Chain.Eth || chain.name === Chain.Base && buyTokenName === "ETH")
                         ? token.image
                         : chain.name === Chain.Solana
                         ? solanaLogo
@@ -324,7 +324,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   />
                   <p>
                     {(chain.name === Chain.Solana && buyTokenName === "SOL") ||
-                    (chain.name === Chain.Eth && buyTokenName === "ETH")
+                    (chain.name === Chain.Eth || chain.name === Chain.Base && buyTokenName === "ETH")
                       ? `$${formatTicker(token.ticker)}`
                       : chain.name === Chain.Solana
                       ? "$SOL"
