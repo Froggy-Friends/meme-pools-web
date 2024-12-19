@@ -12,10 +12,10 @@ export default async function BaseHomePage() {
   const queryClient = new QueryClient();
   const topTokens = await fetchTopVotesTokens(Chain.Base);
 
-  const defaultTokensQueryKey = ["tokens", TokenFilter.New, 1, Chain.Base];
+  const defaultBaseTokensQueryKey = [`${Chain.Base}-tokens`, TokenFilter.New, 1];
 
   await queryClient.prefetchQuery({
-    queryKey: defaultTokensQueryKey,
+    queryKey: defaultBaseTokensQueryKey,
     queryFn: async () => fetchTokens(TokenFilter.New, 1, Chain.Base),
   });
 
