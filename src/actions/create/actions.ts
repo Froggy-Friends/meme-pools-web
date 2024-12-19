@@ -8,6 +8,8 @@ import { Address } from "viem";
 import { getPusher } from "@/config/pusher";
 import { Channel } from "@/models/channel";
 import { contractAddress } from "@/config/env";
+import { baseContractAddress } from "@/config/env";
+import { Chain } from "@/models/chain";
 
 export const createCoin = async (
   formData: FormData,
@@ -45,7 +47,7 @@ export const createCoin = async (
           chain: chain,
           marketCap: 100,
           isNsfw: isNsfw,
-          platformAddress: contractAddress,
+          platformAddress: chain === Chain.Eth ? contractAddress : baseContractAddress,
         },
       });
 
