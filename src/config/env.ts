@@ -16,8 +16,8 @@ export const memepoolsApi = isProd
 
 // evm
 export const contractAddress: Address = isProd
-  ? "0x4bA69e95F5F18902Cad88a1e35E037F1DC7E7b77"
-  : "0x1e6AaaC4201CdDd10b90735898f71Fd3541aF66F";
+  ? "0x036ca20D4Cc8dE8EB783258b36F5F9499aa234A8"
+  : "0xEFd94EDFCB5902dc3Ce1F379DDB006Df0326Dc34";
 export const baseContractAddress: Address =
   "0x5D606A1eB8Cd7c50092866725B9982355b4a5F4C";
 export const froggyFriendsAddress: Address = isProd
@@ -28,7 +28,7 @@ export const claimContractAddress: Address = isProd
   : "0x6570Ff390976C206b05EcD5873a0aAaF7a1F3D28";
 export const baseClaimContractAddress: Address =
   "0xb6224A473Edd4E401B4f86650ec58eDb124596eF";
-export const contractAddressV1 = "0xEFd94EDFCB5902dc3Ce1F379DDB006Df0326Dc34";
+export const contractAddressV1 = "0x4bA69e95F5F18902Cad88a1e35E037F1DC7E7b77";
 export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = 8453;
 export const ethChain = isProd ? mainnet : sepolia;

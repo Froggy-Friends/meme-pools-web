@@ -5,8 +5,6 @@ import prisma from "@/lib/prisma";
 import { getTokenInfo } from "../../lib/getTokenInfo";
 import { fetchUser } from "@/queries/profile/queries";
 import { Address } from "viem";
-import { getPusher } from "@/config/pusher";
-import { Channel } from "@/models/channel";
 import { contractAddress } from "@/config/env";
 import { baseContractAddress } from "@/config/env";
 import { Chain } from "@/models/chain";
@@ -48,15 +46,6 @@ export const createCoin = async (
           marketCap: 100,
           isNsfw: isNsfw,
           platformAddress: chain === Chain.Eth ? contractAddress : baseContractAddress,
-        },
-      });
-
-      const pusher = getPusher();
-      await pusher.trigger(Channel.CreateToken, token.id, {
-        feedData: {
-          user: user,
-          date: token.createdAt,
-          value: `$${token.ticker}`,
         },
       });
     }

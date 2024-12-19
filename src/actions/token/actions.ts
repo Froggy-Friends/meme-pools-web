@@ -100,14 +100,6 @@ export async function updateVote(
 
   await pusher.trigger(channel, tokenId, {
     voteCounts,
-    feedData:
-      vote && vote.status !== null
-        ? {
-            user: vote.User,
-            date: new Date().toISOString(),
-            value: vote.Token.ticker,
-          }
-        : null,
   });
 }
 
@@ -133,11 +125,6 @@ export const postComment = async (
 
   await pusher.trigger(Channel.Comment, tokenId, {
     comment,
-    feedData: {
-      user: comment.user,
-      date: comment.createdAt,
-      value: comment.message,
-    },
   });
 };
 
@@ -192,11 +179,6 @@ export const addCommentLike = async (
   await pusher.trigger(channel, commentId, {
     add: result,
     remove: remove,
-    feedData: {
-      user: result.User,
-      date: result.createdAt,
-      value: result.Comment.message,
-    },
   });
 
   return result;
