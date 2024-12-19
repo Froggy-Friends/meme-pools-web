@@ -2,7 +2,7 @@ import useTokens from "@/hooks/useTokens";
 import { TokenFilter } from "@/models/token";
 import { MdRefresh } from "react-icons/md";
 import { useState } from "react";
-import { memepoolsApi } from "@/config/env";
+import { useChain } from "@/context/chain";
 
 type TokenRefreshButtonProps = {
   tokenFilter: TokenFilter;
@@ -13,6 +13,7 @@ type TokenRefreshButtonProps = {
 
 export default function TokenRefreshButton({ tokenFilter, tokenPage, reverse, isNsfw }: TokenRefreshButtonProps) {
   const [isSpinning, setIsSpinning] = useState(false);
+  const { chain } = useChain();
   const { refetch } = useTokens({
     filter: tokenFilter,
     page: tokenPage,
@@ -22,9 +23,12 @@ export default function TokenRefreshButton({ tokenFilter, tokenPage, reverse, is
 
   const handleClick = async () => {
     setIsSpinning(true);
-    await fetch(`${memepoolsApi}/tasks/refresh-${tokenFilter === TokenFilter.New ? "newest" : tokenFilter}`, {
-      method: "POST",
-    });
+    await fetch(
+      `/api/tasks/refresh?endpoint=${tokenFilter === TokenFilter.New ? "newest" : tokenFilter}&chain=${chain.name}`,
+      {
+        method: "GET",
+      }
+    );
     refetch();
     setTimeout(() => setIsSpinning(false), 550);
   };

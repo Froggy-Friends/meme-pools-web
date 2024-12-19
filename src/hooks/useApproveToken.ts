@@ -17,7 +17,7 @@ export default function useApproveToken(token: Token) {
       ApproveToast(token, "", Infinity, false, "approve-toast");
 
       const tx = await contract.approve(
-        contractAddress,
+        token.platformAddress,
         parseUnits(maxTotalSupply.toString(), 18)
       );
 

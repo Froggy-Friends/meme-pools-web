@@ -18,7 +18,7 @@ type CreatedCoinCardProps = {
 
 export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps) {
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
-  const { launchCoin } = useLaunchCoin();
+  const { launchCoin } = useLaunchCoin(token);
   const { chain } = useChain();
   const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold);
   const [isLaunching, setIsLaunching] = useState(false);

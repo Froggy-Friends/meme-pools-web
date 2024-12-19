@@ -261,26 +261,15 @@ export const addTrade = async (
     User: user,
     Token: token,
   });
+  
 
   if (category === Trade.Buy) {
     await pusher.trigger(Channel.Buy, token.id, {
       trade: formattedTrade,
-      feedData: {
-        user: user,
-        date: trade.createdAt,
-        value: `$${token.ticker}`,
-        amount: formattedTrade.amount,
-      },
     });
   } else {
     await pusher.trigger(Channel.Sell, token.id, {
       trade: formattedTrade,
-      feedData: {
-        user: user,
-        date: trade.createdAt,
-        value: `$${token.ticker}`,
-        amount: formattedTrade.amount,
-      },
     });
   }
 };
@@ -338,5 +327,12 @@ export const updateTokenMarketcap = async (
   await prisma.token.update({
     where: { id: tokenId },
     data: { marketCap: marketcap },
+  });
+};
+
+export const updateTokenReadyForLp = async (tokenId: string) => {
+  const pusher = getPusher();
+  await pusher.trigger(Channel.ReadyForLp, tokenId, {
+    readyForLp: true,
   });
 };

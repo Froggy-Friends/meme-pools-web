@@ -10,4 +10,5 @@ export enum Channel {
   Buy = "buy",
   Sell = "sell",
   Meme = "meme",
+  ReadyForLp = "ready-for-lp",
 }

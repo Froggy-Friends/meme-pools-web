@@ -5,10 +5,11 @@ import RewardTier from "./RewardTier";
 import useEthPrice from "@/hooks/useEthPrice";
 import { tierOneEthReward, tierTwoEthReward, tierThreeEthReward } from "@/lib/constants";
 import useMarketcapGoal from "@/hooks/useMarketcapGoal";
+import { contractAddress } from "@/config/env";
 
 export default function CreatorRewards() {
   const ethPrice = useEthPrice();
-  const marketcapGoal = useMarketcapGoal();
+  const marketcapGoal = useMarketcapGoal(contractAddress);
   const tierOneReward = Math.round(tierOneEthReward * ethPrice);
   const tierTwoReward = Math.round(tierTwoEthReward * ethPrice);
   const tierThreeReward = Math.round(tierThreeEthReward * ethPrice);

@@ -31,7 +31,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
   const cachedUser = await fetchUser(
     chain === Chain.Solana ? cachedUserSolanaAddress?.value : cachedUserEvmAddress?.value
   );
-  const profileUser = await fetchUserByName(params.username);
+  const profileUser = await fetchUserByName(decodeURIComponent(params.username));
   if (!profileUser) {
     throw new Error("User not found");
   }

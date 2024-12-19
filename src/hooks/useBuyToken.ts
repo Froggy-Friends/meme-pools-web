@@ -6,10 +6,10 @@ import toast from "react-hot-toast";
 import usePostTradeData from "./usePostTradeData";
 import { Token } from "@prisma/client";
 import { BuyToast } from "@/components/swap/BuyToast";
-
-export default function useBuyToken() {
+import * as Sentry from "@sentry/react";
+export default function useBuyToken(token: Token) {
   const signer = useEthersSigner();
-  const contract = new Contract(contractAddress, memepoolsAbi, signer);
+  const contract = new Contract(token.platformAddress, memepoolsAbi, signer);
   const { getBuyTokenDetails } = usePostTradeData();
 
   const buyToken = async (
@@ -48,6 +48,7 @@ export default function useBuyToken() {
 
       return receipt;
     } catch (error) {
+      Sentry.captureException(error);
       toast.remove("buy-toast");
       if ((error as Error).message.includes("slippage")) {
         toast.error("Slippage reached");

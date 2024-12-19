@@ -7,7 +7,7 @@ import * as Sentry from "@sentry/react";
 
 export default function useMaxBuy(token: Token) {
   const { tokenInfo } = useTokenInfo(token);
-  const { buyPriceTokens } = useBuyPrice();
+  const { buyPriceTokens } = useBuyPrice(token);
 
   const { data: maxBuyPrice } = useQuery({
     queryKey: ["maxBuyPrice", token.id, tokenInfo?.availableSupply],

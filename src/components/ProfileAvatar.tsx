@@ -1,7 +1,6 @@
 "use client";
 
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
-import ConnectButton from "./ConnectButton";
 import { Chain } from "@/models/chain";
 import { User } from "@prisma/client";
 import Image from "next/image";
@@ -10,6 +9,9 @@ import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { setUserCookies } from "@/actions/profile/actions";
 import Link from "next/link";
 import { useChainSync } from "@/hooks/useChainSync";
+import dynamic from "next/dynamic";
+
+const ConnectButton = dynamic(() => import("./ConnectButton"), { ssr: false });
 
 type ProfileAvatarProps = {
   cachedUser: User | null;
@@ -20,13 +22,20 @@ type ProfileAvatarProps = {
   address: string | null | undefined;
 };
 
-export default function ProfileAvatar({ cachedUser, currentUser, isConnected, chain, disconnect, address }: ProfileAvatarProps) {
+export default function ProfileAvatar({
+  cachedUser,
+  currentUser,
+  isConnected,
+  chain,
+  disconnect,
+  address,
+}: ProfileAvatarProps) {
   useChainSync({ isConnected, address, chain });
 
   return (
     <section className="hidden tablet:block">
       <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
-      {!isConnected && <ConnectButton />}
+        {!isConnected && <ConnectButton />}
         <DropdownTrigger>
           <div className="hover:bg-gray rounded-lg p-1 laptop:p-2 cursor-pointer">
             <Image

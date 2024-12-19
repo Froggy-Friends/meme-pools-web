@@ -46,4 +46,8 @@ export const channelConfigs: ChannelConfig = {
     name: "sold",
     color: "text-rose",
   },
+  [Channel.ReadyForLp]: {
+    name: "ready-for-lp",
+    color: "text-primary",
+  },
 };

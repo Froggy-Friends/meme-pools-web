@@ -50,7 +50,7 @@ export default async function UserCard({ user, view, profileUser }: UserCardProp
           isFollowing={isFollowing?.status || "false"}
           cachedUser={cachedUser}
           user={user}
-          className="w-28 py-[0.375rem]"
+          className="w-28 py-1"
         />
       )}
     </div>

@@ -5,20 +5,21 @@ import { contractAddress } from "@/config/env";
 import { useState } from "react";
 import { useEffect } from "react";
 import useTokenBalance from "./useTokenBalance";
+import { Token } from "@prisma/client";
 
-export default function useAllowance(tokenAddress: Address, chainId: number) {
+export default function useAllowance(token: Token, chainId: number) {
   const { address } = useAccount();
-  const { tokenBalance } = useTokenBalance(tokenAddress, chainId);
+  const { tokenBalance } = useTokenBalance(token.tokenAddress as Address, chainId);
   const [isApproved, setIsApproved] = useState(false);
 
   const { data, refetch: refetchAllowance } = useReadContracts({
     contracts: [
       {
-        address: tokenAddress,
+        address: token.tokenAddress as Address,
         abi: memepoolsTokenAbi,
         functionName: "allowance",
         chainId: chainId,
-        args: [address, contractAddress],
+        args: [address, token.platformAddress],
       },
     ],
   });

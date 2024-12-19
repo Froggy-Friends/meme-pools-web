@@ -31,7 +31,12 @@ import { useAccount } from "wagmi";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { formatBalance } from "@/lib/formatBalance";
 import useMaxBuy from "@/hooks/useMaxBuy";
-import { updateTokenIsClaimable, createClaimRecords, updateTokenMarketcap } from "@/actions/token/actions";
+import {
+  updateTokenIsClaimable,
+  createClaimRecords,
+  updateTokenMarketcap,
+  updateTokenReadyForLp,
+} from "@/actions/token/actions";
 import SlippagePopover from "./SlippagePopover";
 
 export enum TradingTab {
@@ -63,14 +68,14 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const [buyTokenName, setBuyTokenName] = useState("ETH");
   const [buyTokenSrc, setBuyTokenSrc] = useState(ethLogo);
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
-  const { buyToken } = useBuyToken();
-  const { buyPriceTokens, buyPriceEth } = useBuyPrice();
-  const { sellToken } = useSellToken();
-  const getSellPrice = useSellPrice();
+  const { buyToken } = useBuyToken(token);
+  const { buyPriceTokens, buyPriceEth } = useBuyPrice(token);
+  const { sellToken } = useSellToken(token);
+  const getSellPrice = useSellPrice(token);
   const { ethBalance, refetchEthBalance } = useEthBalance(wagmiChains.eth.id);
   const { tokenBalance, refetchBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
-  const { isApproved, refetchAllowance } = useAllowance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { isApproved, refetchAllowance } = useAllowance(token, wagmiChains.eth.id);
   const { postTradeData } = usePostTradeData();
   const { approveToken } = useApproveToken(token);
   const { maxBuyPrice } = useMaxBuy(token);
@@ -164,9 +169,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
       await approveToken();
       await refetchAllowance();
     }
-    if (updatedTokenInfo.data?.autoLaunch && updatedTokenInfo.data?.liquidityPoolSeeded && !token.isClaimable) {
-      await updateTokenIsClaimable(token.id);
-      await createClaimRecords(token.tokenAddress);
+    if (updatedTokenInfo.data?.readyForLp) {
+      await updateTokenReadyForLp(token.id);
     }
   };
 
@@ -286,10 +290,12 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   MAX
                 </button>
                 <p className="text-light-gray text-xs whitespace-nowrap">
-                  {tokenInfo?.liquidityPoolSeeded
+                  {tokenInfo?.readyForLp
                     ? "0.0 ETH"
                     : buyTokenName === "ETH"
-                    ? `${Number(formatEther((maxBuyPrice as bigint) || BigInt(0))).toFixed(2) || 0.0} ETH`
+                    ? Number(formatEther((maxBuyPrice as bigint) || BigInt(0))) < 0.01
+                      ? ">0.01 ETH"
+                      : `${Number(formatEther((maxBuyPrice as bigint) || BigInt(0))).toFixed(2) || 0.0} ETH`
                     : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
                 </p>
               </div>
@@ -343,6 +349,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
           {activeTab === TradingTab.SELL && (
             <>
               <Input
+                disabled={tokenInfo?.readyForLp}
                 classNames={{
                   input: "text-right appearance-none",
                   inputWrapper: ["h-[70px] px-7 bg-dark data-[hover=true]:bg-dark data-[focus=true]:bg-dark"],
@@ -456,7 +463,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
               SELL_AMOUNTS.map(amount => (
                 <button
                   key={amount}
-                  disabled={!isConnected}
+                  disabled={!isConnected || tokenInfo?.readyForLp}
                   onClick={() => {
                     setSellAmount(
                       amount === 100 ? (tokenBalance as bigint) : tokensByPercentage(amount, Number(tokenBalance))
@@ -465,7 +472,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                       amount === 100 ? (tokenBalance as bigint) : tokensByPercentage(amount, Number(tokenBalance))
                     );
                   }}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition disabled:hover:bg-black ${
                     tokensByPercentage(amount, Number(tokenBalance)) === sellAmount
                       ? "bg-black hover:bg-black cursor-default"
                       : "bg-black hover:bg-gray"
@@ -479,6 +486,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
             onClick={() => (activeTab === TradingTab.BUY ? buyTokens() : sellTokens())}
             disabled={
               !isConnected ||
+              tokenInfo?.readyForLp ||
               (activeTab === TradingTab.BUY
                 ? buyAmount === BigInt(0) || insufficientBuyBalance
                 : sellAmount === BigInt(0) || insufficientSellBalance)

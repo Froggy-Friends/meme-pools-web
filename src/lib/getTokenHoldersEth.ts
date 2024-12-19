@@ -2,6 +2,7 @@ import { Address } from "viem";
 import { moralisEthChain } from "@/config/env";
 import { TokenHolderEth, FormattedTokenHolderEth } from "@/types/token/types";
 import * as Sentry from "@sentry/nextjs";
+import { getHolderPercentage } from "./getHolderPercentage";
 
 export const getTokenHoldersEth = async (
   tokenAddress: Address,
@@ -30,7 +31,7 @@ export const getTokenHoldersEth = async (
         rank: index + 1,
         owner: holder.owner_address,
         amount: Number(holder.balance_formatted),
-        percentage: holder.percentage_relative_to_total_supply,
+        percentage: getHolderPercentage(Number(holder.balance_formatted)),
       })
     );
 
