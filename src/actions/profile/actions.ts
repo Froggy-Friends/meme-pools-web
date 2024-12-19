@@ -11,8 +11,6 @@ import { Follow, User } from "@prisma/client";
 import { FollowStatus } from "@/models/follow";
 import { Cookie } from "@/models/cookie";
 import { Chain } from "@/models/chain";
-import { getPusher } from "@/config/pusher";
-import { Channel } from "@/models/channel";
 import { Address } from "viem";
 
 export const createUser = async ({
@@ -131,15 +129,6 @@ export const followUser = async (accountId: string, followerId: string) => {
       },
     });
   }
-
-  const pusher = getPusher();
-  await pusher.trigger(Channel.Follow, accountId, {
-    feedData: {
-      user: follow.followerUser,
-      date: follow.followedAt,
-      value: follow.followingUser.name,
-    },
-  });
 };
 
 export const unfollowUser = async (accountId: string, followerId: string) => {
@@ -174,15 +163,6 @@ export const unfollowUser = async (accountId: string, followerId: string) => {
       },
     });
   }
-
-  const pusher = getPusher();
-  await pusher.trigger(Channel.Unfollow, accountId, {
-    feedData: {
-      user: follow.followerUser,
-      date: follow.unfollowedAt,
-      value: follow.followingUser.name,
-    },
-  });
 };
 
 export const setUserCookies = async (user: User | null, chain?: Chain) => {
