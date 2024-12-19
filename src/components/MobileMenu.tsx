@@ -12,6 +12,7 @@ import ChainSwitcher from "./ChainSwitcher";
 import HowItWorksButton from "./HowItWorksButton";
 import dynamic from "next/dynamic";
 import { useChainSync } from "@/hooks/useChainSync";
+import useSetChainCookie from "@/hooks/useSetChainCookie";
 
 const ConnectButton = dynamic(() => import("./ConnectButton"), { ssr: false });
 
@@ -32,7 +33,7 @@ export default function MobileMenu({
   disconnect,
   address,
 }: MobileMenuProps) {
-  useChainSync({ isConnected, address, chain });
+  useSetChainCookie(chain);
 
   return (
     <section className="tablet:hidden">
