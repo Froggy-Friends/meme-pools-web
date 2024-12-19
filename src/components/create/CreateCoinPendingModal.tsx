@@ -1,4 +1,3 @@
-import { etherscanUrl, baseExplorerUrl } from "@/config/env";
 import { TxStatus } from "@/types/token/types";
 import { Modal, ModalContent, ModalBody, CircularProgress } from "@nextui-org/react";
 import { FaCheckCircle } from "react-icons/fa";
@@ -6,7 +5,7 @@ import Link from "next/link";
 import { formatAddress } from "@/lib/formatAddress";
 import Image from "next/image";
 import { useChain } from "@/context/chain";
-import { Chain } from "@/models/chain";
+import { getExplorerUrl } from "@/lib/chains";
 
 type CreateCoinPendingModalProps = {
   isOpen: boolean;
@@ -72,7 +71,7 @@ export default function CreateCoinPendingModal({
               {txHash ? (
                 <>
                   See confirmation{" "}
-                  <Link href={`${chain.name === Chain.Eth ? etherscanUrl : baseExplorerUrl}/tx/${txHash}`} target="_blank">
+                  <Link href={getExplorerUrl(chain.name, txHash)} target="_blank">
                     <span className="text-light-gray hover:text-cream transition">{formatAddress(txHash)}</span>
                   </Link>
                 </>

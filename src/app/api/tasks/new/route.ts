@@ -22,14 +22,6 @@ export async function GET(request: Request) {
       },
     });
 
-    // TODO: Uncomment this when we have solana support
-    // await fetch(`${memepoolsApi}/tasks/refresh/solana/newest`, {
-    //   method: "POST",
-    //   headers: {
-    //     Authorization: `Bearer ${process.env.CRON_SECRET}`,
-    //   },
-    // });
-
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error:", error);

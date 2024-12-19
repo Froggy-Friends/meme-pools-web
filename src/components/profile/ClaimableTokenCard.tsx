@@ -12,7 +12,7 @@ import useRewards from "@/hooks/useRewards";
 import { Address } from "viem";
 import { formatNumber } from "@/lib/formatNumber";
 import { Chain } from "@/models/chain";
-import { ethLogo, baseLogo } from "@/config/chains";
+import { getChainLogo } from "@/lib/chains";
 
 type ClaimableTokenCardProps = {
   token: Token;
@@ -40,7 +40,7 @@ export default function ClaimableTokenCard({ token, enabled, isClaimed }: Claima
             className="rounded-full h-[50px] w-[50px] object-cover"
           />
           <Image
-            src={token.chain === "eth" ? ethLogo : baseLogo}
+            src={getChainLogo(token.chain as Chain)}
             alt={`${token.chain} logo`}
             width={20}
             height={20}

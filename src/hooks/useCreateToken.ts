@@ -7,7 +7,7 @@ import { ContractEvent } from "@/models/contractEvent";
 import * as Sentry from "@sentry/react";
 import { useState } from "react";
 import { useChain } from "@/context/chain";
-import { getContractAddress } from "@/lib/getContractAddress";
+import { getContractAddress } from "@/lib/chains";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
