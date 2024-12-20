@@ -1,11 +1,19 @@
 import { chainConfigs } from "@/config/chains";
 import {
+  tierOneEthReward,
+  tierOneBaseReward,
+  tierTwoBaseReward,
+  tierTwoEthReward,
+  tierThreeBaseReward,
+  tierThreeEthReward,
+} from "@/config/token";
+import {
   baseClaimContractAddress,
   baseContractAddress,
   claimContractAddress,
   contractAddress,
   froggyFriendsAddress,
-  froggyFriendsBaseAddress,
+  baseFroggyFriendsAddress,
 } from "@/config/env";
 import { Chain, ChainConfig } from "@/models/chain";
 
@@ -21,12 +29,24 @@ export function getChainConfig(path: string): ChainConfig {
   }
 }
 
+export const getTierOneReward = (chain: Chain) => {
+  return chain === Chain.Eth ? tierOneEthReward : tierOneBaseReward;
+};
+
+export const getTierTwoReward = (chain: Chain) => {
+  return chain === Chain.Eth ? tierTwoEthReward : tierTwoBaseReward;
+};
+
+export const getTierThreeReward = (chain: Chain) => {
+  return chain === Chain.Eth ? tierThreeEthReward : tierThreeBaseReward;
+};
+
 export const getExplorerUrl = (chain: Chain, txHash: string) => {
   return `https://${chainConfigs[chain].explorerUrl}/tx/${txHash}`;
 };
 
 export const getFrogAddress = (chain: Chain) => {
-  return chain === Chain.Eth ? froggyFriendsAddress : froggyFriendsBaseAddress;
+  return chain === Chain.Eth ? froggyFriendsAddress : baseFroggyFriendsAddress;
 };
 
 export const getContractAddress = (chain: Chain) => {

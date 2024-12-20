@@ -172,6 +172,10 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     if (updatedTokenInfo.data?.readyForLp) {
       await updateTokenReadyForLp(token.id);
     }
+    if (!token.isClaimable && updatedTokenInfo.data?.liquidityPoolSeeded) {
+      await updateTokenIsClaimable(token.id);
+      await createClaimRecords(token.tokenAddress);
+    }
   };
 
   const sellTokens = async () => {
@@ -228,6 +232,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
           {activeTab === TradingTab.BUY && (
             <>
               <Input
+                disabled={tokenInfo?.readyForLp}
                 classNames={{
                   input: "text-right appearance-none",
                   inputWrapper: [
@@ -311,7 +316,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   <Image
                     src={
                       (chain.name === Chain.Solana && buyTokenName === "SOL") ||
-                      (chain.name === Chain.Eth || chain.name === Chain.Base && buyTokenName === "ETH")
+                      chain.name === Chain.Eth ||
+                      (chain.name === Chain.Base && buyTokenName === "ETH")
                         ? token.image
                         : chain.name === Chain.Solana
                         ? solanaLogo
@@ -324,7 +330,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   />
                   <p>
                     {(chain.name === Chain.Solana && buyTokenName === "SOL") ||
-                    (chain.name === Chain.Eth || chain.name === Chain.Base && buyTokenName === "ETH")
+                    chain.name === Chain.Eth ||
+                    (chain.name === Chain.Base && buyTokenName === "ETH")
                       ? `$${formatTicker(token.ticker)}`
                       : chain.name === Chain.Solana
                       ? "$SOL"
@@ -423,8 +430,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                     setBuyAmount(parseUnits(amount.toString(), 18));
                     debouncedBuyCost(parseUnits(amount.toString(), 18));
                   }}
-                  disabled={!isConnected}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
+                  disabled={!isConnected || tokenInfo?.readyForLp}
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition disabled:hover:bg-black ${
                     parseUnits(amount.toString(), 18) === buyAmount
                       ? "bg-black hover:bg-black cursor-default"
                       : "bg-black hover:bg-gray"
@@ -449,8 +456,8 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                       tokenInfo.availableSupply &&
                       debouncedBuyCost(tokensByPercentage(amount, Number(tokenInfo.availableSupplyRaw)));
                   }}
-                  disabled={!isConnected}
-                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition ${
+                  disabled={!isConnected || tokenInfo?.readyForLp}
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition disabled:hover:bg-black ${
                     parseUnits(amount.toString(), 18) === buyAmount
                       ? "bg-black hover:bg-black cursor-default"
                       : "bg-black hover:bg-gray"

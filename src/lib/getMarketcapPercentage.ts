@@ -1,4 +1,4 @@
-import { MAX_MARKET_CAP } from "@/lib/constants";
+import { MAX_MARKET_CAP } from "@/config/token";
 
 export const getMarketcapPercentage = (marketCap: number | undefined) => {
   if (!marketCap) return 0;

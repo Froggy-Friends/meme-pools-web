@@ -15,7 +15,7 @@ import { cn, Switch } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { GrRefresh } from "react-icons/gr";
 import { useCallback, useRef, useState } from "react";
-import { maxReservedSupply } from "@/lib/constants";
+import { maxReservedSupply } from "@/config/token";
 import { PutBlobResult } from "@vercel/blob";
 import { useDebouncedCallback } from "use-debounce";
 import useReservePrice from "@/hooks/useReservePrice";

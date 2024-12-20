@@ -57,6 +57,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
         cachedUser={cachedUser}
         currentView={view}
         delegatedWallets={delegatedWallets}
+        chain={chain}
       />
 
       {view === "holdings" && profileUser.id === cachedUser?.id && (

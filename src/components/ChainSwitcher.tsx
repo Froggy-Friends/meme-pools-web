@@ -10,6 +10,7 @@ import { useAppKit, useAppKitAccount, useDisconnect } from "@reown/appkit/react"
 import { isWalletChainCompatible } from "@/lib/wallet";
 import { setUserCookies } from "@/actions/profile/actions";
 import { usePathname } from "next/navigation";
+import { setChainCookie } from "@/actions/chain/actions";
 
 type ChainSwitcherProps = {
   height?: number;
@@ -40,11 +41,13 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
     }
 
     if (pathname.includes("/profile") || pathname.includes("/create")) {
+      await setChainCookie(chainConfig.name);
       setChain(chainConfig);
       return;
     } else {
+      router.replace(`/${chainConfig.name}`);
+      await setChainCookie(chainConfig.name);
       setChain(chainConfig);
-      router.push(`/${chainConfig.name}`);
     }
   };
 

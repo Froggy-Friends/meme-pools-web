@@ -1,3 +1,5 @@
+"use client";
+
 import { Token } from "@prisma/client";
 import Image from "next/image";
 import toast from "react-hot-toast";
@@ -9,6 +11,8 @@ import { CircularProgress } from "@nextui-org/react";
 import Link from "next/link";
 import { etherscanUrl } from "@/config/env";
 import { FaCheckCircle } from "react-icons/fa";
+import { useChain } from "@/context/chain";
+import { getExplorerUrl } from "@/lib/chains";
 
 export const BuyToast = (
   token: Token,
@@ -19,6 +23,8 @@ export const BuyToast = (
   isSuccess: boolean,
   id: string
 ) => {
+  const { chain } = useChain();
+
   return toast.custom(
     t => (
       <div
@@ -52,7 +58,7 @@ export const BuyToast = (
           <div className="flex flex-col items-start">
             <p className="-mb-[0.1rem]">{isSuccess ? "Swapped" : "Swapping"}</p>
             <Link
-              href={`${etherscanUrl}/tx/${txHash}`}
+              href={getExplorerUrl(chain.name, txHash)}
               className="text-light-gray hover:text-cream transition text-[15px] leading-[1.125]"
               target="_blank"
             >

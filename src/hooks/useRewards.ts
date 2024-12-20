@@ -24,7 +24,7 @@ export default function useRewards(chain: Chain) {
     setPending(true);
     if (!currentUser || !tokenAddress) return 0;
 
-    const frogIds = await getFrogsByWallet(currentUser?.ethAddress as Address);
+    const frogIds = await getFrogsByWallet(currentUser?.ethAddress as Address, chain);
     const rewards = await contract.rewards(tokenAddress, frogIds);
 
     setPending(false);
