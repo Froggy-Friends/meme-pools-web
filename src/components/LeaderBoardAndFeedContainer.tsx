@@ -6,16 +6,19 @@ import VotingLeaderboard from "./VotingLeaderboard";
 import { useFeatureFlagPayload, useFeatureFlagEnabled } from "posthog-js/react";
 import { useState, useEffect } from "react";
 import { useChain } from "@/context/chain";
+import { useQuery } from "@tanstack/react-query";
+import { fetchTopVotesTokens } from "@/queries/token/queries";
 
-type LeaderBoardAndFeedContainerProps = {
-  topTokens: Token[];
-};
-
-export default function LeaderBoardAndFeedContainer({ topTokens }: LeaderBoardAndFeedContainerProps) {
+export default function LeaderBoardAndFeedContainer() {
   const { chain } = useChain();
   const payload = useFeatureFlagPayload(`spotlight-${chain.name}`);
   const isSpotlightEnabled = useFeatureFlagEnabled(`spotlight-${chain.name}`);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { data: topVotesTokens } = useQuery({
+    queryKey: [`${chain.name}-top-votes-tokens`],
+    queryFn: async () => await fetchTopVotesTokens(chain.name),
+  });
 
   useEffect(() => {
     if (payload || !isSpotlightEnabled) {
@@ -29,7 +32,7 @@ export default function LeaderBoardAndFeedContainer({ topTokens }: LeaderBoardAn
         <div className="w-full rounded-lg bg-dark-gray p-4 flex flex-col gap-6">
           <div className="flex items-center justify-between w-full">
             <span className="hidden laptop:block font-bold uppercase">Leaderboard</span>
-            <VotingLeaderboard tokens={topTokens} />
+            <VotingLeaderboard tokens={topVotesTokens || []} />
           </div>
         </div>
       )}
