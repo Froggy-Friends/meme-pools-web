@@ -17,17 +17,16 @@ export async function GET(request: Request) {
   const delegations = await getDelegations(address as `0x${string}`);
 
   const fetchNfts = async (address: `0x${string}`) => {
-    if (!process.env.MORALIS_API_KEY) {
-      throw new Error("Moralis API key is not set");
+    if (!process.env.ALCHEMY_API_KEY) {
+      throw new Error("Alchemy API key is not set");
     }
 
     const response = await fetch(
-      `https://deep-index.moralis.io/api/v2.2/${address}/nft?chain=${chain}&format=decimal&token_addresses%5B0%5D=${froggyFriendsAddress}&media_items=false`,
+      `https://${chain}-mainnet.g.alchemy.com/nft/v3/${process.env.ALCHEMY_API_KEY}/getNFTsForOwner?owner=${address}&contractAddresses[]=${froggyFriendsAddress}&withMetadata=true&pageSize=100`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "X-API-Key": process.env.MORALIS_API_KEY,
         },
       }
     );
@@ -36,12 +35,17 @@ export async function GET(request: Request) {
   };
 
   const mainWalletData = await fetchNfts(address as `0x${string}`);
+  const mainWalletNfts = mainWalletData.ownedNfts;
+
   const delegatedWalletsData = await Promise.all(
     delegations.map((delegatedAddress) => fetchNfts(delegatedAddress))
   );
+  const delegatedWalletsNfts = delegatedWalletsData.map(
+    (data) => data.ownedNfts
+  );
 
-  const allResults = [mainWalletData, ...delegatedWalletsData].flatMap(
-    (data) => data.result
+  const allResults = [mainWalletNfts, ...delegatedWalletsNfts].flatMap(
+    (data) => data
   );
 
   return NextResponse.json({ result: allResults });
