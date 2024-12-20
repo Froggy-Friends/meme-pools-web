@@ -1,5 +1,9 @@
 import { delegate } from "@/config/delegate";
-import { froggyFriendsAddress } from "@/config/env";
+import {
+  froggyFriendsAddress,
+  baseFroggyFriendsAddress,
+  tadpoleAddress,
+} from "@/config/env";
 import { Address } from "viem";
 
 export const getDelegations = async (address: Address) => {
@@ -13,7 +17,15 @@ export const getDelegations = async (address: Address) => {
       (delegation.type === "CONTRACT" &&
         delegation.contract === froggyFriendsAddress) ||
       (delegation.type === "ERC721" &&
-        delegation.contract === froggyFriendsAddress)
+        delegation.contract === froggyFriendsAddress) ||
+      (delegation.type === "ERC404" &&
+        delegation.contract === tadpoleAddress) ||
+      (delegation.type === "CONTRACT" &&
+        delegation.contract === tadpoleAddress) ||
+      (delegation.type === "ERC721" &&
+        delegation.contract === baseFroggyFriendsAddress) ||
+      (delegation.type === "CONTRACT" &&
+        delegation.contract === baseFroggyFriendsAddress)
     );
   });
 
