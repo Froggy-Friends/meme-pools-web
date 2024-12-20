@@ -9,10 +9,9 @@ import { formatTicker } from "@/lib/formatTicker";
 import { formatBalance } from "@/lib/formatBalance";
 import { CircularProgress } from "@nextui-org/react";
 import Link from "next/link";
-import { etherscanUrl } from "@/config/env";
 import { FaCheckCircle } from "react-icons/fa";
-import { useChain } from "@/context/chain";
 import { getExplorerUrl } from "@/lib/chains";
+import { Chain } from "@/models/chain";
 
 export const SellToast = (
   token: Token,
@@ -21,10 +20,9 @@ export const SellToast = (
   txHash: string,
   duration: number,
   isSuccess: boolean,
-  id: string
+  id: string,
+  chain: Chain
 ) => {
-  const { chain } = useChain();
-
   return toast.custom(
     t => (
       <div
@@ -57,7 +55,7 @@ export const SellToast = (
           <div className="flex flex-col items-start">
             <p className="-mb-[0.1rem]">{isSuccess ? "Swapped" : "Swapping"}</p>
             <Link
-              href={getExplorerUrl(chain.name, txHash)}
+              href={getExplorerUrl(chain, txHash)}
               className="text-light-gray hover:text-cream transition text-[15px] leading-[1.125]"
               target="_blank"
             >
