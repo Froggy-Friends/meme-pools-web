@@ -1,6 +1,5 @@
 "use client";
 
-import { Token } from "@prisma/client";
 import LiveFeed from "./LiveFeed";
 import VotingLeaderboard from "./VotingLeaderboard";
 import { useFeatureFlagPayload, useFeatureFlagEnabled } from "posthog-js/react";
@@ -15,7 +14,7 @@ export default function LeaderBoardAndFeedContainer() {
   const isSpotlightEnabled = useFeatureFlagEnabled(`spotlight-${chain.name}`);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { data: topVotesTokens } = useQuery({
+  const { data: tokens } = useQuery({
     queryKey: [`${chain.name}-top-votes-tokens`],
     queryFn: async () => await fetchTopVotesTokens(chain.name),
   });
@@ -32,7 +31,7 @@ export default function LeaderBoardAndFeedContainer() {
         <div className="w-full rounded-lg bg-dark-gray p-4 flex flex-col gap-6">
           <div className="flex items-center justify-between w-full">
             <span className="hidden laptop:block font-bold uppercase">Leaderboard</span>
-            <VotingLeaderboard tokens={topVotesTokens || []} />
+            <VotingLeaderboard tokens={tokens || []} />
           </div>
         </div>
       )}
