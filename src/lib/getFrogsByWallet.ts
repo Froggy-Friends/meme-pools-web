@@ -8,7 +8,7 @@ export const getFrogsByWallet = async (address: Address, chain: Chain) => {
   }
 
   const response = await fetch(
-    `${memepoolsDomain}/frog-ids?address=${address}&chain=${chain}`
+    `${memepoolsDomain}/api/frog-ids?address=${address}&chain=${chain}`
   );
   const data = await response.json();
 
