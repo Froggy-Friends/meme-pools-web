@@ -28,7 +28,7 @@ export default function CreatorRewards() {
             <span>
               {" "}
               <Link
-                href={"https://magiceden.io/collections/base/0x0afcae1208ac99addc6983a06735a199f190de09"}
+                href={"https://opensea.io/collection/tadpolesnft"}
                 className="text-primary hover:text-light-primary transition"
                 target="_blank"
               >
@@ -38,7 +38,7 @@ export default function CreatorRewards() {
             </span>
           )}{" "}
           <Link
-            href="https://magiceden.us/collections/ethereum/0x7ad05c1b87e93be306a9eadf80ea60d7648f1b6f"
+            href="https://opensea.io/collection/froggyfriendsnft"
             className="text-[#61A14C] hover:text-green transition"
             target="_blank"
           >
