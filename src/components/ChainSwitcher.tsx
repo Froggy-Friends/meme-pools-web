@@ -41,13 +41,13 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
     }
 
     if (pathname.includes("/profile") || pathname.includes("/create")) {
-      setChain(chainConfig);
       await setChainCookie(chainConfig.name);
+      setChain(chainConfig);
       return;
     } else {
-      setChain(chainConfig);
-      router.push(`/${chainConfig.name}`);
+      router.replace(`/${chainConfig.name}`);
       await setChainCookie(chainConfig.name);
+      setChain(chainConfig);
     }
   };
 
