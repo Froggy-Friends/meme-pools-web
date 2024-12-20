@@ -3,19 +3,19 @@
 import Link from "next/link";
 import RewardTier from "./RewardTier";
 import useEthPrice from "@/hooks/useEthPrice";
-import { tierOneEthReward, tierTwoEthReward, tierThreeEthReward } from "@/config/token";
 import useMarketcapGoal from "@/hooks/useMarketcapGoal";
 import { contractAddress } from "@/config/env";
 import { Chain } from "@/models/chain";
 import { useChain } from "@/context/chain";
+import { getTierOneReward, getTierThreeReward, getTierTwoReward } from "@/lib/chains";
 
 export default function CreatorRewards() {
   const ethPrice = useEthPrice();
   const marketcapGoal = useMarketcapGoal(contractAddress);
-  const tierOneReward = Math.round(tierOneEthReward * ethPrice);
-  const tierTwoReward = Math.round(tierTwoEthReward * ethPrice);
-  const tierThreeReward = Math.round(tierThreeEthReward * ethPrice);
   const { chain } = useChain();
+  const tierOneReward = Math.round(getTierOneReward(chain.name) * ethPrice);
+  const tierTwoReward = Math.round(getTierTwoReward(chain.name) * ethPrice);
+  const tierThreeReward = Math.round(getTierThreeReward(chain.name) * ethPrice);
 
   return (
     <section className="flex flex-col items-center laptop:flex-row justify-between gap-y-6 laptop:gap-y-0 bg-dark-gray rounded-xl mx-2 tablet:mx-0 px-4 laptop:px-6 py-7 laptop:w-full desktop:w-[950px] desktop:mx-auto mt-20 text-center laptop:text-left">
@@ -76,7 +76,7 @@ export default function CreatorRewards() {
         </p>
       </div>
 
-      <div className="flex items-center gap-x-6">
+      <div className="flex items-center gap-x-5 laptop:w-[47%] desktop:w-[40%] laptop:justify-end">
         <RewardTier tier="bronze" rewardAmount={tierOneReward} />
         <RewardTier tier="silver" rewardAmount={tierTwoReward} />
         <RewardTier tier="gold" rewardAmount={tierThreeReward} />
