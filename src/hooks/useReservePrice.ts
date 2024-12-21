@@ -1,10 +1,15 @@
 import { memepoolsAbi } from "@/abi/memepools";
-import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { formatEther, parseUnits } from "viem";
 import { Contract } from "ethers";
+import { useChain } from "@/context/chain";
+import { getContractAddress } from "@/lib/chains";
+
 export default function useReservePrice() {
+  const { chain } = useChain();
   const signer = useEthersSigner();
+  const contractAddress = getContractAddress(chain.name);
+
   const contract = new Contract(contractAddress, memepoolsAbi, signer);
 
   const getReservePrice = async (amount: number) => {
