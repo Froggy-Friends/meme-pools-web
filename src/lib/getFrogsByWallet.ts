@@ -12,5 +12,5 @@ export const getFrogsByWallet = async (address: Address, chain: Chain) => {
   );
   const data = await response.json();
 
-  return data.result.map((frog: any) => Number(frog.token_id));
+  return data.result.map((frog: any) => Number(frog.tokenId));
 };

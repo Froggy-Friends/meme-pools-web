@@ -42,7 +42,7 @@ export const getTierThreeReward = (chain: Chain) => {
 };
 
 export const getExplorerUrl = (chain: Chain, txHash: string) => {
-  return `https://${chainConfigs[chain].explorerUrl}/tx/${txHash}`;
+  return `${chainConfigs[chain].explorerUrl}/tx/${txHash}`;
 };
 
 export const getFrogAddress = (chain: Chain) => {
