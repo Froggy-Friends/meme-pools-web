@@ -17,6 +17,7 @@ import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import { formatMarketcap } from "@/lib/formatMarketcap";
 import { defaultProfileAvatarUrl } from "@/config/user";
+import { Chain } from "@/models/chain";
 
 type TokenDisplayCardProps = {
   token: TokenWithCreator | TokenWithVotes;
@@ -96,9 +97,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
                 className="rounded-full shrink-0 min-w-[25px] min-h-[25px] object-cover self-start"
               />
             </Link>
-            <p className="text-light-gray text-sm break-words line-clamp-3">
-              {token.description}
-            </p>
+            <p className="text-light-gray text-sm break-words line-clamp-3">{token.description}</p>
           </div>
         </div>
 
@@ -107,7 +106,9 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
             <div className="text-white text-sm flex items-center gap-1">
               MC
               <span>${formatMarketcap(tokenInfo?.marketcap || 0)}</span>
-              <span className="text-light-gray">({Math.round(getBondingCurvePercentage(tokenInfo?.tokensSold))}%)</span>
+              <span className="text-light-gray">
+                ({Math.round(getBondingCurvePercentage(tokenInfo?.tokensSold, token.chain as Chain))}%)
+              </span>
             </div>
             <div className="flex items-center gap-3">
               {token.twitter && (
@@ -130,7 +131,7 @@ export default function TokenDisplayCard({ token }: TokenDisplayCardProps) {
           <Progress
             aria-label="Downloading..."
             size="md"
-            value={getBondingCurvePercentage(tokenInfo?.tokensSold)}
+            value={getBondingCurvePercentage(tokenInfo?.tokensSold, token.chain as Chain)}
             classNames={{
               base: "max-w-full",
               track: "drop-shadow-md bg-gray h-2",

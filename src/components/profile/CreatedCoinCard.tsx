@@ -22,7 +22,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
   const { tokenInfo, refetchTokenInfo } = useTokenInfo(token);
   const { launchCoin } = useLaunchCoin(token);
   const { chain } = useChain();
-  const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold);
+  const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold, token.chain as Chain);
   const [isLaunching, setIsLaunching] = useState(false);
 
   return (

@@ -6,6 +6,7 @@ import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import useTokenInfo from "@/hooks/useTokenInfo";
 import useMarketcapGoal from "@/hooks/useMarketcapGoal";
 import { Address } from "viem";
+import { Chain } from "@/models/chain";
 
 type BondingCurveProgressProps = {
   token: Token;
@@ -20,7 +21,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
       <Progress
         aria-label="Downloading..."
         size="md"
-        value={tokenInfo?.tokensSold ? getBondingCurvePercentage(tokenInfo.tokensSold) : 0}
+        value={tokenInfo?.tokensSold ? getBondingCurvePercentage(tokenInfo.tokensSold, token.chain as Chain) : 0}
         classNames={{
           base: "max-w-full",
           track: "drop-shadow-md bg-dark-gray h-4",

@@ -20,7 +20,7 @@ type PurchasedCoinCardProps = {
 export default function PurchasedCoinCard({ token }: PurchasedCoinCardProps) {
   const { tokenInfo } = useTokenInfo(token);
   const { chain } = useChain();
-  const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold);
+  const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold, token.chain as Chain);
 
   return (
     <section className="flex flex-col tablet:flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">

@@ -6,6 +6,8 @@ import {
   tierTwoEthReward,
   tierThreeBaseReward,
   tierThreeEthReward,
+  maxTradeableSupply,
+  maxTradeableSupplyBase,
 } from "@/config/token";
 import {
   baseClaimContractAddress,
@@ -45,6 +47,10 @@ export const getExplorerUrl = (chain: Chain, txHash: string) => {
   return `${chainConfigs[chain].explorerUrl}/tx/${txHash}`;
 };
 
+export const getExplorerAddressUrl = (chain: Chain, address: string) => {
+  return `${chainConfigs[chain].explorerUrl}/${chain === Chain.Solana ? "account" : "address"}/${address}`;
+};
+
 export const getFrogAddress = (chain: Chain) => {
   return chain === Chain.Eth ? froggyFriendsAddress : baseFroggyFriendsAddress;
 };
@@ -59,4 +65,8 @@ export const getClaimContractAddress = (chain: Chain) => {
 
 export const getChainLogo = (chain: Chain) => {
   return chainConfigs[chain].logo;
+};
+
+export const getMaxTradeableSupply = (chain: Chain) => {
+  return chain === Chain.Eth ? maxTradeableSupply : maxTradeableSupplyBase;
 };
