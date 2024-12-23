@@ -7,6 +7,7 @@ import useTokenInfo from "@/hooks/useTokenInfo";
 import useMarketcapGoal from "@/hooks/useMarketcapGoal";
 import { Address } from "viem";
 import { Chain } from "@/models/chain";
+import { useChain } from "@/context/chain";
 
 type BondingCurveProgressProps = {
   token: Token;
@@ -14,7 +15,8 @@ type BondingCurveProgressProps = {
 
 export default function BondingCurveProgress({ token }: BondingCurveProgressProps) {
   const { tokenInfo } = useTokenInfo(token);
-  const marketcapGoal = useMarketcapGoal(token.platformAddress as Address);
+  const { chain } = useChain();
+  const marketcapGoal = useMarketcapGoal(token.platformAddress as Address, chain.name);
 
   return (
     <section className="mt-6 laptop:mt-7 desktop:mt-4 w-full tablet:w-[430px]">

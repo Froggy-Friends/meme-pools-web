@@ -4,7 +4,6 @@ import useMarketcapGoal from "@/hooks/useMarketcapGoal";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import RewardTier from "./create/RewardTier";
-import { tierOneEthReward, tierThreeEthReward, tierTwoEthReward } from "@/config/token";
 import useEthPrice from "@/hooks/useEthPrice";
 import Link from "next/link";
 import { contractAddress } from "@/config/env";
@@ -20,9 +19,9 @@ type HowItWorkdsModalProps = {
 
 export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsModalProps) {
   const router = useRouter();
-  const marketcapGoal = useMarketcapGoal(contractAddress);
   const ethPrice = useEthPrice();
   const { chain } = useChain();
+  const marketcapGoal = useMarketcapGoal(contractAddress, chain.name);
   const tierOneReward = Math.round(getTierOneReward(chain.name) * ethPrice);
   const tierTwoReward = Math.round(getTierTwoReward(chain.name) * ethPrice);
   const tierThreeReward = Math.round(getTierThreeReward(chain.name) * ethPrice);
@@ -50,7 +49,8 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
               When a coin reaches a <span className="text-green">${marketcapGoal}</span> market cap, launch it on your
               profile to collect your reward. All users start with bronze rewards. Own
               {chain.name === Chain.Base && (
-                <span>{" "}
+                <span>
+                  {" "}
                   <Link
                     href={"https://opensea.io/collection/tadpolesnft"}
                     className="text-primary hover:text-light-primary transition"
