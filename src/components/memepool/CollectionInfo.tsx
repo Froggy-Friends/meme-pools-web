@@ -8,10 +8,11 @@ import useUser from "@/hooks/useUser";
 import useIsAHolder from "@/hooks/useIsAHolder";
 import { TokenOrigin, TokenType } from "@/models/token";
 import useTokenBalance from "@/hooks/useTokenBalance";
-import { wagmiChains } from "@/config/reown";
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
 import Link from "next/link";
+import { useChain } from "@/context/chain";
+import { Chain } from "@/models/chain";
 
 type CollectionInfoProps = {
   token: Token;
@@ -21,12 +22,14 @@ type CollectionInfoProps = {
 export default function CollectionInfo({ token, setIsVisible }: CollectionInfoProps) {
   const { currentUser } = useUser();
   const { isConnected } = useAccount();
+  const { chain } = useChain();
   const { isHolder } = useIsAHolder(
     token.tokenAddress as Address,
     currentUser?.ethAddress as Address,
-    token.type as TokenType
+    token.type as TokenType,
+    chain.name as Chain
   );
-  const { tokenBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { tokenBalance } = useTokenBalance(token.tokenAddress as Address, chain.id);
   const disabled = useMemo(() => {
     if (!isConnected) return true;
     if (token.origin === TokenOrigin.Internal) {
