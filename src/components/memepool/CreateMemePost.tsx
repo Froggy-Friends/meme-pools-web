@@ -1,7 +1,7 @@
 "use client";
 
 import { IoCloseCircle } from "react-icons/io5";
-import { useState, useCallback, useRef, useMemo, useEffect } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import Image from "next/image";
 import useUser from "@/hooks/useUser";
 import { addMeme, addPost } from "@/actions/memepool/actions";
@@ -13,8 +13,9 @@ import { TokenOrigin, TokenType } from "@/models/token";
 import { Token } from "@prisma/client";
 import { Address } from "viem";
 import useTokenBalance from "@/hooks/useTokenBalance";
-import { wagmiChains } from "@/config/reown";
 import { useAccount } from "wagmi";
+import { useChain } from "@/context/chain";
+import { Chain } from "@/models/chain";
 
 type CreateMemePostProps = {
   isVisible: boolean;
@@ -27,12 +28,14 @@ export default function CreateMemePost({ isVisible, setIsVisible, token }: Creat
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useUser();
   const { isConnected } = useAccount();
+  const { chain } = useChain();
   const { isHolder } = useIsAHolder(
     token.tokenAddress as Address,
     currentUser?.ethAddress as Address,
-    token.type as TokenType
+    token.type as TokenType,
+    chain.name as Chain
   );
-  const { tokenBalance } = useTokenBalance(token.tokenAddress as Address, wagmiChains.eth.id);
+  const { tokenBalance } = useTokenBalance(token.tokenAddress as Address, chain.id);
   const router = useRouter();
   const disabled = useMemo(() => {
     if (!isConnected) return true;
@@ -44,6 +47,7 @@ export default function CreateMemePost({ isVisible, setIsVisible, token }: Creat
     }
     return false;
   }, [token.origin, tokenBalance, isHolder, images.length, isConnected]);
+  const maxTotalFileSize = 4 * 1024 * 1024; // 4MB
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -60,23 +64,34 @@ export default function CreateMemePost({ isVisible, setIsVisible, token }: Creat
   const handlePostMemes = async () => {
     if (images.length === 0) return;
 
+    const totalSize = images.reduce((sum, file) => sum + file.size, 0);
+
+    if (totalSize > maxTotalFileSize) {
+      toast.error("Total file size exceeds 4MB limit");
+      return;
+    }
+
     const post = await addPost(token.id, currentUser?.id);
     if (!post) {
       toast.error("Failed to create post");
       return;
     }
 
-    await Promise.all(
-      images.map(async img => {
-        const formData = new FormData();
-        formData.append("image", img);
-        await addMeme(token.id, currentUser?.id, formData, post.id);
-      })
-    );
+    try {
+      await Promise.all(
+        images.map(async img => {
+          const formData = new FormData();
+          formData.append("image", img);
+          await addMeme(token.id, currentUser?.id, formData, post.id);
+        })
+      );
 
-    setImages([]);
-    toast.success("Memes posted successfully");
-    router.refresh();
+      setImages([]);
+      toast.success("Memes posted successfully");
+      router.refresh();
+    } catch (error) {
+      toast.error("Failed to upload one or more images");
+    }
   };
 
   return (
@@ -114,7 +129,7 @@ export default function CreateMemePost({ isVisible, setIsVisible, token }: Creat
                 onClick={() => fileInputRef.current?.click()}
                 className="text-cream/75 hover:text-cream hover:cursor-pointer"
               >
-                Click or Drag Images Here
+                Click or Drag Images Here (Max 4MB total)
               </p>
             ) : (
               <div
