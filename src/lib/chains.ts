@@ -77,10 +77,10 @@ export const getMaxTradeableSupply = (chain: Chain) => {
   return chain === Chain.Eth ? maxTradeableSupply : maxTradeableSupplyBase;
 };
 
-export const getMarketcapGoal = (chain: Chain, contractAddress: Address) => {
+export const getMarketcapGoal = (chain: Chain, contractAdd: Address) => {
   return chain === Chain.Base
     ? baseMarketcapGoalV1
-    : chain === Chain.Eth && contractAddress === contractAddress
+    : chain === Chain.Eth && contractAddress === contractAdd
     ? ethMarketcapGoalV2
     : ethMarketcapGoalV1;
 };

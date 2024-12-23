@@ -10,7 +10,9 @@ import { useAppKit, useAppKitAccount, useDisconnect } from "@reown/appkit/react"
 import { isWalletChainCompatible } from "@/lib/wallet";
 import { setUserCookies } from "@/actions/profile/actions";
 import { usePathname } from "next/navigation";
-import { setChainCookie } from "@/actions/chain/actions";
+import { setChainCookie, setPreviousChainCookie } from "@/actions/chain/actions";
+import { useState } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 type ChainSwitcherProps = {
   height?: number;
@@ -18,12 +20,14 @@ type ChainSwitcherProps = {
 };
 
 export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcherProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { chain, setChain } = useChain();
   const { open } = useAppKit();
   const { disconnect } = useDisconnect();
   const { address } = useAppKitAccount();
   const pathname = usePathname();
+
   const getChainLogo = (chain: Chain) => {
     if (chain === Chain.Base) return baseLogo;
     else if (chain === Chain.Eth) return ethLogo;
@@ -32,31 +36,53 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
   };
 
   const handleChainSwitch = async (chainConfig: ChainConfig) => {
-    const isWalletCompatible = isWalletChainCompatible(address, chainConfig.name);
+    setIsLoading(true);
 
-    if (!isWalletCompatible) {
-      await disconnect();
-      await setUserCookies(null, chain.name);
-      open();
-    }
+    try {
+      await setPreviousChainCookie(chain.name);
 
-    if (pathname.includes("/profile") || pathname.includes("/create")) {
+      if (pathname.includes("/token")) {
+        router.push(`/${chainConfig.name}`);
+
+        await setChainCookie(chainConfig.name);
+        setChain(chainConfig);
+
+        router.refresh();
+
+        return;
+      }
+
+      const isWalletCompatible = isWalletChainCompatible(address, chainConfig.name);
+
+      if (!isWalletCompatible) {
+        await disconnect();
+        await setUserCookies(null, chain.name);
+        open();
+      }
+
       await setChainCookie(chainConfig.name);
       setChain(chainConfig);
-      return;
-    } else {
-      router.replace(`/${chainConfig.name}`);
-      await setChainCookie(chainConfig.name);
-      setChain(chainConfig);
+
+      if (!pathname.includes("/create") && !pathname.includes("/profile")) {
+        window.history.pushState({}, "", `/${chainConfig.name}`);
+      }
+    } catch (error) {
+      Sentry.captureException(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
       <DropdownTrigger>
-        <div className="hover:bg-gray transition rounded-lg p-1 laptop:p-2 cursor-pointer">
+        <div
+          className={`hover:bg-gray transition rounded-lg p-1 laptop:p-2 cursor-pointer ${
+            isLoading ? "opacity-50" : ""
+          }`}
+        >
           <Image
-            className="transition-transform"
+            className={`transition-transform ${isLoading ? "animate-pulse" : ""}`}
             src={getChainLogo(chain.name)}
             alt="chain-logo"
             height={height}
