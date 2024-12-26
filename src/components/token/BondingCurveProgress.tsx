@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress } from "@nextui-org/react";
+import { Link, Progress } from "@nextui-org/react";
 import { Token } from "@prisma/client";
 import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import useTokenInfo from "@/hooks/useTokenInfo";
@@ -8,6 +8,7 @@ import useMarketcapGoal from "@/hooks/useMarketcapGoal";
 import { Address } from "viem";
 import { Chain } from "@/models/chain";
 import { useChain } from "@/context/chain";
+import useLaunchedCoinMc from "@/hooks/useLaunchedCoinMc";
 
 type BondingCurveProgressProps = {
   token: Token;
@@ -17,6 +18,7 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
   const { tokenInfo } = useTokenInfo(token);
   const { chain } = useChain();
   const marketcapGoal = useMarketcapGoal(token.platformAddress as Address, chain.name);
+  const launchedCoinMarketcap = useLaunchedCoinMc(token);
 
   return (
     <section className="mt-6 laptop:mt-7 desktop:mt-4 w-full tablet:w-[430px]">
@@ -36,10 +38,13 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
         label="Launch Progress"
       />
       <p className="text-light-gray">
-        Marketcap: <span className="text-light-primary">${tokenInfo?.marketcap?.toFixed(2)}</span>
+        Marketcap:{" "}
+        <span className="text-light-primary">${launchedCoinMarketcap || tokenInfo?.marketcap?.toFixed(2)}</span>
       </p>
 
-      {tokenInfo?.autoLaunch ? (
+      {tokenInfo?.liquidityPoolSeeded ? (
+        <p className="text-cream pt-2">${token.ticker} has been launched and trading is available on Uniswap.</p>
+      ) : tokenInfo?.autoLaunch ? (
         <p className="text-cream pt-2">
           ${token.ticker} will be launched and trading enabled on dexes once it reaches a market cap of{" "}
           <span className="text-green">${marketcapGoal}</span>.
