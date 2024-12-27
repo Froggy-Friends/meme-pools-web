@@ -6,6 +6,11 @@ import {
   tierTwoEthReward,
   tierThreeBaseReward,
   tierThreeEthReward,
+  maxTradeableSupply,
+  maxTradeableSupplyBase,
+  baseMarketcapGoalV1,
+  ethMarketcapGoalV1,
+  ethMarketcapGoalV2,
 } from "@/config/token";
 import {
   baseClaimContractAddress,
@@ -16,6 +21,7 @@ import {
   baseFroggyFriendsAddress,
 } from "@/config/env";
 import { Chain, ChainConfig } from "@/models/chain";
+import { Address } from "viem";
 
 export function getChainConfig(path: string): ChainConfig {
   if (path === `/${Chain.Eth}` || path === Chain.Eth) {
@@ -42,7 +48,13 @@ export const getTierThreeReward = (chain: Chain) => {
 };
 
 export const getExplorerUrl = (chain: Chain, txHash: string) => {
-  return `https://${chainConfigs[chain].explorerUrl}/tx/${txHash}`;
+  return `${chainConfigs[chain].explorerUrl}/tx/${txHash}`;
+};
+
+export const getExplorerAddressUrl = (chain: Chain, address: string) => {
+  return `${chainConfigs[chain].explorerUrl}/${
+    chain === Chain.Solana ? "account" : "address"
+  }/${address}`;
 };
 
 export const getFrogAddress = (chain: Chain) => {
@@ -59,4 +71,16 @@ export const getClaimContractAddress = (chain: Chain) => {
 
 export const getChainLogo = (chain: Chain) => {
   return chainConfigs[chain].logo;
+};
+
+export const getMaxTradeableSupply = (chain: Chain) => {
+  return chain === Chain.Eth ? maxTradeableSupply : maxTradeableSupplyBase;
+};
+
+export const getMarketcapGoal = (chain: Chain, contractAdd: Address) => {
+  return chain === Chain.Base
+    ? baseMarketcapGoalV1
+    : chain === Chain.Eth && contractAddress === contractAdd
+    ? ethMarketcapGoalV2
+    : ethMarketcapGoalV1;
 };

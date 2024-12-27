@@ -25,12 +25,13 @@ export default function useAllowance(token: Token, chainId: number) {
   });
 
   const formattedAllowance =
-    address && data && data.length
+    address && data && data.length && data[0].result
       ? Number(formatEther(data[0].result as bigint))
       : 0;
 
   useEffect(() => {
     if (
+      tokenBalance &&
       formattedAllowance >= Number(formatEther(tokenBalance as bigint)) &&
       formattedAllowance > 0
     ) {

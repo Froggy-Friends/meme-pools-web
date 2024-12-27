@@ -11,8 +11,8 @@ import { getTierOneReward, getTierThreeReward, getTierTwoReward } from "@/lib/ch
 
 export default function CreatorRewards() {
   const ethPrice = useEthPrice();
-  const marketcapGoal = useMarketcapGoal(contractAddress);
   const { chain } = useChain();
+  const marketcapGoal = useMarketcapGoal(contractAddress, chain.name);
   const tierOneReward = Math.round(getTierOneReward(chain.name) * ethPrice);
   const tierTwoReward = Math.round(getTierTwoReward(chain.name) * ethPrice);
   const tierThreeReward = Math.round(getTierThreeReward(chain.name) * ethPrice);

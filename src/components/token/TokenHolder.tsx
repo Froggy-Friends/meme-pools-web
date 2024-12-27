@@ -1,9 +1,9 @@
-import { contractAddress, etherscanUrl, solanaExplorerUrl } from "@/config/env";
 import { formatAddress } from "@/lib/formatAddress";
 import { TokenHolderData } from "@/types/token/types";
 import Link from "next/link";
 import { Chain } from "@/models/chain";
 import { formatBalance } from "@/lib/formatBalance";
+import { getContractAddress, getExplorerAddressUrl } from "@/lib/chains";
 
 type TokenHolderProps = {
   holder: TokenHolderData;
@@ -12,7 +12,8 @@ type TokenHolderProps = {
 };
 
 export default function TokenHolder({ holder, chain, creator }: TokenHolderProps) {
-  const isMemepoolsEth = holder.owner.toLowerCase() === contractAddress.toLowerCase();
+  const contractAddress = getContractAddress(chain);
+  const isMemepools = holder.owner.toLowerCase() === contractAddress.toLowerCase();
   const isCreator = creator && holder.owner.toLowerCase() === creator.toLowerCase();
 
   return (
@@ -20,11 +21,7 @@ export default function TokenHolder({ holder, chain, creator }: TokenHolderProps
       <div className="pr-3 tablet:pr-6 pb-1 text-center text-sm tablet:text-base">{holder.rank}</div>
       <div className="pb-1 text-sm tablet:text-base">
         <Link
-          href={
-            chain === Chain.Eth
-              ? `${etherscanUrl}/address/${holder.owner}`
-              : `${solanaExplorerUrl}/account/${holder.owner}`
-          }
+          href={getExplorerAddressUrl(chain, holder.owner)}
           className="text-left text-primary hover:text-light-primary transition"
           target="_blank"
         >
@@ -32,7 +29,7 @@ export default function TokenHolder({ holder, chain, creator }: TokenHolderProps
         </Link>
       </div>
       <div className="pb-1 text-center -mt-[3px] tablet:-mt-[1px]">
-        {isMemepoolsEth && (
+        {isMemepools && (
           <span className="bg-cream rounded-3xl px-[0.625rem] text-center text-sm text-black font-bold">MP</span>
         )}
         {isCreator && (

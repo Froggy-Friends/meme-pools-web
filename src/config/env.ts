@@ -19,7 +19,7 @@ export const contractAddress: Address = isProd
   ? "0x036ca20D4Cc8dE8EB783258b36F5F9499aa234A8"
   : "0xEFd94EDFCB5902dc3Ce1F379DDB006Df0326Dc34";
 export const baseContractAddress: Address =
-  "0x5D606A1eB8Cd7c50092866725B9982355b4a5F4C";
+  "0xA12da06fEe227B8E87A6f961C0ede975cdB60C60";
 export const froggyFriendsAddress: Address = isProd
   ? "0x7ad05c1b87e93BE306A9Eadf80eA60d7648F1B6F"
   : "0xc8939011efd81fB0ca8382ed15EAb160c3a69313";
