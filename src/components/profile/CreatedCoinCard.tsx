@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { getChainLogo } from "@/lib/chains";
 import { Chain } from "@/models/chain";
+import useLaunchedCoinMc from "@/hooks/useLaunchedCoinMc";
 
 type CreatedCoinCardProps = {
   token: Token;
@@ -24,6 +25,7 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
   const { chain } = useChain();
   const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold, token.chain as Chain);
   const [isLaunching, setIsLaunching] = useState(false);
+  const launchedCoinMarketcap = useLaunchedCoinMc(token);
 
   return (
     <section className="flex flex-col tablet:flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">
@@ -50,7 +52,9 @@ export default function CreatedCoinCard({ token, enabled }: CreatedCoinCardProps
             >
               ${formatTicker(token.ticker)}
             </Link>
-            <p className="text-sm text-white/75">${formatMarketcap(tokenInfo?.marketcap || 0)} MC</p>
+            <p className="text-sm text-white/75">
+              ${formatMarketcap(launchedCoinMarketcap || tokenInfo?.marketcap || 0)} MC
+            </p>
           </div>
         </div>
 
