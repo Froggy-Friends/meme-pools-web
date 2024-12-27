@@ -9,6 +9,9 @@ import { getBondingCurvePercentage } from "@/lib/getBondingCurvePercentage";
 import { TokenWithBalance } from "@/types/token/types";
 import { cn, Link, Progress } from "@nextui-org/react";
 import Image from "next/image";
+import { getChainLogo } from "@/lib/chains";
+import { Chain } from "@/models/chain";
+import useLaunchedCoinMc from "@/hooks/useLaunchedCoinMc";
 
 type PurchasedCoinCardProps = {
   token: TokenWithBalance;
@@ -18,13 +21,27 @@ type PurchasedCoinCardProps = {
 export default function PurchasedCoinCard({ token }: PurchasedCoinCardProps) {
   const { tokenInfo } = useTokenInfo(token);
   const { chain } = useChain();
-  const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold);
+  const bondingCurvePercentage = getBondingCurvePercentage(tokenInfo?.tokensSold, token.chain as Chain);
+  const launchedCoinMarketcap = useLaunchedCoinMc(token);
 
   return (
     <section className="flex flex-col tablet:flex-row items-center justify-between bg-dark rounded-xl p-4 tablet:p-6 gap-4">
       <div className="flex justify-between w-full tablet:w-[200px] tablet:justify-start items-center">
-        <div className="flex gap-x-4 mr-4">
-          <Image src={token.image} alt={token.name} width={50} height={50} className="rounded-full" />
+        <div className="flex gap-x-4 mr-4 relative">
+          <Image
+            src={token.image}
+            alt={token.name}
+            width={50}
+            height={50}
+            className="rounded-full h-[50px] w-[50px] object-cover"
+          />
+          <Image
+            src={getChainLogo(token.chain as Chain)}
+            alt={`${token.chain} logo`}
+            width={20}
+            height={20}
+            className="rounded-full h-[20px] w-[20px] object-cover absolute top-8 left-8 ring-4 ring-dark"
+          />
           <div>
             <Link
               href={`/${chain.name}/token/${token.tokenAddress}`}
@@ -32,7 +49,9 @@ export default function PurchasedCoinCard({ token }: PurchasedCoinCardProps) {
             >
               ${formatTicker(token.ticker)}
             </Link>
-            <p className="text-sm text-white/75">${formatMarketcap(tokenInfo?.marketcap || 0)} MC</p>
+            <p className="text-sm text-white/75">
+              ${formatMarketcap(launchedCoinMarketcap || tokenInfo?.marketcap || 0)} MC
+            </p>
           </div>
         </div>
 

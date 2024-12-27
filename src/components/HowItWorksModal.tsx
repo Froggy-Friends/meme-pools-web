@@ -4,10 +4,13 @@ import useMarketcapGoal from "@/hooks/useMarketcapGoal";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import RewardTier from "./create/RewardTier";
-import { tierOneEthReward, tierThreeEthReward, tierTwoEthReward } from "@/lib/constants";
 import useEthPrice from "@/hooks/useEthPrice";
 import Link from "next/link";
 import { contractAddress } from "@/config/env";
+import { getTierTwoReward, getTierThreeReward } from "@/lib/chains";
+import { getTierOneReward } from "@/lib/chains";
+import { useChain } from "@/context/chain";
+import { Chain } from "@/models/chain";
 
 type HowItWorkdsModalProps = {
   isOpen: boolean;
@@ -16,11 +19,12 @@ type HowItWorkdsModalProps = {
 
 export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsModalProps) {
   const router = useRouter();
-  const marketcapGoal = useMarketcapGoal(contractAddress);
   const ethPrice = useEthPrice();
-  const tierOneReward = Math.round(tierOneEthReward * ethPrice);
-  const tierTwoReward = Math.round(tierTwoEthReward * ethPrice);
-  const tierThreeReward = Math.round(tierThreeEthReward * ethPrice);
+  const { chain } = useChain();
+  const marketcapGoal = useMarketcapGoal(contractAddress, chain.name);
+  const tierOneReward = Math.round(getTierOneReward(chain.name) * ethPrice);
+  const tierTwoReward = Math.round(getTierTwoReward(chain.name) * ethPrice);
+  const tierThreeReward = Math.round(getTierThreeReward(chain.name) * ethPrice);
 
   return (
     <>
@@ -43,9 +47,22 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
             </ul>
             <p>
               When a coin reaches a <span className="text-green">${marketcapGoal}</span> market cap, launch it on your
-              profile to collect your reward. All users start with bronze rewards. Own{" "}
+              profile to collect your reward. All users start with bronze rewards. Own
+              {chain.name === Chain.Base && (
+                <span>
+                  {" "}
+                  <Link
+                    href={"https://opensea.io/collection/tadpolesnft"}
+                    className="text-primary hover:text-light-primary transition"
+                    target="_blank"
+                  >
+                    Tadpoles
+                  </Link>{" "}
+                  and
+                </span>
+              )}{" "}
               <Link
-                href="https://magiceden.us/collections/ethereum/0x7ad05c1b87e93be306a9eadf80ea60d7648f1b6f"
+                href="https://opensea.io/collection/froggyfriendsnft"
                 className="text-[#61A14C] hover:text-green transition"
                 target="_blank"
               >

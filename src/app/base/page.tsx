@@ -1,20 +1,22 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import LeaderBoardAndFeedContainer from "@/components/LeaderBoardAndFeedContainer";
+import Spotlight from "@/components/Spotlight";
+import TokenPageContent from "@/components/TokenPageContent";
 import { Chain } from "@/models/chain";
-import { redirect } from "next/navigation";
 
-export default function BaseHomePage() {
-  redirect("/eth");
-  
+export default async function BaseHomePage() {
   return (
-    <main className="flex flex-col min-h-[100vh] mx-32 px-4">
+    <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-2 tablet:px-4">
       <Header chain={Chain.Base} />
 
-      <section className="flex justify-center py-32">
-        <h2 className="text-5xl font-bold">
-          COMING <span className="text-primary">SOON</span> TO <span className="text-based">BASE</span>
-        </h2>
-      </section>
+      <div className="flex flex-col gap-6 w-full">
+        <LeaderBoardAndFeedContainer />
+
+        <Spotlight />
+
+        <TokenPageContent />
+      </div>
 
       <Footer />
     </main>

@@ -1,5 +1,4 @@
 import { memepoolsAbi } from "@/abi/memepools";
-import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { Contract } from "ethers";
 import toast from "react-hot-toast";
@@ -7,10 +6,13 @@ import usePostTradeData from "./usePostTradeData";
 import { Token } from "@prisma/client";
 import { BuyToast } from "@/components/swap/BuyToast";
 import * as Sentry from "@sentry/react";
+import { useChain } from "@/context/chain";
+
 export default function useBuyToken(token: Token) {
   const signer = useEthersSigner();
   const contract = new Contract(token.platformAddress, memepoolsAbi, signer);
   const { getBuyTokenDetails } = usePostTradeData();
+  const { chain } = useChain();
 
   const buyToken = async (
     token: Token,
@@ -19,7 +21,16 @@ export default function useBuyToken(token: Token) {
     slippagePercent: number
   ) => {
     try {
-      BuyToast(token, totalCost, amount, "", Infinity, false, "buy-toast");
+      BuyToast(
+        token,
+        totalCost,
+        amount,
+        "",
+        Infinity,
+        false,
+        "buy-toast",
+        chain.name
+      );
 
       const tx = await contract.buyTokens(
         token.tokenAddress,
@@ -30,7 +41,16 @@ export default function useBuyToken(token: Token) {
         }
       );
 
-      BuyToast(token, totalCost, amount, tx.hash, Infinity, false, "buy-toast");
+      BuyToast(
+        token,
+        totalCost,
+        amount,
+        tx.hash,
+        Infinity,
+        false,
+        "buy-toast",
+        chain.name
+      );
 
       const receipt = await tx.wait();
 
@@ -43,7 +63,8 @@ export default function useBuyToken(token: Token) {
         tx.hash,
         15000,
         true,
-        "buy-toast"
+        "buy-toast",
+        chain.name
       );
 
       return receipt;

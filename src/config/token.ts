@@ -1,4 +1,16 @@
 export const ethMarketcapGoalV1 = 15.9;
 export const ethMarketcapGoalV2 = 13.1;
+export const baseMarketcapGoalV1 = 14.4;
 export const tokensPerPage = 100;
 export const tokenLaunchBuffer = 100;
+export const MAX_MARKET_CAP = 42_000;
+export const maxReservedSupply = 10_000_000;
+export const maxTotalSupply = 1_000_000_000;
+export const maxTradeableSupply = 800_000_000;
+export const maxTradeableSupplyBase = 750_000_000;
+export const tierOneEthReward = 0.2;
+export const tierTwoEthReward = 0.4;
+export const tierThreeEthReward = 0.6;
+export const tierOneBaseReward = 0.15;
+export const tierTwoBaseReward = 0.225;
+export const tierThreeBaseReward = 0.3;

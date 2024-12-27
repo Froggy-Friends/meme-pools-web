@@ -1,9 +1,16 @@
+"use client";
+
+import { useChain } from "@/context/chain";
+import { Chain } from "@/models/chain";
+
 type RewardTierProps = {
   tier: string;
   rewardAmount: number;
 };
 
 export default function RewardTier({ tier, rewardAmount }: RewardTierProps) {
+  const { chain } = useChain();
+
   return (
     <div className="flex flex-col gap-y-1 items-center">
       <p className="text-sm font-proximaNovaBold">
@@ -16,7 +23,14 @@ export default function RewardTier({ tier, rewardAmount }: RewardTierProps) {
       >
         ${rewardAmount}
       </p>
-      <p className="text-xs">{tier === "bronze" ? "*All users" : tier === "silver" ? "*1 Frog" : "*5 Frogs"}</p>
+      {chain.name === Chain.Eth && (
+        <p className="text-xs">{tier === "bronze" ? "*All users" : tier === "silver" ? "*1 Frog" : "*5 Frogs"}</p>
+      )}
+      {chain.name === Chain.Base && (
+        <p className="text-xs">
+          {tier === "bronze" ? "*All users" : tier === "silver" ? "*5 Tadpoles" : "*5 Tads & 1 Frog"}
+        </p>
+      )}
     </div>
   );
 }

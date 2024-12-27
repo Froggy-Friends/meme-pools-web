@@ -1,13 +1,23 @@
+"use client";
+
 import { Token } from "@prisma/client";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { formatTicker } from "@/lib/formatTicker";
 import { CircularProgress } from "@nextui-org/react";
 import Link from "next/link";
-import { etherscanUrl } from "@/config/env";
 import { FaCheckCircle } from "react-icons/fa";
+import { getExplorerUrl } from "@/lib/chains";
+import { Chain } from "@/models/chain";
 
-export const ApproveToast = (token: Token, txHash: string, duration: number, isSuccess: boolean, id: string) => {
+export const ApproveToast = (
+  token: Token,
+  txHash: string,
+  duration: number,
+  isSuccess: boolean,
+  id: string,
+  chain: Chain
+) => {
   return toast.custom(
     t => (
       <div
@@ -29,7 +39,7 @@ export const ApproveToast = (token: Token, txHash: string, duration: number, isS
           <div className="flex flex-col items-start">
             <p className="-mb-1">{isSuccess ? "Approved" : "Approving"}</p>
             <Link
-              href={`${etherscanUrl}/tx/${txHash}`}
+              href={getExplorerUrl(chain, txHash)}
               className="text-light-gray hover:text-cream transition text-[15px]"
               target="_blank"
             >

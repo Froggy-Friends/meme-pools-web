@@ -44,6 +44,7 @@ export const wagmiAdapter = new WagmiAdapter({
   transports: {
     [mainnet.id]: http(process.env.ETH_MAINNET_RPC_URL),
     [sepolia.id]: http(process.env.SEPOLIA_RPC_URL),
+    [base.id]: http(process.env.BASE_RPC_URL),
   },
 });
 

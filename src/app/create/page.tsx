@@ -8,8 +8,7 @@ import { cookies } from "next/headers";
 
 export default async function CreateCoin() {
   const cookieStore = cookies();
-  const cachedUserSolanaAddress = cookieStore.get(Cookie.SolanaAddress);
-  const chain = cachedUserSolanaAddress?.value ? Chain.Solana : Chain.Eth;
+  const chain = cookieStore.get(Cookie.Chain)?.value as Chain || Chain.Base;
 
   return (
     <main className="flex flex-col min-h-[100vh] max-w-[410px] tablet:max-w-[750px] laptop:max-w-[924px] desktop:max-w-[1200px] mx-auto px-0 tablet:px-4">

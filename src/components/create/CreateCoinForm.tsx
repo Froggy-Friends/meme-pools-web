@@ -15,7 +15,7 @@ import { cn, Switch } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { GrRefresh } from "react-icons/gr";
 import { useCallback, useRef, useState } from "react";
-import { maxReservedSupply } from "@/lib/constants";
+import { maxReservedSupply } from "@/config/token";
 import { PutBlobResult } from "@vercel/blob";
 import { useDebouncedCallback } from "use-debounce";
 import useReservePrice from "@/hooks/useReservePrice";
@@ -25,6 +25,7 @@ import { formatNumber } from "@/lib/formatNumber";
 import usePostTradeData from "@/hooks/usePostTradeData";
 import getEthPrice from "@/lib/getEthPrice";
 import CreateCoinPendingModal from "./CreateCoinPendingModal";
+import * as Sentry from "@sentry/nextjs";
 
 export type CreateFormValues = {
   name: string;
@@ -129,6 +130,7 @@ export default function CreateCoinForm() {
       reset();
       router.push(`/${chain.name}/token/${tokenDetails.tokenAddress}`);
     } catch (error) {
+      Sentry.captureException(error);
       toast.error((error as Error).message);
       onClose();
       setTicker("");

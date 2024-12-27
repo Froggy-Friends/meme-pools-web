@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { Token, User } from "@prisma/client";
 import { TokenWithCreator } from "@/lib/types";
 import { ClaimWithToken, TokenWithBalance } from "@/types/token/types";
+import { Chain } from "@/models/chain";
 
 export const fetchUser = async (wallet: string | undefined) => {
   if (!wallet) {
@@ -112,11 +113,13 @@ export const fetchFollowing = async (followerId: string): Promise<User[]> => {
 };
 
 export const fetchCreatedTokens = async (
-  userId: string
+  userId: string,
+  chain: Chain
 ): Promise<TokenWithCreator[]> => {
   const tokens = await prisma.token.findMany({
     where: {
       userId: userId,
+      chain: chain,
     },
     include: {
       user: true,
@@ -129,27 +132,38 @@ export const fetchCreatedTokens = async (
   return tokens;
 };
 
-export const fetchClaimableTokens = async (frogIds: number[]): Promise<ClaimWithToken[]> => {
+export const fetchClaimableTokens = async (
+  frogIds: number[],
+  chain: Chain
+): Promise<ClaimWithToken[]> => {
   const claims = await prisma.claim.findMany({
     where: {
       isClaimed: false,
       frogId: {
-        in: frogIds
-      }
+        in: frogIds,
+      },
+      token: {
+        chain: chain,
+      },
     },
     include: {
       token: true,
-    }
+    },
   });
 
   const uniqueClaims = claims.reduce((acc, claim) => {
-    return acc.some(c => c.token.id === claim.token.id) ? acc : [...acc, claim];
+    return acc.some((c) => c.token.id === claim.token.id)
+      ? acc
+      : [...acc, claim];
   }, [] as ClaimWithToken[]);
 
   return uniqueClaims;
 };
 
-export const fetchUserHoldings = async (userId: string): Promise<TokenWithBalance[]> => {
+export const fetchUserHoldings = async (
+  userId: string,
+  chain: Chain
+): Promise<TokenWithBalance[]> => {
   const holdings = await prisma.token.findMany({
     where: {
       Trades: {
@@ -157,6 +171,7 @@ export const fetchUserHoldings = async (userId: string): Promise<TokenWithBalanc
           userId: userId,
         },
       },
+      chain: chain,
     },
     include: {
       Trades: {
@@ -171,18 +186,24 @@ export const fetchUserHoldings = async (userId: string): Promise<TokenWithBalanc
     },
   });
 
-  return holdings.map(token => {
-    const balance = token.Trades.reduce(
-      (sum, trade) => sum + (trade.category === 'buy' ? Number(trade.amount) : -Number(trade.amount)),
-      0
-    );
-    return {
-      ...token,
-      Trades: token.Trades.map(trade => ({
-        ...trade,
-        amount: Number(trade.amount)
-      })),
-      balance
-    };
-  }).filter(token => token.balance > 0);
+  return holdings
+    .map((token) => {
+      const balance = token.Trades.reduce(
+        (sum, trade) =>
+          sum +
+          (trade.category === "buy"
+            ? Number(trade.amount)
+            : -Number(trade.amount)),
+        0
+      );
+      return {
+        ...token,
+        Trades: token.Trades.map((trade) => ({
+          ...trade,
+          amount: Number(trade.amount),
+        })),
+        balance,
+      };
+    })
+    .filter((token) => token.balance > 0);
 };

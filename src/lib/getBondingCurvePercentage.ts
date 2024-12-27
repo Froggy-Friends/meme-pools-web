@@ -1,7 +1,13 @@
 import { tokenLaunchBuffer } from "@/config/token";
-import { maxTradeableSupply } from "./constants";
+import { Chain } from "@/models/chain";
+import { getMaxTradeableSupply } from "./chains";
 
-export const getBondingCurvePercentage = (tokensSold: number | undefined) => {
+export const getBondingCurvePercentage = (
+  tokensSold: number | undefined,
+  chain: Chain
+) => {
+  const maxTradeableSupply = getMaxTradeableSupply(chain);
+
   if (!tokensSold) return 0;
   const percentage =
     (tokensSold / (maxTradeableSupply - tokenLaunchBuffer)) * 100;

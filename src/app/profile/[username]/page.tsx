@@ -27,7 +27,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
   const cookieStore = cookies();
   const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const cachedUserSolanaAddress = cookieStore.get(Cookie.SolanaAddress);
-  const chain = cachedUserSolanaAddress?.value ? Chain.Solana : Chain.Eth;
+  const chain = cookieStore.get(Cookie.Chain)?.value as Chain || Chain.Base;
   const cachedUser = await fetchUser(
     chain === Chain.Solana ? cachedUserSolanaAddress?.value : cachedUserEvmAddress?.value
   );
@@ -57,14 +57,20 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
         cachedUser={cachedUser}
         currentView={view}
         delegatedWallets={delegatedWallets}
+        chain={chain}
       />
 
       {view === "holdings" && profileUser.id === cachedUser?.id && (
-        <UserHoldings profileUser={profileUser} cachedUser={cachedUser || null} />
+        <UserHoldings profileUser={profileUser} cachedUser={cachedUser || null} chain={chain} />
       )}
       {view === "settings" && profileUser.id === cachedUser?.id && <EditProfileForm profileUser={profileUser} />}
       {view === "created" && (
-        <CreatedTokens profileUser={profileUser} cachedUser={cachedUser || null} delegatedWallets={delegatedWallets} />
+        <CreatedTokens
+          profileUser={profileUser}
+          cachedUser={cachedUser || null}
+          delegatedWallets={delegatedWallets}
+          chain={chain}
+        />
       )}
       {view === "followers" && (
         <Followers followers={followers} profileUser={profileUser} cachedUser={cachedUser || null} />
@@ -73,7 +79,12 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
         <Following following={following} profileUser={profileUser} cachedUser={cachedUser || null} />
       )}
       {view === "claim" && profileUser.id === cachedUser?.id && (
-        <Claim profileUser={profileUser} cachedUser={cachedUser || null} delegatedWallets={delegatedWallets} />
+        <Claim
+          profileUser={profileUser}
+          cachedUser={cachedUser || null}
+          delegatedWallets={delegatedWallets}
+          chain={chain}
+        />
       )}
 
       <Footer />

@@ -130,7 +130,7 @@ export const fetchComments = async (tokenId: string) => {
   return commentsWithLikes;
 };
 
-export const searchTokens = async (search: string) => {
+export const searchTokens = async (search: string, chain: Chain) => {
   const tokens = await prisma.token.findMany({
     where: {
       OR: [
@@ -153,6 +153,7 @@ export const searchTokens = async (search: string) => {
           },
         },
       ],
+      chain: chain,
     },
     orderBy: {
       _relevance: {

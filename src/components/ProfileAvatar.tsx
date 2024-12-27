@@ -8,8 +8,8 @@ import { defaultProfileAvatarUrl } from "@/config/user";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { setUserCookies } from "@/actions/profile/actions";
 import Link from "next/link";
-import { useChainSync } from "@/hooks/useChainSync";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
 
 const ConnectButton = dynamic(() => import("./ConnectButton"), { ssr: false });
 
@@ -30,7 +30,6 @@ export default function ProfileAvatar({
   disconnect,
   address,
 }: ProfileAvatarProps) {
-  useChainSync({ isConnected, address, chain });
 
   return (
     <section className="hidden tablet:block">
@@ -66,7 +65,7 @@ export default function ProfileAvatar({
             className="dark"
             key="Disconnect"
             onPress={async () => {
-              if (chain === Chain.Eth) {
+              if (chain === Chain.Eth || chain === Chain.Base) {
                 disconnect();
                 await setUserCookies(null, Chain.Eth);
               } else if (chain === Chain.Solana) {

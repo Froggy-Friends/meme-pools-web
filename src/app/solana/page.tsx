@@ -28,7 +28,7 @@ export default async function SolanaHomePage() {
 
       <HydrationBoundary state={dehydrate(queryClient)}>
         <div className="flex flex-col gap-6 w-full">
-          <LeaderBoardAndFeedContainer topTokens={topTokens} />
+          <LeaderBoardAndFeedContainer />
 
           <Spotlight />
 

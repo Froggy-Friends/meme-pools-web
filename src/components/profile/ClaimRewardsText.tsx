@@ -3,13 +3,15 @@
 import Link from "next/link";
 import useFrogBalance from "@/hooks/useFrogBalance";
 import { Address } from "viem";
+import { Chain } from "@/models/chain";
 
 type ClaimRewardsTextProps = {
   addresses: Address[];
+  chain: Chain;
 };
 
-export default function ClaimRewardsText({ addresses }: ClaimRewardsTextProps) {
-  const frogBalance = useFrogBalance(addresses);
+export default function ClaimRewardsText({ addresses, chain }: ClaimRewardsTextProps) {
+  const frogBalance = useFrogBalance(addresses, chain);
 
   return (
     <div className="mb-6">

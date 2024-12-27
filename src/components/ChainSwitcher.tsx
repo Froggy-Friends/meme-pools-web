@@ -9,6 +9,10 @@ import { useChain } from "@/context/chain";
 import { useAppKit, useAppKitAccount, useDisconnect } from "@reown/appkit/react";
 import { isWalletChainCompatible } from "@/lib/wallet";
 import { setUserCookies } from "@/actions/profile/actions";
+import { usePathname } from "next/navigation";
+import { setChainCookie, setPreviousChainCookie } from "@/actions/chain/actions";
+import { useState } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 type ChainSwitcherProps = {
   height?: number;
@@ -16,11 +20,13 @@ type ChainSwitcherProps = {
 };
 
 export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcherProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { chain, setChain } = useChain();
   const { open } = useAppKit();
   const { disconnect } = useDisconnect();
   const { address } = useAppKitAccount();
+  const pathname = usePathname();
 
   const getChainLogo = (chain: Chain) => {
     if (chain === Chain.Base) return baseLogo;
@@ -28,26 +34,55 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
     else if (chain === Chain.Solana) return solanaLogo;
     else return ethLogo;
   };
-  
-  const handleChainSwitch = async (chainConfig: ChainConfig) => {
-    const isWalletCompatible = isWalletChainCompatible(address, chainConfig.name);
 
-    if (!isWalletCompatible) {
-      await disconnect();
-      await setUserCookies(null, chain.name);
-      open();
+  const handleChainSwitch = async (chainConfig: ChainConfig) => {
+    setIsLoading(true);
+
+    try {
+      await setPreviousChainCookie(chain.name);
+
+      if (pathname.includes("/token")) {
+        router.push(`/${chainConfig.name}`);
+
+        await setChainCookie(chainConfig.name);
+        setChain(chainConfig);
+
+        router.refresh();
+
+        return;
+      }
+
+      const isWalletCompatible = isWalletChainCompatible(address, chainConfig.name);
+
+      if (!isWalletCompatible) {
+        await disconnect();
+        await setUserCookies(null, chain.name);
+        open();
+      }
+
+      await setChainCookie(chainConfig.name);
+      setChain(chainConfig);
+
+      if (!pathname.includes("/create") && !pathname.includes("/profile")) {
+        window.history.pushState({}, "", `/${chainConfig.name}`);
+      }
+    } catch (error) {
+      Sentry.captureException(error);
+    } finally {
+      setIsLoading(false);
     }
- 
-    setChain(chainConfig);
-    router.push(`/${chainConfig.name}`);
   };
 
   return (
     <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
       <DropdownTrigger>
-        <div className="hover:bg-gray transition rounded-lg p-1 laptop:p-2 cursor-pointer">
+        <div
+          className={`hover:bg-gray transition rounded-lg p-1 laptop:p-2 cursor-pointer ${
+            isLoading ? "opacity-50" : ""
+          }`}
+        >
           <Image
-            className="transition-transform"
+            className={`transition-transform ${isLoading ? "animate-pulse" : ""}`}
             src={getChainLogo(chain.name)}
             alt="chain-logo"
             height={height}
@@ -55,7 +90,13 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
           />
         </div>
       </DropdownTrigger>
-      <DropdownMenu disabledKeys={["Base", "Solana"]}>
+      <DropdownMenu disabledKeys={["Solana"]}>
+        <DropdownItem key="Base" className="dark" onPress={() => handleChainSwitch(chainConfigs.base)}>
+          <div className="flex items-center gap-x-3">
+            <Image src={baseLogo} alt="base-logo" height={height} width={width} />
+            <p className="text-[17px]">Base</p>
+          </div>
+        </DropdownItem>
         <DropdownItem key="Eth" className="dark" onPress={() => handleChainSwitch(chainConfigs.eth)}>
           <div className="flex items-center gap-x-3">
             <Image src={ethLogo} alt="eth-logo" height={height} width={width} />
@@ -66,12 +107,6 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
           <div className="flex items-center gap-x-3">
             <Image src={solanaLogo} alt="solana-logo" height={height} width={width} />
             <p className="text-[17px]">Solana</p>
-          </div>
-        </DropdownItem>
-        <DropdownItem key="Base" className="dark" onPress={() => handleChainSwitch(chainConfigs.base)}>
-          <div className="flex items-center gap-x-3">
-            <Image src={baseLogo} alt="base-logo" height={height} width={width} />
-            <p className="text-[17px]">Base</p>
           </div>
         </DropdownItem>
       </DropdownMenu>

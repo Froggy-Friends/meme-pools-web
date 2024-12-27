@@ -6,12 +6,14 @@ import useFrogBalance from "@/hooks/useFrogBalance";
 import { Address } from "viem";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
+import { Chain } from "@/models/chain";
 
 type ProfileMenuToggleProps = {
   profileUser: User;
   cachedUser: User | null | undefined;
   currentView: string;
   delegatedWallets: Address[];
+  chain: Chain;
 };
 
 export default function ProfileMenuToggle({
@@ -19,11 +21,12 @@ export default function ProfileMenuToggle({
   cachedUser,
   currentView,
   delegatedWallets,
+  chain,
 }: ProfileMenuToggleProps) {
   const walletAddresses = useMemo(() => {
     return delegatedWallets ? [...delegatedWallets, profileUser.ethAddress] : [profileUser.ethAddress];
   }, [delegatedWallets, profileUser.ethAddress]);
-  const frogBalance = useFrogBalance(walletAddresses as Address[]);
+  const frogBalance = useFrogBalance(walletAddresses as Address[], chain);
   const router = useRouter();
 
   if (frogBalance === 0 && currentView === "Claim") {

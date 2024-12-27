@@ -23,7 +23,7 @@ export default function useTokens({
     isPending: isLoadingTokens,
     refetch,
   } = useQuery({
-    queryKey: ["tokens", filter, page, reverse, isNsfw],
+    queryKey: [`tokens-${chain.name}`, filter, page, reverse, isNsfw],
     queryFn: async () => {
       const tokens = await fetchTokens(filter, page, chain.name);
       let filteredTokens = tokens;
