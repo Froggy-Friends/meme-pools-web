@@ -15,6 +15,7 @@ type TokenInteractionContainerProps = {
   tokenId: string;
   tokenTicker: string;
   cachedUser: User | null;
+  tokenCreator: string;
 };
 
 export default async function TokenInteractionContainer({
@@ -23,6 +24,7 @@ export default async function TokenInteractionContainer({
   tokenId,
   tokenTicker,
   cachedUser,
+  tokenCreator,
 }: TokenInteractionContainerProps) {
   const comments = await fetchComments(tokenId);
   const trades = await fetchTrades(tokenId);
@@ -33,9 +35,9 @@ export default async function TokenInteractionContainer({
       <div className="relative flex flex-col w-full h-[700px] my-20 bg-dark-gray rounded-xl overflow-hidden">
         <div className="sticky top-0 z-10 bg-dark-gray mt-2 laptop:mt-0 p-2 laptop:p-6">
           <div className="flex gap-x-2">
+            <ToggleViewButton name="Comments" tokenAddress={tokenAddress} view={view} />
             <ToggleViewButton name="Holders" tokenAddress={tokenAddress} view={view} />
             <ToggleViewButton name="Trades" tokenAddress={tokenAddress} view={view} />
-            <ToggleViewButton name="Comments" tokenAddress={tokenAddress} view={view} />
           </div>
         </div>
         <div className="flex-grow overflow-y-auto p-2 laptop:px-6">
@@ -51,6 +53,7 @@ export default async function TokenInteractionContainer({
               cachedUser={cachedUser || null}
               tokenId={tokenId}
               tokenTicker={tokenTicker}
+              tokenCreator={tokenCreator}
             />
           )}
           {view === "trades" && (

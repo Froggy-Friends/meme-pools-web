@@ -29,7 +29,7 @@ type TokenDetailsPageProps = {
 };
 
 export default async function TokenDetailsPage({ params, searchParams }: TokenDetailsPageProps) {
-  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.HOLDERS;
+  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.COMMENTS;
   const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
@@ -48,7 +48,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
       <Header chain={Chain.Eth} />
 
       <LiquidityPoolBanner token={token} />
-      
+
       <TokenInfo token={token} creator={creator} />
 
       <div className="flex flex-col desktop:flex-row gap-x-10 w-full">
@@ -72,6 +72,7 @@ export default async function TokenDetailsPage({ params, searchParams }: TokenDe
         tokenId={token.id}
         tokenTicker={token.ticker}
         cachedUser={cachedUser || null}
+        tokenCreator={token.tokenCreator}
       />
       <Footer />
     </main>
