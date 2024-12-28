@@ -15,9 +15,16 @@ type TokenCommentsProps = {
   cachedUser: User | null;
   tokenId: string;
   tokenTicker: string;
+  tokenCreator: string;
 };
 
-export default function TokenComments({ comments, cachedUser, tokenId, tokenTicker }: TokenCommentsProps) {
+export default function TokenComments({
+  comments,
+  cachedUser,
+  tokenId,
+  tokenTicker,
+  tokenCreator,
+}: TokenCommentsProps) {
   const queryClient = useQueryClient();
   const [tokenComments, setTokenComments] = useState(comments);
   const posthog = usePostHog();
@@ -73,6 +80,7 @@ export default function TokenComments({ comments, cachedUser, tokenId, tokenTick
             author={comment.user}
             cachedUser={cachedUser || null}
             isNew={comment.isNew}
+            tokenCreator={tokenCreator}
           />
         );
       })}

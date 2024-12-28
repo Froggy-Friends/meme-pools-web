@@ -124,7 +124,7 @@ export const postComment = async (
   });
 
   await pusher.trigger(Channel.Comment, tokenId, {
-    comment,
+    comment: comment,
   });
 };
 
@@ -243,7 +243,6 @@ export const addTrade = async (
     User: user,
     Token: token,
   });
-  
 
   if (category === Trade.Buy) {
     await pusher.trigger(Channel.Buy, token.id, {
