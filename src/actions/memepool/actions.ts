@@ -11,8 +11,6 @@ export const addMeme = async (
   formData: FormData,
   postId: string
 ) => {
-  const pusher = getPusher();
-
   if (!userId) {
     return;
   }
@@ -30,8 +28,6 @@ export const addMeme = async (
       user: true,
     },
   });
-
-  await pusher.trigger(Channel.Meme, tokenId, meme);
 };
 
 export const addPost = async (tokenId: string, userId: string | undefined) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { IoCloseCircle } from "react-icons/io5";
-import { useState, useCallback, useRef, useMemo } from "react";
+import { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import Image from "next/image";
 import useUser from "@/hooks/useUser";
 import { addMeme, addPost } from "@/actions/memepool/actions";
@@ -16,6 +16,7 @@ import useTokenBalance from "@/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
 import { useChain } from "@/context/chain";
 import { Chain } from "@/models/chain";
+import * as Sentry from "@sentry/react";
 
 type CreateMemePostProps = {
   isVisible: boolean;
@@ -61,6 +62,10 @@ export default function CreateMemePost({ isVisible, setIsVisible, token }: Creat
     setImages(prev => [...prev, ...files]);
   };
 
+  useEffect(() => {
+    console.log("images", images);
+  }, [images]);
+
   const handlePostMemes = async () => {
     if (images.length === 0) return;
 
@@ -90,6 +95,7 @@ export default function CreateMemePost({ isVisible, setIsVisible, token }: Creat
       toast.success("Memes posted successfully");
       router.refresh();
     } catch (error) {
+      Sentry.captureException(error);
       toast.error("Failed to upload one or more images");
     }
   };
