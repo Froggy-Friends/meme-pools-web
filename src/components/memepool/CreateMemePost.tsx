@@ -1,7 +1,7 @@
 "use client";
 
 import { IoCloseCircle } from "react-icons/io5";
-import { useState, useCallback, useRef, useMemo, useEffect } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import Image from "next/image";
 import useUser from "@/hooks/useUser";
 import { addMeme, addPost } from "@/actions/memepool/actions";
@@ -61,10 +61,6 @@ export default function CreateMemePost({ isVisible, setIsVisible, token }: Creat
     const files = Array.from(e.target.files).filter(file => file.type.startsWith("image/"));
     setImages(prev => [...prev, ...files]);
   };
-
-  useEffect(() => {
-    console.log("images", images);
-  }, [images]);
 
   const handlePostMemes = async () => {
     if (images.length === 0) return;
