@@ -16,6 +16,7 @@ import useTokenBalance from "@/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
 import { useChain } from "@/context/chain";
 import { Chain } from "@/models/chain";
+import * as Sentry from "@sentry/react";
 
 type CreateMemePostProps = {
   isVisible: boolean;
@@ -90,6 +91,7 @@ export default function CreateMemePost({ isVisible, setIsVisible, token }: Creat
       toast.success("Memes posted successfully");
       router.refresh();
     } catch (error) {
+      Sentry.captureException(error);
       toast.error("Failed to upload one or more images");
     }
   };

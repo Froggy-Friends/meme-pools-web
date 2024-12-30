@@ -123,8 +123,17 @@ export const postComment = async (
     },
   });
 
+  const sanitizedComment = {
+    ...comment,
+    user: {
+      ...comment.user,
+      twitterId: comment.user.twitterId?.toString() || null,
+      twitterFollowers: comment.user.twitterFollowers?.toString() || null,
+    },
+  };
+
   await pusher.trigger(Channel.Comment, tokenId, {
-    comment,
+    comment: sanitizedComment,
   });
 };
 
@@ -135,7 +144,6 @@ export const addCommentLike = async (
   prevCommentLikeId?: string
 ) => {
   const pusher = getPusher();
-  let remove: CommentLikes | null = null;
 
   const result = await prisma.commentLikes.create({
     data: {
@@ -153,8 +161,19 @@ export const addCommentLike = async (
     },
   });
 
+  const sanitizedResult = {
+    ...result,
+    User: {
+      ...result.User,
+      twitterId: result.User.twitterId?.toString() || null,
+      twitterFollowers: result.User.twitterFollowers?.toString() || null,
+    },
+  };
+
+  let remove: typeof sanitizedResult | null = null;
+
   if (prevCommentLikeId) {
-    const result = await prisma.commentLikes.delete({
+    const deleteResult = await prisma.commentLikes.delete({
       where: {
         id: prevCommentLikeId,
       },
@@ -168,7 +187,15 @@ export const addCommentLike = async (
       },
     });
 
-    remove = result;
+    remove = {
+      ...deleteResult,
+      User: {
+        ...deleteResult.User,
+        twitterId: deleteResult.User.twitterId?.toString() || null,
+        twitterFollowers:
+          deleteResult.User.twitterFollowers?.toString() || null,
+      },
+    };
   }
 
   let channel =
@@ -177,7 +204,7 @@ export const addCommentLike = async (
       : Channel.CommentDislikes;
 
   await pusher.trigger(channel, commentId, {
-    add: result,
+    add: sanitizedResult,
     remove: remove,
   });
 
@@ -198,9 +225,18 @@ export const removeCommentLike = async (
     },
   });
 
+  const sanitizedResult = {
+    ...result,
+    User: {
+      ...result.User,
+      twitterId: result.User.twitterId?.toString() || null,
+      twitterFollowers: result.User.twitterFollowers?.toString() || null,
+    },
+  };
+
   await pusher.trigger(Channel.CommentLikes, commentId, {
     add: null,
-    remove: result,
+    remove: sanitizedResult,
   });
 };
 
@@ -243,7 +279,6 @@ export const addTrade = async (
     User: user,
     Token: token,
   });
-  
 
   if (category === Trade.Buy) {
     await pusher.trigger(Channel.Buy, token.id, {

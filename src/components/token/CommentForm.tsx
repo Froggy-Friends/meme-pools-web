@@ -11,6 +11,7 @@ import { Address } from "viem";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import { wagmiChains } from "@/config/reown";
 import { formatTicker } from "@/lib/formatTicker";
+import { useChain } from "@/context/chain";
 
 type CommentFormProps = {
   tokenId: string;
@@ -22,7 +23,8 @@ export default function CommentForm({ tokenId, tokenAddress, tokenTicker }: Comm
   const formRef = useRef<HTMLFormElement>(null);
   const { currentUser } = useUser();
   const queryClient = useQueryClient();
-  const { tokenBalance } = useTokenBalance(tokenAddress as Address, wagmiChains.eth.id);
+  const { chain } = useChain();
+  const { tokenBalance } = useTokenBalance(tokenAddress as Address, chain.id);
 
   const addComment = useMutation({
     mutationKey: ["add-comment", tokenId],
@@ -71,9 +73,7 @@ export default function CommentForm({ tokenId, tokenAddress, tokenTicker }: Comm
       id="post-comment"
     >
       <textarea
-        placeholder={
-          !tokenBalance ? `Buy $${formatTicker(tokenTicker)} to post a comment...` : "Post a comment..."
-        }
+        placeholder={!tokenBalance ? `Buy $${formatTicker(tokenTicker)} to post a comment...` : "Post a comment..."}
         className="w-full desktop:w-[725px] h-[200px] bg-dark rounded-xl p-4 outline-none focus:ring-2 ring-gray"
         name="comment"
         id="comment"

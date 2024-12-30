@@ -1,17 +1,18 @@
 import { memepoolsAbi } from "@/abi/memepools";
-import { contractAddress } from "@/config/env";
 import { Token } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatUnits } from "viem";
 import getEthPrice from "@/lib/getEthPrice";
-import { usePublicClient } from "wagmi";
 import { useEffect } from "react";
 import Pusher from "pusher-js";
 import { Channel } from "@/models/channel";
 import { TradeWithUserAndToken } from "@/types/token/types";
+import { useChain } from "@/context/chain";
+import { getViemClient } from "@/lib/getPublicClient";
 
 export default function useTokenInfo(token: Token) {
-  const publicClient = usePublicClient();
+  const { chain } = useChain();
+  const publicClient = getViemClient(chain.name);
   const queryClient = useQueryClient();
 
   const { data: tokenInfo, refetch: refetchTokenInfo } = useQuery({

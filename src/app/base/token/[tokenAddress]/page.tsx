@@ -29,7 +29,7 @@ type TokenDetailsPageProps = {
 };
 
 export default async function BaseTokenDetailsPage({ params, searchParams }: TokenDetailsPageProps) {
-  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.HOLDERS;
+  const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.COMMENTS;
   const tokenAddress = params.tokenAddress;
   const token = await fetchTokenByAddress(tokenAddress);
 
@@ -72,6 +72,7 @@ export default async function BaseTokenDetailsPage({ params, searchParams }: Tok
         tokenId={token.id}
         tokenTicker={token.ticker}
         cachedUser={cachedUser || null}
+        tokenCreator={token.tokenCreator}
       />
       <Footer />
     </main>
