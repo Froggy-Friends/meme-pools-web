@@ -5,9 +5,8 @@ import prisma from "@/lib/prisma";
 import { getTokenInfo } from "../../lib/getTokenInfo";
 import { fetchUser } from "@/queries/profile/queries";
 import { Address } from "viem";
-import { contractAddress } from "@/config/env";
-import { baseContractAddress } from "@/config/env";
 import { Chain } from "@/models/chain";
+import { getContractAddress } from "@/lib/chains";
 
 export const createCoin = async (
   formData: FormData,
@@ -45,7 +44,7 @@ export const createCoin = async (
           chain: chain,
           marketCap: 100,
           isNsfw: isNsfw,
-          platformAddress: chain === Chain.Eth ? contractAddress : baseContractAddress,
+          platformAddress: getContractAddress(chain as Chain) ,
         },
       });
     }

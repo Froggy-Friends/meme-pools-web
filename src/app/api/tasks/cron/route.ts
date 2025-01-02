@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 const refreshConfig = {
   eth: ["trending", "transactions", "volume", "comments", "votes"],
   base: ["trending", "transactions", "volume", "comments", "votes"],
+  apechain: ["trending", "transactions", "volume", "comments", "votes"],
 } as const;
 
 export async function GET(request: Request) {

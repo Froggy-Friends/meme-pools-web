@@ -14,6 +14,7 @@ import {
   solana,
   solanaDevnet,
   solanaTestnet,
+  apeChain,
 } from "@reown/appkit/networks";
 import { http } from "viem";
 
@@ -40,11 +41,13 @@ export const wagmiAdapter = new WagmiAdapter({
     solana,
     solanaTestnet,
     solanaDevnet,
+    apeChain,
   ],
   transports: {
     [mainnet.id]: http(process.env.ETH_MAINNET_RPC_URL),
     [sepolia.id]: http(process.env.SEPOLIA_RPC_URL),
     [base.id]: http(process.env.BASE_RPC_URL),
+    [apeChain.id]: http(process.env.APE_CHAIN_RPC_URL),
   },
 });
 

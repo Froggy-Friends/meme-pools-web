@@ -38,6 +38,7 @@ import {
   updateTokenReadyForLp,
 } from "@/actions/token/actions";
 import SlippagePopover from "./SlippagePopover";
+import { getNativeTokenLogo, getNativeTokenPrice, getNativeTokenTicker } from "@/lib/chains";
 
 export enum TradingTab {
   BUY,
@@ -50,6 +51,7 @@ type TradingWidgetProps = {
 };
 
 const PURCHASE_AMOUNTS_ETH = [0.01, 0.025, 0.05, 0.1];
+const PURCHASE_AMOUNTS_APE = [30, 75, 150, 300];
 const PURCHASE_AMOUNTS_TOKENS = [0.25, 0.5, 1, 2];
 const SELL_AMOUNTS = [25, 50, 75, 100];
 const rule = /^[\d,]*\.?\d{0,18}$/; // Regex to match numbers with up to 18 decimal places
@@ -65,11 +67,11 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
   const [buyInputValue, setBuyInputValue] = useState("");
   const [sellAmount, setSellAmount] = useState<bigint>(BigInt(0));
   const [sellPayout, setSellPayout] = useState<bigint>(BigInt(0));
-  const [buyTokenName, setBuyTokenName] = useState("ETH");
-  const [buyTokenSrc, setBuyTokenSrc] = useState(ethLogo);
+  const [buyTokenName, setBuyTokenName] = useState(getNativeTokenTicker(chain.name));
+  const [buyTokenSrc, setBuyTokenSrc] = useState(getNativeTokenLogo(chain.name));
   const [slippagePercent, setSlippagePercent] = useState<number>(defaultSlippagePercent);
   const { buyToken } = useBuyToken(token);
-  const { buyPriceTokens, buyPriceEth } = useBuyPrice(token);
+  const { buyPriceTokens, buyPriceEth, buyPriceApe } = useBuyPrice(token);
   const { sellToken } = useSellToken(token);
   const getSellPrice = useSellPrice(token);
   const { ethBalance, refetchEthBalance } = useEthBalance(chain.id);
@@ -97,6 +99,9 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
 
     if (buyTokenName === "ETH") {
       const totalTokens = await buyPriceEth(tokenAddress, amount);
+      setBuyTokensReceived(totalTokens);
+    } else if (buyTokenName === "APE") {
+      const totalTokens = await buyPriceApe(tokenAddress, amount);
       setBuyTokensReceived(totalTokens);
     } else {
       const totalCost = await buyPriceTokens(tokenAddress, amount);
@@ -147,16 +152,36 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     debouncedSellPayout(BigInt(0));
   };
 
+  const getMaxBuyDisplay = (tokenInfo: any, buyTokenName: string, maxBuyPrice: bigint, chain: Chain) => {
+    if (tokenInfo?.readyForLp) {
+      return `0.0 ${getNativeTokenTicker(chain)}`;
+    }
+  
+    if (buyTokenName === "ETH" || buyTokenName === "APE") {
+      const formattedPrice = Number(formatEther(maxBuyPrice || BigInt(0)));
+      
+      if (formattedPrice < 0.01) {
+        return `>0.01 ${getNativeTokenTicker(chain)}`;
+      }
+      
+      return `${formattedPrice.toFixed(2) || 0.0} ${getNativeTokenTicker(chain)}`;
+    }
+  
+    return formatBalance(tokenInfo?.availableSupply || 0);
+  };
+
   const buyTokens = async () => {
     let receipt: ContractTransactionReceipt;
     const formattedSlippage = slippagePercent * 100;
+    const nativeToken = getNativeTokenTicker(chain.name).toLowerCase();
+    const nativeTokenPrice = await getNativeTokenPrice(chain.name);
 
-    if (buyTokenName === "ETH") {
+    if (buyTokenName === "ETH" || buyTokenName === "APE") {
       receipt = await buyToken(token, buyTokensReceived, buyAmount, formattedSlippage);
     } else {
       receipt = await buyToken(token, buyAmount, buyCost, formattedSlippage);
     }
-    await postTradeData(receipt, TradingTab.BUY, ethPrice);
+    await postTradeData(receipt, TradingTab.BUY, nativeTokenPrice, nativeToken, chain.name);
     await refetchBalance();
     await refetchEthBalance();
     await refetchAllowance();
@@ -185,7 +210,9 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
       await refetchAllowance();
     }
     const receipt = await sellToken(token, sellAmount, sellPayout, formattedSlippage);
-    await postTradeData(receipt, TradingTab.SELL, ethPrice);
+    const nativeToken = getNativeTokenTicker(chain.name).toLowerCase();
+    const nativeTokenPrice = await getNativeTokenPrice(chain.name);
+    await postTradeData(receipt, TradingTab.SELL, nativeTokenPrice, nativeToken, chain.name);
     await refetchBalance();
     await refetchEthBalance();
     await refetchAllowance();
@@ -241,7 +268,9 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                 }}
                 placeholder="0.0"
                 value={
-                  buyTokenName === "ETH" ? buyInputValue : formatNumber(Math.round(Number(formatEther(buyAmount))))
+                  buyTokenName === "ETH" || buyTokenName === "APE"
+                    ? buyInputValue
+                    : formatNumber(Math.round(Number(formatEther(buyAmount))))
                 }
                 onChange={handleBuyAmountChange}
                 type="text"
@@ -253,6 +282,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                       imgName={buyTokenName}
                       imgSrc={buyTokenSrc}
                       token={token}
+                      chain={chain.name}
                       onChange={(ticker, tickerSrc) => {
                         setBuyTokenName(ticker);
                         setBuyTokenSrc(tickerSrc);
@@ -261,7 +291,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                         setBuyCost(BigInt(0));
                       }}
                       balance={
-                        buyTokenName === "ETH"
+                        buyTokenName === "ETH" || buyTokenName === "APE"
                           ? Number(formatEther(ethBalance?.value || BigInt(0)))
                           : Number(formatEther(tokenBalance as bigint))
                       }
@@ -275,16 +305,16 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   onClick={async () => {
                     const updatedTokenInfo = await refetchTokenInfo();
                     setBuyInputValue(
-                      buyTokenName === "ETH"
+                      buyTokenName === "ETH" || buyTokenName === "APE"
                         ? formatEther((maxBuyPrice as bigint) || BigInt(0)).substring(0, 8) || "0"
                         : updatedTokenInfo?.data?.availableSupply.toString() || "0"
                     );
                     setBuyAmount(
-                      buyTokenName === "ETH"
+                      buyTokenName === "ETH" || buyTokenName === "APE"
                         ? maxBuyPrice || BigInt(0)
                         : updatedTokenInfo?.data?.availableSupplyRaw || BigInt(0)
                     );
-                    if (buyTokenName !== "ETH") {
+                    if (buyTokenName !== "ETH" && buyTokenName !== "APE") {
                       debouncedBuyCost(updatedTokenInfo?.data?.availableSupplyRaw || BigInt(0));
                     } else {
                       setBuyTokensReceived(updatedTokenInfo?.data?.availableSupplyRaw || BigInt(0));
@@ -295,13 +325,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   MAX
                 </button>
                 <p className="text-light-gray text-xs whitespace-nowrap">
-                  {tokenInfo?.readyForLp
-                    ? "0.0 ETH"
-                    : buyTokenName === "ETH"
-                    ? Number(formatEther((maxBuyPrice as bigint) || BigInt(0))) < 0.01
-                      ? ">0.01 ETH"
-                      : `${Number(formatEther((maxBuyPrice as bigint) || BigInt(0))).toFixed(2) || 0.0} ETH`
-                    : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
+                  {getMaxBuyDisplay(tokenInfo, buyTokenName, maxBuyPrice as bigint, chain.name)}
                 </p>
               </div>
 
@@ -317,28 +341,26 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                     src={
                       (chain.name === Chain.Solana && buyTokenName === "SOL") ||
                       chain.name === Chain.Eth ||
-                      (chain.name === Chain.Base && buyTokenName === "ETH")
+                      (chain.name === Chain.Base && buyTokenName === "ETH") ||
+                      (chain.name === Chain.ApeChain && buyTokenName === "APE")
                         ? token.image
-                        : chain.name === Chain.Solana
-                        ? solanaLogo
-                        : ethLogo
+                        : getNativeTokenLogo(chain.name)
                     }
-                    alt="eth"
+                    alt={buyTokenName}
                     width={35}
                     height={35}
                     className="rounded-full w-[35px] h-[35px] object-cover"
                   />
                   <p>
                     {(chain.name === Chain.Solana && buyTokenName === "SOL") ||
-                    chain.name === Chain.Eth ||
-                    (chain.name === Chain.Base && buyTokenName === "ETH")
+                    (chain.name === Chain.Eth && buyTokenName === "ETH") ||
+                    (chain.name === Chain.Base && buyTokenName === "ETH") ||
+                    (chain.name === Chain.ApeChain && buyTokenName === "APE")
                       ? `$${formatTicker(token.ticker)}`
-                      : chain.name === Chain.Solana
-                      ? "$SOL"
-                      : "$ETH"}
+                      : getNativeTokenTicker(chain.name)}
                   </p>
                 </div>
-                {buyTokenName !== "ETH" && (
+                {buyTokenName !== "ETH" && buyTokenName !== "APE" && (
                   <p className="text-light-gray text-sm mr-[3.25rem] tablet:mr-[4.25rem]">
                     {buyCost !== BigInt(0) ? Number(formatUnits(buyCost)).toFixed(6) : "0.0"}
                   </p>
@@ -346,6 +368,13 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                 {buyTokenName === "ETH" && (
                   <p className="text-light-gray text-sm mr-[3.25rem] tablet:mr-[4.25rem]">
                     {buyTokenName === "ETH" && buyTokensReceived !== BigInt(0) && buyAmount !== BigInt(0)
+                      ? formatNumber(Math.round(Number(formatEther(buyTokensReceived))))
+                      : "0.0"}
+                  </p>
+                )}
+                {buyTokenName === "APE" && (
+                  <p className="text-light-gray text-sm mr-[3.25rem] tablet:mr-[4.25rem]">
+                    {buyTokenName === "APE" && buyTokensReceived !== BigInt(0) && buyAmount !== BigInt(0)
                       ? formatNumber(Math.round(Number(formatEther(buyTokensReceived))))
                       : "0.0"}
                   </p>
@@ -398,13 +427,13 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
               <div className="h-[70px] flex items-center justify-between py-2 px-7 rounded-xl bg-dark w-full">
                 <div className="flex items-center gap-2">
                   <Image
-                    src={chain.name === Chain.Solana ? solanaLogo : ethLogo}
-                    alt="chain-logo"
+                    src={getNativeTokenLogo(chain.name)}
+                    alt={`${chain.name}-logo`}
                     width={35}
                     height={35}
                     className="rounded-full w-[35px] h-[35px] object-cover"
                   />
-                  <p>{chain.name === Chain.Solana ? "$SOL" : "$ETH"}</p>
+                  <p>{getNativeTokenTicker(chain.name)}</p>
                 </div>
                 <p className="text-light-gray text-sm">
                   {sellPayout !== BigInt(0) ? Number(formatUnits(sellPayout)).toFixed(6) : "0.0"}
@@ -441,7 +470,28 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                 </button>
               ))}
             {activeTab === TradingTab.BUY &&
+              buyTokenName === "APE" &&
+              PURCHASE_AMOUNTS_APE.map(amount => (
+                <button
+                  key={amount}
+                  onClick={() => {
+                    setBuyInputValue(amount.toString());
+                    setBuyAmount(parseUnits(amount.toString(), 18));
+                    debouncedBuyCost(parseUnits(amount.toString(), 18));
+                  }}
+                  disabled={!isConnected || tokenInfo?.readyForLp}
+                  className={`flex items-center justify-center p-2 text-sm w-[45px] h-[25px] rounded-lg transition disabled:hover:bg-black ${
+                    parseUnits(amount.toString(), 18) === buyAmount
+                      ? "bg-black hover:bg-black cursor-default"
+                      : "bg-black hover:bg-gray"
+                  }`}
+                >
+                  {amount}
+                </button>
+              ))}
+            {activeTab === TradingTab.BUY &&
               buyTokenName !== "ETH" &&
+              buyTokenName !== "APE" &&
               PURCHASE_AMOUNTS_TOKENS.map(amount => (
                 <button
                   key={amount}
@@ -505,7 +555,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
             }`}
           >
             {activeTab === TradingTab.BUY && insufficientBuyBalance
-              ? "Insufficient ETH"
+              ? `Insufficient ${getNativeTokenTicker(chain.name)}`
               : activeTab === TradingTab.SELL && insufficientSellBalance
               ? "Insufficient Balance"
               : "TRADE"}

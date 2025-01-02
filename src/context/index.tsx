@@ -3,7 +3,7 @@
 import { solanaWeb3JsAdapter, wagmiAdapter } from "@/config/reown";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createAppKit } from "@reown/appkit/react";
-import { mainnet, sepolia, baseSepolia, base, solana, solanaTestnet, solanaDevnet } from "@reown/appkit/networks";
+import { mainnet, sepolia, baseSepolia, base, solana, solanaTestnet, solanaDevnet, apeChain } from "@reown/appkit/networks";
 import React, { type ReactNode } from "react";
 import { cookieToInitialState, WagmiProvider, type Config } from "wagmi";
 import { walletConnectProjectId } from "@/config/env";
@@ -25,7 +25,7 @@ const metadata = {
 const modal = createAppKit({
   adapters: [wagmiAdapter, solanaWeb3JsAdapter],
   projectId: walletConnectProjectId,
-  networks: [mainnet, sepolia, baseSepolia, base, solana, solanaTestnet, solanaDevnet],
+  networks: [mainnet, sepolia, baseSepolia, base, solana, solanaTestnet, solanaDevnet, apeChain],
   defaultNetwork: ethChain,
   metadata: metadata,
   features: {

@@ -1,14 +1,13 @@
-import { memepoolsAbi } from "@/abi/memepools";
 import { Token } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatUnits } from "viem";
-import getEthPrice from "@/lib/getEthPrice";
 import { useEffect } from "react";
 import Pusher from "pusher-js";
 import { Channel } from "@/models/channel";
 import { TradeWithUserAndToken } from "@/types/token/types";
 import { useChain } from "@/context/chain";
 import { getViemClient } from "@/lib/getPublicClient";
+import { getMemePoolsAbi, getNativeTokenPrice } from "@/lib/chains";
 
 export default function useTokenInfo(token: Token) {
   const { chain } = useChain();
@@ -16,13 +15,14 @@ export default function useTokenInfo(token: Token) {
   const queryClient = useQueryClient();
 
   const { data: tokenInfo, refetch: refetchTokenInfo } = useQuery({
-    queryKey: ["tokenInfo", token.id],
+    queryKey: ["tokenInfo", token.id, chain.name],
     queryFn: async () => {
-      const [ethPrice, rawInfo] = (await Promise.all([
-        getEthPrice(),
+      const abi = getMemePoolsAbi(chain.name);
+      const [nativeTokenPrice, rawInfo] = (await Promise.all([
+        getNativeTokenPrice(chain.name),
         publicClient?.readContract({
           address: token.platformAddress as `0x${string}`,
-          abi: memepoolsAbi,
+          abi: abi,
           functionName: "tokenInfos",
           args: [token.tokenAddress],
         }),
@@ -35,7 +35,7 @@ export default function useTokenInfo(token: Token) {
         creator: rawInfo[1],
         totalSupply: Number(formatUnits(rawInfo[2], 18)),
         availableSupply: Number(formatUnits(rawInfo[3], 18)),
-        marketcap: Number(formatUnits(rawInfo[4], 18)) * ethPrice,
+        marketcap: Number(formatUnits(rawInfo[4], 18)) * nativeTokenPrice,
         tokensSold: Number(formatUnits(rawInfo[5], 18)),
         balance: rawInfo[6],
         price: rawInfo[7],
