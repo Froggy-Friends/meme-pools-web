@@ -3,14 +3,13 @@
 import { Token } from "@prisma/client";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { ethLogo } from "@/config/chains";
 import { formatEther } from "viem";
 import { formatTicker } from "@/lib/formatTicker";
 import { formatBalance } from "@/lib/formatBalance";
 import { CircularProgress } from "@nextui-org/react";
 import Link from "next/link";
 import { FaCheckCircle } from "react-icons/fa";
-import { getExplorerUrl } from "@/lib/chains";
+import { getExplorerUrl, getNativeTokenLogo, getNativeTokenTicker } from "@/lib/chains";
 import { Chain } from "@/models/chain";
 
 export const SellToast = (
@@ -43,8 +42,8 @@ export const SellToast = (
               style={{ clipPath: "inset(0 50% 0 0)" }}
             />
             <Image
-              src={ethLogo}
-              alt="eth-logo"
+              src={getNativeTokenLogo(chain)}
+              alt={`${chain}-logo`}
               height={30}
               width={30}
               className="rounded-full h-[30px] w-[30px] object-cover -ml-[28px]"
@@ -63,7 +62,7 @@ export const SellToast = (
               {Number(formatEther(BigInt(ethAmount)))
                 .toFixed(6)
                 .replace(/\.?0+$/, "")}{" "}
-              $ETH
+              ${getNativeTokenTicker(chain)}
             </Link>
           </div>
         </div>

@@ -3,16 +3,13 @@
 import { Token } from "@prisma/client";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { ethLogo } from "@/config/chains";
 import { formatEther } from "viem";
 import { formatTicker } from "@/lib/formatTicker";
 import { formatBalance } from "@/lib/formatBalance";
 import { CircularProgress } from "@nextui-org/react";
 import Link from "next/link";
-import { etherscanUrl } from "@/config/env";
 import { FaCheckCircle } from "react-icons/fa";
-import { useChain } from "@/context/chain";
-import { getExplorerUrl } from "@/lib/chains";
+import { getExplorerUrl, getNativeTokenLogo, getNativeTokenTicker } from "@/lib/chains";
 import { Chain } from "@/models/chain";
 
 export const BuyToast = (
@@ -37,8 +34,8 @@ export const BuyToast = (
         <div className="flex items-center gap-x-2">
           <div className="flex items-center">
             <Image
-              src={ethLogo}
-              alt="eth-logo"
+              src={getNativeTokenLogo(chain)}
+              alt={`${chain}-logo`}
               height={30}
               width={30}
               className="rounded-full w-[30px] h-[30px] object-cover"
@@ -65,8 +62,8 @@ export const BuyToast = (
               {Number(formatEther(BigInt(ethAmount)))
                 .toFixed(6)
                 .replace(/\.?0+$/, "")}{" "}
-              $ETH for {formatBalance(Math.round(Number(formatEther(BigInt(tokenAmount)))))} $
-              {formatTicker(token.ticker)}
+              {getNativeTokenTicker(chain)} for {formatBalance(Math.round(Number(formatEther(BigInt(tokenAmount)))))} $
+              ${formatTicker(token.ticker)}
             </Link>
           </div>
         </div>
