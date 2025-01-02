@@ -23,9 +23,10 @@ import { MdInfoOutline } from "react-icons/md";
 import { Tooltip, useDisclosure } from "@nextui-org/react";
 import { formatNumber } from "@/lib/formatNumber";
 import usePostTradeData from "@/hooks/usePostTradeData";
-import getEthPrice from "@/lib/getEthPrice";
 import CreateCoinPendingModal from "./CreateCoinPendingModal";
 import * as Sentry from "@sentry/nextjs";
+import { Chain } from "@/models/chain";
+import { getNativeTokenPrice, getNativeTokenTicker } from "@/lib/chains";
 
 export type CreateFormValues = {
   name: string;
@@ -106,7 +107,8 @@ export default function CreateCoinForm() {
 
       if (reservedAmount !== BigInt(0)) {
         const { reservePrice, totalCost } = await getReservePrice(Number(numericReservedAmount));
-        const ethPrice = await getEthPrice();
+        const nativeToken = getNativeTokenTicker(chain.name).toLowerCase();
+        const nativeTokenPrice = await getNativeTokenPrice(chain.name);
 
         await postReserveData(
           tokenDetails.tokenAddress,
@@ -114,7 +116,9 @@ export default function CreateCoinForm() {
           Number(totalCost),
           Number(reservePrice),
           Number(reservedAmount),
-          ethPrice,
+          nativeTokenPrice,
+          nativeToken,
+          chain.name,
           tokenDetails.txHash
         );
       }
@@ -182,31 +186,33 @@ export default function CreateCoinForm() {
       >
         <div className="flex self-end items-center gap-x-2 tablet:gap-x-4 -mr-3 tablet:-mr-0 desktop:-mr-2">
           <div className="flex items-center gap-x-2 tablet:gap-x-4 mb-[15px]">
-            <Switch
-              isSelected={autoLaunch}
-              onValueChange={setAutoLaunch}
-              color="primary"
-              size="sm"
-              classNames={{
-                thumb: "bg-dark",
-                base: cn("inline-flex flex-row-reverse", "justify-between cursor-pointer gap-2"),
-                wrapper: "hover:bg-light-gray",
-              }}
-            >
-              {" "}
-              <div className="flex gap-x-1 items-center">
-                <Tooltip
-                  placement="top"
-                  content="Meme Pools will auto-deploy your coin LP at 100% launch progress. Toggle off for manual deployment on your profile page."
-                  className="max-w-[200px] tablet:max-w-[300px]"
-                >
-                  <button>
-                    <MdInfoOutline size={21} className="text-light-gray" />
-                  </button>
-                </Tooltip>
-                <p className="text-[15px] tablet:text-lg">Auto Launch</p>
-              </div>
-            </Switch>
+            {chain.name !== Chain.ApeChain && (
+              <Switch
+                isSelected={autoLaunch}
+                onValueChange={setAutoLaunch}
+                color="primary"
+                size="sm"
+                classNames={{
+                  thumb: "bg-dark",
+                  base: cn("inline-flex flex-row-reverse", "justify-between cursor-pointer gap-2"),
+                  wrapper: "hover:bg-light-gray",
+                }}
+              >
+                {" "}
+                <div className="flex gap-x-1 items-center">
+                  <Tooltip
+                    placement="top"
+                    content="Meme Pools will auto-deploy your coin LP at 100% launch progress. Toggle off for manual deployment on your profile page."
+                    className="max-w-[200px] tablet:max-w-[300px]"
+                  >
+                    <button>
+                      <MdInfoOutline size={21} className="text-light-gray" />
+                    </button>
+                  </Tooltip>
+                  <p className="text-[15px] tablet:text-lg">Auto Launch</p>
+                </div>
+              </Switch>
+            )}
             <Switch
               isSelected={isNsfw}
               onValueChange={setIsNsfw}
@@ -369,7 +375,11 @@ export default function CreateCoinForm() {
                 flex items-center  
                 pointer-events-none"
               >
-                {reserveCost && <p className="text-light-gray">{parseFloat(reserveCost).toFixed(6)} ETH</p>}
+                {reserveCost && (
+                  <p className="text-light-gray">
+                    {parseFloat(reserveCost).toFixed(6)} {getNativeTokenTicker(chain.name)}
+                  </p>
+                )}
               </div>
             </div>
           </div>

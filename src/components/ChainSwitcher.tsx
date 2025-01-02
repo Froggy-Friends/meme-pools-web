@@ -3,7 +3,7 @@
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { Chain, ChainConfig } from "@/models/chain";
 import Image from "next/image";
-import { baseLogo, solanaLogo, ethLogo, chainConfigs } from "@/config/chains";
+import { baseLogo, solanaLogo, ethLogo, apeChainLogo, chainConfigs } from "@/config/chains";
 import { useRouter } from "next/navigation";
 import { useChain } from "@/context/chain";
 import { useAppKit, useAppKitAccount, useDisconnect } from "@reown/appkit/react";
@@ -32,6 +32,7 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
     if (chain === Chain.Base) return baseLogo;
     else if (chain === Chain.Eth) return ethLogo;
     else if (chain === Chain.Solana) return solanaLogo;
+    else if (chain === Chain.ApeChain) return apeChainLogo;
     else return ethLogo;
   };
 
@@ -44,7 +45,7 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
       if (pathname.includes("/token")) {
         router.push(`/${chainConfig.name}`);
 
-        await setChainCookie(chainConfig.name);
+        await setChainCookie(chainConfig.name); 
         setChain(chainConfig);
 
         router.refresh();
@@ -82,7 +83,7 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
           }`}
         >
           <Image
-            className={`transition-transform ${isLoading ? "animate-pulse" : ""}`}
+            className={`rounded-full transition-transform ${isLoading ? "animate-pulse" : ""}`}
             src={getChainLogo(chain.name)}
             alt="chain-logo"
             height={height}
@@ -101,6 +102,12 @@ export default function ChainSwitcher({ height = 25, width = 25 }: ChainSwitcher
           <div className="flex items-center gap-x-3">
             <Image src={ethLogo} alt="eth-logo" height={height} width={width} />
             <p className="text-[17px]">ETH</p>
+          </div>
+        </DropdownItem>
+        <DropdownItem key="ApeChain" className="dark" onPress={() => handleChainSwitch(chainConfigs.apechain)}>
+          <div className="flex items-center gap-x-3">
+            <Image src={apeChainLogo} alt="apechain-logo" height={height} width={width} className="rounded-full"/>
+            <p className="text-[17px]">ApeChain</p>
           </div>
         </DropdownItem>
         <DropdownItem key="Solana" className="dark" onPress={() => handleChainSwitch(chainConfigs.solana)}>

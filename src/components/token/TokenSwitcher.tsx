@@ -1,5 +1,6 @@
-import { ethLogo } from "@/config/chains";
+import { getNativeTokenTicker, getNativeTokenLogo } from "@/lib/chains";
 import { formatBalance } from "@/lib/formatBalance";
+import { Chain } from "@/models/chain";
 import { TokenWithVoteCount } from "@/types/token/types";
 import Image from "next/image";
 import { FaWallet } from "react-icons/fa";
@@ -10,11 +11,14 @@ type TokenSwitcherProps = {
   token: TokenWithVoteCount;
   onChange: (ticker: string, tickerSrc: string) => void;
   balance?: number;
+  chain: Chain;
 };
 
-export default function TokenSwitcher({ imgName, imgSrc, token, onChange, balance }: TokenSwitcherProps) {
+export default function TokenSwitcher({ imgName, imgSrc, token, onChange, balance, chain }: TokenSwitcherProps) {
   const handleClick = () => {
-    imgName === "ETH" ? onChange(token.ticker, token.image) : onChange("ETH", ethLogo);
+    imgName === "ETH" || imgName === "APE"
+      ? onChange(token.ticker, token.image)
+      : onChange(getNativeTokenTicker(chain), getNativeTokenLogo(chain));
   };
 
   return (
@@ -31,7 +35,7 @@ export default function TokenSwitcher({ imgName, imgSrc, token, onChange, balanc
         <div className="flex items-center gap-x-1 -mt-[0.085rem]">
           <FaWallet size={12} className="text-light-gray" />
           <p className="text-light-gray text-xs">
-            {imgName === "ETH" ? formatBalance(balance || 0, true) : formatBalance(balance || 0)}
+            {imgName === "ETH" || imgName === "APE" ? formatBalance(balance || 0, true) : formatBalance(balance || 0)}
           </p>
         </div>
       </div>

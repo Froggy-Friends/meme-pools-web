@@ -2,12 +2,14 @@
 
 import { useChain } from "@/context/chain";
 import useTokenInfo from "@/hooks/useTokenInfo";
+import { getDexName, getDexUrl } from "@/lib/chains";
 import { Channel } from "@/models/channel";
 import { Token } from "@prisma/client";
 import Link from "next/link";
 import Pusher from "pusher-js";
 import { useEffect, useState } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import { Address } from "viem";
 
 type LiquidityPoolBannerProps = {
   token: Token;
@@ -52,15 +54,9 @@ export default function LiquidityPoolBanner({ token }: LiquidityPoolBannerProps)
         <section className="w-full h-12 tablet:h-20 mb-8 tablet:mb-12 flex items-center justify-center bg-primary rounded-lg tablet:text-3xl">
           {tokenInfo?.liquidityPoolSeeded ? (
             <p className="text-black flex items-center gap-x-2">
-              All coins sold, trade now on {chain.name === "solana" ? "Raydium" : "Uniswap"}
+              All coins sold, trade now on {getDexName(chain.name)}
               <Link
-                href={
-                  chain.name === "solana"
-                    ? `https://raydium.io/swap/?inputMint=So11111111111111111111111111111111111111112&outputMint=${token.tokenAddress}`
-                    : `https://app.uniswap.org/explore/tokens/${chain.name === "eth" ? "ethereum" : chain.name}/${
-                        token.tokenAddress
-                      }`
-                }
+                href={getDexUrl(chain.name, token.tokenAddress as Address)}
                 target="_blank"
                 className="text-black hover:text-dark hover:scale-[1.04] transition"
               >
