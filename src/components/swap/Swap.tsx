@@ -152,6 +152,24 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     debouncedSellPayout(BigInt(0));
   };
 
+  const getMaxBuyDisplay = (tokenInfo: any, buyTokenName: string, maxBuyPrice: bigint, chain: Chain) => {
+    if (tokenInfo?.readyForLp) {
+      return `0.0 ${getNativeTokenTicker(chain)}`;
+    }
+  
+    if (buyTokenName === "ETH" || buyTokenName === "APE") {
+      const formattedPrice = Number(formatEther(maxBuyPrice || BigInt(0)));
+      
+      if (formattedPrice < 0.01) {
+        return `>0.01 ${getNativeTokenTicker(chain)}`;
+      }
+      
+      return `${formattedPrice.toFixed(2) || 0.0} ${getNativeTokenTicker(chain)}`;
+    }
+  
+    return formatBalance(tokenInfo?.availableSupply || 0);
+  };
+
   const buyTokens = async () => {
     let receipt: ContractTransactionReceipt;
     const formattedSlippage = slippagePercent * 100;
@@ -307,15 +325,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
                   MAX
                 </button>
                 <p className="text-light-gray text-xs whitespace-nowrap">
-                  {tokenInfo?.readyForLp
-                    ? `0.0 ${getNativeTokenTicker(chain.name)}`
-                    : buyTokenName === "ETH" || buyTokenName === "APE"
-                    ? Number(formatEther((maxBuyPrice as bigint) || BigInt(0))) < 0.01
-                      ? `>0.01 ${getNativeTokenTicker(chain.name)}`
-                      : `${
-                          Number(formatEther((maxBuyPrice as bigint) || BigInt(0))).toFixed(2) || 0.0
-                        } ${getNativeTokenTicker(chain.name)}`
-                    : `${formatBalance(tokenInfo?.availableSupply || 0)}`}
+                  {getMaxBuyDisplay(tokenInfo, buyTokenName, maxBuyPrice as bigint, chain.name)}
                 </p>
               </div>
 

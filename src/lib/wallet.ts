@@ -15,6 +15,6 @@ export function isWalletChainCompatible(
   const walletType = getWalletType(walletAddress);
   return (
     (walletType === "solana" && chain === Chain.Solana) ||
-    (walletType === "eth" && (chain === Chain.Eth || chain === Chain.Base))
+    (walletType === "eth" && (chain === Chain.Eth || chain === Chain.Base || chain === Chain.ApeChain))
   );
 }
