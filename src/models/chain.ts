@@ -4,6 +4,7 @@ export enum Chain {
   Solana = "solana",
   Base = "base",
   Eth = "eth",
+  ApeChain = "apechain",
 }
 
 export type ChainConfig = {
@@ -17,4 +18,5 @@ export type ChainConfigs = {
   eth: ChainConfig;
   base: ChainConfig;
   solana: ChainConfig;
+  apechain: ChainConfig;
 };
