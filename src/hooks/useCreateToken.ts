@@ -1,19 +1,26 @@
 import { memepoolsAbi } from "@/abi/memepools";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { CreateTokenParams, TokenCreated, TxStatus } from "@/types/token/types";
-import { Contract, ContractTransactionReceipt, EventLog } from "ethers";
+import {
+  Contract,
+  ContractTransaction,
+  ContractTransactionReceipt,
+  EventLog,
+} from "ethers";
 import { toast } from "react-hot-toast";
 import { ContractEvent } from "@/models/contractEvent";
 import * as Sentry from "@sentry/react";
 import { useState } from "react";
 import { useChain } from "@/context/chain";
-import { getContractAddress } from "@/lib/chains";
+import { getContractAddress, getMemePoolsAbi } from "@/lib/chains";
+import { Chain } from "@/models/chain";
 
 export default function useCreateToken() {
   const signer = useEthersSigner();
   const { chain } = useChain();
   const contractAddress = getContractAddress(chain.name);
-  const contract = new Contract(contractAddress, memepoolsAbi, signer);
+  const abi = getMemePoolsAbi(chain.name);
+  const contract = new Contract(contractAddress, abi, signer);
   const [txStatus, setTxStatus] = useState<TxStatus>("idle");
   const [txHash, setTxHash] = useState<string | null>(null);
 
@@ -48,15 +55,24 @@ export default function useCreateToken() {
       const [price, cost, fee, total] = await contract.calculateReservePrice(
         reservedAmount
       );
-      const tx = await contract.createToken(
-        name,
-        symbol,
-        reservedAmount,
-        autoLaunch,
-        {
+
+      let tx: any;
+
+      if (chain.name === Chain.ApeChain) {
+        tx = await contract.createToken(name, symbol, reservedAmount, {
           value: total,
-        }
-      );
+        });
+      } else {
+        tx = await contract.createToken(
+          name,
+          symbol,
+          reservedAmount,
+          autoLaunch,
+          {
+            value: total,
+          }
+        );
+      }
       setTxStatus("pending");
       setTxHash(tx.hash);
       const txHash = tx.hash;
