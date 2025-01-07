@@ -91,7 +91,7 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
                   className="text-primary hover:text-light-primary transition"
                   target="_blank"
                 >
-                  BAYC
+                  Bayc
                 </Link>{" "}
                 holders. One percent will be available to claim as an exclusive reward for{" "}
                 <Link
@@ -99,7 +99,7 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
                   className="text-primary hover:text-light-primary transition"
                   target="_blank"
                 >
-                  MAYC
+                  Mayc
                 </Link>{" "}
                 holders.
               </p>
