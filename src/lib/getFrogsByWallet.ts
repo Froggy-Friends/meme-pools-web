@@ -3,7 +3,7 @@ import { Address } from "viem";
 import { Chain } from "@/models/chain";
 
 export const getFrogsByWallet = async (address: Address, chain: Chain) => {
-  if (!address) {
+  if (!address || chain === Chain.ApeChain) {
     return [];
   }
 
