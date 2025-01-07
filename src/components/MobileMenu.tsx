@@ -31,7 +31,6 @@ export default function MobileMenu({
   disconnect,
   address,
 }: MobileMenuProps) {
-
   return (
     <section className="tablet:hidden">
       <NavbarMenu className="bg-dark mt-6 min-w-[100vw] max-w-full left-0 right-0">
@@ -51,7 +50,7 @@ export default function MobileMenu({
                   <button
                     className="bg-dark-gray rounded-lg py-[0.1rem] w-24 text-sm"
                     onClick={async () => {
-                      if (chain === Chain.Eth) {
+                      if (chain === Chain.Eth || chain === Chain.Base || chain === Chain.ApeChain) {
                         disconnect();
                         await setUserCookies(null, Chain.Eth);
                       } else if (chain === Chain.Solana) {

@@ -1,9 +1,8 @@
-import { baseExplorerUrl, etherscanUrl, solanaExplorerUrl } from "@/config/env";
 import { defaultProfileAvatarUrl } from "@/config/user";
+import { getExplorerUrl } from "@/lib/chains";
 import { formatAddress } from "@/lib/formatAddress";
 import { getTimeDifference } from "@/lib/getTimeDifference";
 import { getUserDisplayName } from "@/lib/getUserDisplayName";
-import { Chain } from "@/models/chain";
 import { Trade } from "@/models/trade";
 import { FormattedTrade } from "@/types/token/types";
 import Image from "next/image";
@@ -56,13 +55,7 @@ export default function TokenTrade({ trade }: TokenTradeProps) {
 
       <Link
         className="text-sm tablet:text-base text-light-primary hover:text-cream transition ml-3"
-        href={`${
-          trade.chain === Chain.Eth
-            ? `${etherscanUrl}/tx/${trade.transactionHash}`
-            : trade.chain === Chain.Solana
-            ? `${solanaExplorerUrl}/tx/${trade.transactionHash}`
-            : `${baseExplorerUrl}/tx/${trade.transactionHash}`
-        }`}
+        href={getExplorerUrl(trade.chain, trade.transactionHash)}
         target="_blank"
       >
         {formatAddress(trade.transactionHash)}

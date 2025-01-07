@@ -9,6 +9,7 @@ import { Address } from "viem";
 import { Chain } from "@/models/chain";
 import { useChain } from "@/context/chain";
 import useLaunchedCoinMc from "@/hooks/useLaunchedCoinMc";
+import { getDexName } from "@/lib/chains";
 
 type BondingCurveProgressProps = {
   token: Token;
@@ -43,7 +44,9 @@ export default function BondingCurveProgress({ token }: BondingCurveProgressProp
       </p>
 
       {tokenInfo?.liquidityPoolSeeded ? (
-        <p className="text-cream pt-2">${token.ticker} has been launched and trading is available on Uniswap.</p>
+        <p className="text-cream pt-2">
+          ${token.ticker} has been launched and trading is available on {getDexName(chain.name)}
+        </p>
       ) : tokenInfo?.autoLaunch ? (
         <p className="text-cream pt-2">
           ${token.ticker} will be launched and trading enabled on dexes once it reaches a market cap of{" "}

@@ -9,7 +9,6 @@ import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { setUserCookies } from "@/actions/profile/actions";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
 
 const ConnectButton = dynamic(() => import("./ConnectButton"), { ssr: false });
 
@@ -30,7 +29,6 @@ export default function ProfileAvatar({
   disconnect,
   address,
 }: ProfileAvatarProps) {
-
   return (
     <section className="hidden tablet:block">
       <Dropdown className="min-w-0 w-fit py-2 px-3 bg-dark-gray" placement="bottom-end">
@@ -65,7 +63,7 @@ export default function ProfileAvatar({
             className="dark"
             key="Disconnect"
             onPress={async () => {
-              if (chain === Chain.Eth || chain === Chain.Base) {
+              if (chain === Chain.Eth || chain === Chain.Base || chain === Chain.ApeChain) {
                 disconnect();
                 await setUserCookies(null, Chain.Eth);
               } else if (chain === Chain.Solana) {
