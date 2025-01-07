@@ -27,7 +27,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
   const cookieStore = cookies();
   const cachedUserEvmAddress = cookieStore.get(Cookie.EvmAddress);
   const cachedUserSolanaAddress = cookieStore.get(Cookie.SolanaAddress);
-  const chain = cookieStore.get(Cookie.Chain)?.value as Chain || Chain.Base;
+  const chain = (cookieStore.get(Cookie.Chain)?.value as Chain) || Chain.Base;
   const cachedUser = await fetchUser(
     chain === Chain.Solana ? cachedUserSolanaAddress?.value : cachedUserEvmAddress?.value
   );
@@ -52,13 +52,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
         delegatedWallets={delegatedWallets}
       />
 
-      <ProfileMenuToggle
-        profileUser={profileUser}
-        cachedUser={cachedUser}
-        currentView={view}
-        delegatedWallets={delegatedWallets}
-        chain={chain}
-      />
+      <ProfileMenuToggle profileUser={profileUser} cachedUser={cachedUser} currentView={view} />
 
       {view === "holdings" && profileUser.id === cachedUser?.id && (
         <UserHoldings profileUser={profileUser} cachedUser={cachedUser || null} chain={chain} />
