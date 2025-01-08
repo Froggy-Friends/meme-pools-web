@@ -1,5 +1,6 @@
 import { useReadContracts } from "wagmi";
-import { froggyFriendsAbi } from "@/abi/froggyFriends";
+import { baycAbi } from "@/abi/baycAbi";
+import { maycAbi } from "@/abi/maycAbi";
 import { Abi, Address } from "viem";
 import { baycAddress, maycAddress } from "@/config/env";
 
@@ -7,7 +8,7 @@ export default function useApesBalance(walletAddresses: Address[]) {
   const { data: baycBalances } = useReadContracts({
     contracts: walletAddresses.map((address) => ({
       address: baycAddress as Address,
-      abi: froggyFriendsAbi as Abi,
+      abi: baycAbi as Abi,
       functionName: "balanceOf",
       args: [address],
     })),
@@ -21,7 +22,7 @@ export default function useApesBalance(walletAddresses: Address[]) {
   const { data: maycBalances } = useReadContracts({
     contracts: walletAddresses.map((address) => ({
       address: maycAddress as Address,
-      abi: froggyFriendsAbi as Abi,
+      abi: maycAbi as Abi,
       functionName: "balanceOf",
       args: [address],
     })),

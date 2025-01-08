@@ -9,6 +9,7 @@ import { getUserDisplayName } from "@/lib/getUserDisplayName";
 import { setUserCookies } from "@/actions/profile/actions";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { isEvmChain } from "@/lib/chains";
 
 const ConnectButton = dynamic(() => import("./ConnectButton"), { ssr: false });
 
@@ -63,7 +64,7 @@ export default function ProfileAvatar({
             className="dark"
             key="Disconnect"
             onPress={async () => {
-              if (chain === Chain.Eth || chain === Chain.Base || chain === Chain.ApeChain) {
+              if (isEvmChain(chain)) {
                 disconnect();
                 await setUserCookies(null, Chain.Eth);
               } else if (chain === Chain.Solana) {
