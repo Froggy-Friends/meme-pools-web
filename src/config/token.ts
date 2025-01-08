@@ -14,3 +14,5 @@ export const tierThreeEthReward = 0.6;
 export const tierOneBaseReward = 0.15;
 export const tierTwoBaseReward = 0.225;
 export const tierThreeBaseReward = 0.3;
+export const apeChainMarketcapGoal = 40_000;
+export const apeChainReward = 800;

@@ -163,5 +163,13 @@ export const getDexUrl = (chain: Chain, tokenAddress: Address) => {
     ? `https://raydium.io/swap/?inputMint=So11111111111111111111111111111111111111112&outputMint=${tokenAddress}`
     : chain === Chain.ApeChain
     ? "https://app.camelot.exchange/"
-    : `https://app.uniswap.org/explore/tokens/${chain === "eth" ? "ethereum" : chain}/${tokenAddress}`;
+    : `https://app.uniswap.org/explore/tokens/${
+        chain === "eth" ? "ethereum" : chain
+      }/${tokenAddress}`;
+};
+
+export const isEvmChain = (chain: Chain): boolean => {
+  return (
+    chain === Chain.Eth || chain === Chain.Base || chain === Chain.ApeChain
+  );
 };

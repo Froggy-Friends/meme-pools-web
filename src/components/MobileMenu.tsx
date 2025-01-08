@@ -11,6 +11,7 @@ import { setUserCookies } from "@/actions/profile/actions";
 import ChainSwitcher from "./ChainSwitcher";
 import HowItWorksButton from "./HowItWorksButton";
 import dynamic from "next/dynamic";
+import { isEvmChain } from "@/lib/chains";
 
 const ConnectButton = dynamic(() => import("./ConnectButton"), { ssr: false });
 
@@ -31,7 +32,6 @@ export default function MobileMenu({
   disconnect,
   address,
 }: MobileMenuProps) {
-
   return (
     <section className="tablet:hidden">
       <NavbarMenu className="bg-dark mt-6 min-w-[100vw] max-w-full left-0 right-0">
@@ -51,7 +51,7 @@ export default function MobileMenu({
                   <button
                     className="bg-dark-gray rounded-lg py-[0.1rem] w-24 text-sm"
                     onClick={async () => {
-                      if (chain === Chain.Eth) {
+                      if (isEvmChain(chain)) {
                         disconnect();
                         await setUserCookies(null, Chain.Eth);
                       } else if (chain === Chain.Solana) {

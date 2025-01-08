@@ -14,7 +14,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: props.symbol,
       // BEWARE: no trailing slash is expected in feed URL
-      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(`${memepoolsApi}/trade`, undefined, {
+      datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(`${memepoolsApi}/trade`, 5000, {
         maxResponseLength: 5000,
         expectedOrder: "latestFirst",
         supports_search: true,
@@ -52,11 +52,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
   return (
     <>
       <header></header>
-      <div 
-        id="tv_chart_container"
-        ref={chartContainerRef} 
-        className="h-[420px] w-full bg-dark-gray" 
-      />
+      <div id="tv_chart_container" ref={chartContainerRef} className="h-[420px] w-full bg-dark-gray" />
     </>
   );
 };

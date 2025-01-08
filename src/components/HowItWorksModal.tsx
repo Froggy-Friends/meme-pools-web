@@ -11,6 +11,8 @@ import { getTierTwoReward, getTierThreeReward } from "@/lib/chains";
 import { getTierOneReward } from "@/lib/chains";
 import { useChain } from "@/context/chain";
 import { Chain } from "@/models/chain";
+import { apeChainReward } from "@/config/token";
+import useApePrice from "@/hooks/useApePrice";
 
 type HowItWorkdsModalProps = {
   isOpen: boolean;
@@ -20,11 +22,13 @@ type HowItWorkdsModalProps = {
 export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsModalProps) {
   const router = useRouter();
   const ethPrice = useEthPrice();
+  const apePrice = useApePrice();
   const { chain } = useChain();
   const marketcapGoal = useMarketcapGoal(contractAddress, chain.name);
   const tierOneReward = Math.round(getTierOneReward(chain.name) * ethPrice);
   const tierTwoReward = Math.round(getTierTwoReward(chain.name) * ethPrice);
   const tierThreeReward = Math.round(getTierThreeReward(chain.name) * ethPrice);
+  const apeReward = Math.round(apeChainReward * apePrice);
 
   return (
     <>
@@ -45,42 +49,74 @@ export default function HowItWorksModal({ isOpen, onOpenChange }: HowItWorkdsMod
               <li>No presale</li>
               <li>No team allocation</li>
             </ul>
-            <p>
-              When a coin reaches a <span className="text-green">${marketcapGoal}</span> market cap, launch it on your
-              profile to collect your reward. All users start with bronze rewards. Own
-              {chain.name === Chain.Base && (
-                <span>
-                  {" "}
-                  <Link
-                    href={"https://opensea.io/collection/tadpolesnft"}
-                    className="text-primary hover:text-light-primary transition"
-                    target="_blank"
-                  >
-                    Tadpoles
-                  </Link>{" "}
-                  and
-                </span>
-              )}{" "}
-              <Link
-                href="https://opensea.io/collection/froggyfriendsnft"
-                className="text-[#61A14C] hover:text-green transition"
-                target="_blank"
-              >
-                Frogs
-              </Link>{" "}
-              to earn exclusive silver and gold tier rewards.
-            </p>
+            {chain.name === Chain.ApeChain ? (
+              <p>
+                When a coin reaches a <span className="text-green">${marketcapGoal}</span> market cap, it will be
+                automatically launched and the creator will be sent their{" "}
+                <span className="text-gold">${apeReward}</span> reward onchain.
+              </p>
+            ) : (
+              <p>
+                When a coin reaches a <span className="text-green">${marketcapGoal}</span> market cap, launch it on your
+                profile to collect your reward. All users start with bronze rewards. Own
+                {chain.name === Chain.Base && (
+                  <span>
+                    {" "}
+                    <Link
+                      href={"https://opensea.io/collection/tadpolesnft"}
+                      className="text-primary hover:text-light-primary transition"
+                      target="_blank"
+                    >
+                      Tadpoles
+                    </Link>{" "}
+                    and
+                  </span>
+                )}{" "}
+                <Link
+                  href="https://opensea.io/collection/froggyfriendsnft"
+                  className="text-[#61A14C] hover:text-green transition"
+                  target="_blank"
+                >
+                  Frogs
+                </Link>{" "}
+                to earn exclusive silver and gold tier rewards.
+              </p>
+            )}
 
-            <p>
-              One percent of all coins that graduate from Meme Pools are available to claim as an exclusive reward for
-              Frog owners.
-            </p>
+            {chain.name === Chain.ApeChain ? (
+              <p className="mb-4">
+                Two percent of all coins that graduate from Meme Pools are available to claim as an exclusive reward for{" "}
+                <Link
+                  href="https://opensea.io/collection/boredapeyachtclub"
+                  className="text-primary hover:text-light-primary transition"
+                  target="_blank"
+                >
+                  Bayc
+                </Link>{" "}
+                holders. One percent will be available to claim as an exclusive reward for{" "}
+                <Link
+                  href="https://opensea.io/collection/mutant-ape-yacht-club"
+                  className="text-primary hover:text-light-primary transition"
+                  target="_blank"
+                >
+                  Mayc
+                </Link>{" "}
+                holders.
+              </p>
+            ) : (
+              <p>
+                One percent of all coins that graduate from Meme Pools are available to claim as an exclusive reward for
+                Frog owners.
+              </p>
+            )}
 
-            <div className="flex items-center justify-center gap-x-6 my-10">
-              <RewardTier tier="bronze" rewardAmount={tierOneReward} />
-              <RewardTier tier="silver" rewardAmount={tierTwoReward} />
-              <RewardTier tier="gold" rewardAmount={tierThreeReward} />
-            </div>
+            {chain.name !== Chain.ApeChain && (
+              <div className="flex items-center justify-center gap-x-6 my-10">
+                <RewardTier tier="bronze" rewardAmount={tierOneReward} />
+                <RewardTier tier="silver" rewardAmount={tierTwoReward} />
+                <RewardTier tier="gold" rewardAmount={tierThreeReward} />
+              </div>
+            )}
           </ModalBody>
           <ModalFooter className="flex justify-center">
             <button
