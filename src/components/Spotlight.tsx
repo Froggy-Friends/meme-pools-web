@@ -16,7 +16,7 @@ import useTokenByAddress from "@/hooks/useTokenByAddress";
 export default function Spotlight() {
   const { chain } = useChain();
   const payload = useFeatureFlagPayload(`spotlight-${chain.name}`);
-  const { token } = useTokenByAddress(payload as string);
+  const { token } = useTokenByAddress(payload as string, chain.name);
   const [latestTrade, setLatestTrade] = useState<FormattedTrade | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 

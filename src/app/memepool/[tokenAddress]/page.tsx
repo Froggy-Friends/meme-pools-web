@@ -18,9 +18,8 @@ type MemePoolPageProps = {
 
 export default async function MemePool({ params }: MemePoolPageProps) {
   const cookieStore = cookies();
-  const cachedUserSolanaAddress = cookieStore.get(Cookie.SolanaAddress);
-  const chain = cachedUserSolanaAddress?.value ? Chain.Solana : Chain.Eth;
-  const token = await fetchTokenByAddress(params.tokenAddress);
+  const chain = cookieStore.get(Cookie.Chain)?.value as Chain || Chain.Base;
+  const token = await fetchTokenByAddress(params.tokenAddress, chain as Chain);
 
   if (!token) {
     redirect("/");

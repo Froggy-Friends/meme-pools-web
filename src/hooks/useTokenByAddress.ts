@@ -1,7 +1,8 @@
+import { Chain } from "@/models/chain";
 import { fetchTokenByAddress } from "@/queries/token/queries";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useTokenByAddress(tokenAddress: string) {
+export default function useTokenByAddress(tokenAddress: string, chain: Chain) {
   const {
     data: token,
     isPending: isLoadingToken,
@@ -10,7 +11,7 @@ export default function useTokenByAddress(tokenAddress: string) {
     queryKey: ["token-by-address", tokenAddress],
     queryFn: async () => {
       if (!tokenAddress) return null;
-      const token = await fetchTokenByAddress(tokenAddress);
+      const token = await fetchTokenByAddress(tokenAddress, chain);
       return token;
     },
   });
