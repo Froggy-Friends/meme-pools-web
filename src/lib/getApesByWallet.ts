@@ -9,7 +9,7 @@ export const getApesByWallet = async (address: Address, chain: Chain) => {
   }
 
   const response = await fetch(
-    `http://localhost:3000/api/ape-ids?address=${address}`
+    `${memepoolsDomain}/api/ape-ids?address=${address}`
   );
   const data = await response.json();
 
