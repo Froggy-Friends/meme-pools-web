@@ -253,7 +253,7 @@ export const addTrade = async (
   txHash: Address
 ) => {
   const pusher = getPusher();
-  const token = await fetchTokenByAddress(tokenAddress);
+  const token = await fetchTokenByAddress(tokenAddress, chain as Chain);
   const user = await fetchUser(userAddress);
   if (!token || !user) {
     return;
@@ -325,16 +325,44 @@ export const updateTokenIsClaimable = async (tokenId: string) => {
   });
 };
 
-export const createClaimRecords = async (tokenAddress: string) => {
-  const claims = Array.from({ length: 4444 }, (_, i) => ({
-    frogId: i,
-    tokenAddress,
-    id: randomUUID(),
-  }));
+export const createClaimRecords = async (
+  tokenAddress: string,
+  chain: Chain
+) => {
+  if (chain === Chain.ApeChain) {
+    const baycClaims = Array.from({ length: 10000 }, (_, i) => ({
+      nftId: i,
+      tokenAddress,
+      collection: "bayc",
+      id: randomUUID(),
+      chain: Chain.ApeChain,
+    }));
 
-  await prisma.claim.createMany({
-    data: claims,
-  });
+    const maycClaims = Array.from({ length: 20000 }, (_, i) => ({
+      nftId: i,
+      tokenAddress,
+      collection: "mayc",
+      id: randomUUID(),
+      chain: Chain.ApeChain,
+    }));
+
+    const claims = [...baycClaims, ...maycClaims];
+
+    await prisma.apeClaim.createMany({
+      data: claims,
+    });
+  } else {
+    const claims = Array.from({ length: 4444 }, (_, i) => ({
+      frogId: i,
+      tokenAddress,
+      id: randomUUID(),
+      chain: chain,
+    }));
+
+    await prisma.claim.createMany({
+      data: claims,
+    });
+  }
 };
 
 export const updateTokenMarketcap = async (
