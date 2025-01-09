@@ -1,5 +1,4 @@
 import { memepoolsAbi } from "@/abi/memepools";
-import { contractAddress } from "@/config/env";
 import { useEthersSigner } from "@/config/eth/wagmi-ethers";
 import { Contract } from "ethers";
 import toast from "react-hot-toast";
@@ -10,6 +9,7 @@ import {
 } from "@/actions/token/actions";
 import { formatTicker } from "@/lib/formatTicker";
 import { Token } from "@prisma/client";
+import { Chain } from "@/models/chain";
 
 export default function useLaunchCoin(token: Token) {
   const signer = useEthersSigner();
@@ -30,7 +30,7 @@ export default function useLaunchCoin(token: Token) {
       });
 
       await updateTokenIsClaimable(tokenId);
-      await createClaimRecords(tokenAddress);
+      await createClaimRecords(tokenAddress, token.chain as Chain);
     } catch (error) {
       Sentry.captureException(error);
       toast.error("Launch coin error");
