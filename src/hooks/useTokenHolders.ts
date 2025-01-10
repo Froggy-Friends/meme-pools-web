@@ -20,7 +20,7 @@ export default function useTokenHolders(
       );
       return response.json();
     },
-    enabled: Boolean(tokenAddress),
+    enabled: Boolean(tokenAddress) && chain !== Chain.ApeChain,
   }) as {
     data: TokenHolderData[];
     isLoading: boolean;

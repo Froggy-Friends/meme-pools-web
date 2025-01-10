@@ -4,6 +4,9 @@ import useTokenHolders from "@/hooks/useTokenHolders";
 import TokenHolder from "./TokenHolder";
 import { useChain } from "@/context/chain";
 import useToken from "@/hooks/useToken";
+import { useEffect } from "react";
+import useTokenHoldersApechain from "@/hooks/useTokenHoldersApechain";
+import { Chain } from "@/models/chain";
 
 type TokenHoldersProps = {
   tokenAddress: string;
@@ -13,6 +16,7 @@ type TokenHoldersProps = {
 export default function TokenHolders({ tokenAddress, tokenId }: TokenHoldersProps) {
   const { chain } = useChain();
   const { holders } = useTokenHolders(tokenAddress, chain.name, tokenId);
+  const { holdersApechain } = useTokenHoldersApechain(tokenId, chain.name);
   const { token } = useToken(tokenId);
 
   return (
@@ -27,7 +31,16 @@ export default function TokenHolders({ tokenAddress, tokenId }: TokenHoldersProp
         </div>
 
         <div className="overflow-y-auto flex-1 scrollbar-hide">
-          <div className="grid grid-cols-[15%_19%_16%_29%_23%] w-full">
+          {chain.name === Chain.ApeChain ? <div className="grid grid-cols-[15%_19%_16%_29%_23%] w-full">
+            {holdersApechain?.map(holder => (
+              <TokenHolder
+                key={holder.owner}
+                holder={holder}
+                chain={chain.name}
+                creator={token?.tokenCreator || null}
+              />
+            ))}
+          </div> : <div className="grid grid-cols-[15%_19%_16%_29%_23%] w-full">
             {holders?.map(holder => (
               <TokenHolder
                 key={holder.owner}
@@ -36,7 +49,7 @@ export default function TokenHolders({ tokenAddress, tokenId }: TokenHoldersProp
                 creator={token?.tokenCreator || null}
               />
             ))}
-          </div>
+          </div>}
         </div>
       </div>
     </section>
