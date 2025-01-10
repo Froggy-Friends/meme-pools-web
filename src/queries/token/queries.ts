@@ -1,12 +1,17 @@
 "use server";
 
 import { getVotesByTokenId } from "@/actions/token/actions";
-import { memepoolsApi } from "@/config/env";
+import { apeChainContractAddress, memepoolsApi } from "@/config/env";
+import { maxTotalSupply } from "@/config/token";
 import prisma from "@/lib/prisma";
 import { TokenWithCreator } from "@/lib/types";
 import { Chain } from "@/models/chain";
 import { TokenFilter, TokenVoteStatus } from "@/models/token";
-import { TokenSearchResult, TokenWithVotes } from "@/types/token/types";
+import {
+  TokenHolderData,
+  TokenSearchResult,
+  TokenWithVotes,
+} from "@/types/token/types";
 
 export const checkTokenNameExists = async (name: string) => {
   const exists = !!(await prisma.token.findFirst({
@@ -63,7 +68,10 @@ export const fetchTokenById = async (tokenId: string) => {
   return token;
 };
 
-export const fetchTokenByAddress = async (tokenAddress: string, chain: Chain) => {
+export const fetchTokenByAddress = async (
+  tokenAddress: string,
+  chain: Chain
+) => {
   const token = await prisma.token.findFirst({
     where: {
       tokenAddress: tokenAddress,
@@ -204,4 +212,53 @@ export const fetchMemes = async (tokenId: string) => {
   });
 
   return memes;
+};
+
+export const getTokenHoldersApechain = async (
+  tokenId: string
+): Promise<TokenHolderData[]> => {
+  const holdings = await prisma.$queryRaw`
+    WITH holder_balances AS (
+      SELECT 
+        u.id,
+        u.name, 
+        u."ethAddress" as owner,
+        SUM(
+          CASE 
+            WHEN t.category = 'buy' THEN t.amount
+            WHEN t.category = 'sell' THEN -t.amount
+            ELSE 0
+          END
+        ) as amount
+      FROM "Trades" t
+      JOIN "User" u ON t."userId" = u.id
+      WHERE t."tokenId" = ${tokenId}::uuid
+      GROUP BY u.id, u.name, u."ethAddress"
+      HAVING SUM(
+        CASE 
+          WHEN t.category = 'buy' THEN t.amount
+          WHEN t.category = 'sell' THEN -t.amount
+          ELSE 0
+        END
+      ) > 0
+    )
+    SELECT 
+      ROW_NUMBER() OVER (ORDER BY amount DESC)::int as rank,
+      COALESCE(owner, ${apeChainContractAddress}) as owner,
+      COALESCE(amount, ${maxTotalSupply} - (SELECT COALESCE(SUM(amount), 0) FROM holder_balances))::float8 as amount,
+      COALESCE(amount, ${maxTotalSupply} - (SELECT COALESCE(SUM(amount), 0) FROM holder_balances)) * 100.0 / ${maxTotalSupply}::float8 as percentage
+    FROM (
+      SELECT owner, amount FROM holder_balances
+      UNION ALL
+      SELECT 
+        ${apeChainContractAddress}::text,
+        ${maxTotalSupply} - (SELECT COALESCE(SUM(amount), 0) FROM holder_balances)::float8
+      WHERE (SELECT COALESCE(SUM(amount), 0) FROM holder_balances) < ${maxTotalSupply}
+    ) all_holders
+    WHERE amount > 0
+    ORDER BY amount DESC
+    LIMIT 20
+  `;
+
+  return holdings as TokenHolderData[];
 };
