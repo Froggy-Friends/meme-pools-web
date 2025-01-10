@@ -208,11 +208,31 @@ export const handleFollow = async (
 
 export const updateClaimStatus = async (
   frogIds: number[],
-  tokenAddress: string
+  tokenAddress: string,
+  claimerAddress: string
 ) => {
   await prisma.claim.updateMany({
     where: { frogId: { in: frogIds }, tokenAddress },
-    data: { isClaimed: true },
+    data: { isClaimed: true, claimerAddress: claimerAddress },
+  });
+
+  revalidatePath("/profile");
+};
+
+export const updateApeClaimStatus = async (
+  baycIds: number[],
+  maycIds: number[],
+  tokenAddress: string,
+  claimerAddress: string
+) => {
+  await prisma.apeClaim.updateMany({
+    where: { nftId: { in: baycIds }, tokenAddress, collection: "bayc" },
+    data: { isClaimed: true, claimerAddress: claimerAddress },
+  });
+
+  await prisma.apeClaim.updateMany({
+    where: { nftId: { in: maycIds }, tokenAddress, collection: "mayc" },
+    data: { isClaimed: true, claimerAddress: claimerAddress },
   });
 
   revalidatePath("/profile");

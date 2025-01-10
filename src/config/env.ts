@@ -21,7 +21,7 @@ export const contractAddress: Address = isProd
 export const baseContractAddress: Address =
   "0xA12da06fEe227B8E87A6f961C0ede975cdB60C60";
 export const apeChainContractAddress: Address =
-  "0xb6224A473Edd4E401B4f86650ec58eDb124596eF";
+  "0xa944036Da955c729745B21B3C09E13f20EC1dFc3"; // TODO: Add correct contract address
 export const froggyFriendsAddress: Address = isProd
   ? "0x7ad05c1b87e93BE306A9Eadf80eA60d7648F1B6F"
   : "0xc8939011efd81fB0ca8382ed15EAb160c3a69313";
@@ -34,6 +34,8 @@ export const claimContractAddress: Address = isProd
   : "0x6570Ff390976C206b05EcD5873a0aAaF7a1F3D28";
 export const baseClaimContractAddress: Address =
   "0xb6224A473Edd4E401B4f86650ec58eDb124596eF";
+export const apeChainClaimContractAddress: Address =
+  "0xB37a7F612a9d11971CEd804Afe01D73C5D3f3E3c"; // TODO: Add correct claim contract address
 export const contractAddressV1 = "0x4bA69e95F5F18902Cad88a1e35E037F1DC7E7b77";
 export const ethChainId = isProd ? 1 : 11155111;
 export const baseChainId = 8453;

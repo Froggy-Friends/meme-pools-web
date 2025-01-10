@@ -34,7 +34,7 @@ model Token {
   name            String
   createdAt       DateTime      @default(now()) @db.Timestamptz(6)
   updatedAt       DateTime?     @default(now()) @db.Timestamptz(6)
-  tokenAddress    String        @unique
+  tokenAddress    String
   tokenCreator    String
   marketCap       Int
   discord         String?
@@ -54,6 +54,9 @@ model Token {
   Meme            Meme[]
   Claim           Claim[]
   Post            Post[]
+  ApeClaim        ApeClaim[]
+
+  @@unique([tokenAddress, chain])
 }
 
 model User {
@@ -163,11 +166,12 @@ model Claim {
   id             String    @id(map: "claim_pkey") @default(uuid()) @db.Uuid
   frogId         Int
   tokenAddress   String
+  chain          String
   claimerAddress String?
   isClaimed      Boolean   @default(false)
   createdAt      DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime? @default(now()) @db.Timestamptz(6)
-  token          Token     @relation(fields: [tokenAddress], references: [tokenAddress], onDelete: NoAction, onUpdate: NoAction, map: "token_address_fkey")
+  token          Token     @relation(fields: [tokenAddress, chain], references: [tokenAddress, chain], onDelete: NoAction, onUpdate: NoAction, map: "token_address_fkey")
 }
 
 model Post {
@@ -179,4 +183,17 @@ model Post {
   user      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id_fkey")
   token     Token     @relation(fields: [tokenId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "token_id_fkey")
   memes     Meme[]
+}
+
+model ApeClaim {
+  id             String    @id(map: "ape_claim_pkey") @default(uuid()) @db.Uuid
+  nftId          Int
+  tokenAddress   String
+  chain          String
+  claimerAddress String?
+  collection     String
+  isClaimed      Boolean   @default(false)
+  createdAt      DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime? @default(now()) @db.Timestamptz(6)
+  token          Token     @relation(fields: [tokenAddress, chain], references: [tokenAddress, chain], onDelete: NoAction, onUpdate: NoAction, map: "token_address_fkey")
 }

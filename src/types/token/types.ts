@@ -1,6 +1,6 @@
 import { Chain } from "@/models/chain";
 import { Trade } from "@/models/trade";
-import { Claim, CommentLikes, Meme, Token, Trades, User } from "@prisma/client";
+import { ApeClaim, Claim, CommentLikes, Meme, Token, Trades, User } from "@prisma/client";
 import { UseMutationResult } from "@tanstack/react-query";
 
 export type CreateTokenParams = {
@@ -129,6 +129,8 @@ export type TokenInfo = {
 };
 
 export type ClaimWithToken = Claim & { token: Token };
+
+export type ApeClaimWithToken = ApeClaim & { token: Token };
 
 export type TokenHolderEth = {
   balance: string;

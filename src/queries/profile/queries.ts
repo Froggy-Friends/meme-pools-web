@@ -3,8 +3,13 @@
 import prisma from "@/lib/prisma";
 import { Token, User } from "@prisma/client";
 import { TokenWithCreator } from "@/lib/types";
-import { ClaimWithToken, TokenWithBalance } from "@/types/token/types";
+import {
+  ApeClaimWithToken,
+  ClaimWithToken,
+  TokenWithBalance,
+} from "@/types/token/types";
 import { Chain } from "@/models/chain";
+import { ApeData } from "@/types/claim/types";
 
 export const fetchUser = async (wallet: string | undefined) => {
   if (!wallet) {
@@ -132,7 +137,7 @@ export const fetchCreatedTokens = async (
   return tokens;
 };
 
-export const fetchClaimableTokens = async (
+export const fetchFrogClaimableTokens = async (
   frogIds: number[],
   chain: Chain
 ): Promise<ClaimWithToken[]> => {
@@ -156,6 +161,30 @@ export const fetchClaimableTokens = async (
       ? acc
       : [...acc, claim];
   }, [] as ClaimWithToken[]);
+
+  return uniqueClaims;
+};
+
+export const fetchApeClaimableTokens = async (
+  apes: ApeData[]
+): Promise<ApeClaimWithToken[]> => {
+  const claims = await prisma.apeClaim.findMany({
+    where: {
+      isClaimed: false,
+      OR: apes.map((ape) => ({
+        nftId: parseInt(ape.apeId),
+        collection: ape.collection,
+      })),
+      token: { chain: Chain.ApeChain },
+    },
+    include: { token: true },
+  });
+
+  const uniqueClaims = claims.reduce((acc, claim) => {
+    return acc.some((c) => c.token.id === claim.token.id)
+      ? acc
+      : [...acc, claim];
+  }, [] as ApeClaimWithToken[]);
 
   return uniqueClaims;
 };

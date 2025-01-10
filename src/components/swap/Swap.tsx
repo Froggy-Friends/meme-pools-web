@@ -11,10 +11,8 @@ import { TokenWithVoteCount } from "@/types/token/types";
 import useBuyPrice from "@/hooks/useBuyPrice";
 import { Input } from "@nextui-org/react";
 import TokenSwitcher from "../token/TokenSwitcher";
-import { wagmiChains } from "@/config/reown";
 import useEthBalance from "@/hooks/useEthBalance";
 import useTokenBalance from "@/hooks/useTokenBalance";
-import { ethLogo, solanaLogo } from "@/config/chains";
 import usePostTradeData from "@/hooks/usePostTradeData";
 import { useDebouncedCallback } from "use-debounce";
 import { Chain } from "@/models/chain";
@@ -39,6 +37,7 @@ import {
 } from "@/actions/token/actions";
 import SlippagePopover from "./SlippagePopover";
 import { getNativeTokenLogo, getNativeTokenPrice, getNativeTokenTicker } from "@/lib/chains";
+import Link from "next/link";
 
 export enum TradingTab {
   BUY,
@@ -156,17 +155,17 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     if (tokenInfo?.readyForLp) {
       return `0.0 ${getNativeTokenTicker(chain)}`;
     }
-  
+
     if (buyTokenName === "ETH" || buyTokenName === "APE") {
       const formattedPrice = Number(formatEther(maxBuyPrice || BigInt(0)));
-      
+
       if (formattedPrice < 0.01) {
         return `>0.01 ${getNativeTokenTicker(chain)}`;
       }
-      
+
       return `${formattedPrice.toFixed(2) || 0.0} ${getNativeTokenTicker(chain)}`;
     }
-  
+
     return formatBalance(tokenInfo?.availableSupply || 0);
   };
 
@@ -199,7 +198,7 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
     }
     if (!token.isClaimable && updatedTokenInfo.data?.liquidityPoolSeeded) {
       await updateTokenIsClaimable(token.id);
-      await createClaimRecords(token.tokenAddress);
+      await createClaimRecords(token.tokenAddress, token.chain as Chain);
     }
   };
 
@@ -252,6 +251,15 @@ export default function Swap({ token, ethPrice }: TradingWidgetProps) {
             >
               Sell
             </button>
+            {chain.name === Chain.ApeChain && (
+              <Link
+                href="https://apechain.com/portal"
+                target="_blank"
+                className="bg-dark-gray text-white rounded-xl px-4 py-1 font-proximaNovaBold hover:bg-gray transition"
+              >
+                Bridge
+              </Link>
+            )}
           </div>
           <SlippagePopover slippagePercent={slippagePercent} setSlippagePercent={setSlippagePercent} />
         </div>

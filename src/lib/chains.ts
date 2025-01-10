@@ -25,6 +25,7 @@ import {
   froggyFriendsAddress,
   baseFroggyFriendsAddress,
   apeChainContractAddress,
+  apeChainClaimContractAddress,
 } from "@/config/env";
 import { Chain, ChainConfig } from "@/models/chain";
 import { Address } from "viem";
@@ -33,6 +34,8 @@ import { memepoolsApechainAbi } from "@/abi/memepoolsApechain";
 import getApePrice from "./getApePrice";
 import getEthPrice from "./getEthPrice";
 import { apeChain, base, mainnet } from "viem/chains";
+import { mempoolsClaimsApechainAbi } from "@/abi/memepoolsClaimsApechain";
+import { mempoolsClaimsAbi } from "@/abi/mempoolsClaims";
 
 export function getChainConfig(path: string): ChainConfig {
   if (path === `/${Chain.Eth}` || path === Chain.Eth) {
@@ -83,7 +86,11 @@ export const getContractAddress = (chain: Chain) => {
 };
 
 export const getClaimContractAddress = (chain: Chain) => {
-  return chain === Chain.Eth ? claimContractAddress : baseClaimContractAddress;
+  return chain === Chain.Eth
+    ? claimContractAddress
+    : chain === Chain.ApeChain
+    ? apeChainClaimContractAddress
+    : baseClaimContractAddress;
 };
 
 export const getChainLogo = (chain: Chain) => {
@@ -120,6 +127,12 @@ export const getNativeTokenLogo = (chain: Chain) => {
 
 export const getMemePoolsAbi = (chain: Chain) => {
   return chain === Chain.ApeChain ? memepoolsApechainAbi : memepoolsAbi;
+};
+
+export const getMemePoolsClaimsAbi = (chain: Chain) => {
+  return chain === Chain.ApeChain
+    ? mempoolsClaimsApechainAbi
+    : mempoolsClaimsAbi;
 };
 
 export const getNativeTokenPrice = async (chain: Chain) => {

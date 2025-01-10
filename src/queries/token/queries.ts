@@ -63,10 +63,11 @@ export const fetchTokenById = async (tokenId: string) => {
   return token;
 };
 
-export const fetchTokenByAddress = async (tokenAddress: string) => {
+export const fetchTokenByAddress = async (tokenAddress: string, chain: Chain) => {
   const token = await prisma.token.findFirst({
     where: {
       tokenAddress: tokenAddress,
+      chain: chain,
     },
     include: {
       _count: {

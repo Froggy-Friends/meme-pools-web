@@ -31,7 +31,8 @@ type TokenDetailsPageProps = {
 export default async function BaseTokenDetailsPage({ params, searchParams }: TokenDetailsPageProps) {
   const view = (searchParams.view as CommentAndTradesView) || CommentAndTradesViews.COMMENTS;
   const tokenAddress = params.tokenAddress;
-  const token = await fetchTokenByAddress(tokenAddress);
+  const chain = Chain.ApeChain;
+  const token = await fetchTokenByAddress(tokenAddress, chain);
 
   if (!token) {
     redirect("/");
